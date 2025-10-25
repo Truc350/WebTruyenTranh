@@ -1,0 +1,103 @@
+.footer {
+    background: #1b1b1b;
+    color: #f1f1f1;
+    padding: 50px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.7;
+}
+
+.footerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;         /* Cho xuống dòng khi màn hình nhỏ */
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-column .logo img {
+    width: 120px;          /* 👈 chỉnh kích thước ảnh tại đây */
+    height: auto;          /* Tự động giữ tỷ lệ */
+    border-radius: 10px;   /* Bo góc nếu muốn */
+    transition: transform 0.3s ease, opacity 0.3s;
+}
+.footer-column .logo img:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+.footer-column h4 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.footer-column h4 i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/*Liên kết nhanh*/
+.footer-column ul  {
+    list-style: none;
+    padding: 0;
+}
+.footer-column ul li {
+    margin: 8px 0;
+}
+.footer-column ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ;
+}
+.footer-column ul li a:hover{
+    color: #ffcc00;
+}
+/*Liên hệ*/
+.footer-column p i {
+    margin-right: 8px;
+    color:  #ffcc00;
+}
+/*mạng xã hôi*/
+.social-links {
+    margin-top: 10px;
+}
+.social-links a{
+    display: inline-block;
+    font-size: 22px;
+    color: #ccc;
+    margin-right: 15px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.social-links a:hover {
+    color: #ffcc00;
+    transform: scale(1.2);
+}
+/*Thanh toán*/
+.payment-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.payment-icons img {
+    width: 45px;
+    height: auto;
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+}
+/*ban quyen*/
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+    padding-top: 15px;
+    color: #aaa;
+    font-size: 14px;
+}
+.footer-bottom strong {
+    color: #ffcc00;
+}
