@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" href="../css/adminCss/stylePro.css">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul>
+            <li>
+                <img src="icons/home.png" class="icon">
+                <span>Trang chủ</span>
+            </li>
+            <li class="active">
+                <img src="icons/product.png" class="icon">
+                <span>Quản lý sản phẩm</span>
+            </li>
+            <li>
+                <img src="icons/category.png" class="icon">
+                <span>Quản lý thể loại</span>
+            </li>
+            <li>
+                <img src="icons/order.png" class="icon">
+                <span>Quản lý đơn hàng</span>
+            </li>
+            <li>
+                <img src="icons/user.png" class="icon">
+                <span>Quản lý người dùng</span>
+            </li>
+            <li>
+                <img src="icons/promo.png" class="icon">
+                <span>Khuyến mãi</span>
+            </li>
+            <li>
+                <img src="icons/report.png" class="icon">
+                <span>Thống kê/ Báo cáo</span>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <header>
+            <h2>Quản lý sản phẩm</h2>
+            <div class="admin-info">
+                <img src="icons/admin.png" alt="admin" class="avatar">
+                <span>Admin</span>
+            </div>
+        </header>
+
+        <div class="search-add">
+            <input type="text" placeholder="Tìm kiếm truyện...">
+            <button class="add-btn">+ Thêm truyện mới</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Bìa truyện</th>
+                <th>Tên truyện</th>
+                <th>Thể loại</th>
+                <th>Tác giả</th>
+                <th>Giá</th>
+                <th>Còn trong kho</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Dòng 1 -->
+            <tr>
+                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                <td>Thám tử lừng danh Conan</td>
+                <td>Trinh thám</td>
+                <td>Gosho Aoyama</td>
+                <td>22,500₫</td>
+                <td>550 quyển</td>
+                <td><button class="edit-btn">Sửa</button></td>
+            </tr>
+            <!-- Dòng 2 -->
+            <tr>
+                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                <td>Thám tử lừng danh Conan</td>
+                <td>Trinh thám</td>
+                <td>Gosho Aoyama</td>
+                <td>22,500₫</td>
+                <td>550 quyển</td>
+                <td><button class="edit-btn">Sửa</button></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+        </div>
+    </main>
+</div>
+</body>
+</html>
