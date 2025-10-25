@@ -6,96 +6,99 @@
     <link rel="stylesheet" href="../css/adminCss/stylePro.css">
 </head>
 <body>
-<div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <ul>
-            <li>
-                <img src="icons/home.png" class="icon">
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <ul class="menu-list">
+            <li class="menu-item">
+                <img src="icons/home.png" alt="home" class="menu-icon">
                 <span>Trang chủ</span>
             </li>
-            <li class="active">
-                <img src="icons/product.png" class="icon">
+            <li class="menu-item active">
+                <img src="icons/product.png" alt="product" class="menu-icon">
                 <span>Quản lý sản phẩm</span>
             </li>
-            <li>
-                <img src="icons/category.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/category.png" alt="category" class="menu-icon">
                 <span>Quản lý thể loại</span>
             </li>
-            <li>
-                <img src="icons/order.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/order.png" alt="order" class="menu-icon">
                 <span>Quản lý đơn hàng</span>
             </li>
-            <li>
-                <img src="icons/user.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/user.png" alt="user" class="menu-icon">
                 <span>Quản lý người dùng</span>
             </li>
-            <li>
-                <img src="icons/promo.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/promo.png" alt="promo" class="menu-icon">
                 <span>Khuyến mãi</span>
             </li>
-            <li>
-                <img src="icons/report.png" class="icon">
-                <span>Thống kê/ Báo cáo</span>
+            <li class="menu-item">
+                <img src="icons/report.png" alt="report" class="menu-icon">
+                <span>Thống kê & Báo cáo</span>
             </li>
         </ul>
-    </aside>
+    </nav>
 
-    <!-- Main content -->
-    <main class="main-content">
-        <header>
-            <h2>Quản lý sản phẩm</h2>
-            <div class="admin-info">
-                <img src="icons/admin.png" alt="admin" class="avatar">
+    <!-- MAIN -->
+    <section class="main-section">
+        <div class="top-bar">
+            <h1 class="page-title">Quản lý sản phẩm</h1>
+            <div class="admin-profile">
+                <img src="icons/admin.png" alt="Admin" class="admin-avatar">
                 <span>Admin</span>
             </div>
-        </header>
-
-        <div class="search-add">
-            <input type="text" placeholder="Tìm kiếm truyện...">
-            <button class="add-btn">+ Thêm truyện mới</button>
         </div>
 
-        <table>
-            <thead>
-            <tr>
-                <th>Bìa truyện</th>
-                <th>Tên truyện</th>
-                <th>Thể loại</th>
-                <th>Tác giả</th>
-                <th>Giá</th>
-                <th>Còn trong kho</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Dòng 1 -->
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
-                <td>Thám tử lừng danh Conan</td>
-                <td>Trinh thám</td>
-                <td>Gosho Aoyama</td>
-                <td>22,500₫</td>
-                <td>550 quyển</td>
-                <td><button class="edit-btn">Sửa</button></td>
-            </tr>
-            <!-- Dòng 2 -->
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
-                <td>Thám tử lừng danh Conan</td>
-                <td>Trinh thám</td>
-                <td>Gosho Aoyama</td>
-                <td>22,500₫</td>
-                <td>550 quyển</td>
-                <td><button class="edit-btn">Sửa</button></td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="action-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Nhập tên truyện cần tìm...">
+            </div>
+            <button class="btn btn-add">+ Thêm truyện mới</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Bìa</th>
+                    <th>Tên truyện</th>
+                    <th>Thể loại</th>
+                    <th>Tác giả</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="pagination">
             <button class="page-btn active">1</button>
         </div>
-    </main>
+    </section>
 </div>
 </body>
 </html>

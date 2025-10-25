@@ -1,3 +1,4 @@
+/* Reset + font chung */
 * {
     margin: 0;
     padding: 0;
@@ -6,10 +7,11 @@
 }
 
 body {
-    background-color: #fff;
+    background-color: #fff8f8;
     color: #333;
 }
 
+/* Layout chính */
 .container {
     display: flex;
     height: 100vh;
@@ -18,84 +20,108 @@ body {
 /* Sidebar */
 .sidebar {
     width: 230px;
-    background-color: #fff5f5;
-    border-right: 2px solid #f2dcdc;
-    padding-top: 20px;
+    background-color: #fff;
+    border-right: 2px solid #f3d6d6;
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-shadow: 2px 0 8px rgba(255, 122, 122, 0.1);
 }
 
 .sidebar ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .sidebar li {
-    padding: 12px 20px;
+    padding: 12px 22px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
-    transition: 0.3s;
-    color: #333;
+    color: #444;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
 }
 
-.sidebar li:hover,
+.sidebar li:hover {
+    background-color: #ffe0e0;
+    border-left-color: #ff8a8a;
+    font-weight: 600;
+    transform: translateX(3px);
+}
+
 .sidebar li.active {
     background-color: #ffd6d6;
-    border-left: 4px solid #ff7a7a;
+    border-left-color: #ff6a6a;
     font-weight: 600;
 }
 
 .sidebar .icon {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.1));
 }
 
-/* Main content */
+/* Nội dung chính */
 .main-content {
     flex: 1;
-    padding: 30px;
+    padding: 30px 40px;
     background-color: #fff;
+    overflow-y: auto;
 }
 
+/* Header */
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 header h2 {
-    color: #333;
+    color: #ff5f5f;
+    letter-spacing: 0.5px;
 }
 
 .admin-info {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     font-weight: 500;
+    color: #444;
 }
 
 .avatar {
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background-color: #ffe6e6;
     object-fit: cover;
+    background-color: #ffe6e6;
+    border: 1px solid #ffd6d6;
 }
 
-/* Search + Add */
+/* Thanh tìm kiếm + nút thêm */
 .search-add {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .search-add input {
-    width: 70%;
-    padding: 10px;
-    border: 1px solid #f0bebe;
+    width: 72%;
+    padding: 10px 15px;
+    border: 1px solid #ffc5c5;
     border-radius: 8px;
     outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-add input:focus {
+    border-color: #ff8a8a;
 }
 
 .add-btn {
@@ -103,31 +129,35 @@ header h2 {
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 10px 22px;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(255, 122, 122, 0.3);
+    transition: all 0.3s;
 }
 
 .add-btn:hover {
     background-color: #ff6a6a;
+    transform: translateY(-2px);
 }
 
-/* Table */
+/* Bảng */
 table {
     width: 100%;
     border-collapse: collapse;
-    background-color: #fff5f5;
-    border-radius: 8px;
+    background-color: #fffaf9;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 3px 10px rgba(255, 122, 122, 0.1);
 }
 
 thead {
-    background-color: #ffeaea;
+    background-color: #ffe6e6;
     color: #333;
 }
 
 th, td {
-    padding: 12px;
+    padding: 14px;
     text-align: center;
     border-bottom: 1px solid #f0dcdc;
 }
@@ -135,27 +165,30 @@ th, td {
 td img {
     width: 45px;
     height: 60px;
-    border-radius: 4px;
+    border-radius: 6px;
+    object-fit: cover;
 }
 
+/* Nút chỉnh sửa */
 .edit-btn {
     background-color: #ff8a8a;
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 6px 14px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s;
 }
 
 .edit-btn:hover {
     background-color: #ff6a6a;
+    transform: scale(1.05);
 }
 
-/* Pagination */
+/* Phân trang */
 .pagination {
     text-align: center;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .page-btn {
@@ -165,9 +198,15 @@ td img {
     padding: 6px 12px;
     cursor: pointer;
     margin: 2px;
+    transition: all 0.3s;
+}
+
+.page-btn:hover {
+    background-color: #ffbebe;
 }
 
 .page-btn.active {
     background-color: #ff8a8a;
     color: #fff;
+    font-weight: 500;
 }
