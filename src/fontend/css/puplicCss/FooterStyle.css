@@ -1,0 +1,149 @@
+.footer {
+    background: #1b1b1b;
+    color: #f1f1f1;
+    padding: 50px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.7;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* Prevent wrapping to keep columns horizontal */
+    gap: 20px; /* Reduced gap for better spacing */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-column {
+    flex: 1; /* Each column takes equal space */
+    min-width: 180px; /* Minimum width to prevent squishing */
+    text-align: left; /* Align content to the left */
+}
+
+.footer-column .logo img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease, opacity 0.3s;
+}
+
+.footer-column .logo img:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.footer-column h4 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.footer-column h4 i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/* Liên kết nhanh */
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin: 8px 0;
+}
+
+.footer-column ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #ffcc00;
+}
+
+/* Liên hệ */
+.footer-column p i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/* Mạng xã hội */
+.social-links {
+    margin-top: 10px;
+}
+
+.social-links a {
+    display: inline-block;
+    font-size: 22px;
+    color: #ccc;
+    margin-right: 15px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.social-links a:hover {
+    color: #ffcc00;
+    transform: scale(1.2);
+}
+
+/* Thanh toán */
+.payment-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.payment-icons img {
+    width: 45px;
+    height: auto;
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+}
+
+/* Bản quyền */
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+    padding-top: 15px;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.footer-bottom strong {
+    color: #ffcc00;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        justify-content: space-around; /* Center columns when wrapped */
+    }
+
+    .footer-column {
+        flex: 1 1 45%; /* Two columns per row on medium screens */
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-column {
+        flex: 1 1 100%; /* Stack columns vertically on small screens */
+        text-align: center; /* Center text for better appearance */
+    }
+
+    .payment-icons {
+        justify-content: center; /* Center payment icons */
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center; /* Center social icons */
+    }
+}
