@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý đơn hàng</title>
+    <link rel="stylesheet" href="../css/adminCss/styleOrder.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <div class="main-content">
+        <header>
+            <h2>Quản lý đơn hàng</h2>
+            <div class="admin-info">
+                <img src="../../img/admin.png" alt="Admin" class="avatar">
+                <span>Admin</span>
+            </div>
+        </header>
+
+        <!-- Thanh lọc trạng thái -->
+        <div class="filter-buttons">
+            <button class="filter-btn active">Tất cả</button>
+            <button class="filter-btn">Chờ xử lý</button>
+            <button class="filter-btn">Đang giao</button>
+            <button class="filter-btn">Hoàn tất</button>
+        </div>
+
+        <!-- Bảng đơn hàng -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>10/05/2025</td>
+                    <td>155,400đ</td>
+                    <td><span class="status done">Hoàn tất</span></td>
+                    <td><button class="detail-btn">Chi tiết</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>10/05/2025</td>
+                    <td>155,400đ</td>
+                    <td><span class="status pending">Chờ xử lý</span></td>
+                    <td><button class="detail-btn">Chi tiết</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>10/05/2025</td>
+                    <td>155,400đ</td>
+                    <td><span class="status shipping">Đang giao</span></td>
+                    <td><button class="detail-btn">Chi tiết</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>10/05/2025</td>
+                    <td>155,400đ</td>
+                    <td><span class="status done">Hoàn tất</span></td>
+                    <td><button class="detail-btn">Chi tiết</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>10/05/2025</td>
+                    <td>155,400đ</td>
+                    <td><span class="status done">Hoàn tất</span></td>
+                    <td><button class="detail-btn">Chi tiết</button></td>
+                </tr>
+
+                <!-- Hàng phân trang -->
+                <tr class="pagination-row">
+                    <td colspan="7">
+                        <div class="pagination">
+                            <button>&lt;</button>
+                            <button class="active">1</button>
+                            <button>&gt;</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Nút cập nhật -->
+        <div class="update-status">
+            <button class="update-btn">Cập nhật trạng thái</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tải sidebar.html vào vùng #sidebar-container
+    fetch("sidebar.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("sidebar-container").innerHTML = data;
+        });
+</script>
+</body>
+</html>
