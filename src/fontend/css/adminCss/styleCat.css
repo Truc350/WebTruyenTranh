@@ -1,0 +1,190 @@
+/* Tổng thể layout */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body {
+    color: #333;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 30px 40px;
+    background-color:white;
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    /*position: relative;*/
+    margin-bottom: 30px;
+    display: flex;
+    /*align-items: center;*/
+}
+
+header h2 {
+    margin-top: 50px;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.admin-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bolder;
+    margin: 10px 30px 0 0;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Thanh tìm kiếm và nút thêm */
+.search-add-container {
+    display: flex;
+    margin-bottom: 40px;
+    gap: 30px;
+}
+
+.search-add-container input {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    outline: none;
+    height: 30px;
+}
+
+.search-add-container input::placeholder {
+    font-size: 16px;
+    color: #A49F9F;
+}
+
+
+.search-input:focus {
+    border-color: #ff9999;
+    box-shadow: 0 0 4px rgba(255, 153, 153, 0.5);
+}
+
+.search-add-container .add-btn {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+
+}
+
+.add-btn:hover {
+    background-color: #ff6a6a;
+}
+
+/* Bảng dữ liệu */
+.table-container {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.table-container th,
+.table-container td {
+    text-align: left;
+    padding: 14px 20px;
+}
+
+.table-container th {
+    background-color: #fff5f5;
+    color: #333;
+    font-weight: 600;
+}
+
+
+
+.table-container tr:nth-child(even) {
+    background-color: #fffafc;
+}
+
+.table-container tr:hover {
+    background-color: #fff1f1;
+}
+
+/* Nút hành động */
+.edit-btn{
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    color: white;
+    background: #ff7070;
+}
+.delete-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    color: white;
+    background: #ff4c4c;
+}
+
+.edit-btn:hover {
+    background-color: #ff5e5e;
+}
+
+.delete-btn:hover {
+    background-color: #ff8c8c;
+}
+
+/* Phân trang bên trong bảng */
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pagination-row td {
+    text-align: right;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #FF7A7A;
+    color: #333;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button.active {
+    background-color: #ff7070;
+    color: white;
+}

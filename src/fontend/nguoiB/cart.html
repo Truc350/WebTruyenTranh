@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Store - Giỏ hàng</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
+    <link rel="stylesheet" href="../css/UserBCss/cartCss.css">
+    <link rel="stylesheet" href="../css/puplicCss/nav.css">
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="navbar">
+    <div class="logo">
+        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <span>Comic Store</span>
+    </div>
+    <nav class="menu">
+        <a href="#">Trang chủ</a>
+        <div class="dropdown">
+            <a href="#">Thể loại <i class="fa-solid fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="#">Hành động</a>
+                <a href="#">Trinh thám</a>
+                <a href="#">Hài hước</a>
+            </div>
+        </div>
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+    </nav>
+    <div class="actions">
+        <div class="search">
+            <i class="fas fa-magnifying-glass"></i>
+        </div>
+        <a href="#" class="publish-btn">Publish</a>
+        <a href="#" class="login-btn">Log in</a>
+    </div>
+</header>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main class="wrapper">
+
+    <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM (CÓ SCROLL) -->
+    <div class="cart-items-container">
+        <!-- Header -->
+        <div class="cart-header">GIỎ HÀNG (2 sản phẩm)</div>
+
+        <!-- Chọn tất cả -->
+        <div class="select-all">
+            <input type="checkbox" class="item-checkbox" id="select-all"/>
+            <label for="select-all">Chọn tất cả (2 sản phẩm)</label>
+            <div class="quantity-header">Số lượng</div>
+            <div class="price-header">Thành tiền</div>
+        </div>
+
+        <!-- Scrollable Area -->
+        <div class="cart-items-scrollable">
+            <div class="cart-items">
+
+                <!-- Sản phẩm 1 -->
+                <div class="cart-item">
+                    <input type="checkbox" class="item-checkbox"/>
+                    <img src="https://cdn.hstatic.net/products/1000376556/thien_quan_tu_phuc_2_-_bia_1_1__8dd3bc9af4784d79a7451f64899ef0d9_1024x1024.jpg"
+                         alt="Thiên quan từ phúc" class="item-image"/>
+                    <div class="item-info">
+                        <div class="item-title">Thiên quan từ phúc</div>
+                        <div class="item-subtitle">Thiên quan từ phúc</div>
+                        <div class="item-price">86.000 đ <del>115.000 đ</del></div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="text" value="1" class="quantity-input" readonly/>
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="item-total">86.000 đ</div>
+                    <span class="delete-btn">Xóa</span>
+                </div>
+
+                <!-- Sản phẩm 2 -->
+                <div class="cart-item">
+                    <input type="checkbox" class="item-checkbox"/>
+                    <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
+                         alt="Nhật Ký Tarot" class="item-image"/>
+                    <div class="item-info">
+                        <div class="item-title">Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)</div>
+                        <div class="item-subtitle">
+                            1 x Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)<br>
+                            1 x Bộ Bìa Góc Bảo Quản
+                        </div>
+                        <div class="item-price">164.002 đ <del>205.000 đ</del></div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="text" value="1" class="quantity-input" readonly/>
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="item-total">164.002 đ</div>
+                    <span class="delete-btn">Xóa</span>
+                </div>
+
+                <!-- Thêm sản phẩm để test scroll -->
+                <!-- <div class="cart-item">...</div> -->
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CỘT PHẢI: TỔNG KẾT & THANH TOÁN (STICKY) -->
+    <div class="cart-summary">
+        <!-- Khuyến mãi -->
+        <div class="promo-section">
+            <div class="promo-header">
+                <i class="fa-solid fa-tag"></i>
+                <span>KHUYẾN MÃI</span>
+                <a href="#" class="view-more">Xem thêm ></a>
+            </div>
+            <div class="promo-item">
+                <div class="promo-info">
+                    <div class="promo-title">Mã Giảm 10K - Toàn Sản</div>
+                    <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại...</div>
+                    <div class="promo-expiry">HSD: 31/10/2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%;"></div>
+                    </div>
+                    <div class="progress-label">Mua thêm 130.000 đ</div>
+                </div>
+                <button class="btn-buy-more">Mua thêm</button>
+            </div>
+            <div class="promo-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Có thể áp dụng đồng thời nhiều...
+            </div>
+        </div>
+
+        <!-- Nhận quà -->
+        <div class="gift-section">
+            <div class="gift-header">
+                <i class="fa-solid fa-gift"></i>
+                <span>Nhận quà</span>
+                <a href="#" class="view-more">Chọn quà ></a>
+            </div>
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="total-section">
+            <div class="total-row">
+                <span>Thành tiền</span>
+                <span class="total-price">0 đ</span>
+            </div>
+            <div class="total-row final">
+                <span>Tổng Số Tiền (gồm VAT)</span>
+                <span class="total-final">0 đ</span>
+            </div>
+        </div>
+
+        <!-- Thanh toán -->
+        <div class="checkout-section">
+            <button class="btn-checkout">THANH TOÁN</button>
+            <div class="checkout-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</div>
+        </div>
+    </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Cột 1 -->
+        <div class="footer-column">
+            <div class="logo">
+                <a href="#"><img src="../../img/logo.png" alt="logo"></a>
+            </div>
+            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
+                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
+            <p>Thành lập năm <strong>2025</strong>, chúng tôi mang đến hơn <str>10.000+</str><br>truyện hấp dẫn cho bạn.</p>
+        </div>
+
+        <!-- Cột 2 -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
+            <ul>
+                <li><a href="#">Trang chủ</a></li>
+                <li><a href="#">Thể loại truyện</a></li>
+                <li><a href="#">Khuyến mãi</a></li>
+                <li><a href="#">Giỏ hàng</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 3 -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
+            <ul>
+                <li><a href="#">Hướng dẫn mua hàng</a></li>
+                <li><a href="#">Chính sách đổi trả</a></li>
+                <li><a href="#">Chính sách vận chuyển</a></li>
+                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 4 -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
+            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
+            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
+            <div class="social-links">
+                <a href="https://facebook.com" target="_blank" title="Facebook">
+                    <img src="src/img/facebook.png" alt="Facebook" class="social-icon">
+                </a>
+                <a href="https://instagram.com" target="_blank" title="Instagram">
+                    <img src="src/img/instagram.png" alt="Instagram" class="social-icon">
+                </a>
+                <a href="https://tiktok.com" target="_blank" title="TikTok">
+                    <img src="src/img/tiktok.png" alt="TikTok" class="social-icon">
+                </a>
+            </div>
+        </div>
+
+        <!-- Cột 5 -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
+            <p>Hỗ trợ thanh toán qua:</p>
+            <div class="payment-icons">
+                <img src="../../img/momo.png" alt="Momo">
+                <img src="../../img/zalopay.png" alt="ZaloPay">
+            </div>
+            <p>Website đã đăng ký với Bộ Công Thương.</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

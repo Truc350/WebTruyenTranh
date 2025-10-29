@@ -1,0 +1,56 @@
+/* sidebar.css */
+/* Reset chung cho sidebar (nếu cần) */
+.sidebar {
+    width: 240px;
+    background-color: white;
+    border-right: 1px solid #f5b5b5;
+    padding-top: 15px;
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Logo + tên web */
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: red;
+}
+
+.sidebar-header .logo {
+    width: 70px;              /* tùy chỉnh kích thước logo */
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 5px;       /* tạo khoảng cách giữa logo và chữ */
+    margin-top: 5px;
+}
+
+
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 30px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.sidebar li:hover,
+.sidebar li.active {
+    background-color: #ff9494;
+    font-weight: 600;
+    color: white;
+}
+
+.sidebar .icon {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
