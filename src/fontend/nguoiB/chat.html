@@ -1,96 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý thể loại</title>
-    <link rel="stylesheet" href="../css/adminCss/styleCat.css">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Comic Store - Chat Người Mua - Người Bán</title>
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="../css/nguoiBCss/chat.css">
+    <link rel="stylesheet" href="../css/puplicCss/nav.css">
+
 </head>
 <body>
-<div class="container">
+<header class="navbar">
+    <div class="logo">
+        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <span>Comic Store</span>
+    </div>
+    <nav class="menu">
+        <!-- <a href="#">Trang chủ</a>
+        <a href="#">Hành động</a>
+        <a href="#">Trinh thám</a>
+        <a href="#">Hài hước</a>
+        <a href="#">Học tập</a> -->
+        <a href="#">Trang chủ</a>
 
-    <!-- Sidebar (nạp động bằng JS) -->
-    <div id="sidebar-container"></div>
-
-<div class="main-content">
-    <header>
-        <h2>Quản lý thể loại</h2>
-        <div class="admin-info">
-            <img src="../../img/admin.png" alt="Admin Avatar" class="admin-avatar">
-            <span>Admin</span>
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="#">Hành động</a>
+                <a href="#">Trinh thám</a>
+                <a href="#">Hài hước</a>
+            </div>
         </div>
-    </header>
 
-    <div class="search-add-container">
-        <input type="text" placeholder="Tìm kiếm truyện..." class="search-input">
-        <button class="add-btn">
-            <span>+</span> Thêm thể loại
-        </button>
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+    </nav>
+    <div class="actions">
+        <div class="search">
+            <i class="fas fa-magnifying-glass"></i>
+        </div>
+        <a href="#" class="publish-btn">Publish</a>
+        <a href="#" class="login-btn">Log in</a>
+
+    </div>
+</header>
+
+<div class="chat-container">
+    <!-- Danh sách người dùng -->
+    <div class="user-list">
+        <h3>Danh sách người dùng</h3>
+        <ul id="userList">
+            <li data-user-id="1" onclick="selectUser(1)">
+                <img src="../../img/user1.jpg" alt="User 1" class="user-avatar">
+                <span>Người bán 1</span>
+            </li>
+            <li data-user-id="2" onclick="selectUser(2)">
+                <img src="../../img/user2.jpg" alt="User 2" class="user-avatar">
+                <span>Người bán 2</span>
+            </li>
+        </ul>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-            <tr>
-                <th>Mã thể loại</th>
-                <th>Tên thể loại</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>CT01</td>
-                <td>Hành động</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT02</td>
-                <td>Trinh thám</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT03</td>
-                <td>Học đường</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT04</td>
-                <td>Kinh dị</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <button>&lt;</button>
-            <button class="active">1</button>
-            <button>&gt;</button>
+    <!-- Khu vực chat -->
+    <div class="chat-area">
+        <div class="chat-header" id="chatHeader">
+            <h3>Chọn người dùng để bắt đầu chat</h3>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input">
+            <textarea id="messageInput" placeholder="Nhập tin nhắn..."></textarea>
+            <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i> Gửi</button>
         </div>
     </div>
 </div>
-</div>
-
-<script>
-    // Tải sidebar.html vào vùng #sidebar-container
-    fetch("sidebar.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("sidebar-container").innerHTML = data;
-        });
-</script>
-
 
 <footer class="footer">
     <div class="footer-container">
@@ -164,6 +151,5 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-
 </body>
 </html>

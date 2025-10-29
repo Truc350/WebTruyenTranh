@@ -5,17 +5,110 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Footer</title>
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-    />
+    <title>Commic store - Giỏ hàng</title>
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
+    <link rel="stylesheet" href="../css/nguoiBCss/cartCss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="../css/puplicCss/nav.css">
+
+
 </head>
 <body>
+
+<header class="navbar">
+    <div class="logo">
+        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <span>Comic Store</span>
+    </div>
+    <nav class="menu">
+        <!-- <a href="#">Trang chủ</a>
+        <a href="#">Hành động</a>
+        <a href="#">Trinh thám</a>
+        <a href="#">Hài hước</a>
+        <a href="#">Học tập</a> -->
+        <a href="#">Trang chủ</a>
+
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="#">Hành động</a>
+                <a href="#">Trinh thám</a>
+                <a href="#">Hài hước</a>
+            </div>
+        </div>
+
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+    </nav>
+    <div class="actions">
+        <div class="search">
+            <i class="fas fa-magnifying-glass"></i>
+        </div>
+        <a href="#" class="publish-btn">Publish</a>
+        <a href="#" class="login-btn">Log in</a>
+
+    </div>
+</header>
+
+
+<div class="cartContainer">
+    <h2>Giỏ hàng</h2>
+
+    <div class="cartHeader">
+        <div class="checkBox">
+            <input type="checkbox" checked>
+            <span>Tất cả (1 sản phẩm)</span>
+        </div>
+
+        <div class="columns">
+            <span>Đơn giá</span>
+            <span>Số lượng</span>
+            <span>Thành tiền</span>
+        </div>
+
+    </div>
+
+    <div class="cartItem">
+        <div class="checkbox">
+            <input type="checkbox" checked>
+            <img src="https://cdn.hstatic.net/products/200000343865/tieu-thuyet-tham-tu-lung-danh-conan_du-anh-cua-doc-nhan_bia_5ca7047c0eaa4a38bbe15983375355d5_master.jpg"
+                 alt="truyện Conan">
+            <div class="itemInfo">
+                <h3>Truyện Conan</h3>
+                <p class="bookcare">Có thể đọc bằng <a href="#"></a>Bookcare</p>
+                <div class="shop">
+                    <img src="https://thanhnien.mediacdn.vn/Uploaded/dotuan/2022_09_23/2-2190.jpg" alt="shop icon">
+                    <span>commic trading</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="columns">
+            <span class="price"><span class="discounted">174.000đ</span><span class="old">228.000đ</span></span>
+            <div class="quantity">
+                <button>-</button>
+                <input type="text" value="1" min="1">
+                <button>+</button>
+            </div>
+            <span class="total">174.000đ</span>
+        </div>
+
+
+    </div>
+
+    <div class="shopPromo">
+        <span>Thêm mã khuyễn mãi của shop</span>
+    </div>
+
+    <div class="shipping">
+        Freeship 10k đơn từ 45k, Freeship 25k cho đơn 100k
+    </div>
+
+</div>
+
+
 <footer class="footer">
     <div class="footer-container">
         <!-- Cột 1: Giới thiệu -->
@@ -88,7 +181,5 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-
-
 </body>
 </html>

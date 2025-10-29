@@ -3,7 +3,7 @@
     color: #f1f1f1;
     padding: 50px 20px;
     font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.7;
+    line-height: 1.5;
 }
 
 .footer-container {
@@ -37,7 +37,7 @@
 .footer-column h4 {
     color: #ffcc00;
     margin-bottom: 15px;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 .footer-column h4 i {

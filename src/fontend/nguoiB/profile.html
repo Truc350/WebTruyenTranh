@@ -2,95 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý thể loại</title>
-    <link rel="stylesheet" href="../css/adminCss/styleCat.css">
+    <title>Title</title>
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
+    <link rel="stylesheet" href="../css/puplicCss/nav.css">
+
 </head>
 <body>
-<div class="container">
 
-    <!-- Sidebar (nạp động bằng JS) -->
-    <div id="sidebar-container"></div>
-
-<div class="main-content">
-    <header>
-        <h2>Quản lý thể loại</h2>
-        <div class="admin-info">
-            <img src="../../img/admin.png" alt="Admin Avatar" class="admin-avatar">
-            <span>Admin</span>
-        </div>
-    </header>
-
-    <div class="search-add-container">
-        <input type="text" placeholder="Tìm kiếm truyện..." class="search-input">
-        <button class="add-btn">
-            <span>+</span> Thêm thể loại
-        </button>
+<header class="navbar">
+    <div class="logo">
+        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <span>Comic Store</span>
     </div>
+    <nav class="menu">
+        <!-- <a href="#">Trang chủ</a>
+        <a href="#">Hành động</a>
+        <a href="#">Trinh thám</a>
+        <a href="#">Hài hước</a>
+        <a href="#">Học tập</a> -->
+        <a href="#">Trang chủ</a>
 
-    <div class="table-container">
-        <table>
-            <thead>
-            <tr>
-                <th>Mã thể loại</th>
-                <th>Tên thể loại</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>CT01</td>
-                <td>Hành động</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT02</td>
-                <td>Trinh thám</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT03</td>
-                <td>Học đường</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            <tr>
-                <td>CT04</td>
-                <td>Kinh dị</td>
-                <td>
-                    <button class="edit-btn">Sửa</button>
-                    <button class="delete-btn">Xóa</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <button>&lt;</button>
-            <button class="active">1</button>
-            <button>&gt;</button>
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="#">Hành động</a>
+                <a href="#">Trinh thám</a>
+                <a href="#">Hài hước</a>
+            </div>
         </div>
+
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+    </nav>
+    <div class="actions">
+        <div class="search">
+            <i class="fas fa-magnifying-glass"></i>
+        </div>
+        <a href="#" class="publish-btn">Publish</a>
+        <a href="#" class="login-btn">Log in</a>
+
     </div>
-</div>
-</div>
+</header>
 
-<script>
-    // Tải sidebar.html vào vùng #sidebar-container
-    fetch("sidebar.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("sidebar-container").innerHTML = data;
-        });
-</script>
+<main>
 
+</main>
 
 <footer class="footer">
     <div class="footer-container">
@@ -101,10 +57,12 @@
                     <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
-            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
+            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện
+                giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
+                <str>10.000+</str>
+                <br>
                 truyện hấp dẫn cho bạn
             </p>
 
@@ -164,6 +122,5 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-
 </body>
 </html>
