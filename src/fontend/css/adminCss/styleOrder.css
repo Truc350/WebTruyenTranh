@@ -180,7 +180,7 @@ tbody tr:nth-child(even):not(.pagination-row) {
 }
 
 .update-btn {
-    background-color: #FF7A7A;
+    background-color: #ff4c4c;
     color: white;
     border: none;
     border-radius: 10px;
