@@ -1,32 +1,34 @@
 .footer {
     background: #1b1b1b;
     color: #f1f1f1;
-    padding: 50px 20px;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.5;
+    padding: 60px 40px; /* Tăng padding cho thoáng */
+    font-family: "Poppins", Arial, Helvetica, sans-serif;
+    line-height: 1.8; /* Giãn dòng dễ đọc hơn */
 }
 
 .footer-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    flex-wrap: nowrap; /* Prevent wrapping to keep columns horizontal */
-    gap: 20px; /* Reduced gap for better spacing */
-    max-width: 1200px;
+    flex-wrap: nowrap;
+    gap: 40px; /* Giãn khoảng cách giữa các cột */
+    max-width: 1300px;
     margin: 0 auto;
 }
 
 .footer-column {
-    flex: 1; /* Each column takes equal space */
-    min-width: 180px; /* Minimum width to prevent squishing */
-    text-align: left; /* Align content to the left */
+    flex: 1;
+    min-width: 200px;
+    text-align: left;
 }
 
+/* Logo */
 .footer-column .logo img {
-    width: 120px;
+    width: 130px;
     height: auto;
-    border-radius: 10px;
+    border-radius: 12px;
     transition: transform 0.3s ease, opacity 0.3s;
+    margin-bottom: 15px;
 }
 
 .footer-column .logo img:hover {
@@ -34,13 +36,28 @@
     opacity: 0.9;
 }
 
+/* Tiêu đề */
 .footer-column h4 {
     color: #ffcc00;
-    margin-bottom: 15px;
-    font-weight: 400;
+    margin-bottom: 18px;
+    font-weight: 500;
+    font-size: 18px; /* To hơn */
+    letter-spacing: 0.5px;
 }
 
 .footer-column h4 i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/* Văn bản */
+.footer-column p {
+    font-size: 15px; /* To hơn một chút */
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.footer-column p i {
     margin-right: 8px;
     color: #ffcc00;
 }
@@ -52,12 +69,13 @@
 }
 
 .footer-column ul li {
-    margin: 8px 0;
+    margin: 10px 0;
 }
 
 .footer-column ul li a {
     color: #ccc;
     text-decoration: none;
+    font-size: 15px;
     transition: color 0.3s;
 }
 
@@ -65,15 +83,9 @@
     color: #ffcc00;
 }
 
-/* Liên hệ */
-.footer-column p i {
-    margin-right: 8px;
-    color: #ffcc00;
-}
-
 /* Mạng xã hội */
 .social-links {
-    margin-top: 10px;
+    margin-top: 12px;
 }
 
 .social-links a {
@@ -86,64 +98,78 @@
 
 .social-links a:hover {
     color: #ffcc00;
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 
 /* Thanh toán */
 .payment-icons {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 10px 0;
+    gap: 12px;
+    margin: 12px 0;
 }
 
 .payment-icons img {
-    width: 45px;
+    width: 48px;
     height: auto;
     border-radius: 6px;
     background: #fff;
-    padding: 4px;
+    padding: 5px;
 }
 
 /* Bản quyền */
 .footer-bottom {
     text-align: center;
     border-top: 1px solid #333;
-    margin-top: 30px;
-    padding-top: 15px;
+    margin-top: 40px;
+    padding-top: 20px;
     color: #aaa;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .footer-bottom strong {
     color: #ffcc00;
 }
 
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
+/* Responsive design */
+@media (max-width: 992px) {
     .footer-container {
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        justify-content: space-around; /* Center columns when wrapped */
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 30px;
     }
 
     .footer-column {
-        flex: 1 1 45%; /* Two columns per row on medium screens */
-        margin-bottom: 20px;
+        flex: 1 1 45%;
+        margin-bottom: 25px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+    .footer {
+        padding: 40px 20px;
+    }
+
     .footer-column {
-        flex: 1 1 100%; /* Stack columns vertically on small screens */
-        text-align: center; /* Center text for better appearance */
+        flex: 1 1 100%;
+        text-align: center;
     }
 
     .payment-icons {
-        justify-content: center; /* Center payment icons */
+        justify-content: center;
     }
 
     .social-links {
         display: flex;
-        justify-content: center; /* Center social icons */
+        justify-content: center;
+    }
+
+    .footer-column h4 {
+        font-size: 17px;
+    }
+
+    .footer-column p,
+    .footer-column ul li a {
+        font-size: 14px;
     }
 }
