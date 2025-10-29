@@ -51,63 +51,127 @@
 
     </div>
 </header>
+<div class="wrapper">
+    <div class="cart-container">
+        <div class="cart-header">GIỎ HÀNG (2 sản phẩm)</div>
 
-
-<div class="cartContainer">
-    <h2>Giỏ hàng</h2>
-
-    <div class="cartHeader">
-        <div class="checkBox">
-            <input type="checkbox" checked>
-            <span>Tất cả (1 sản phẩm)</span>
+        <div class="select-all">
+            <input type="checkbox" class="item-checkbox" id="select-all"/>
+            <label for="select-all">Chọn tất cả (2 sản phẩm)</label>
+            <div class="quantity-header">Số lượng</div>
+            <div class="price-header">Thành tiền</div>
         </div>
 
-        <div class="columns">
-            <span>Đơn giá</span>
-            <span>Số lượng</span>
-            <span>Thành tiền</span>
-        </div>
+        <div class="cart-items">
 
-    </div>
-
-    <div class="cartItem">
-        <div class="checkbox">
-            <input type="checkbox" checked>
-            <img src="https://cdn.hstatic.net/products/200000343865/tieu-thuyet-tham-tu-lung-danh-conan_du-anh-cua-doc-nhan_bia_5ca7047c0eaa4a38bbe15983375355d5_master.jpg"
-                 alt="truyện Conan">
-            <div class="itemInfo">
-                <h3>Truyện Conan</h3>
-                <p class="bookcare">Có thể đọc bằng <a href="#"></a>Bookcare</p>
-                <div class="shop">
-                    <img src="https://thanhnien.mediacdn.vn/Uploaded/dotuan/2022_09_23/2-2190.jpg" alt="shop icon">
-                    <span>commic trading</span>
+            <!-- Sản phẩm 1 -->
+            <div class="cart-item">
+                <input type="checkbox" class="item-checkbox"/>
+                <img src="https://cdn.hstatic.net/products/1000376556/thien_quan_tu_phuc_2_-_bia_1_1__8dd3bc9af4784d79a7451f64899ef0d9_1024x1024.jpg"
+                     alt="Bệnh Từ Miệng Mà Ra" class="item-image"/>
+                <div class="item-info">
+                    <div class="item-title">Thiên quan từ phúc</div>
+                    <div class="item-subtitle">Thiên quan từ phúc</div>
+                    <div class="item-price">86.000 đ
+                        <del>115.000 đ</del>
+                    </div>
                 </div>
+                <div class="quantity-control">
+                    <button class="quantity-btn minus">-</button>
+                    <input type="text" value="1" class="quantity-input" readonly/>
+                    <button class="quantity-btn plus">+</button>
+                </div>
+                <div class="item-total">86.000 đ</div>
+                <span class="delete-btn">Xóa</span>
+            </div>
+
+            <!-- Sản phẩm 2 -->
+            <div class="cart-item">
+                <input type="checkbox" class="item-checkbox"/>
+                <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
+                     alt="Nhật Ký Tarot" class="item-image"/>
+                <div class="item-info">
+                    <div class="item-title">Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)</div>
+                    <div class="item-subtitle">
+                        1 x Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)<br>
+                        1 x Bộ Bìa Góc Bảo Quản
+                    </div>
+                    <div class="item-price">164.002 đ
+                        <del>205.000 đ</del>
+                    </div>
+                </div>
+                <div class="quantity-control">
+                    <button class="quantity-btn minus">-</button>
+                    <input type="text" value="1" class="quantity-input" readonly/>
+                    <button class="quantity-btn plus">+</button>
+                </div>
+                <div class="item-total">164.002 đ</div>
+                <span class="delete-btn">Xóa</span>
+            </div>
+
+        </div>
+    </div>
+    <!-- PHẦN TỔNG KẾT & THANH TOÁN -->
+    <div class="cart-summary">
+        <!-- Khuyến mãi -->
+        <div class="promo-section">
+            <div class="promo-header">
+                <i class="fa-solid fa-tag"></i>
+                <span>KHUYẾN MÃI</span>
+                <a href="#" class="view-more">Xem thêm ></a>
+            </div>
+
+            <div class="promo-item">
+                <div class="promo-info">
+                    <div class="promo-title">Mã Giảm 10K - Toàn Sản</div>
+                    <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga,
+                        Ngoại...
+                    </div>
+                    <div class="promo-expiry">HSD: 31/10/2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%;"></div>
+                    </div>
+                    <div class="progress-label">Mua thêm 130.000 đ</div>
+                </div>
+                <button class="btn-buy-more">Mua thêm</button>
+            </div>
+
+            <div class="promo-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Có thể áp dụng đồng thời nhiều...
             </div>
         </div>
 
-        <div class="columns">
-            <span class="price"><span class="discounted">174.000đ</span><span class="old">228.000đ</span></span>
-            <div class="quantity">
-                <button>-</button>
-                <input type="text" value="1" min="1">
-                <button>+</button>
+        <!-- Nhận quà -->
+        <div class="gift-section">
+            <div class="gift-header">
+                <i class="fa-solid fa-gift"></i>
+                <span>Nhận quà</span>
+                <a href="#" class="view-more">Chọn quà ></a>
             </div>
-            <span class="total">174.000đ</span>
         </div>
 
+        <!-- Tổng tiền -->
+        <div class="total-section">
+            <div class="total-row">
+                <span>Thành tiền</span>
+                <span class="total-price">0 đ</span>
+            </div>
+            <div class="total-row final">
+                <span>Tổng Số Tiền (gồm VAT)</span>
+                <span class="total-final">0 đ</span>
+            </div>
+        </div>
 
+        <!-- Nút thanh toán -->
+        <div class="checkout-section">
+            <button class="btn-checkout">THANH TOÁN</button>
+            <div class="checkout-note">
+                (Giảm giá trên web chỉ áp dụng cho bán lẻ)
+            </div>
+        </div>
     </div>
-
-    <div class="shopPromo">
-        <span>Thêm mã khuyễn mãi của shop</span>
-    </div>
-
-    <div class="shipping">
-        Freeship 10k đơn từ 45k, Freeship 25k cho đơn 100k
-    </div>
-
 </div>
-
 
 <footer class="footer">
     <div class="footer-container">
@@ -118,10 +182,12 @@
                     <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
-            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
+            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện
+                giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
+                <str>10.000+</str>
+                <br>
                 truyện hấp dẫn cho bạn
             </p>
 
