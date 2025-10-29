@@ -18,7 +18,7 @@ body {
 .main-content {
     flex: 1;
     padding: 30px 40px;
-    background-color:#FFE1E1;
+    background-color:white;
     box-sizing: border-box;
 }
 
@@ -64,7 +64,7 @@ header h2 {
 .search-add-container input {
     flex: 1;
     padding: 10px;
-    border: 2px solid #FF9797;
+    border: 2px solid #ff8282;
     border-radius: 8px;
     outline: none;
     height: 30px;
@@ -82,7 +82,7 @@ header h2 {
 }
 
 .search-add-container .add-btn {
-    background-color: #FF7A7A;
+    background-color: #ff4c4c;
     color: white;
     border: none;
     padding: 10px 10px;
@@ -94,7 +94,7 @@ header h2 {
 }
 
 .add-btn:hover {
-    background-color: #ff6f6f;
+    background-color: #ff6a6a;
 }
 
 /* Bảng dữ liệu */
@@ -134,7 +134,16 @@ header h2 {
 }
 
 /* Nút hành động */
-.edit-btn,
+.edit-btn{
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    color: white;
+    background: #ff7070;
+}
 .delete-btn {
     border: none;
     padding: 6px 12px;
@@ -143,43 +152,39 @@ header h2 {
     font-weight: bold;
     transition: 0.2s;
     color: white;
-    background: #FF7A7A;
+    background: #ff4c4c;
 }
 
 .edit-btn:hover {
-    background-color: #ff9a9a;
+    background-color: #ff5e5e;
 }
 
 .delete-btn:hover {
     background-color: #ff8c8c;
 }
 
-/* Phân trang */
+/* Phân trang bên trong bảng */
 .pagination {
-    display: flex;
-    justify-content: flex-end;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 15px 20px;
-    background-color: #fff;
-    border-top: 1px solid #f5c5c5;
+    gap: 4px;
+}
+
+.pagination-row td {
+    text-align: right;
 }
 
 .pagination button {
     background-color: #fff;
-    border: 1px solid #f4bebe;
-    border-radius: 5px;
-    padding: 5px 10px;
+    border: 1px solid #FF7A7A;
+    color: #333;
+    border-radius: 6px;
+    padding: 4px 10px;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
 .pagination button.active {
-    background-color: #ff9b9b;
+    background-color: #ff7070;
     color: white;
-    border-color: #ff9b9b;
-}
-
-.pagination button:hover:not(.active) {
-    background-color: #fff2f2;
 }

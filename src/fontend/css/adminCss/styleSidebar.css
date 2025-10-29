@@ -2,7 +2,7 @@
 /* Reset chung cho sidebar (nếu cần) */
 .sidebar {
     width: 240px;
-    background-color: #FFE1E1;
+    background-color: white;
     border-right: 1px solid #f5b5b5;
     padding-top: 15px;
     height: 100vh;
@@ -17,8 +17,8 @@
 }
 
 .sidebar-header .logo {
-    width: 50px;              /* tùy chỉnh kích thước logo */
-    height: 50px;
+    width: 70px;              /* tùy chỉnh kích thước logo */
+    height: 70px;
     object-fit: contain;
     margin-bottom: 5px;       /* tạo khoảng cách giữa logo và chữ */
     margin-top: 5px;
@@ -44,8 +44,9 @@
 
 .sidebar li:hover,
 .sidebar li.active {
-    background-color: #ffb5b5;
+    background-color: #ff9494;
     font-weight: 600;
+    color: white;
 }
 
 .sidebar .icon {

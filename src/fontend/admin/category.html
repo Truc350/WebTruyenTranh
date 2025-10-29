@@ -5,12 +5,49 @@
     <title>Quản lý thể loại</title>
     <link rel="stylesheet" href="../css/adminCss/styleCat.css">
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
+    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
 </head>
 <body>
 <div class="container">
 
-    <!-- Sidebar (nạp động bằng JS) -->
-    <div id="sidebar-container"></div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="../../img/logo.png" alt="Logo" class="logo">
+            <h2>Comic Store</h2>
+        </div>
+
+        <ul>
+            <li>
+                <img src="../../img/home.png" class="icon">
+                <span>Trang chủ</span>
+            </li>
+            <li class="active">
+                <img src="../../img/product.png" class="icon">
+                <span>Quản lý sản phẩm</span>
+            </li>
+            <li>
+                <img src="../../img/category.png" class="icon">
+                <span>Quản lý thể loại</span>
+            </li>
+            <li>
+                <img src="../../img/order.png" class="icon">
+                <span>Quản lý đơn hàng</span>
+            </li>
+            <li>
+                <img src="../../img/user.png" class="icon">
+                <span>Quản lý người dùng</span>
+            </li>
+            <li>
+                <img src="../../img/promo.png" class="icon">
+                <span>Khuyến mãi</span>
+            </li>
+            <li>
+                <img src="../../img/report.png" class="icon">
+                <span>Thống kê/ Báo cáo</span>
+            </li>
+        </ul>
+    </aside>
 
 <div class="main-content">
     <header>
@@ -70,14 +107,20 @@
                     <button class="delete-btn">Xóa</button>
                 </td>
             </tr>
+
+            <tr class="pagination-row">
+                <td colspan="7">
+                    <div class="pagination">
+                        <button >&lt;</button>
+                        <button>1</button>
+                        <button class="active">&gt;</button>
+                    </div>
+                </td>
+            </tr>
+
             </tbody>
         </table>
 
-        <div class="pagination">
-            <button>&lt;</button>
-            <button class="active">1</button>
-            <button>&gt;</button>
-        </div>
     </div>
 </div>
 </div>

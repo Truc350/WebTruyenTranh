@@ -21,8 +21,8 @@ body {
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 30px;
-    background-color: #FFE1E1;
+    padding: 20px;
+    background-color: white;
 }
 
 header {
@@ -66,7 +66,7 @@ header h2 {
 
 .search-add input {
     padding: 10px;
-    border: 2px solid #FF9797;
+    border: 2px solid #ff8282;
     border-radius: 8px;
     outline: none;
     height: 50px;
@@ -78,7 +78,7 @@ header h2 {
 }
 
 .search-add .add-btn {
-    background-color: #FF7A7A;
+    background-color: #ff4c4c;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -128,7 +128,7 @@ td img {
 }
 
 .edit-btn {
-    background-color: #FF7A7A;
+    background-color: #ff7070;
     color: white;
     border: none;
     border-radius: 6px;
@@ -139,12 +139,11 @@ td img {
 }
 
 .edit-btn:hover {
-    background-color: #ff6a6a;
+    background-color: #ff5e5e;
 }
 /*pagination*/
 /* Hàng chứa phân trang */
 .pagination-row td {
-    border-top: 2px solid #f7bcbc;
     text-align: right;
     padding: 10px 20px;
     background-color: #fff;
@@ -168,10 +167,10 @@ td img {
 }
 
 .pagination button.active {
-    background-color: #FF7A7A;
+    background-color: #ff7070;
     color: white;
 }
 
-.pagination button:hover {
-    background-color: #ffdcdc;
-}
+/*.pagination button:hover {*/
+/*    background-color: #ff5e5e;*/
+/*}*/
