@@ -3,12 +3,15 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, sans-serif;
+
 }
 
 body {
+
     background-color: #f9f9f9;
-    padding: 20px;
+
 }
+
 
 /* ---------- CART CONTAINER ---------- */
 .cart-container {
@@ -384,7 +387,7 @@ body {
     display: flex;
     gap: 24px;
     max-width: 1200px;
-    margin: 50px auto;
+    margin: auto auto;
     padding: 0 20px;
     align-items: flex-start; /* Đảm bảo 2 cột thẳng hàng ở trên */
 }
