@@ -1,0 +1,346 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Thanh điều hướng chính */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 12px 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #e53935;
+}
+
+.logo #logo {
+  height: 100px;
+  margin-right: 8px;
+  margin: -10px;
+}
+
+/* Menu chính */
+.menu {
+  display: flex;
+  gap: 16px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.menu a:hover {
+  color: #e53935;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+  background-color: #fff;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 12px;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px 0;
+  min-width: 150px;
+  z-index: 100;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 8px 16px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+  background-color: #f2f2f2;
+}
+/* chỗ này cái thể loại bị lệch xuống dưới do có thêm cái div */
+.dropdown {
+  position: relative;
+  top: 9px;
+}
+/* Hiện submenu khi hover vào .dropdown */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Các hành động bên phải */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.actions .publish-btn{
+  display: none;
+}
+
+.actions{
+  position: relative;
+  right: 90px;
+}
+
+.actions .search{
+  padding: 5px;
+}
+.actions a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.publish-btn ,.login-btn {
+  background-color: #e53935;
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+  /* transition: background-color 0.2s ease; */
+}
+
+.publish-btn:hover {
+  background-color: #d32f2f;
+}
+
+
+
+
+
+
+/* code trên là của header */
+.container-body{
+    display: flex;
+    flex-direction: row;
+    margin: 40px;
+
+    
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-rate-price{
+    display: flex;
+    flex-direction: column;
+}
+
+.voucher-ship-quality{
+    display: flex;
+    flex-direction: column;
+}
+.button-add-buy{
+    display: flex;
+    flex-direction: column;
+}
+#img{
+    margin-right: 100px;
+    margin-left: 100px;
+    width: 450px;
+    height: 600px;
+}
+
+
+
+
+
+
+
+/* code dưới là footer  */
+.footer{
+  margin-top: 200px;
+}
+
+
+.footer {
+    background: #1b1b1b;
+    color: #f1f1f1;
+    padding: 50px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.7;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* Prevent wrapping to keep columns horizontal */
+    gap: 20px; /* Reduced gap for better spacing */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-column {
+    flex: 1; /* Each column takes equal space */
+    min-width: 180px; /* Minimum width to prevent squishing */
+    text-align: left; /* Align content to the left */
+}
+
+.footer-column .logo img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+    transition: transform 0.3s ease, opacity 0.3s;
+}
+
+.footer-column .logo img:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.footer-column h4 {
+    color: #ffcc00;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.footer-column h4 i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/* Liên kết nhanh */
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin: 8px 0;
+}
+
+.footer-column ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-column ul li a:hover {
+    color: #ffcc00;
+}
+
+/* Liên hệ */
+.footer-column p i {
+    margin-right: 8px;
+    color: #ffcc00;
+}
+
+/* Mạng xã hội */
+.social-links {
+    margin-top: 10px;
+}
+
+.social-links a {
+    display: inline-block;
+    font-size: 22px;
+    color: #ccc;
+    margin-right: 15px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.social-links a:hover {
+    color: #ffcc00;
+    transform: scale(1.2);
+}
+
+/* Thanh toán */
+.payment-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.payment-icons img {
+    width: 45px;
+    height: auto;
+    border-radius: 6px;
+    background: #fff;
+    padding: 4px;
+}
+
+/* Bản quyền */
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #333;
+    margin-top: 30px;
+    padding-top: 15px;
+    color: #aaa;
+    font-size: 14px;
+}
+
+.footer-bottom strong {
+    color: #ffcc00;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        justify-content: space-around; /* Center columns when wrapped */
+    }
+
+    .footer-column {
+        flex: 1 1 45%; /* Two columns per row on medium screens */
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-column {
+        flex: 1 1 100%; /* Stack columns vertically on small screens */
+        text-align: center; /* Center text for better appearance */
+    }
+
+    .payment-icons {
+        justify-content: center; /* Center payment icons */
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center; /* Center social icons */
+    }
+}
