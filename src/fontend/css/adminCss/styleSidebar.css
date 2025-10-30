@@ -1,7 +1,7 @@
 /* sidebar.css */
 /* Reset chung cho sidebar (nếu cần) */
 .sidebar {
-    width: 240px;
+    min-width: 240px;
     background-color: white;
     border-right: 1px solid #f5b5b5;
     padding-top: 15px;
@@ -53,4 +53,8 @@
     width: 25px;
     height: 25px;
     object-fit: contain;
+}
+
+.sidebar ul li span {
+    white-space: nowrap; /* không cho chữ xuống dòng hay nén */
 }
