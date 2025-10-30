@@ -4,227 +4,103 @@
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="../css/adminCss/stylePro.css">
-    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-
 </head>
 <body>
-<div class="container">
+<div class="admin-layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-
-        <ul>
-            <li>
-                <img src="../../img/home.png" class="icon">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <ul class="menu-list">
+            <li class="menu-item">
+                <img src="icons/home.png" alt="home" class="menu-icon">
                 <span>Trang chủ</span>
             </li>
-            <li class="active">
-                <img src="../../img/product.png" class="icon">
+            <li class="menu-item active">
+                <img src="icons/product.png" alt="product" class="menu-icon">
                 <span>Quản lý sản phẩm</span>
             </li>
-            <li>
-                <img src="../../img/category.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/category.png" alt="category" class="menu-icon">
                 <span>Quản lý thể loại</span>
             </li>
-            <li>
-                <img src="../../img/order.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/order.png" alt="order" class="menu-icon">
                 <span>Quản lý đơn hàng</span>
             </li>
-            <li>
-                <img src="../../img/user.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/user.png" alt="user" class="menu-icon">
                 <span>Quản lý người dùng</span>
             </li>
-            <li>
-                <img src="../../img/promo.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/promo.png" alt="promo" class="menu-icon">
                 <span>Khuyến mãi</span>
             </li>
-            <li>
-                <img src="../../img/report.png" class="icon">
-                <span>Thống kê/ Báo cáo</span>
+            <li class="menu-item">
+                <img src="icons/report.png" alt="report" class="menu-icon">
+                <span>Thống kê & Báo cáo</span>
             </li>
         </ul>
-    </aside>
+    </nav>
 
-    <!-- Main content -->
-    <main class="main-content">
-        <header>
-            <h2>Quản lý sản phẩm</h2>
-            <div class="admin-info">
-                <img src="../../img/admin.png" alt="admin" class="avatar">
+    <!-- MAIN -->
+    <section class="main-section">
+        <div class="top-bar">
+            <h1 class="page-title">Quản lý sản phẩm</h1>
+            <div class="admin-profile">
+                <img src="icons/admin.png" alt="Admin" class="admin-avatar">
                 <span>Admin</span>
             </div>
-        </header>
+        </div>
 
-        <div class="table-container">
-        <div class="search-add">
-            <input type="text" placeholder="Tìm kiếm truyện...">
-
-            <div class="action-buttons">
-                <button class="add-btn">+ Thêm truyện</button>
-                <button class="delete-btn">Xóa</button>
+        <div class="action-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Nhập tên truyện cần tìm...">
             </div>
+            <button class="btn btn-add">+ Thêm truyện mới</button>
         </div>
+
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Bìa</th>
+                    <th>Tên truyện</th>
+                    <th>Thể loại</th>
+                    <th>Tác giả</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-        <table>
-            <thead>
-            <tr>
-                <th>Bìa truyện</th>
-                <th>Tên truyện</th>
-                <th>Thể loại</th>
-                <th>Tác giả</th>
-                <th>Giá</th>
-                <th>Còn trong kho</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
-                <td>Thám tử lừng danh Conan</td>
-                <td>Trinh thám</td>
-                <td>Gosho Aoyama</td>
-                <td>22,500₫</td>
-                <td>550 quyển</td>
-                <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
-                    <div class="menu-container">
-                        <button class="more-btn">⋮</button>
-                        <div class="dropdown-menu">
-                            <label><input type="radio" name="display" checked> Hiển thị</label>
-                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/8/8c/Doraemon_Volume_1_Cover.jpg" alt="bia"></td>
-                <td>Doraemon</td>
-                <td>Hài hước</td>
-                <td>Fujiko F. Fujio</td>
-                <td>18,000₫</td>
-                <td>320 quyển</td>
-                <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
-                    <div class="menu-container">
-                        <button class="more-btn">⋮</button>
-                        <div class="dropdown-menu">
-                            <label><input type="radio" name="display" checked> Hiển thị</label>
-                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            <tr class="pagination-row">
-                <td colspan="7">
-                    <div class="pagination">
-                        <button >&lt;</button>
-                        <button>1</button>
-                        <button class="active">&gt;</button>
-                    </div>
-                </td>
-            </tr>
-
-            </tbody>
-        </table>
-    </main>
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+        </div>
+    </section>
 </div>
-
-
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
-        <div class="footer-column">
-            <div class="logo">
-                <a href="#">
-                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
-                </a>
-            </div>
-            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
-                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
-                truyện hấp dẫn cho bạn
-            </p>
-
-
-        </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
-            <ul>
-                <li><a href="#">Trang chủ</a></li>
-                <li><a href="#">Thể loại truyện</a></li>
-                <li><a href="#">Khuyến mãi</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">Liên hệ</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
-            <ul>
-                <li><a href="#">Hướng dẫn mua hàng</a></li>
-                <li><a href="#">Chính sách đổi trả</a></li>
-                <li><a href="#">Chính sách vận chuyển</a></li>
-                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
-            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
-            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
-            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
-
-            <div class="social-links">
-                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-
-        <!-- Cột 5: Thanh toán -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
-            <p>Hỗ trợ thanh toán qua:</p>
-            <div class="payment-icons">
-                <img src="../../img/momo.png" alt="Momo">
-                <img src="../../img/zalopay.png" alt="ZaloPay">
-            </div>
-            <p>Website đã đăng ký với Bộ Công Thương.</p>
-        </div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
-    </div>
-</footer>
-<script>
-    document.addEventListener("click", function(e) {
-        // Ẩn tất cả menu trước
-        document.querySelectorAll(".dropdown-menu").forEach(menu => {
-            menu.style.display = "none";
-        });
-
-        // Nếu click vào nút ⋮ thì hiển thị menu tương ứng
-        if (e.target.classList.contains("more-btn")) {
-            const menu = e.target.nextElementSibling;
-            menu.style.display = "block";
-            e.stopPropagation(); // Ngăn chặn sự kiện lan ra ngoài
-        }
-    });
-
 </script>
+
 </body>
 </html>

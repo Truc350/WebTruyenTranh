@@ -1,52 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
-    <link rel="stylesheet" href="../css/puplicCss/nav.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/puplicCss/login.css">
 </head>
+
 <body>
+ <header class="navbar">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+        <nav class="menu">
+            
+            <a href="#">Trang chủ</a>
 
-<header class="navbar">
-    <div class="logo">
-        <img id="logo" src="../../img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
-    <nav class="menu">
-        <!-- <a href="#">Trang chủ</a>
-        <a href="#">Hành động</a>
-        <a href="#">Trinh thám</a>
-        <a href="#">Hài hước</a>
-        <a href="#">Học tập</a> -->
-        <a href="#">Trang chủ</a>
+            <div class="dropdown">
+                <a href="#">Thể loại &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="#">Hành động</a>
+                    <a href="#">Trinh thám</a>
+                    <a href="#">Hài hước</a>
+                </div>
+            </div>
 
-        <div class="dropdown">
-            <a href="#">Thể loại &#9662;</a>
-            <div class="dropdown-content">
-                <a href="#">Hành động</a>
-                <a href="#">Trinh thám</a>
-                <a href="#">Hài hước</a>
+            <a href="#">Liên hệ</a>
+            <a href="#">Thông báo</a>
+        </nav>
+        <div class="actions">
+            <div class="search">
+                <i class="fas fa-magnifying-glass"></i>
+            </div>
+            <a href="#" class="publish-btn">Publish</a>
+            <a href="#" class="login-btn">Log in</a>
+
+        </div>
+    </header>
+
+
+
+    <!-- Form đăng ký -->
+    <div class="register-container">
+        <div class="title">
+            <h3>Đăng nhập tài khoản với Comic Store</h3>
+            <p>Bạn đã có tài khoản? Nhấn để <a href="#">Đăng kí</a></p>
+        </div>
+        <div class="container">
+            <div class="method">
+                <span><a href="#">Zalo</a></span>
+                <span>Voice Call</span>
+                <span>SMS</span>
+            </div>
+
+            <div class="sdt_maOTP">
+                <input id="nhapstk" type="text" placeholder="Số điện thoại hoặc Email">
+                <input id="nhapmk" type="text" placeholder="Nhập mật khẩu">
+                <div class="toggle-eye">
+                    <!-- <label id="toggle-eye">
+                        <input type="checkbox" id="eyeToggle" hidden>
+                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-eye-slash"></i>
+                    </label> -->
+                </div>
+            </div>
+
+            <button class="btn_guiOTP">Gửi OTP qua Zalo</button>
+
+            <div class="quenmk">
+            <span><a href="#">Bạn đã quên mật khẩu?</a></span>
             </div>
         </div>
-
-        <a href="#">Liên hệ</a>
-        <a href="#">Thông báo</a>
-    </nav>
-    <div class="actions">
-        <div class="search">
-            <i class="fas fa-magnifying-glass"></i>
-        </div>
-        <a href="#" class="publish-btn">Publish</a>
-        <a href="#" class="login-btn">Log in</a>
-
     </div>
-</header>
 
-<main>
 
-</main>
+</body>
+
+
 
 <footer class="footer">
     <div class="footer-container">
@@ -54,15 +86,14 @@
         <div class="footer-column">
             <div class="logo">
                 <a href="#">
+
                     <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
-            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện
-                giấy,<br>
+            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str>
-                <br>
+                <str>10.000+</str><br>
                 truyện hấp dẫn cho bạn
             </p>
 
@@ -122,5 +153,6 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-</body>
+
+
 </html>
