@@ -60,9 +60,15 @@
             </div>
         </header>
 
+        <div class="table-container">
         <div class="search-add">
             <input type="text" placeholder="Tìm kiếm truyện...">
-            <button class="add-btn">+ Thêm truyện mới</button>
+
+            <div class="action-buttons">
+                <button class="add-btn">+ Thêm truyện</button>
+                <button class="delete-btn">Xóa</button>
+            </div>
+        </div>
         </div>
 
         <table>
@@ -85,7 +91,16 @@
                 <td>Gosho Aoyama</td>
                 <td>22,500₫</td>
                 <td>550 quyển</td>
-                <td><button class="edit-btn">Sửa</button></td>
+                <td class="action-cell">
+                    <button class="edit-btn">Sửa</button>
+                    <div class="menu-container">
+                        <button class="more-btn">⋮</button>
+                        <div class="dropdown-menu">
+                            <label><input type="radio" name="display" checked> Hiển thị</label>
+                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
+                        </div>
+                    </div>
+                </td>
             </tr>
 
             <tr>
@@ -95,8 +110,15 @@
                 <td>Fujiko F. Fujio</td>
                 <td>18,000₫</td>
                 <td>320 quyển</td>
-                <td>
+                <td class="action-cell">
                     <button class="edit-btn">Sửa</button>
+                    <div class="menu-container">
+                        <button class="more-btn">⋮</button>
+                        <div class="dropdown-menu">
+                            <label><input type="radio" name="display" checked> Hiển thị</label>
+                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
+                        </div>
+                    </div>
                 </td>
             </tr>
 
@@ -115,15 +137,6 @@
     </main>
 </div>
 
-<!-- JS để tự động load sidebar -->
-<script>
-    // Tải sidebar.html vào vùng #sidebar-container
-    fetch("sidebar.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("sidebar-container").innerHTML = data;
-        });
-</script>
 
 <footer class="footer">
     <div class="footer-container">
@@ -197,6 +210,21 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
+<script>
+    document.addEventListener("click", function(e) {
+        // Ẩn tất cả menu trước
+        document.querySelectorAll(".dropdown-menu").forEach(menu => {
+            menu.style.display = "none";
+        });
 
+        // Nếu click vào nút ⋮ thì hiển thị menu tương ứng
+        if (e.target.classList.contains("more-btn")) {
+            const menu = e.target.nextElementSibling;
+            menu.style.display = "block";
+            e.stopPropagation(); // Ngăn chặn sự kiện lan ra ngoài
+        }
+    });
+
+</script>
 </body>
 </html>
