@@ -34,14 +34,17 @@ body {
 
 .logo #logo {
   height: 100px;
-  margin-right: 8px;
-  margin: -10px;
 }
 
+
+/*mới sửa chỗ này với cái ở dưới action */
 /* Menu chính */
 .menu {
   display: flex;
   gap: 16px;
+    position: relative;
+    /*left: 00px;*/
+    font-size: 20px;
 }
 
 .menu a {
@@ -106,11 +109,46 @@ body {
   display: block;
 }
 
-/* Các hành động bên phải */
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.actions{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    font-size: 22px;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px;
+    max-width: 400px;
+    background-color: #fff;
+    width: 450px;
+    margin: 0 35px 0;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+    outline: none;
+    background-color: transparent;
+    color: #333;
+}
+
+.search-button {
+    padding: 8px 12px;
+    border: none;
+    background-color: transparent;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.search-button i {
+    font-size: 16px;
+    color: #666;
 }
 .actions .publish-btn{
   display: none;
