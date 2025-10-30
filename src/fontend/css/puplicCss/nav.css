@@ -114,6 +114,8 @@ body {
     gap: 30px;
     align-items: center;
     font-size: 22px;
+    position: relative;
+    left: 1px;
 }
 .search-bar {
     display: flex;
