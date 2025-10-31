@@ -1,0 +1,192 @@
+/* /* Reset mặc định */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f9f9f9;
+}
+
+/* Thanh điều hướng chính */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 12px 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo MangaToon */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #e53935;
+}
+
+.logo #logo {
+  height: 100px;
+}
+
+
+/*mới sửa chỗ này với cái ở dưới action */
+/* Menu chính */
+.menu {
+  display: flex;
+  gap: 16px;
+    position: relative;
+    /*left: 00px;*/
+    font-size: 20px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.menu a:hover {
+  color: #e53935;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+  background-color: #fff;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 12px;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px 0;
+  min-width: 150px;
+  z-index: 100;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 8px 16px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+  background-color: #f2f2f2;
+}
+/* chỗ này cái thể loại bị lệch xuống dưới do có thêm cái div */
+.dropdown {
+  position: relative;
+  top: 9px;
+}
+/* Hiện submenu khi hover vào .dropdown */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.actions{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    font-size: 22px;
+    position: relative;
+    left: 1px;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px;
+    max-width: 400px;
+    background-color: #fff;
+    width: 450px;
+    margin: 0 35px 0;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+    outline: none;
+    background-color: transparent;
+    color: #333;
+}
+
+.search-button {
+    padding: 8px 12px;
+    border: none;
+    background-color: transparent;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.search-button i {
+    font-size: 16px;
+    color: #666;
+}
+.actions .publish-btn{
+  display: none;
+}
+
+.actions{
+  position: relative;
+  right: 90px;
+}
+
+.actions .search{
+  padding: 5px;
+}
+.actions a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.publish-btn ,.login-btn {
+  background-color: #e53935;
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.publish-btn:hover {
+  background-color: #d32f2f;
+}
+
+.product-section {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+
+/* chỗ này mai sửa */
