@@ -4,519 +4,103 @@
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="../css/adminCss/stylePro.css">
-    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-    <script src="https://kit.fontawesome.com/a2e0e6ad27.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="container">
+<div class="admin-layout">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-
-        <ul>
-            <li>
-                <img src="../../img/home.png" class="icon">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <ul class="menu-list">
+            <li class="menu-item">
+                <img src="icons/home.png" alt="home" class="menu-icon">
                 <span>Trang chủ</span>
             </li>
-            <li class="active">
-                <img src="../../img/product.png" class="icon">
+            <li class="menu-item active">
+                <img src="icons/product.png" alt="product" class="menu-icon">
                 <span>Quản lý sản phẩm</span>
             </li>
-            <li>
-                <img src="../../img/category.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/category.png" alt="category" class="menu-icon">
                 <span>Quản lý thể loại</span>
             </li>
-            <li>
-                <img src="../../img/order.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/order.png" alt="order" class="menu-icon">
                 <span>Quản lý đơn hàng</span>
             </li>
-            <li>
-                <img src="../../img/user.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/user.png" alt="user" class="menu-icon">
                 <span>Quản lý người dùng</span>
             </li>
-            <li>
-                <img src="../../img/promo.png" class="icon">
+            <li class="menu-item">
+                <img src="icons/promo.png" alt="promo" class="menu-icon">
                 <span>Khuyến mãi</span>
             </li>
-            <li>
-                <img src="../../img/report.png" class="icon">
-                <span>Thống kê/ Báo cáo</span>
+            <li class="menu-item">
+                <img src="icons/report.png" alt="report" class="menu-icon">
+                <span>Thống kê & Báo cáo</span>
             </li>
         </ul>
-    </aside>
+    </nav>
 
-    <!-- Main content -->
-    <main class="main-content">
-        <header>
-            <h2>Quản lý sản phẩm</h2>
-            <div class="admin-info">
-                <img src="../../img/admin.png" alt="admin" class="avatar">
+    <!-- MAIN -->
+    <section class="main-section">
+        <div class="top-bar">
+            <h1 class="page-title">Quản lý sản phẩm</h1>
+            <div class="admin-profile">
+                <img src="icons/admin.png" alt="Admin" class="admin-avatar">
                 <span>Admin</span>
             </div>
-        </header>
+        </div>
 
-        <div class="table-container">
-        <div class="search-add">
-            <input type="text" placeholder="Tìm kiếm truyện...">
-
-            <div class="action-buttons">
-                <button class="add-btn">+ Thêm truyện</button>
-                <button class="delete-btn">Xóa</button>
+        <div class="action-bar">
+            <div class="search-box">
+                <input type="text" placeholder="Nhập tên truyện cần tìm...">
             </div>
-        </div>
-        </div>
-
-        <table>
-            <thead>
-            <tr>
-                <th>Bìa truyện</th>
-                <th>Tên truyện</th>
-                <th>Thể loại</th>
-                <th>Tác giả</th>
-                <th>Giá</th>
-                <th>Còn trong kho</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
-                <td>Thám tử lừng danh Conan</td>
-                <td>Trinh thám</td>
-                <td>Gosho Aoyama</td>
-                <td>22,500₫</td>
-                <td>550 quyển</td>
-                <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
-                    <div class="menu-container">
-                        <button class="more-btn">⋮</button>
-                        <div class="dropdown-menu">
-                            <label><input type="radio" name="display" checked> Hiển thị</label>
-                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/8/8c/Doraemon_Volume_1_Cover.jpg" alt="bia"></td>
-                <td>Doraemon</td>
-                <td>Hài hước</td>
-                <td>Fujiko F. Fujio</td>
-                <td>18,000₫</td>
-                <td>320 quyển</td>
-                <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
-                    <div class="menu-container">
-                        <button class="more-btn">⋮</button> <!--menu-btn-->
-                        <div class="dropdown-menu"> <!--menu-options-->
-                            <label><input type="radio" name="display" checked> Hiển thị</label>
-                            <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            <tr class="pagination-row">
-                <td colspan="7">
-                    <div class="pagination">
-                        <button >&lt;</button>
-                        <button>1</button>
-                        <button class="active">&gt;</button>
-                    </div>
-                </td>
-            </tr>
-
-            </tbody>
-        </table>
-
-        <!-- POPUP THÊM TRUYỆN -->
-        <div class="modal-overlay" id="addModal">
-            <div class="modal-rectangle">
-                <h3>Thêm truyện mới</h3>
-                <form id="addForm" class="form-horizontal">
-                    <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" placeholder="Nhập mã truyện">
-                        </div>
-                        <div class="form-group">
-                            <label>Tên truyện:</label>
-                            <input type="text" placeholder="Nhập tên truyện">
-                        </div>
-                        <div class="form-group">
-                            <label>Thể loại:</label>
-                            <select>
-                                <option>Trinh thám</option>
-                                <option>Hài hước</option>
-                                <option>Tình cảm</option>
-                                <option>Hành động</option>
-                                <option>Kinh dị</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Tác giả:</label>
-                            <input type="text" placeholder="Nhập tên tác giả">
-                        </div>
-                        <div class="form-group">
-                            <label>Ngày đăng:</label>
-                            <input type="date">
-                        </div>
-                    </div>
-
-                    <div class="form-right">
-                        <div class="image-upload" id="imageBox">
-                            <input type="file" id="imageInput" accept="image/*" hidden>
-                            <div class="upload-placeholder" id="imagePreview">
-                                <i class="icon">+</i>
-                                <img id="previewImg" src="" alt="Preview" style="display:none;">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Mô tả ngắn:</label>
-                            <textarea rows="4" placeholder="Nhập mô tả ngắn..."></textarea>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="form-buttons">
-                    <button type="button" class="cancel-btn">Hủy</button>
-                    <button type="submit" class="save-btn">Lưu</button>
-                </div>
-            </div>
+            <button class="btn btn-add">+ Thêm truyện mới</button>
         </div>
 
-        <!-- POPUP SỬA TRUYỆN -->
-        <div class="modal-overlay" id="editModal">
-            <div class="modal-rectangle">
-                <h3>Chỉnh sửa truyện</h3>
-                <form id="editForm" class="form-horizontal">
-                    <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" value="TT001" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Tên truyện:</label>
-                            <input type="text" value="Thám tử lừng danh Conan">
-                        </div>
-                        <div class="form-group">
-                            <label>Thể loại:</label>
-                            <select>
-                                <option selected>Trinh thám</option>
-                                <option>Hài hước</option>
-                                <option>Tình cảm</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Tác giả:</label>
-                            <input type="text" value="Gosho Aoyama">
-                        </div>
-                        <div class="form-group">
-                            <label>Ngày đăng:</label>
-                            <input type="date" value="2024-12-01">
-                        </div>
-                    </div>
-
-                    <div class="form-right">
-                        <div class="image-upload" id="editImageBox">
-                            <input type="file" id="editImageInput" accept="image/*" hidden>
-                            <div class="upload-placeholder" id="editImagePreview">
-                                <img id="editPreviewImg"
-                                     src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg"
-                                     alt="Preview">
-                                <div class="upload-overlay">
-                                    <span>+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Mô tả ngắn:</label>
-                            <textarea rows="4">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="form-buttons">
-                    <button type="button" class="cancel-btn">Hủy</button>
-                    <button type="submit" class="save-btn">Thay đổi</button>
-                </div>
-            </div>
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Bìa</th>
+                    <th>Tên truyện</th>
+                    <th>Thể loại</th>
+                    <th>Tác giả</th>
+                    <th>Giá</th>
+                    <th>Tồn kho</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                <tr>
+                    <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                    <td>Thám tử lừng danh Conan</td>
+                    <td>Trinh thám</td>
+                    <td>Gosho Aoyama</td>
+                    <td>22,500₫</td>
+                    <td>550 quyển</td>
+                    <td><button class="btn btn-edit">Sửa</button></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-
-        <!-- POPUP XÓA TRUYỆN -->
-        <div class="modal-overlay" id="deleteModal">
-            <div class="delete-modal">
-                <h3>Xóa truyện</h3>
-
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">
-                    <button id="searchBtn" class="search-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
-
-                <div class="delete-list">
-                    <label><input type="checkbox"> Thám tử lừng danh Conan – Gosho Aoyama (2024-12-01)</label>
-                    <label><input type="checkbox"> Doraemon – Fujiko F. Fujio (2024-11-15)</label>
-                    <label><input type="checkbox"> One Piece – Eiichiro Oda (2024-10-10)</label>
-                    <label><input type="checkbox"> Attack on Titan – Hajime Isayama (2024-08-05)</label>
-                    <label><input type="checkbox"> Naruto – Masashi Kishimoto (2024-07-20)</label>
-                    <label><input type="checkbox"> Bleach – Tite Kubo (2024-06-10)</label>
-                    <label><input type="checkbox"> Spy x Family – Tatsuya Endo (2024-05-15)</label>
-                    <label><input type="checkbox"> Bleach – Tite Kubo (2024-06-10)</label>
-                    <label><input type="checkbox"> Spy x Family – Tatsuya Endo (2024-05-15)</label>
-                    <label><input type="checkbox"> Bleach – Tite Kubo (2024-06-10)</label>
-                    <label><input type="checkbox"> Spy x Family – Tatsuya Endo (2024-05-15)</label>
-                </div>
-
-                <div class="delete-buttons">
-                    <button class="cancel-btn">Hủy</button>
-                    <button class="delete-confirm-btn">Xóa</button>
-                </div>
-            </div>
+        <div class="pagination">
+            <button class="page-btn active">1</button>
         </div>
-
-
-        <!-- POPUP XÁC NHẬN XÓA -->
-        <div class="modal-overlay" id="confirmDeleteModal">
-            <div class="confirm-box">
-                <p>Bạn có chắc muốn xóa truyện không?</p>
-                <div class="confirm-buttons">
-                    <button class="cancel-btn">Hủy</button>
-                    <button class="delete-confirm-btn">Xác nhận</button>
-                </div>
-            </div>
-        </div>
-
-
-    </main>
+    </section>
 </div>
-
-
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
-        <div class="footer-column">
-            <div class="logo">
-                <a href="#">
-                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
-                </a>
-            </div>
-            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
-                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
-                truyện hấp dẫn cho bạn
-            </p>
-
-
-        </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
-            <ul>
-                <li><a href="#">Trang chủ</a></li>
-                <li><a href="#">Thể loại truyện</a></li>
-                <li><a href="#">Khuyến mãi</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">Liên hệ</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
-            <ul>
-                <li><a href="#">Hướng dẫn mua hàng</a></li>
-                <li><a href="#">Chính sách đổi trả</a></li>
-                <li><a href="#">Chính sách vận chuyển</a></li>
-                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
-            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
-            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
-            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
-
-            <div class="social-links">
-                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-
-        <!-- Cột 5: Thanh toán -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
-            <p>Hỗ trợ thanh toán qua:</p>
-            <div class="payment-icons">
-                <img src="../../img/momo.png" alt="Momo">
-                <img src="../../img/zalopay.png" alt="ZaloPay">
-            </div>
-            <p>Website đã đăng ký với Bộ Công Thương.</p>
-        </div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
-    </div>
-</footer>
-
-<!--action của hiện/ ẩn sản phẩm-->
-<script>
-    document.querySelectorAll('.more-btn').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-
-            // Đóng menu khác nếu có
-            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-
-            const menu = this.nextElementSibling; // menu nằm ngay sau nút 3 chấm
-            const rect = this.getBoundingClientRect(); // tọa độ nút 3 chấm
-
-            // Đặt vị trí menu ngay dưới nút 3 chấm
-            menu.style.display = 'block';
-            menu.style.top = rect.bottom + 'px';
-            menu.style.left = (rect.right - menu.offsetWidth) + 'px';
-        });
-    });
-
-    // Ẩn menu khi click ra ngoài
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-    });
 </script>
-<script>
-    const addBtn = document.querySelector('.add-btn');
-    const modal = document.getElementById('addModal');
-    const cancelBtn = document.querySelector('.cancel-btn');
-    const imageBox = document.getElementById('imageBox');
-    const imageInput = document.getElementById('imageInput');
-    const previewImg = document.getElementById('previewImg');
-    const imagePlaceholder = document.getElementById('imagePreview');
-
-    addBtn.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
-
-    cancelBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-        imageInput.value = "";
-        previewImg.style.display = "none";
-    });
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // Khi click vào khung ảnh thì mở chọn file
-    imageBox.addEventListener('click', () => {
-        imageInput.click();
-    });
-
-    // Khi chọn file xong thì hiển thị preview
-    imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                previewImg.style.display = "block";
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
-
-<script>
-    // === MỞ POPUP SỬA ===
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('editModal').style.display = 'flex';
-        });
-    });
-
-    // === MỞ POPUP XÓA ===
-    document.querySelector('.delete-btn').addEventListener('click', () => {
-        document.getElementById('deleteModal').style.display = 'flex';
-    });
-
-    // === ĐÓNG POPUP KHI NHẤN HỦY ===
-    document.querySelectorAll('.cancel-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const modal = e.target.closest('.modal-overlay');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-
-    // === KHI NHẤN XÓA TRONG POPUP DANH SÁCH ===
-    document.querySelectorAll('.delete-confirm-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('confirmDeleteModal').style.display = 'flex';
-        });
-    });
-
-    // === TÌM KIẾM TRUYỆN TRONG POPUP XÓA ===
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const deleteList = document.querySelector('.delete-list');
-
-    if (searchBtn && searchInput && deleteList) {
-        searchBtn.addEventListener('click', () => {
-            const keyword = searchInput.value.toLowerCase().trim();
-            const labels = deleteList.querySelectorAll('label');
-            labels.forEach(label => {
-                const text = label.textContent.toLowerCase();
-                label.style.display = text.includes(keyword) ? 'block' : 'none';
-            });
-        });
-
-        // Nhấn Enter để tìm
-        searchInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') searchBtn.click();
-        });
-    }
-
-
-    // === XỬ LÝ ẢNH TRONG POPUP SỬA ===
-    const editImageBox = document.getElementById('editImageBox');
-    const editImageInput = document.getElementById('editImageInput');
-    const editPreviewImg = document.getElementById('editPreviewImg');
-
-    // Nhấn vào khung để mở chọn ảnh
-    editImageBox.addEventListener('click', () => {
-        editImageInput.click();
-    });
-
-    // Hiển thị ảnh xem trước
-    editImageInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                editPreviewImg.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-</script>
-
 
 </body>
 </html>
