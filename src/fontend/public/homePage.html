@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="../css/puplicCss/homePage.css ">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../js/homePage.js" defer></script>
 </head>
 
 <body>
@@ -31,7 +32,7 @@
         </nav>
         <div class="actions">
             <div class="search-bar">
-                <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+                <input id="search" type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
                 <button class="search-button">
                     <i class="fas fa-magnifying-glass"></i>
                 </button>
@@ -45,82 +46,17 @@
         </div>
     </header>
 
-    <div>
+    <div id="slider">
+       <div class="list-images">
+             <img class="img" src="https://namchauims.com/wp-content/uploads/2022/03/truyen-doraemon.jpg" alt="">
+            <img class="img" src="https://th.bing.com/th/id/R.142bb2c2a35993717d8966db659cae36?rik=EC%2flBnEo2VjbZg&pid=ImgRaw&r=0" alt="">
+            <img class="img" src="https://wallpapers.com/images/hd/doraemon-and-the-underworld-adventure-hpq4w9q1xczrkexg.jpg" alt="">
+            <img class="img" src="https://anhdepbonphuong.com/wp-content/uploads/2024/03/hinh-nen-truyen-connan-dep-01-1024x512-1.jpg" alt="">
+       </div>
+    </div>
 
-        <div>
-            <h1>GỢI Ý HÔM NAY</h1>
-
-            <input type="radio" name="slider" id="slide1" checked>
-            <input type="radio" name="slider" id="slide2">
-            <input type="radio" name="slider" id="slide3">
-            <input type="radio" name="slider" id="slide4">
-            <input type="radio" name="slider" id="slide5">
-            <input type="radio" name="slider" id="slide6">
-
-            <div class="slider-wrapper">
-                <div class="slider-track">
-                    <div>
-                        <label for="slide6">◀</label>
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.ngbTME3YIP9gZ9PecjljRgHaLZ?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="Sản phẩm 1">
-                        <strong>dragon ball</strong><br>
-                        Giá: 299,000₫<br>
-                        Đánh giá: ★★★★☆
-                        <label for="slide2">▶</label>
-                    </div>
-
-                    <div>
-                        <label for="slide1">◀</label>
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.luq8EquqAZkBYFKlzuCWugHaLp?w=550&h=865&rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="Sản phẩm 2">
-                        <strong>conan</strong><br>
-                        Giá: 199,000₫<br>
-                        Đánh giá: ★★★★☆
-                        <label for="slide3">▶</label>
-                    </div>
-
-                    <div>
-                        <label for="slide2">◀</label>
-                        <img src="https://lh3.googleusercontent.com/-yx6J3fo_vtQ/XaaK_5Y5w9I/AAAAAAAA7hk/Qcol5RS7MYkd5RoqLtpfwDV5QvAJhMORwCNcBGAsYHQ/w1300/001.jpg"
-                            alt="Sản phẩm 3">
-                        <strong>doraemon</strong><br>
-                        Giá: 149,000₫<br>
-                        Đánh giá: ★★★☆☆
-                        <label for="slide4">▶</label>
-                    </div>
-
-                    <div>
-                        <label for="slide3">◀</label>
-                        <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
-                            alt="Sản phẩm 4">
-                        <strong>conan</strong><br>
-                        Giá: 119,000₫<br>
-                        Đánh giá: ★★★★★
-                        <label for="slide5">▶</label>
-                    </div>
-
-                    <div>
-                        <label for="slide4">◀</label>
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.R1CZ3FFpWKsbFRmVPcdQYwHaJI?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="Sản phẩm 5">
-                        <strong>Doraemon</strong><br>
-                        Giá: 145,000₫<br>
-                        Đánh giá: ★★★☆☆
-                        <label for="slide6">▶</label>
-                    </div>
-
-                    <div>
-                        <label for="slide5">◀</label>
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.R1CZ3FFpWKsbFRmVPcdQYwHaJI?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="Sản phẩm 6">
-                        <strong>Doraemon</strong><br>
-                        Giá: 145,000₫<br>
-                        Đánh giá: ★★★☆☆
-                        <label for="slide1">▶</label>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="content">
+        <!-- làm xong slider thì đến content -->
     </div>
 
 
