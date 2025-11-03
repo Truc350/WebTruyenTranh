@@ -6,9 +6,8 @@
     <title>Comic Store - Giỏ hàng</title>
 
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 
     <!-- CSS -->
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
@@ -25,26 +24,33 @@
     </div>
     <nav class="menu">
         <a href="#">Trang chủ</a>
+
         <div class="dropdown">
-            <a href="#">Thể loại <i class="fa-solid fa-caret-down"></i></a>
+            <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
                 <a href="#">Hành động</a>
                 <a href="#">Trinh thám</a>
                 <a href="#">Hài hước</a>
             </div>
         </div>
+
         <a href="#">Liên hệ</a>
-        <a href="#">Thông báo</a>
     </nav>
     <div class="actions">
-        <div class="search">
-            <i class="fas fa-magnifying-glass"></i>
+        <div class="search-bar">
+            <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+            <button class="search-button">
+                <i class="fas fa-magnifying-glass"></i>
+            </button>
         </div>
+        <i class="fa-solid fa-bell"></i>
         <a href="#" class="publish-btn">Publish</a>
+        <i class="fa-solid fa-user"></i>
         <a href="#" class="login-btn">Log in</a>
+        <i class="fa-solid fa-comment"></i>
+
     </div>
 </header>
-
 <!-- ===================== MAIN CONTENT ===================== -->
 <main class="wrapper">
 
@@ -73,7 +79,9 @@
                     <div class="item-info">
                         <div class="item-title">Thiên quan từ phúc</div>
                         <div class="item-subtitle">Thiên quan từ phúc</div>
-                        <div class="item-price">86.000 đ <del>115.000 đ</del></div>
+                        <div class="item-price">86.000 đ
+                            <del>115.000 đ</del>
+                        </div>
                     </div>
                     <div class="quantity-control">
                         <button class="quantity-btn minus">-</button>
@@ -95,7 +103,9 @@
                             1 x Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)<br>
                             1 x Bộ Bìa Góc Bảo Quản
                         </div>
-                        <div class="item-price">164.002 đ <del>205.000 đ</del></div>
+                        <div class="item-price">164.002 đ
+                            <del>205.000 đ</del>
+                        </div>
                     </div>
                     <div class="quantity-control">
                         <button class="quantity-btn minus">-</button>
@@ -125,7 +135,9 @@
             <div class="promo-item">
                 <div class="promo-info">
                     <div class="promo-title">Mã Giảm 10K - Toàn Sản</div>
-                    <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại...</div>
+                    <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga,
+                        Ngoại...
+                    </div>
                     <div class="promo-expiry">HSD: 31/10/2025</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 40%;"></div>
@@ -172,19 +184,26 @@
 <!-- ===================== FOOTER ===================== -->
 <footer class="footer">
     <div class="footer-container">
-        <!-- Cột 1 -->
+        <!-- Cột 1: Giới thiệu -->
         <div class="footer-column">
             <div class="logo">
-                <a href="#"><img src="../../img/logo.png" alt="logo"></a>
+                <a href="#">
+                    <img src="../../img/logo.png" alt="logo">
+                </a>
             </div>
-            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
+            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
+                truyện giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lập năm <strong>2025</strong>, chúng tôi mang đến hơn <str>10.000+</str><br>truyện hấp dẫn cho bạn.</p>
+            <p>Thành lập năm <strong>2025</strong>, chúng tôi mang đến hơn
+                <strong>10.000+</strong>
+                <br>
+                truyện hấp dẫn cho bạn
+            </p>
         </div>
 
-        <!-- Cột 2 -->
+        <!-- Cột 2: Liên kết nhanh -->
         <div class="footer-column">
-            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
+            <h4>Liên kết nhanh</h4>
             <ul>
                 <li><a href="#">Trang chủ</a></li>
                 <li><a href="#">Thể loại truyện</a></li>
@@ -194,9 +213,9 @@
             </ul>
         </div>
 
-        <!-- Cột 3 -->
+        <!-- Cột 3: Hỗ trợ khách hàng -->
         <div class="footer-column">
-            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
+            <h4>Hỗ trợ khách hàng</h4>
             <ul>
                 <li><a href="#">Hướng dẫn mua hàng</a></li>
                 <li><a href="#">Chính sách đổi trả</a></li>
@@ -205,28 +224,23 @@
             </ul>
         </div>
 
-        <!-- Cột 4 -->
+        <!-- Cột 4: Liên hệ & Mạng xã hội -->
         <div class="footer-column">
-            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
-            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
-            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
-            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
+            <h4>Liên hệ</h4>
+            <p>support@metruyen.vn</p>
+            <p>0123 456 789</p>
+            <p>123 Nguyễn Huệ, Q.1, TP.HCM</p>
+
             <div class="social-links">
-                <a href="https://facebook.com" target="_blank" title="Facebook">
-                    <img src="src/img/facebook.png" alt="Facebook" class="social-icon">
-                </a>
-                <a href="https://instagram.com" target="_blank" title="Instagram">
-                    <img src="src/img/instagram.png" alt="Instagram" class="social-icon">
-                </a>
-                <a href="https://tiktok.com" target="_blank" title="TikTok">
-                    <img src="src/img/tiktok.png" alt="TikTok" class="social-icon">
-                </a>
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
 
-        <!-- Cột 5 -->
+        <!-- Cột 5: Thanh toán -->
         <div class="footer-column">
-            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
+            <h4>Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>
             <div class="payment-icons">
                 <img src="../../img/momo.png" alt="Momo">
@@ -241,5 +255,100 @@
     </div>
 </footer>
 
+<div class="promoPopup" id="modal">
+    <div class="modalContent">
+        <span class="closeBtn">&times;</span>
+        <h2>CHỌN MÃ KHUYẾN MÃI</h2>
+        <p>Hướng dẫn sử dụng Gift Card ⓘ</p>
+        <div class="promoInput">
+            <input type="text" id="promoCodeInput" placeholder="Nhập mã khuyến mãi..." class="promoInputField">
+            <button id="applyManualCode" class="btnApply">Áp dụng</button>
+        </div>
+        <div class="promo-list">
+            <div class="promoItem">
+                <input type="radio" id="promo10k" name="promo" value="10k">
+                <label for="promo10k">Mã giảm giá 10K - Toàn sàn <br><small>Đơn hàng từ 130k -Không bao gồm giá trị <br>của
+                    các sản phẩm sau Manga, Ngoại...</small><br><small>HSD: 31/11/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <div class="promoItem">
+                <input type="radio" id="promo25k" name="promo" value="10k">
+                <label for="promo25k">Mã giảm giá 25K - Truyện Manga <br><small>Đơn hàng từ 210k</small><br><small>HSD:
+                    31/11/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+        </div>
+        <button id="viewMoreBtn" class="btnViewMore">Xem thêm</button>
+    </div>
+</div>
+<!-- JavaScript -->
+<script>
+    // Get the modal
+    var modal = document.getElementById("modal");
+
+    // Get the button that opens the modal (assuming it's triggered by "Mua thêm" in promo section)
+    var btn = document.querySelector(".promo-section .btn-buy-more");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("closeBtn")[0];
+    var closeBtn = document.querySelector(".btnClose");
+
+    // Get the view more button and promo items
+    var viewMoreBtn = document.getElementById("viewMoreBtn");
+    var promoItems = document.querySelectorAll(".promoItem");
+
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x) or "Đóng", close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // Apply promo code from list
+    var applyBtns = document.querySelectorAll(".promoItem .btnApply");
+    applyBtns.forEach(button => {
+        button.onclick = function() {
+            var promo = this.parentElement.querySelector("input[type='radio']:checked");
+            if (promo) {
+                alert("Áp dụng mã " + promo.value + " thành công!");
+                modal.style.display = "none";
+            } else {
+                alert("Vui lòng chọn một mã khuyến mãi!");
+            }
+        }
+    });
+
+    // Apply manually entered promo code
+    document.getElementById("applyManualCode").onclick = function() {
+        var promoCode = document.getElementById("promoCodeInput").value.trim();
+        if (promoCode) {
+            alert("Áp dụng mã " + promoCode + " thành công!");
+            modal.style.display = "none";
+        } else {
+            alert("Vui lòng nhập mã khuyến mãi!");
+        }
+    }
+
+    // View more functionality
+    viewMoreBtn.onclick = function() {
+        promoItems.forEach(item => {
+            item.classList.remove("hidden");
+        });
+        viewMoreBtn.style.display = "none"; // Ẩn nút "Xem thêm" sau khi hiển thị tất cả
+    }
+</script>
 </body>
 </html>
