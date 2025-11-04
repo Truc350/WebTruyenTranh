@@ -1,3 +1,12 @@
+// cho truyện link qua trang detail.html
+  document.addEventListener("DOMContentLoaded", function () {
+    const product = document.querySelector("#clickon");
+    product.addEventListener("click", function () {
+      window.location.href = "detail.html";
+    });
+  });
+
+// banner
 const listImage = document.querySelector('.list-images'); 
 const imgs = document.querySelectorAll('.list-images img'); 
 const dots = document.querySelectorAll('.dot'); 
@@ -39,33 +48,36 @@ btnPrev.addEventListener('click', () => {
     changeSlide(index);
 });
 
+// slider
+document.querySelectorAll('.product-slider').forEach(slider => {
+    const track = slider.querySelector('.slider-track');
+    const prevBtn = slider.querySelector('.arrow.prev');
+    const nextBtn = slider.querySelector('.arrow.next');
+    const items = slider.querySelectorAll('.product-item');
 
-// phần này của slider
-// 🔽 Lấy phần tử cần dùng
-const track = document.querySelector('.slider-track');
-const prevBtn = document.querySelector('.arrow.prev');
-const nextBtn = document.querySelector('.arrow.next');
+    let currentPosition = 0;
 
-// 🔽 Biến để lưu vị trí hiện tại
-let currentPosition = 0;
-const itemWidth = 220; // mỗi item 200px + gap 20px
-const visibleItems = 5; // số lượng item hiển thị trong khung
+    //Lấy đúng kích thước 1 item thực tế (bao gồm margin/gap)
+    const itemWidth = items[0].offsetWidth + 10; // 10 = gap trong CSS
+    const visibleItems = 5;
 
-// 🔽 Khi nhấn nút next
-nextBtn.addEventListener('click', () => {
-    const totalItems = document.querySelectorAll('.product-item').length;
-    const maxPosition = -(itemWidth * (totalItems - visibleItems));
+    // Tính toán vị trí tối đa KHÔNG bị trống
+    const maxPosition = -((items.length * itemWidth) - (itemWidth * visibleItems));
 
-    if (currentPosition > maxPosition) {
-        currentPosition -= itemWidth;
-        track.style.transform = `translateX(${currentPosition}px)`;
-    }
-});
+    // 🔹 Khi nhấn nút next
+    nextBtn.addEventListener('click', () => {
+        if (currentPosition > maxPosition) {
+            currentPosition -= itemWidth;
+            // Dịch chuyển đúng khoảng cần thiết
+            track.style.transform = `translateX(${currentPosition}px)`;
+        }
+    });
 
-// 🔽 Khi nhấn nút prev
-prevBtn.addEventListener('click', () => {
-    if (currentPosition < 0) {
-        currentPosition += itemWidth;
-        track.style.transform = `translateX(${currentPosition}px)`;
-    }
+    //Khi nhấn nút prev
+    prevBtn.addEventListener('click', () => {
+        if (currentPosition < 0) {
+            currentPosition += itemWidth;
+            track.style.transform = `translateX(${currentPosition}px)`;
+        }
+    });
 });

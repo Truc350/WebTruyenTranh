@@ -195,9 +195,16 @@ body {
   display: flex;
 }
 /* dòng này nhớ bỏ */
-.container-content .describe{
-margin-left: 100px;
+  .container-content .describe{
+  margin-left: 100px;
 }
+/* chỗ này css cho thẻ a link qua trang detail
+a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+} */
+
 
 
 /* banner */
@@ -205,10 +212,7 @@ margin-left: 100px;
   width: 600px;
   height: 300px;
   overflow: hidden;
-  /* margin: 100px auto; */
   position: relative;
-  /* top: 20px;
-  left: 100px; */
 }
 
 
@@ -280,34 +284,80 @@ margin-left: 100px;
   right: 10px;
 }
 
-/* phần dưới này của slider */
-#slider{
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+
+/* phần này là danh mục */
+.danh-muc-icon {
+  padding: 20px;
+  background-color: #fff;
+  margin-bottom: 50px;
 }
 
+.danh-muc-icon h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.icon-list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 20px;
+  padding-bottom: 10px;
+}
+
+.icon-item {
+  flex: 0 0 auto;
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.icon-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.icon-item p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
+
+
+
+
+
+
+/* phần dưới này của slider */
 #slider {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
     margin-top: 50px;
     padding: 20px;
     background-color: #f8f8f8;
     border-radius: 10px;
 }
 
-/* Vùng chứa slider */
+/* --- VÙNG CHỨA MỖI SLIDER --- */
 .product-slider {
-    overflow: hidden;
-    position: relative;
+    position: relative; /* cần cho mũi tên nằm đúng vị trí */
+    overflow: hidden;   /* ẩn phần tràn ra ngoài */
+    width: 100%;
 }
 
-/* Thanh cuộn ngang chứa các item */
+/* --- THANH TRƯỢT NGANG CHỨA CÁC SẢN PHẨM --- */
 .slider-track {
     display: flex;
-    gap: 20px;
+    gap: 10px; 
     transition: transform 0.5s ease;
+    padding: 10px 0; /* tạo chút đệm trên dưới */
 }
 
-/* Mỗi sản phẩm */
+/* --- MỖI SẢN PHẨM --- */
 .product-item {
     background: #fff;
     border-radius: 10px;
@@ -334,7 +384,8 @@ margin-left: 100px;
     color: #ff5722;
     font-weight: bold;
 }
-/*  Nút mũi tên */
+
+/* --- NÚT MŨI TÊN SLIDER --- */
 .arrow {
     position: absolute;
     top: 50%;
@@ -350,16 +401,96 @@ margin-left: 100px;
     cursor: pointer;
     z-index: 2;
     user-select: none;
+    /* ↓ Thêm hiệu ứng hover nhẹ */
+    transition: background 0.3s ease;
 }
 
 .arrow:hover {
     background: rgba(0, 0, 0, 0.7);
 }
 
+/* --- VỊ TRÍ MŨI TÊN --- */
 .arrow.prev {
-    left: 10px;
+    left: 5px; 
 }
 
 .arrow.next {
-    right: 10px;
+    right: 5px;
+}
+
+
+/* phần này là top bán chạy */
+.top-truyen {
+  gap: 40px;
+  padding: 30px 60px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+}
+.content-top{
+  display: flex;
+  margin-top: 50px;
+}
+
+/* Danh sách bên trái */
+.sach-danh-sach {
+  flex: 1;
+}
+
+.sach-danh-sach ol {
+  list-style: decimal;
+  padding-left: 20px;
+}
+
+.sach-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sach-item img {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.sach-item h3 {
+  font-size: 16px;
+  margin: 0;
+  color: #333;
+}
+
+.sach-item p {
+  font-size: 14px;
+  color: #666;
+  margin: 4px 0 0;
+}
+
+/* Chi tiết sách bên phải */
+.sach-chi-tiet {
+  flex: 1;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sach-chi-tiet h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #e53935;
+}
+
+.sach-chi-tiet p {
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.sach-chi-tiet p:last-child {
+  margin-top: 12px;
+  font-style: italic;
+  color: #555;
 }
