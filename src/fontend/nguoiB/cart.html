@@ -125,7 +125,7 @@
     <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM (CÓ SCROLL) -->
     <div class="cart-items-container">
         <!-- Header -->
-        <div class="cart-header">GIỎ HÀNG (2 sản phẩm)</div>
+        <div class="cart-header">GIỎ HÀNG</div>
 
         <!-- Chọn tất cả -->
         <div class="select-all">
@@ -215,14 +215,14 @@
             </div>
         </div>
 
-        <!-- Nhận quà -->
-        <div class="gift-section">
-            <div class="gift-header">
-                <i class="fa-solid fa-gift"></i>
-                <span>Nhận quà</span>
-                <a href="#" class="view-more">Chọn quà ></a>
-            </div>
-        </div>
+        <!--        &lt;!&ndash; Nhận quà &ndash;&gt;-->
+        <!--        <div class="gift-section">-->
+        <!--            <div class="gift-header">-->
+        <!--                <i class="fa-solid fa-gift"></i>-->
+        <!--                <span>Nhận quà</span>-->
+        <!--                <a href="#" class="view-more">Chọn quà ></a>-->
+        <!--            </div>-->
+        <!--        </div>-->
 
         <!-- Tổng tiền -->
         <div class="total-section">
@@ -230,8 +230,9 @@
                 <span>Thành tiền</span>
                 <span class="total-price">0 đ</span>
             </div>
+            <div class="pricePromo"></div>
             <div class="total-row final">
-                <span>Tổng Số Tiền (gồm VAT)</span>
+                <span>Tổng Số Tiền (gồm VAT 10%)</span>
                 <span class="total-final">0 đ</span>
             </div>
         </div>
@@ -374,16 +375,68 @@
     var messageBox = document.getElementById("messageBox");
     var messageText = document.getElementById("messageText");
     var closeMsg = document.querySelector(".close-msg");
+    var selectAllLabel = document.querySelector(".select-all label[for='select-all']"); // Thay đổi để lấy label của "Chọn tất cả"
+    var totalFinalElement = document.querySelector(".total-final"); // Phần tử hiển thị tổng tiền (có VAT)
+    var totalPriceElement = document.querySelector(".total-price"); // Phần tử hiển thị tổng tiền
+    var checkoutButton = document.querySelector(".btn-checkout"); // Nút "THANH TOÁN"
 
-    // en=vent-select all
+    // Hàm tính tiền dựa trên sản phẩm được tick
+    function calculateTotal() {
+        var cartItems = document.querySelectorAll(".cart-item");
+        let total = 0;
+
+        cartItems.forEach(item => {
+            var checkbox = item.querySelector(".item-checkbox");
+            if (checkbox && checkbox.checked) { // Chỉ tính nếu checkbox được tick
+                var priceText = item.querySelector(".item-price").textContent.match(/[\d,.]+/)[0].replace(/\./g, ''); // Lấy giá tiền (VD: "86.000" -> 86000)
+                var quantity = parseInt(item.querySelector(".quantity-input").value);
+                var price = parseInt(priceText); // Chuyển thành số
+                total += price * quantity;
+            }
+        });
+        // Định dạng tiền tệ (thêm dấu chấm mỗi 3 số)
+        totalPriceElement.textContent = `${total.toLocaleString('vi-VN')} đ`;
+        // Tính tổng tiền cuối cùng (bao gồm VAT 10%)
+        let finalTotal = total * 1.1; // VAT 10%
+        totalFinalElement.textContent = `${finalTotal.toLocaleString('vi-VN')} đ`;
+
+        // Kích hoạt hoặc vô hiệu hóa nút "THANH TOÁN" dựa trên tổng tiền
+        if (finalTotal > 0) {
+            checkoutButton.disabled = false; // Bỏ vô hiệu hóa nếu có tiền
+        } else {
+            checkoutButton.disabled = true; // Vô hiệu hóa nếu tổng tiền là 0
+        }
+    }
+
+    // Cập nhật tiêu đề "Chọn tất cả (X sản phẩm)"
+    function updateCartItemCount() {
+        var itemCount = document.querySelectorAll(".cart-item").length;
+        selectAllLabel.textContent = `Chọn tất cả (${itemCount} sản phẩm)`; // Cập nhật nội dung label
+    }
+
+    // Gọi hàm cập nhật khi trang tải
+    window.onload = function () {
+        updateCartItemCount();
+        calculateTotal(); // Tính tổng tiền ban đầu
+    };
+
+    // Sự kiện "Chọn tất cả"
     document.getElementById("select-all").addEventListener("change", function () {
         var allCheckedboxes = document.querySelectorAll(".cart-item .item-checkbox");
         allCheckedboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;//dong bo trang thai voi checkbox "chon tat ca"
+            checkbox.checked = this.checked; // Đồng bộ trạng thái với checkbox "Chọn tất cả"
+        });
+        calculateTotal(); // Cập nhật tổng tiền khi thay đổi trạng thái "Chọn tất cả"
+    });
 
+    // Sự kiện thay đổi checkbox riêng lẻ
+    document.querySelectorAll(".cart-item .item-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            calculateTotal(); // Cập nhật tổng tiền khi thay đổi checkbox riêng lẻ
         });
     });
-    // su kien tang giam so luon sach
+
+    // Sự kiện tăng giảm số lượng sách
     document.querySelectorAll(".quantity-control .quantity-btn").forEach(button => {
         button.addEventListener("click", function () {
             var quantityInput = this.parentElement.querySelector(".quantity-input");
@@ -393,13 +446,17 @@
             } else if (this.classList.contains("minus") && currentValue > 1) {
                 quantityInput.value = currentValue - 1;
             }
+            calculateTotal(); // Cập nhật tổng tiền sau khi thay đổi số lượng
         });
     });
-    // su kien cho nút xoa san pham
+
+    // Sự kiện cho nút xóa sản phẩm
     document.querySelectorAll(".delete-btn").forEach(button => {
-       button.addEventListener("click", function(){
-          this.closest(".cart-item").remove();// xoa phan tu cha gan nhat
-       });
+        button.addEventListener("click", function () {
+            this.closest(".cart-item").remove(); // Xóa phần tử cha gần nhất
+            updateCartItemCount(); // Cập nhật số lượng sau khi xóa
+            calculateTotal(); // Cập nhật tổng tiền sau khi xóa
+        });
     });
 
     // Open modal and disable scroll
