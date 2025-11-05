@@ -116,6 +116,12 @@ header h2 {
 .add-btn:hover {
     background-color: #ff6a6a;
 }
+/*.table-wrapper {*/
+/*    margin-top: 15px;*/
+/*    border-radius: 12px;          !* Bo góc *!*/
+/*    overflow: hidden;             !* Quan trọng để bo góc hoạt động *!*/
+/*    background: white;            !* Nền trắng để bo góc rõ ràng *!*/
+/*}*/
 
 /* Table */
 table {
@@ -123,15 +129,21 @@ table {
     min-width: 700px;
     border-collapse: collapse;
     background-color: #fff5f5;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
-    /*border: 2px solid #FF9797;*/
 }
 
 /* Đảm bảo menu không bị cắt trong bảng */
 table, tbody, tr, td {
     overflow: visible !important;
 }
+
+table th, table td {
+    padding: 12px;
+    border-bottom: 1px solid #e8e8e8;
+    text-align: left;
+}
+
 
 /* Cho phép phần chứa bảng hiển thị menu tràn ra ngoài */
 .table-container {
