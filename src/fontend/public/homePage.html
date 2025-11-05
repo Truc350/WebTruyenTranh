@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/puplicCss/homePage.css ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../../js/homePage.js" defer></script>
+    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css ">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+        <nav class="menu">
+            <a href="#">Trang chủ</a>
+
+            <div class="dropdown">
+                <a href="#">Thể loại &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="#">Hành động</a>
+                    <a href="#">Trinh thám</a>
+                    <a href="#">Hài hước</a>
+                </div>
+            </div>
+
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="actions">
+            <div class="search-bar">
+                <input id="search" type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+                <button class="search-button">
+                    <i class="fas fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <i class="fa-solid fa-bell"></i>
+            <a href="#" class="publish-btn">Publish</a>
+            <i class="fa-solid fa-user"></i>
+            <a href="#" class="login-btn">Log in</a>
+            <i class="fa-solid fa-comment"></i>
+
+        </div>
+    </header>
+
+
+
+    <div class="container-content">
+        <!-- chỗ này banner đang làm -->
+        <div class="bannder-des">
+            <div id="banner">
+                <div class="list-images">
+                    <img class="img" src="https://mrwallpaper.com/images/hd/inuyasha-fan-poster-f9t21oh2uw6fw3ri.jpg"
+                        alt="">
+                    <img class="img"
+                        src="https://th.bing.com/th/id/R.142bb2c2a35993717d8966db659cae36?rik=EC%2flBnEo2VjbZg&pid=ImgRaw&r=0"
+                        alt="">
+                    <img class="img" src="https://i.ytimg.com/vi/LjCimywqJ94/maxresdefault.jpg" alt="">
+                    <img class="img"
+                        src="https://baodongnai.com.vn/file/e7837c02876411cd0187645a2551379f/082024/crayon-shin-chan-cau-be-but-chi_20240823002508.jpg"
+                        alt="">
+                </div>
+
+                <div class="btn prev">&#10094;</div>
+                <div class="btn next">&#10095;</div>
+
+                <div class="dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+
+            </div>
+
+            <!-- chỗ này des -->
+            <!-- <div class="describe">
+                    <h2>Bên này nó sẽ là một cái miêu tả gì đó</h2>
+                    <h3>có thể là cái giảm giá truyện như shoppe</h3>
+                    <h3>hoặc cái gì đó chưa nghĩ ra nè</h3>
+                </div> -->
+        </div>
+
+
+        <!-- chỗ này là danh mục -->
+        <div class="danh-muc-icon">
+            <h2>Tiện ích</h2>
+            <div class="icon-list">
+                <div class="icon-item">
+                    <i class="fa-brands fa-salesforce"></i>
+                    <p>11.11</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-solid fa-gift"></i>
+                    <p>Gift Card</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-solid fa-clipboard-user"></i>
+                    <p>Điểm Danh</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-solid fa-ticket"></i>
+                    <p>Mã Giảm Giá</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <p>Sản Phẩm Mới</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-brands fa-shopify"></i>
+                    <p>Mua sắm</p>
+                </div>
+                <div class="icon-item">
+                    <i class="fa-solid fa-book"></i>
+                    <p>Manga</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flash-sale">
+            <div class="titile-flash-sale">
+                <h2>FLASH SALE</h2>
+                <p>Thời gian còn lại: 2 giờ</p>
+            </div>
+
+            <div class="list-product-sale">
+                <div>
+                    <h3>Shin cậu bé bút chì - ước muốn điểm cao</h3>
+                    <p>Giá khuyến mãi: 70,000₫</p>
+                    <p>Giá gốc: <s>100,000₫</s></p>
+                    <p>Giảm giá: 30%</p>
+                </div>
+
+                <div>
+                    <h3>Kiếm sĩ mạnh nhất (Tái Bản)</h3>
+                    <p>Tác giả: Jared Diamond</p>
+                    <p>Giá khuyến mãi: 47,650₫</p>
+                    <p>Giá gốc: <s>75,000₫</s></p>
+                    <p>Giảm giá: 37%</p>
+                </div>
+
+                <div>
+                    <h3>Oggy và những chú gián - Sân Băng</h3>
+                    <p>Giá khuyến mãi: 134,000₫</p>
+                    <p>Giá gốc: <s>213,000₫</s></p>
+                    <p>Giảm giá: 37%</p>
+                </div>
+
+                <div>
+                    <h3>Tấm Cám (2025)</h3>
+                    <p>Giá khuyến mãi: 119,000₫</p>
+                    <p>Giá gốc: <s>189,000₫</s></p>
+                    <p>Giảm giá: 37%</p>
+                </div>
+
+                <!-- <div>
+                    <h3>Nexus - Lược Sử Của Những Liên Kết Thông Tin Từ Thiên Nhiên</h3>
+                    <p>Tác giả: Yuval Noah Harari</p>
+                    <p>Giá khuyến mãi: 227,000₫</p>
+                    <p>Giá gốc: <s>360,000₫</s></p>
+                    <p>Giảm giá: 37%</p>
+                </div> -->
+            </div>
+        </div>
+
+
+
+
+
+        <div id="slider">
+            <div class="suggest">
+                <h2>Gợi ý cho bạn</h2>
+            </div>
+
+            <!-- slider 1 -->
+            <div class="product-slider">
+
+                <!-- mũi tên trái -->
+                <div class="arrow prev">&#10094;</div>
+
+                <div class="slider-track">
+                    <div class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫18,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫27,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫16,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫19,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫22,000</p>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫19,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫21,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫17,000</p>
+                    </div>
+
+
+                </div>
+
+                <!-- mũi tên phải -->
+                <div class="arrow next">&#10095;</div>
+            </div>
+
+            <!-- slider 2 -->
+            <div class="product-slider">
+
+                <!-- mũi tên trái -->
+                <div class="arrow prev">&#10094;</div>
+
+                <div class="slider-track">
+                    <div id="clickon" class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫18,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫27,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫18,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://www.detectiveconanworld.com/wiki/images/a/aa/Volume28v.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫18,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫22,000</p>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="https://www.detectiveconanworld.com/wiki/images/thumb/7/7d/Volume75v.jpg/225px-Volume75v.jpg"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫19,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://www.detectiveconanworld.com/wiki/images/d/d8/Volume72v.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫21,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://www.detectiveconanworld.com/wiki/images/3/30/Volume76v.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫17,000</p>
+                    </div>
+
+
+                </div>
+
+                <!-- mũi tên phải -->
+                <div class="arrow next">&#10095;</div>
+            </div>
+
+            <!-- slider 3 -->
+            <div class="product-slider">
+
+                <!-- mũi tên trái -->
+                <div class="arrow prev">&#10094;</div>
+
+                <div class="slider-track">
+                    <div class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫183,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫270,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫168,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫189,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫228,000</p>
+                    </div>
+
+                    <div class="product-item">
+                        <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫190,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫210,000</p>
+                    </div>
+                    <div class="product-item">
+                        <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
+                        <p class="product-name">doraemon123</p>
+                        <p class="product-price">₫175,000</p>
+                    </div>
+
+
+                </div>
+
+                <!-- mũi tên phải -->
+                <div class="arrow next">&#10095;</div>
+            </div>
+        </div>
+
+
+        <div class="top-truyen">
+            <h2>Top sách bán chạy trong tuần</h2>
+            <div class="content-top">
+                <div class="list-book">
+                    <ol>
+                        <li>
+                            <div class="sach-item">
+                                <img src="https://tse2.mm.bing.net/th/id/OIP.o5BlN5mfxXoD8u_Xm6S9igHaLH?rs=1&pid=ImgDetMain&o=7&rm=3"
+                                    alt="">
+                                <h3>One piece: Vùng Wano Quốc</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sach-item">
+                                <img
+                                    src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3">
+                                <h3>Tập 100</h3>
+                                <p>Thám tử lừng danh Conan</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sach-item">
+                                <img src="https://tse3.mm.bing.net/th/id/OIP.sZz1xnJWZY9rIqEsyGuMfAHaKX?rs=1&pid=ImgDetMain&o=7&rm=3"
+                                    alt="">
+                                <h3>Dragon ball</h3>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sach-item">
+                                <img src="https://cdn0.fahasa.com/media/catalog/product/t/r/truyen_tranh_trang_quynh___tap_1_sao_sang_xu_thanh_in_mau_1_2021_05_08_08_11_15.jpg"
+                                    alt="">
+                                <h3>Ăn Sáng xứ Thanh</h3>
+                                <p>Trạng Quỳnh</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="sach-item">
+                                <img src="https://tse1.mm.bing.net/th/id/OIP.9kpsaXsuR1X9igWmZ0jRfgHaL4?rs=1&pid=ImgDetMain&o=7&rm=3"
+                                    alt="">
+                                <h3>One piece: Đảo người cá</h3>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="sach-chi-tiet">
+                    <div class="item-top-1">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.o5BlN5mfxXoD8u_Xm6S9igHaLH?rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                    </div>
+
+                    <div class="detail-top-1">
+                        <h3>One piece: Vùng Wano quốc</h3>
+                        <p>Tác giả: Eiichiro Oda</p>
+                        <p>Nhà xuất bản: Shueisha</p>
+                        <p id="sale-price">22.500 đ</p>
+                        <div class="sale-item">
+                            <p><s>30.000 đ</s></p>
+                            <div id="sale-percent">-25%</div>
+                        </div>
+                        <p>Mô tả: Arc Wano Quốc trong One Piece là cuộc chiến lớn giữa liên minh Luffy và các samurai
+                            chống lại Kaido và băng Bách Thú để giải phóng đất nước Wano khỏi chế độ độc tài..</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Cột 1: Giới thiệu -->
+        <div class="footer-column">
+            <div class="logo">
+                <a href="#">
+                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                </a>
+            </div>
+            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện
+                giấy,<br>
+                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
+            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
+                <str>10.000+</str><br>
+                truyện hấp dẫn cho bạn
+            </p>
+
+
+        </div>
+
+        <!-- Cột 2: Liên kết nhanh -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
+            <ul>
+                <li><a href="#">Trang chủ</a></li>
+                <li><a href="#">Thể loại truyện</a></li>
+                <li><a href="#">Khuyến mãi</a></li>
+                <li><a href="#">Giỏ hàng</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 3: Hỗ trợ khách hàng -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
+            <ul>
+                <li><a href="#">Hướng dẫn mua hàng</a></li>
+                <li><a href="#">Chính sách đổi trả</a></li>
+                <li><a href="#">Chính sách vận chuyển</a></li>
+                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 4: Liên hệ & Mạng xã hội -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
+            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
+            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
+
+            <div class="social-links">
+                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <!-- Cột 5: Thanh toán -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
+            <p>Hỗ trợ thanh toán qua:</p>
+            <div class="payment-icons">
+                <img src="../../img/momo.png" alt="Momo">
+                <img src="../../img/zalopay.png" alt="ZaloPay">
+            </div>
+            <p>Website đã đăng ký với Bộ Công Thương.</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
+    </div>
+</footer>
+
+
+</html>
