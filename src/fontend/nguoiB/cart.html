@@ -8,11 +8,82 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-
     <!-- CSS -->
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
     <link rel="stylesheet" href="../css/UserBCss/cartCss.css">
     <link rel="stylesheet" href="../css/puplicCss/nav.css">
+
+    <!-- Thêm CSS để quản lý popup và message box -->
+    <style>
+        /* Ẩn các promoItem ban đầu */
+        .promoItem.hidden {
+            display: none;
+        }
+
+        /* Tắt thanh cuộn cho body và html khi popup hoặc message box mở */
+        body.no-scroll, html.no-scroll {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Popup và modalContent */
+        .promoPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modalContent {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        /* Message Box */
+        .message-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 10001; /* Cao hơn popup */
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+
+        .message-box .close-msg {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .message-box .close-msg:hover {
+            color: #000;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,7 +95,6 @@
     </div>
     <nav class="menu">
         <a href="#">Trang chủ</a>
-
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
@@ -33,7 +103,6 @@
                 <a href="#">Hài hước</a>
             </div>
         </div>
-
         <a href="#">Liên hệ</a>
     </nav>
     <div class="actions">
@@ -48,12 +117,11 @@
         <i class="fa-solid fa-user"></i>
         <a href="#" class="login-btn">Log in</a>
         <i class="fa-solid fa-comment"></i>
-
     </div>
 </header>
+
 <!-- ===================== MAIN CONTENT ===================== -->
 <main class="wrapper">
-
     <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM (CÓ SCROLL) -->
     <div class="cart-items-container">
         <!-- Header -->
@@ -70,7 +138,6 @@
         <!-- Scrollable Area -->
         <div class="cart-items-scrollable">
             <div class="cart-items">
-
                 <!-- Sản phẩm 1 -->
                 <div class="cart-item">
                     <input type="checkbox" class="item-checkbox"/>
@@ -115,10 +182,6 @@
                     <div class="item-total">164.002 đ</div>
                     <span class="delete-btn">Xóa</span>
                 </div>
-
-                <!-- Thêm sản phẩm để test scroll -->
-                <!-- <div class="cart-item">...</div> -->
-
             </div>
         </div>
     </div>
@@ -264,90 +327,170 @@
             <input type="text" id="promoCodeInput" placeholder="Nhập mã khuyến mãi..." class="promoInputField">
             <button id="applyManualCode" class="btnApply">Áp dụng</button>
         </div>
-        <div class="promo-list">
+        <div class="promo-list" id="promoList">
             <div class="promoItem">
                 <input type="radio" id="promo10k" name="promo" value="10k">
-                <label for="promo10k">Mã giảm giá 10K - Toàn sàn <br><small>Đơn hàng từ 130k -Không bao gồm giá trị <br>của
-                    các sản phẩm sau Manga, Ngoại...</small><br><small>HSD: 31/11/2025</small></label>
+                <label for="promo10k">Mã giảm giá 10K - Toàn sàn <br><small>Đơn hàng từ 130k - Không bao gồm giá trị
+                    <br>của các sản phẩm sau Manga, Ngoại...</small><br><small>HSD: 31/11/2025</small></label>
                 <button class="btnApply">Áp dụng</button>
             </div>
             <div class="promoItem">
-                <input type="radio" id="promo25k" name="promo" value="10k">
+                <input type="radio" id="promo25k" name="promo" value="25k">
                 <label for="promo25k">Mã giảm giá 25K - Truyện Manga <br><small>Đơn hàng từ 210k</small><br><small>HSD:
                     31/11/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <!-- Thêm các promoItem ẩn để minh họa chức năng "Xem thêm" -->
+            <div class="promoItem hidden">
+                <input type="radio" id="promo50k" name="promo" value="50k">
+                <label for="promo50k">Mã giảm giá 50K - Sách Học Đường <br><small>Đơn hàng từ 300k</small><br><small>HSD:
+                    31/12/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <div class="promoItem hidden">
+                <input type="radio" id="promo100k" name="promo" value="100k">
+                <label for="promo100k">Mã giảm giá 100K - Toàn Sàn <br><small>Đơn hàng từ 500k</small><br><small>HSD:
+                    31/12/2025</small></label>
                 <button class="btnApply">Áp dụng</button>
             </div>
         </div>
         <button id="viewMoreBtn" class="btnViewMore">Xem thêm</button>
     </div>
 </div>
+
+<!-- Thêm Message Box -->
+<div class="message-box" id="messageBox">
+    <span class="close-msg">&times;</span>
+    <p id="messageText"></p>
+</div>
+
 <!-- JavaScript -->
 <script>
-    // Get the modal
+    // Get elements
     var modal = document.getElementById("modal");
-
-    // Get the button that opens the modal (assuming it's triggered by "Mua thêm" in promo section)
-    var btn = document.querySelector(".promo-section .btn-buy-more");
-
-    // Get the <span> element that closes the modal
+    var viewMoreLink = document.querySelector(".promo-section .view-more");
     var span = document.getElementsByClassName("closeBtn")[0];
-    var closeBtn = document.querySelector(".btnClose");
-
-    // Get the view more button and promo items
     var viewMoreBtn = document.getElementById("viewMoreBtn");
-    var promoItems = document.querySelectorAll(".promoItem");
+    var messageBox = document.getElementById("messageBox");
+    var messageText = document.getElementById("messageText");
+    var closeMsg = document.querySelector(".close-msg");
 
-    // When the user clicks the button, open the modal
-    btn.onclick = function() {
+    // en=vent-select all
+    document.getElementById("select-all").addEventListener("change", function () {
+        var allCheckedboxes = document.querySelectorAll(".cart-item .item-checkbox");
+        allCheckedboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;//dong bo trang thai voi checkbox "chon tat ca"
+
+        });
+    });
+    // su kien tang giam so luon sach
+    document.querySelectorAll(".quantity-control .quantity-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            var quantityInput = this.parentElement.querySelector(".quantity-input");
+            var currentValue = parseInt(quantityInput.value);
+            if (this.classList.contains("plus")) {
+                quantityInput.value = currentValue + 1;
+            } else if (this.classList.contains("minus") && currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+        });
+    });
+    // su kien cho nút xoa san pham
+    document.querySelectorAll(".delete-btn").forEach(button => {
+       button.addEventListener("click", function(){
+          this.closest(".cart-item").remove();// xoa phan tu cha gan nhat
+       });
+    });
+
+    // Open modal and disable scroll
+    viewMoreLink.onclick = function (event) {
+        event.preventDefault();
         modal.style.display = "block";
+        document.body.classList.add("no-scroll");
+        document.documentElement.classList.add("no-scroll");
     }
 
-    // When the user clicks on <span> (x) or "Đóng", close the modal
-    span.onclick = function() {
+    // Close modal and enable scroll
+    span.onclick = function () {
         modal.style.display = "none";
-    }
-    closeBtn.onclick = function() {
-        modal.style.display = "none";
+        document.body.classList.remove("no-scroll");
+        document.documentElement.classList.remove("no-scroll");
     }
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
+    // Close modal when clicking outside
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
+            document.body.classList.remove("no-scroll");
+            document.documentElement.classList.remove("no-scroll");
         }
     }
 
-    // Apply promo code from list
+    // Apply promo code from list with message box and auto-close
     var applyBtns = document.querySelectorAll(".promoItem .btnApply");
     applyBtns.forEach(button => {
-        button.onclick = function() {
+        button.onclick = function () {
             var promo = this.parentElement.querySelector("input[type='radio']:checked");
             if (promo) {
-                alert("Áp dụng mã " + promo.value + " thành công!");
-                modal.style.display = "none";
+                messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promo.value + '</b> thành công!';
+                messageBox.style.display = "block";
+                document.body.classList.add("no-scroll");
+                document.documentElement.classList.add("no-scroll");
+                // Không ẩn popup: giữ modal.style.display = "block";
+                // Tự động tắt message box sau 3 giây
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                    document.body.classList.remove("no-scroll");
+                    document.documentElement.classList.remove("no-scroll");
+                }, 3000); // 3000ms = 3 giây
             } else {
-                alert("Vui lòng chọn một mã khuyến mãi!");
+                messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng chọn một mã khuyến mãi!';
+                messageBox.style.display = "block";
+                document.body.classList.add("no-scroll");
+                document.documentElement.classList.add("no-scroll");
             }
         }
     });
 
-    // Apply manually entered promo code
-    document.getElementById("applyManualCode").onclick = function() {
+    // Apply manually entered promo code with message box and auto-close
+    document.getElementById("applyManualCode").onclick = function () {
         var promoCode = document.getElementById("promoCodeInput").value.trim();
         if (promoCode) {
-            alert("Áp dụng mã " + promoCode + " thành công!");
-            modal.style.display = "none";
+            messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promoCode + '</b> thành công!';
+            messageBox.style.display = "block";
+            document.body.classList.add("no-scroll");
+            document.documentElement.classList.add("no-scroll");
+            // Không ẩn popup: giữ modal.style.display = "block";
+            // Tự động tắt message box sau 3 giây
+            setTimeout(() => {
+                messageBox.style.display = "none";
+                document.body.classList.remove("no-scroll");
+                document.documentElement.classList.remove("no-scroll");
+            }, 3000); // 3000ms = 3 giây
         } else {
-            alert("Vui lòng nhập mã khuyến mãi!");
+            messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng nhập mã khuyến mãi!';
+            messageBox.style.display = "block";
+            document.body.classList.add("no-scroll");
+            document.documentElement.classList.add("no-scroll");
         }
+    };
+
+    // Close message box and enable scroll
+    closeMsg.onclick = function () {
+        messageBox.style.display = "none";
+        document.body.classList.remove("no-scroll");
+        document.documentElement.classList.remove("no-scroll");
     }
 
     // View more functionality
-    viewMoreBtn.onclick = function() {
-        promoItems.forEach(item => {
+    viewMoreBtn.onclick = function () {
+        var hiddenItems = document.querySelectorAll(".promoItem.hidden");
+        hiddenItems.forEach(item => {
             item.classList.remove("hidden");
         });
-        viewMoreBtn.style.display = "none"; // Ẩn nút "Xem thêm" sau khi hiển thị tất cả
+        if (document.querySelectorAll(".promoItem.hidden").length === 0) {
+            viewMoreBtn.style.display = "none";
+        }
     }
 </script>
 </body>

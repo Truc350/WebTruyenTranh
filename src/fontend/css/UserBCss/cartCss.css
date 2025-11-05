@@ -5,7 +5,7 @@
     box-sizing: border-box;
     font-family: Arial, sans-serif;
 }
- *::before, *::after { box-sizing: border-box; }
+*::before, *::after { box-sizing: border-box; }
 
 body {
     background-color: #f9f9f9;
@@ -520,6 +520,92 @@ body {
 .btnClose:hover {
     background-color: #c82333;
 }
+
+/* ===================== Message Box - Đẹp và Lớn Hơn ===================== */
+#messageBox {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #e8f5e9, #a5d6a7);
+    border: 2px solid #4caf50;
+    border-radius: 20px;
+    padding: 40px 50px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    font-family: "Poppins", sans-serif;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#messageBox p {
+    font-size: 18px;
+    color: #2e7d32;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-box.success {
+    background: #f1f9f1;
+    border: 2px solid #28a745;
+}
+
+.message-box.error {
+    background: #fef2f2;
+    border: 2px solid #dc3545;
+}
+
+.message-box .check-icon {
+    font-size: 40px;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.message-box .error-icon {
+    font-size: 40px;
+    color: #dc3545;
+    margin-bottom: 15px;
+}
+
+.message-box p {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 20px;
+    line-height: 1.5;
+}
+
+.message-box .close-msg {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
+    transition: color 0.3s;
+}
+
+.message-box .close-msg:hover {
+    color: #000;
+}
+
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 900px) {
     .wrapper {
