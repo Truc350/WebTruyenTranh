@@ -72,7 +72,49 @@
             </ul>
         </div>
     </div>
+    <div class="profile-form-container">
+        <h2>Hồ sơ cá nhân</h2>
+        <form>
+            <div class="form-group">
+                <label for="ho">Họ*</label>
+                <input type="text" id="ho" name="ho" value="Huỳnh" required>
+            </div>
+            <div class="form-group">
+                <label for="ten">Tên*</label>
+                <input type="text" id="ten" name="ten" value="Trúc" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Số điện thoại</label>
+                <input type="tel" id="phone" name="phone" value="0394158994" required>
+                <button type="button" class="edit-btn">Thay đổi</button>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="Chưa có email" required>
+                <button type="button" class="edit-btn">Thêm mới</button>
+            </div>
+            <div class="form-group">
+                <div class="genders">
+                    <label>Giới tính*</label>
+                    <div class="gender-options">
+                        <label><input type="radio" name="gender" value="male" checked> Nam</label>
+                        <label><input type="radio" name="gender" value="female"> Nữ</label>
+                    </div>
+                </div>
 
+            </div>
+            <div class="form-group">
+                <div class="birthday">
+                    <label for="day">Birthday*</label>
+                    <input type="number" id="day" name="day" value="27" min="1" max="31" required> /
+                    <input type="number" id="month" name="month" value="10" min="1" max="12" required> /
+                    <input type="number" id="year" name="year" value="2005" min="1900" max="2025" required>
+                </div>
+
+            </div>
+            <button type="submit" class="save-btn">Lưu thay đổi</button>
+        </form>
+    </div>
 
 
 </main>
