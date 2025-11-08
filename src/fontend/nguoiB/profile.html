@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="../css/puplicCss/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/UserBCss/profile.css">
-
 </head>
 <body>
-
 <header class="navbar">
     <div class="logo">
         <img id="logo" src="../../img/logo.png" alt="Comic Store">
@@ -53,22 +51,18 @@
                 <h2>Huỳnh Trúc</h2>
                 <p class="membership">Thành viên Bạc</p>
                 <p class="f-point">F-Point tích lũy: 0</p>
-                <button class="add-point">Thêm 30.000 đé nâng hạng Vàng</button>
+<!--                <button class="add-point">Thêm 30.000 đé nâng hạng Vàng</button>-->
             </div>
         </div>
         <div class="menu">
             <ul>
                 <li><a href="#">Thông tin tài khoản <span class="red-dot"></span></a></li>
-                <li><a href="#">Số địa chỉ</a></li>
                 <li><a href="#">Đổi mật khẩu</a></li>
-                <li><a href="#">Thông tin xuất hóa đơn GTGT</a></li>
                 <li><a href="#">Ưu đãi thành viên</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
                 <li><a href="#">Ví voucher <span class="badge">14</span></a></li>
-                <li><a href="#">Tài Khoản F-Point / Freeship</a></li>
                 <li><a href="#">Thông Báo</a></li>
                 <li><a href="#">Sản phẩm yêu thích</a></li>
-                <li><a href="#">Nhận xét của tôi</a></li>
             </ul>
         </div>
     </div>
@@ -101,7 +95,6 @@
                         <label><input type="radio" name="gender" value="female"> Nữ</label>
                     </div>
                 </div>
-
             </div>
             <div class="form-group">
                 <div class="birthday">
@@ -110,13 +103,56 @@
                     <input type="number" id="month" name="month" value="10" min="1" max="12" required> /
                     <input type="number" id="year" name="year" value="2005" min="1900" max="2025" required>
                 </div>
+            </div>
+            <div class="form-group">
+                <div class="address">
+                    <label for="country">Quốc gia*</label>
+                    <select id="country" name="country" required>
+                        <option value="" disabled selected>Chọn quốc gia</option>
+                        <option value="Vietnam">Việt Nam</option>
 
+                    </select>
+                    <div class="diaChi">
+                        <div class="address-group">
+                            <label for="province">Tỉnh/Thành phố*</label>
+                            <select id="province" name="province" required>
+                                <option value="" disabled selected>Chọn tỉnh/thành phố</option>
+                            </select>
+                        </div>
+
+                        <div class="address-group">
+                            <label for="district">Huyện*</label>
+                            <select id="district" name="district" required>
+                                <option value="" disabled selected>Chọn huyện</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label for="house-number">Số nhà*</label>
+                    <input type="text" id="house-number" name="house-number" placeholder="Nhập số nhà, xã" required>
+                </div>
             </div>
             <button type="submit" class="save-btn">Lưu thay đổi</button>
         </form>
     </div>
-
-
+    <div class="change-password-container" style="display: none">
+        <h2>Đổi mật khẩu</h2>
+        <form action="">
+            <div class="form-group">
+                <label for="current-passord">Mật khẩu hiện tại*</label>
+                <input type="password" id="current-passord" name="current-passord" required>
+            </div>
+            <div class="form-group">
+                <label for="new-password">Mật khẩu mới*</label>
+                <input type="password" id="new-password" name="new-password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Xác nhận mật khẩu mới*</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            <button type="submit" class="save-btn">Lưu thay đổi</button>
+        </form>
+    </div>
 </main>
 
 <footer class="footer">
@@ -137,8 +173,6 @@
                 <br>
                 truyện hấp dẫn cho bạn
             </p>
-
-
         </div>
 
         <!-- Cột 2: Liên kết nhanh -->
@@ -194,5 +228,110 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const provinceSelect = document.getElementById('province');
+        const districtSelect = document.getElementById('district');
+        const profileForm = document.querySelector('.profile-form-container');
+        const changePasswordForm = document.querySelector('.change-password-container');
+        const menuItems = document.querySelectorAll('.menu ul li');
+
+        // Fallback tĩnh cho huyện
+        const fallbackDistricts = {
+            '1': [{ code: '001', name: 'Ba Đình' }, { code: '002', name: 'Hoàn Kiếm' }, { code: '003', name: 'Cầu Giấy' }],
+            '79': [{ code: '268', name: 'Quận 1' }, { code: '269', name: 'Quận 3' }, { code: '270', name: 'Quận 7' }],
+            '48': [{ code: '161', name: 'Hải Châu' }, { code: '162', name: 'Thanh Khê' }]
+        };
+
+        // Load tỉnh/thành
+        fetch('https://provinces.open-api.vn/api/?depth=1')
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.code;
+                    option.textContent = item.name;
+                    provinceSelect.appendChild(option);
+                });
+                console.log('Đã load thành công', data.length, 'tỉnh/thành phố');
+            })
+            .catch(error => console.error('Error loading provinces:', error));
+
+        // Load huyện khi chọn tỉnh
+        provinceSelect.addEventListener('change', function() {
+            const provinceCode = this.value;
+            districtSelect.innerHTML = '<option value="" disabled selected>Đang tải huyện...</option>';
+            if (provinceCode) {
+                fetch(`https://esgoo.net/api-quanhuyen?tinhthanh=${provinceCode}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                const option = document.createElement('option');
+                                option.value = item.id;
+                                option.textContent = item.ten_quan_huyen;
+                                districtSelect.appendChild(option);
+                            });
+                            console.log('Đã load thành công', data.length, 'huyện cho tỉnh', provinceCode);
+                        } else {
+                            loadFallbackDistricts(provinceCode);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi tải huyện từ Esgoo API cho tỉnh', provinceCode, ':', error);
+                        loadFallbackDistricts(provinceCode);
+                    });
+            } else {
+                districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
+            }
+        });
+
+        // Hàm load fallback tĩnh
+        function loadFallbackDistricts(provinceCode) {
+            districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
+            const districts = fallbackDistricts[provinceCode] || [{ code: 'none', name: 'Không có dữ liệu' }];
+            districts.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.code;
+                option.textContent = item.name;
+                districtSelect.appendChild(option);
+            });
+            console.log('Đã load fallback huyện cho tỉnh', provinceCode);
+        }
+
+        // Xử lý click menu item
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Loại bỏ active từ tất cả
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // Xử lý hiển thị form
+                const text = this.querySelector('a').textContent.trim();
+                if (text === 'Đổi mật khẩu') {
+                    profileForm.style.display = 'none';
+                    changePasswordForm.style.display = 'block';
+                } else {
+                    profileForm.style.display = 'block';
+                    changePasswordForm.style.display = 'none';
+                }
+
+                e.preventDefault();
+            });
+        });
+
+        // Đặt active mặc định cho "Thông tin tài khoản"
+        menuItems[0].classList.add('active');
+        profileForm.style.display = 'block';
+        changePasswordForm.style.display = 'none';
+    });
+</script>
 </body>
 </html>
