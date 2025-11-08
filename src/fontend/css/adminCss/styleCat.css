@@ -19,10 +19,7 @@ body {
     flex: 1;
     padding: 30px 40px;
     background-color:white;
-    box-sizing: border-box;
-    overflow-y: auto;
     max-height: 100vh;
-    overflow-x: auto;
 }
 
 .page-title {
@@ -146,20 +143,21 @@ body {
 }
 
 /* Phân trang bên trong bảng */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+}
+
 .pagination {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-}
-
-.pagination-row td {
-    text-align: right;
+    gap: 6px;
 }
 
 .pagination button {
     background-color: #fff;
     border: 1px solid #FF7A7A;
-    color: #333;
     border-radius: 6px;
     padding: 4px 10px;
     cursor: pointer;
@@ -167,8 +165,19 @@ body {
 }
 
 .pagination button.active {
-    background-color: #ff7070;
-    color: white;
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
 }
 /* POPUP THÊM THỂ LOẠI*/
 /* Overlay mờ toàn màn */

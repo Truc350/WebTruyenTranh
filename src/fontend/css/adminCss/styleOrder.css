@@ -530,5 +530,151 @@ body {
     font-size: 18px;
 }
 
+/* ====== TAB: TRA TIEN/ HOAN TIEN ====== */
+/* Trạng thái */
+.status {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
+.status.yellow { background: #ffe6b3; color: #b36b00; }
+.status.green { background: #d6ffd8; color: #1d7a24; }
+
+/* Nút */
+.btn-detail, .btn-refund {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.btn-detail { background: #e8e8e8; }
+.btn-refund { background: #ffb84d; }
+
+/* Popup xem chi tiết */
+.return-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 9999;
+    animation: fadeIn 0.25s ease;
+    font-family: "Segoe UI", sans-serif;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -48%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Header */
+.popup-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.popup-close-btn {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+.popup-close-btn:hover {
+    color: #000;
+}
+
+/* Nội dung */
+.popup-content {
+    padding: 16px 20px;
+}
+
+.popup-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.popup-row .label {
+    width: 130px;
+    font-weight: 600;
+    color: #444;
+}
+
+.popup-row .value {
+    flex: 1;
+    color: #222;
+}
+
+.proof-link {
+    color: #007bff;
+    text-decoration: none;
+}
+.proof-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    border-top: 1px solid #eee;
+}
+
+.popup-close {
+    background: #424ef5;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.popup-close:hover {
+    background: #2933d1;
+}
+
+
+#tab-return .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-return .pagination-row-return td {
+    text-align: right;
+    background-color: #fff;
+}
+
+/* ====== TAB: DON BI HUY ====== */
+#tab-cancelled .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-cancelled .pagination-row-cancelled td {
+    text-align: right;
+    background: #fff;
+}
+
+
+
+
+
 
 

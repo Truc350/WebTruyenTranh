@@ -504,6 +504,190 @@
         </div>
 
 
+        <!-- ========== TAB 5: TRẢ HÀNG/ HOAN TIEN ========== -->
+        <div class="tab-content" id="tab-return" style="display:none;">
+
+            <!-- Thanh tìm kiếm -->
+            <div class="order-controls return-controls">
+                <div class="search-box">
+                    <input type="text" id="returnSearch" class="search-input" placeholder="Tìm mã đơn / tên khách...">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Lý do hoàn trả</th>
+                        <th>Tình trạng xử lý</th>
+                        <th>Chi tiết</th>
+                        <th>Xác nhận hoàn tiền</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="returnTableBody">
+
+                    <!-- Ví dụ đơn đang xem xét -->
+                    <tr>
+                        <td>DH00210</td>
+                        <td>Phạm Ngọc Mai</td>
+                        <td>Bìa truyện bị rách</td>
+
+                        <!-- Trạng thái -->
+                        <td>
+                            <span class="status yellow">Đang xem xét</span>
+                        </td>
+
+                        <!-- Nút Xem chi tiết -->
+                        <td>
+                            <button class="btn-detail">Xem</button>
+                        </td>
+
+                        <!-- Nút Xác nhận hoàn tiền -->
+                        <td>
+                            <button class="btn-refund">Xác nhận hoàn tiền</button>
+                        </td>
+                    </tr>
+
+                    <!-- Ví dụ đơn đã hoàn -->
+                    <tr>
+                        <td>DH00211</td>
+                        <td>Nguyễn Quang Hải</td>
+                        <td>Giao nhầm sản phẩm</td>
+
+                        <td>
+                            <span class="status green">Đã hoàn tiền</span>
+                        </td>
+
+                        <td>
+                            <button class="btn-detail">Xem</button>
+                        </td>
+
+                        <td>
+                            <!-- Nút không xuất hiện -->
+                        </td>
+                    </tr>
+
+                    <!-- Phân trang -->
+                    <tr class="pagination-row-return">
+                        <td colspan="10">
+                            <div class="pagination" id="returnPagination">
+                                <button class="page-btn return-page" data-page="1">1</button>
+                                <button class="page-btn return-page" data-page="2">2</button>
+                                <button class="page-btn return-page" data-page="3">3</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="return-popup" id="returnPopup">
+            <div class="popup-header">
+                <h3>Chi tiết đơn hoàn</h3>
+                <span class="popup-close-btn" id="closePopup">×</span>
+            </div>
+
+            <div class="popup-content">
+                <div class="popup-row">
+                    <span class="label">Sản phẩm:</span>
+                    <span class="value">Thám tử lừng danh Conan tập 156</span>
+                </div>
+
+                <div class="popup-row">
+                    <span class="label">Số lượng:</span>
+                    <span class="value">1</span>
+                </div>
+
+                <div class="popup-row">
+                    <span class="label">Lý do hoàn:</span>
+                    <span class="value">Sách bị rách</span>
+                </div>
+
+                <div class="popup-row">
+                    <span class="label">Minh chứng:</span>
+                    <span class="value"><a href="#" class="proof-link">Xem ảnh / video</a></span>
+                </div>
+            </div>
+
+            <div class="popup-footer">
+                <button class="popup-close" id="closePopupBtn">Đóng</button>
+            </div>
+        </div>
+
+        <!-- ========== TAB 6: DON BI HUY ========== -->
+        <div class="tab-content" id="tab-cancelled" style="display:none;">
+
+            <!-- Thanh tìm kiếm -->
+            <div class="order-controls cancelled-controls">
+                <div class="search-box">
+                    <input type="text" id="cancelledSearch" class="search-input" placeholder="Tìm kiếm mã đơn / tên khách / lý do...">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Lý do hủy</th>
+                        <th>Người hủy</th>
+                        <th>Ngày hủy</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="cancelledTableBody">
+
+                    <!-- DỮ LIỆU MẪU -->
+                    <tr>
+                        <td>DH00901</td>
+                        <td>Trần Minh Hào</td>
+                        <td>Đổi ý</td>
+                        <td>Khách hàng</td>
+                        <td>05/11/2025</td>
+                    </tr>
+
+                    <tr>
+                        <td>DH00902</td>
+                        <td>Ngô Thị Hạnh</td>
+                        <td>Sản phẩm giao chậm</td>
+                        <td>Khách hàng</td>
+                        <td>04/11/2025</td>
+                    </tr>
+
+                    <tr>
+                        <td>DH00903</td>
+                        <td>Bùi Tuấn Khang</td>
+                        <td>Không liên hệ được khách</td>
+                        <td>Admin</td>
+                        <td>03/11/2025</td>
+                    </tr>
+
+                    <!-- Phân trang -->
+                    <tr class="pagination-row-cancelled">
+                        <td colspan="10">
+                            <div class="pagination" id="cancelledPagination">
+                                <button class="page-btn cancelled-page" data-page="1">1</button>
+                                <button class="page-btn cancelled-page" data-page="2">2</button>
+                                <button class="page-btn cancelled-page" data-page="3">3</button>
+                                <button class="page-btn cancelled-page" data-page="4">4</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     </div>
 
@@ -555,60 +739,62 @@
 
 </script>
 
+
+<!--TAB CHỜ LẤY HÀNG-->
 <script>
 
-    const tabs = document.querySelectorAll(".tab-item");
-    const tabContents = document.querySelectorAll(".tab-content");
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('pickupTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-pickup'));
+        const pageButtons = document.querySelectorAll('.pickup-page');
 
-    // Hiển thị tab theo index: 0 = chờ xác nhận, 1 = chờ lấy hàng, ...
-    function showTab(index) {
-        // Xóa active
-        tabs.forEach(t => t.classList.remove("active"));
-        if (tabs[index]) tabs[index].classList.add("active");
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
 
-        // Ẩn mọi nội dung, chỉ show cái index
-        tabContents.forEach((c, i) => {
-            if (i === index) c.style.display = ""; // show (mặc định)
-            else c.style.display = "none";
-        });
-    }
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
 
-    // Gắn sự kiện click cho tab
-    tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => {
-            showTab(index);
-            // Nếu cần focus vào search input tương ứng:
-            const targetContent = tabContents[index];
-            const input = targetContent ? targetContent.querySelector('.search-input') : null;
-            if (input) input.focus();
-        });
-    });
-
-    // Khởi tạo: show tab đầu (Chờ xác nhận)
-    showTab(0);
-
-    /* --- XỬ LÝ NÚT "Xác nhận đã giao cho ĐVVC" trong tab-pickup --- */
-    document.addEventListener("click", (e) => {
-        // nút trong tab-pickup
-        if (e.target.classList.contains("ship-confirm-btn")) {
-            const row = e.target.closest("tr");
-            if (!row) return;
-            const orderId = row.children[0].textContent.trim();
-            // Gọi API / cập nhật DB ở đây nếu cần (fetch)
-            // Tạm: hiện thông báo và remove row
-            if (confirm(`Xác nhận đơn ${orderId} đã giao cho ĐVVC?`)) {
-                // TODO: gửi request lên server
-                row.remove();
-                // Nếu bạn muốn tự động chuyển sang tab "Đang giao",
-                // tìm index của tab "Đang giao" và gọi showTab(index)
-                // ví dụ: showTab(2);
-            }
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.pickup-page[data-page="${page}"]`)?.classList.add('active');
         }
-    });
 
-    /* ==============================
-      TAB ĐANG GIAO
-============================== */
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+
+
+        /* --- XỬ LÝ NÚT "Xác nhận đã giao cho ĐVVC" trong tab-pickup --- */
+        document.addEventListener("click", (e) => {
+            // nút trong tab-pickup
+            if (e.target.classList.contains("ship-confirm-btn")) {
+                const row = e.target.closest("tr");
+                if (!row) return;
+                const orderId = row.children[0].textContent.trim();
+                // Gọi API / cập nhật DB ở đây nếu cần (fetch)
+                // Tạm: hiện thông báo và remove row
+                if (confirm(`Xác nhận đơn ${orderId} đã giao cho ĐVVC?`)) {
+                    // TODO: gửi request lên server
+                    row.remove();
+                    // Nếu bạn muốn tự động chuyển sang tab "Đang giao",
+                    // tìm index của tab "Đang giao" và gọi showTab(index)
+                    // ví dụ: showTab(2);
+                }
+            }
+        });
+    })();
+
+</script>
+
+
+<!--TAB ĐANG GIAO-->
+<script>
     (function(){
         const ROWS_PER_PAGE = 5;
         const tbody = document.getElementById('deliverTableBody');
@@ -634,12 +820,59 @@
         });
 
         showPage(1);
+
+
+        /* --- XỬ LÝ NÚT (Delegation) --- */
+        document.addEventListener('click', async (e) => {
+            // btn-delivered: xác nhận đã giao
+            if (e.target.classList.contains('btn-delivered')) {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const orderId = row.children[0].textContent.trim();
+
+                if (!confirm(`Xác nhận đơn ${orderId} đã giao thành công?`)) return;
+
+                // TODO: Gửi request lên backend để cập nhật status
+                // ví dụ (fetch):
+                // const res = await fetch('/api/orders/updateStatus', {method:'POST', body: JSON.stringify({id: orderId, status:'DELIVERED'})});
+                // const data = await res.json();
+                // if (!data.success) { alert('Cập nhật thất bại'); return; }
+
+                // Vì bạn chưa có backend, ta simulate success:
+                // --- remove row từ DOM ---
+                row.remove();
+
+                // --- cập nhật pagination / hiển thị lại bảng ---
+                update();
+
+                // --- (tùy chọn) chuyển tab Đã giao: chỉ khi backend OK
+                // showTab(3); // bỏ comment nếu bạn muốn tự động chuyển
+                return;
+            }
+
+            // btn-return: chuyển sang Trả hàng/Hoàn tiền
+            if (e.target.classList.contains('btn-return')) {
+                const row = e.target.closest('tr');
+                if (!row) return;
+                const orderId = row.children[0].textContent.trim();
+
+                if (!confirm(`Chuyển đơn ${orderId} sang Đơn trả hàng/Hoàn tiền?`)) return;
+
+                // TODO: Gọi API backend chuyển trạng thái
+                // simulate success: remove row
+                row.remove();
+                update();
+
+                // showTab(4); // bật nếu muốn chuyển
+                return;
+            }
+        });
     })();
+</script>
 
 
-    /* ==============================
-          TAB ĐÃ GIAO
-    ============================== */
+<!--TAB ĐÃ GIAO-->
+<script>
     (function(){
         const ROWS_PER_PAGE = 5;
         const tbody = document.getElementById('deliveredTableBody');
@@ -679,64 +912,114 @@
             r.style.display = text.includes(keyword) ? "" : "none";
         });
     });
+</script>
 
-        // /* --- XỬ LÝ NÚT (Delegation) --- */
-        // document.addEventListener('click', async (e) => {
-        //     // btn-delivered: xác nhận đã giao
-        //     if (e.target.classList.contains('btn-delivered')) {
-        //         const row = e.target.closest('tr');
-        //         if (!row) return;
-        //         const orderId = row.children[0].textContent.trim();
-        //
-        //         if (!confirm(`Xác nhận đơn ${orderId} đã giao thành công?`)) return;
-        //
-        //         // TODO: Gửi request lên backend để cập nhật status
-        //         // ví dụ (fetch):
-        //         // const res = await fetch('/api/orders/updateStatus', {method:'POST', body: JSON.stringify({id: orderId, status:'DELIVERED'})});
-        //         // const data = await res.json();
-        //         // if (!data.success) { alert('Cập nhật thất bại'); return; }
-        //
-        //         // Vì bạn chưa có backend, ta simulate success:
-        //         // --- remove row từ DOM ---
-        //         row.remove();
-        //
-        //         // --- cập nhật pagination / hiển thị lại bảng ---
-        //         update();
-        //
-        //         // --- (tùy chọn) chuyển tab Đã giao: chỉ khi backend OK
-        //         // showTab(3); // bỏ comment nếu bạn muốn tự động chuyển
-        //         return;
-        //     }
-        //
-        //     // btn-return: chuyển sang Trả hàng/Hoàn tiền
-        //     if (e.target.classList.contains('btn-return')) {
-        //         const row = e.target.closest('tr');
-        //         if (!row) return;
-        //         const orderId = row.children[0].textContent.trim();
-        //
-        //         if (!confirm(`Chuyển đơn ${orderId} sang Đơn trả hàng/Hoàn tiền?`)) return;
-        //
-        //         // TODO: Gọi API backend chuyển trạng thái
-        //         // simulate success: remove row
-        //         row.remove();
-        //         update();
-        //
-        //         // showTab(4); // bật nếu muốn chuyển
-        //         return;
-        //     }
-        // });
+
+<!--CHUỂN TRANG GIŨA CÁC TAB-->
+<script>
+
+    const tabs = document.querySelectorAll(".tab-item");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    // Hiển thị tab theo index: 0 = chờ xác nhận, 1 = chờ lấy hàng, ...
+    function showTab(index) {
+        // Xóa active
+        tabs.forEach(t => t.classList.remove("active"));
+        if (tabs[index]) tabs[index].classList.add("active");
+
+        // Ẩn mọi nội dung, chỉ show cái index
+        tabContents.forEach((c, i) => {
+            if (i === index) c.style.display = ""; // show (mặc định)
+            else c.style.display = "none";
+        });
+    }
+
+    // Gắn sự kiện click cho tab
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+            showTab(index);
+            // Nếu cần focus vào search input tương ứng:
+            const targetContent = tabContents[index];
+            const input = targetContent ? targetContent.querySelector('.search-input') : null;
+            if (input) input.focus();
+        });
+    });
+
+    // Khởi tạo: show tab đầu (Chờ xác nhận)
+    showTab(0);
 
 </script>
 
+<!--TRA TIEN/ HOAN TIEN-->
 <script>
-    /* ==============================
-       TAB CHỜ LẤY HÀNG
- ============================== */
+    /* --- TÌM KIẾM --- */
+    document.getElementById("returnSearch").addEventListener("keyup", function () {
+        const keyword = this.value.toLowerCase();
+        document.querySelectorAll("#returnTableBody tr:not(.pagination-row-return)").forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(keyword) ? "" : "none";
+        });
+    });
+
+
+    /* --- POPUP CHI TIẾT --- */
+    document.addEventListener("click", e => {
+        if (e.target.classList.contains("btn-detail")) {
+            document.getElementById("returnPopup").style.display = "block";
+        }
+    });
+    document.getElementById("closePopup").onclick = () => {
+        document.getElementById("returnPopup").style.display = "none";
+    };
+
+    document.getElementById("closePopupBtn").onclick = () => {
+        document.getElementById("returnPopup").style.display = "none";
+    };
+
+
+    /* --- XÁC NHẬN HOÀN TIỀN --- */
+    document.addEventListener("click", e => {
+        if (e.target.classList.contains("btn-refund")) {
+            const row = e.target.closest("tr");
+            if (confirm("Xác nhận hoàn tiền cho đơn này?")) {
+                row.querySelector(".status").textContent = "Đã hoàn tiền";
+                row.querySelector(".status").classList.remove("yellow");
+                row.querySelector(".status").classList.add("green");
+                e.target.remove();
+            }
+        }
+    });
+
+
+    /* --- PHÂN TRANG --- */
     (function(){
         const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('pickupTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-pickup'));
-        const pageButtons = document.querySelectorAll('.pickup-page');
+        const tbody = document.getElementById('returnTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-return'));
+        const pageButtons = document.querySelectorAll('.return-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => r.style.display = (idx >= start && idx < end) ? "" : "none");
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.return-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => btn.addEventListener("click", () => showPage(Number(btn.dataset.page))));
+        showPage(1);
+    })();
+
+</script>
+
+<!--DON BI HUY-->
+<script>
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('cancelledTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-cancelled'));
+        const pageButtons = document.querySelectorAll('.cancelled-page');
 
         function showPage(page){
             const start = (page - 1) * ROWS_PER_PAGE;
@@ -747,7 +1030,7 @@
             });
 
             pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.pickup-page[data-page="${page}"]`)?.classList.add('active');
+            document.querySelector(`.cancelled-page[data-page="${page}"]`)?.classList.add('active');
         }
 
         pageButtons.forEach(btn => {
@@ -758,6 +1041,15 @@
 
         showPage(1);
     })();
+
+    /* SEARCH */
+    document.getElementById("cancelledSearch").addEventListener("keyup", function () {
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#cancelledTableBody tr:not(.pagination-row-cancelled)");
+        rows.forEach(r => {
+            r.style.display = r.textContent.toLowerCase().includes(keyword) ? "" : "none";
+        });
+    });
 
 </script>
 

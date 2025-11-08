@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý người dùng</title>
+    <link rel="stylesheet" href="../css/adminCss/styleUserMan.css">
+    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="../../img/logo.png" alt="Logo" class="logo">
+            <h2>Comic Store</h2>
+        </div>
+
+        <ul>
+            <li>
+                <img src="../../img/home.png" class="icon">
+                <span>Trang chủ</span>
+            </li>
+            <li class="active">
+                <img src="../../img/product.png" class="icon">
+                <span>Quản lý sản phẩm</span>
+            </li>
+            <li>
+                <img src="../../img/category.png" class="icon">
+                <span>Quản lý thể loại</span>
+            </li>
+            <li>
+                <img src="../../img/order.png" class="icon">
+                <span>Quản lý đơn hàng</span>
+            </li>
+            <li>
+                <img src="../../img/user.png" class="icon">
+                <span>Quản lý người dùng</span>
+            </li>
+            <li>
+                <img src="../../img/promo.png" class="icon">
+                <span>Khuyến mãi</span>
+            </li>
+            <li>
+                <img src="../../img/report.png" class="icon">
+                <span>Thống kê/ Báo cáo</span>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <header class="admin-header">
+            <div class="header-right">
+                <i class="bi bi-bell header-icon"></i>
+                <i class="bi bi-chat-dots header-icon"></i>
+
+                <div class="admin-profile">
+                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                    <span class="admin-name">Admin</span>
+                </div>
+            </div>
+        </header>
+        <h2 class="page-title">Quản lý người dùng</h2>
+
+        <div class="user-management">
+
+            <!-- Search bar -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm người mua...">
+                <i class="bi bi-search search-icon"></i>
+            </div>
+
+            <table id="userTable" class="user-table">
+                <thead>
+                <tr>
+                    <th>Tên khách hàng</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Ngày tạo</th>
+                    <th>Cấp thành viên</th>
+                    <th>Tổng chi tiêu</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+
+                <tbody id="userTableBody" >
+                <tr>
+                    <td>Nguyễn Văn A</td>
+                    <td>van.a@example.com</td>
+                    <td>090-123-4567</td>
+                    <td>21/01/2024</td>
+                    <td><span class="badge level-Normal">Normal</span></td>
+                    <td>1.200.000đ</td>
+                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                </tr>
+
+                <tr>
+                    <td>Nguyễn Văn B</td>
+                    <td>van.b@example.com</td>
+                    <td>090-123-4568</td>
+                    <td>12/03/2024</td>
+                    <td><span class="badge level-Silver">Silver</span></td>
+                    <td>3.500.000đ</td>
+                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                </tr>
+
+                <tr>
+                    <td>Trần Thị C</td>
+                    <td>thi.c@example.com</td>
+                    <td>090-123-4569</td>
+                    <td>05/02/2024</td>
+                    <td><span class="badge level-Gold">Gold</span></td>
+                    <td>7.800.000đ</td>
+                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                </tr>
+
+                <tr>
+                    <td>Lê Thị D</td>
+                    <td>thi.d@example.com</td>
+                    <td>090-123-4570</td>
+                    <td>18/04/2024</td>
+                    <td><span class="badge level-Platinum">Platinum</span></td>
+                    <td>11.200.000đ</td>
+                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                </tr>
+
+                <!-- Phân trang -->
+                <tr class="pagination-row">
+                    <td colspan="10">
+                        <div class="pagination" id="tablePagination">
+                            <button class="page-btn user-page" data-page="1">1</button>
+                            <button class="page-btn user-page" data-page="2">2</button>
+                            <button class="page-btn user-page" data-page="3">3</button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Popup -->
+        <div id="upgradePopup" class="popup-overlay">
+            <div class="popup-box">
+                <h3>Nâng cấp thành viên</h3>
+                <p id="popupUserName"></p>
+                <select id="upgradeSelect">
+                    <option value="Normal">Thường</option>
+                    <option value="Silver">Bạc</option>
+                    <option value="Gold">Vàng</option>
+                    <option value="Platinum">Kim cương</option>
+                </select>
+
+                <div class="popup-actions">
+                    <button id="upgradeConfirm">Xác nhận</button>
+                    <button id="upgradeCancel">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+
+<script>
+    let rows = Array.from(document.querySelectorAll("#userTableBody tr"))
+        .filter(r => r.querySelector(".upgrade-btn"));
+    let popup = document.getElementById("upgradePopup");
+    let selectedRow = null;
+
+    rows.forEach(row => {
+        row.querySelector(".upgrade-btn").onclick = function(){
+            selectedRow = row;
+            document.getElementById("popupUserName").innerText =
+                "Tên: " + row.cells[0].innerText;
+            popup.style.display = "flex";
+        }
+    });
+
+    document.getElementById("upgradeConfirm").onclick = function(){
+        let level = document.getElementById("upgradeSelect").value;
+        let levelSpan = selectedRow.cells[4].querySelector("span");
+        levelSpan.textContent = level;
+        levelSpan.className = "badge level-" + level;
+        popup.style.display = "none";
+    };
+
+    document.getElementById("upgradeCancel").onclick = function(){
+        popup.style.display = "none";
+    };
+
+    document.getElementById("searchInput").onkeyup = function(){
+        let filter = this.value.toLowerCase();
+        rows.forEach(row => {
+            let text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    };
+</script>
+
+<script>
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('userTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        const pageButtons = document.querySelectorAll('.user-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.user-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+</script>
+
+</body>
+</html>
