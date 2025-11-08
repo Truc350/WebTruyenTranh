@@ -8,11 +8,8 @@
     <title>Comic Store - Chat Người Mua - Người Bán</title>
     <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-
-    <link rel="stylesheet" href="../css/UserBCss/chat.css">
     <link rel="stylesheet" href="../css/puplicCss/nav.css">
-
+    <link rel="stylesheet" href="../css/UserBCss/chat.css">
 </head>
 <body>
 <header class="navbar">
@@ -46,33 +43,10 @@
         <i class="fa-solid fa-comment"></i>
     </div>
 </header>
-<!-- ==================== CHỈ CẬP NHẬT PHẦN NÀY ==================== -->
-<div class="chat-container">
-    <!-- Danh sách người dùng -->
-    <div class="user-list">
-        <div class="user-list-header">Tin nhắn</div>
-        <ul id="userList">
-            <li data-user-id="1" onclick="selectUser(1)" class="active">
-                <img src="https://i.pravatar.cc/150?img=1" alt="User 1" class="user-avatar">
-                <div class="user-info">
-                    <div class="user-name">Người bán 1</div>
-                    <div class="user-preview">Cảm ơn bạn đã mua hàng!</div>
-                </div>
-                <div class="user-status online"></div>
-                <span class="unread-badge">2</span>
-            </li>
-            <li data-user-id="2" onclick="selectUser(2)">
-                <img src="https://i.pravatar.cc/150?img=2" alt="User 2" class="user-avatar">
-                <div class="user-info">
-                    <div class="user-name">Người bán 2</div>
-                    <div class="user-preview">Sản phẩm còn không ạ?</div>
-                </div>
-                <div class="user-status"></div>
-            </li>
-        </ul>
-    </div>
 
-    <!-- Khu vực chat -->
+<!-- Chat Container -->
+<div class="chat-container">
+    <!-- Chat Area -->
     <div class="chat-area">
         <div class="chat-header" id="chatHeader">
             <img src="https://i.pravatar.cc/150?img=1" alt="" class="user-avatar">
@@ -99,20 +73,18 @@
             <span></span><span></span><span></span>
         </div>
 
-        <!-- Trong phần .chat-input -->
+        <!-- Chat input -->
         <div class="chat-input">
             <label class="input-action" for="imageInput" title="Gửi ảnh">
                 <i class="fas fa-image"></i>
             </label>
             <input type="file" id="imageInput" accept="image/*" style="display: none;"/>
-
             <textarea id="messageInput" placeholder="Nhập tin nhắn..." rows="1"></textarea>
-
             <button class="input-action emoji-btn"><i class="fas fa-smile"></i></button>
             <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
         </div>
 
-        <!-- Xem trước ảnh -->
+        <!-- Image preview -->
         <div id="imagePreview" class="image-preview" style="display: none;">
             <img id="previewImg" src="" alt="Preview"/>
             <button class="close-preview" onclick="closePreview()">×</button>
@@ -120,12 +92,10 @@
         </div>
     </div>
 </div>
-<!-- ============================================================ -->
 
-<!-- FOOTER GIỮ NGUYÊN (không thay đổi) -->
+<!-- Footer -->
 <footer class="footer">
     <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
         <div class="footer-column">
             <div class="logo">
                 <a href="#">
@@ -133,16 +103,11 @@
                 </a>
             </div>
             <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
-                truyện giấy,<br>
-                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
+                truyện giấy,<br> đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lập năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <strong>10.000+</strong>
-                <br>
-                truyện hấp dẫn cho bạn
+                <strong>10.000+</strong><br> truyện hấp dẫn cho bạn
             </p>
         </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
         <div class="footer-column">
             <h4>Liên kết nhanh</h4>
             <ul>
@@ -153,8 +118,6 @@
                 <li><a href="#">Liên hệ</a></li>
             </ul>
         </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
         <div class="footer-column">
             <h4>Hỗ trợ khách hàng</h4>
             <ul>
@@ -164,22 +127,17 @@
                 <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
             </ul>
         </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
         <div class="footer-column">
             <h4>Liên hệ</h4>
             <p>support@metruyen.vn</p>
             <p>0123 456 789</p>
             <p>123 Nguyễn Huệ, Q.1, TP.HCM</p>
-
             <div class="social-links">
                 <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
                 <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
-
-        <!-- Cột 5: Thanh toán -->
         <div class="footer-column">
             <h4>Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>
@@ -190,7 +148,6 @@
             <p>Website đã đăng ký với Bộ Công Thương.</p>
         </div>
     </div>
-
     <div class="footer-bottom">
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
@@ -200,7 +157,7 @@
     // === KEY LƯU TRỮ TRONG LOCALSTORAGE ===
     const STORAGE_KEY = 'comicstore_chat_history';
 
-    // === LOAD DỮ LIỆU TỪ LOCALSTORAGE (nếu có) ===
+    // === LOAD DỮ LIỆU TỪ LOCALSTORAGE ===
     let conversations = {};
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -211,20 +168,13 @@
         console.warn("Không thể đọc lịch sử chat:", e);
     }
 
-    // === DỮ LIỆU MẶC ĐỊNH (nếu chưa có) ===
+    // === DỮ LIỆU MẶC ĐỊNH ===
     const defaultConversations = {
         1: {
             user: {name: "Người bán 1", avatar: "https://i.pravatar.cc/150?img=1", online: true},
             messages: [
                 {text: "Chào bạn! Mình có thể giúp gì ạ?", type: "received", time: "10:32"},
                 {text: "Mình cần tư vấn về sản phẩm", type: "sent", time: "10:33"}
-            ]
-        },
-        2: {
-            user: {name: "Người bán 2", avatar: "https://i.pravatar.cc/150?img=2", online: false},
-            messages: [
-                {text: "Sản phẩm còn không ạ?", type: "sent", time: "09:15"},
-                {text: "Dạ còn ạ, bạn muốn đặt hàng không?", type: "received", time: "09:16"}
             ]
         }
     };
@@ -236,7 +186,7 @@
         }
     });
 
-    let currentUserId = 1;
+    const currentUserId = 1;
 
     // === LƯU VÀO LOCALSTORAGE ===
     function saveToStorage() {
@@ -248,20 +198,20 @@
     }
 
     // === HIỂN THỊ HỘI THOẠI ===
-    function loadConversation(userId) {
-        const conv = conversations[userId];
+    function loadConversation() {
+        const conv = conversations[currentUserId];
         const header = document.getElementById('chatHeader');
         const messagesDiv = document.getElementById('chatMessages');
 
         // Cập nhật header
         header.innerHTML = `
-            <img src="${conv.user.avatar}" alt="" class="user-avatar">
-            <div class="header-info">
-                <h3>${conv.user.name}</h3>
-                <small><i class="fas fa-circle online-dot"></i> ${conv.user.online ? 'Đang hoạt động' : 'Offline'}</small>
-            </div>
-            <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
-        `;
+        <img src="${conv.user.avatar}" alt="" class="user-avatar">
+        <div class="header-info">
+            <h3>${conv.user.name}</h3>
+            <small><i class="fas fa-circle online-dot"></i> ${conv.user.online ? 'Đang hoạt động' : 'Offline'}</small>
+        </div>
+        <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
+    `;
 
         // Load tin nhắn
         messagesDiv.innerHTML = '';
@@ -269,24 +219,13 @@
             const messageEl = document.createElement('div');
             messageEl.className = `message ${msg.type}`;
             messageEl.innerHTML = `
-                <div class="bubble">${msg.text}</div>
-                <div class="timestamp">${msg.time}</div>
-            `;
+            <div class="bubble">${msg.text}</div>
+            <div class="timestamp">${msg.time}</div>
+        `;
             messagesDiv.appendChild(messageEl);
         });
 
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    // === CHỌN NGƯỜI BÁN ===
-    function selectUser(userId) {
-        if (currentUserId === userId) return;
-
-        document.querySelectorAll('#userList li').forEach(li => li.classList.remove('active'));
-        document.querySelector(`#userList li[data-user-id="${userId}"]`).classList.add('active');
-
-        currentUserId = userId;
-        loadConversation(userId);
     }
 
     // === GỬI TIN NHẮN ===
@@ -376,8 +315,10 @@
 
     // === KHỞI TẠO ===
     document.addEventListener('DOMContentLoaded', () => {
-        loadConversation(1);
+        loadConversation();
     });
 </script>
+
+
 </body>
 </html>
