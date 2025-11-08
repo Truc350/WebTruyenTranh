@@ -66,7 +66,7 @@ body {
     transition: width 0.25s ease; /* hiệu ứng underline mượt */
 }
 
- /*Thanh tìm kiếm + chọn đơn vị vận chuyển */
+/*Thanh tìm kiếm + chọn đơn vị vận chuyển */
 .order-controls {
     display: flex;
     gap: 14px;
@@ -75,11 +75,28 @@ body {
     margin-top: 40px;
 }
 
-.search-input {
+#tab-pending .search-box {
+    position: relative;
+    display: flex;
     width: 500px;
-    padding: 9px 14px;
+}
+
+#tab-pending .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 6px;
+}
+
+#tab-pending .search-box .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
 .shipping-select select {
@@ -88,7 +105,7 @@ body {
     border: 1px solid #ccc;
 }
 
-.shipping-select select option{
+.shipping-select select option {
     padding: 9px 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
@@ -106,15 +123,40 @@ body {
     font-size: 14px;
 }
 
-.apply-btn { background: #FFA68D; color: white; }
-.confirm-all-btn { background: #ff4d4d; color: white; }
-.confirm-btn { background: #4CAF50; color: white; }
-.cancel-btn { background: #CCCCCC; }
+.apply-btn {
+    background: #FFA68D;
+    color: white;
+}
 
-.apply-btn:hover { background: #ff8f76; }
-.confirm-all-btn:hover { background: #ff3636; }
-.confirm-btn:hover { background: #45a049; }
-.cancel-btn:hover { background: #b8b8b8; }
+.confirm-all-btn {
+    background: #ff4d4d;
+    color: white;
+}
+
+.confirm-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+.cancel-btn {
+    background: #CCCCCC;
+}
+
+.apply-btn:hover {
+    background: #ff8f76;
+}
+
+.confirm-all-btn:hover {
+    background: #ff3636;
+}
+
+.confirm-btn:hover {
+    background: #45a049;
+}
+
+.cancel-btn:hover {
+    background: #b8b8b8;
+}
 
 /*BANG*/
 .order-table {
@@ -127,7 +169,7 @@ body {
     text-align: left;
     font-weight: 600;
     padding: 8px 8px;
-    background: #fff;
+    background-color: #f9f9f9;
     white-space: nowrap;
 }
 
@@ -163,7 +205,7 @@ body {
     border-radius: 6px;
 }
 
-.order-table tbody tr:hover {
+#tab-pending .order-table tbody tr:hover {
     background: #fff5f5;
     transition: 0.25s;
 }
@@ -179,7 +221,6 @@ body {
 /* ==== PAGINATION ==== */
 .pagination-row td {
     text-align: right;
-    border-top: 2px solid #ffdede;
     background-color: #fff;
     padding-right: 20px;
 }
@@ -204,10 +245,6 @@ body {
     color: #fff;
 }
 
-.pagination button:hover {
-    background-color: #ffdcdc;
-}
-
 .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -223,11 +260,11 @@ body {
 /* ===== Popup hủy đơn - overlay & box ===== */
 .cancel-popup {
     position: fixed;
-    inset: 0;                   /* top:0; right:0; bottom:0; left:0; */
-    display: none;             /* show bằng JS */
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    display: none; /* show bằng JS */
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     z-index: 1200;
     padding: 20px;
 }
@@ -238,7 +275,7 @@ body {
     background: #fff;
     border-radius: 10px;
     padding: 18px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -303,8 +340,195 @@ body {
 
 /* Small animation */
 @keyframes popupIn {
-    from { transform: translateY(8px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
+
+/* ====== TAB: CHỜ LẤY HÀNG ====== */
+
+/* Thanh tìm kiếm */
+#tab-pickup .order-controls {
+    display: flex;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+#tab-pickup .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+}
+
+#tab-pickup .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-pickup .search-box .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Bảng */
+#tab-pickup .order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tab-pickup .order-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f4d6d6;
+    text-align: left;
+}
+
+#tab-pickup .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-pickup .order-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Nút xác nhận giao */
+.ship-confirm-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.ship-confirm-btn:hover {
+    background-color: #45A049;
+}
+
+#tab-pickup .pagination-row-pickup td {
+    text-align: right;
+    background-color: #fff;
+    /*padding-right: 20px;*/
+}
+
+/* ====== TAB: ĐANG GIAO ====== */
+/* Search box có icon */
+#tab-delivering .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+}
+
+#tab-delivering .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-delivering .search-box .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#tab-delivering .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+/* Cột chứa nút */
+#tab-delivering .action-cell {
+    display: flex;
+    gap: 6px;
+}
+
+/* Style nút */
+#tab-delivering .btn-delivered,
+.btn-return {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#tab-delivering .btn-delivered {
+    background: #3cb371;
+    color: white;
+    font-size: 14px;
+}
+
+#tab-delivering .btn-return {
+    background: #ff7043;
+    color: white;
+    font-size: 14px;
+}
+
+#tab-delivering .pagination-row-delivering td {
+    text-align: right;
+    background-color: #fff;
+    /*padding-right: 20px;*/
+}
+/* ====== TAB: ĐÃ GIAO ====== */
+/* ==== ICON TÌM KIẾM TRONG INPUT ===== */
+.search-box {
+    position: relative;
+    width: 500px;
+}
+.search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+.search-box .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+#tab-delivered .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-delivered .pagination-row-delivered td {
+    text-align: right;
+    background-color: #fff;
+}
+
+
+/* ==== STARS ==== */
+.stars i {
+    color: #FFD43B; /* vàng đẹp */
+    font-size: 18px;
+}
+
 
 
