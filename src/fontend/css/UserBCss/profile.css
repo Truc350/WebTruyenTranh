@@ -7,11 +7,12 @@ body {
 
 .profile-container {
     max-width: 300px;
-    margin: 20px 0;
+    margin: 0;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    flex: 0 0 300px;
 }
 
 .profile-header {
@@ -72,6 +73,7 @@ body {
 .menu ul li {
     padding: 15px 20px;
     border-bottom: 1px solid #ddd;
+    position: relative;
 }
 
 .menu ul li a {
@@ -81,11 +83,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .menu ul li a:hover {
-    color: #007bff;
+    color: #ff9494;
 }
+
+.menu ul li.active a {
+    color: #ff9494;
+    background-color: rgba(255, 148, 148, 0.2);
+}
+
 
 .red-dot {
     width: 8px;
@@ -105,17 +114,21 @@ body {
 
 main {
     display: flex;
-    gap: 0; /* Loại bỏ khoảng cách giữa hai container */
-    padding: 20px;
+    gap: 0;
+    padding: 20px 40px;
 }
 
-.profile-form-container {
+.content-container {
     flex: 1;
+    min-width: 0;
+}
+
+.profile-form-container, .change-password-container {
     padding: 20px;
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    min-width: 0; /* Đảm bảo container không bị co lại quá mức */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -189,4 +202,102 @@ main {
 .birthday input[type="number"] {
     width: 60px;
     padding: 5px;
+}
+
+.address {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.address label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.address input,
+.address select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: 14px;
+    appearance: none;
+}
+
+.address select {
+    cursor: pointer;
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.address select:hover {
+    border-color: #007bff;
+}
+
+.diaChi {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.address-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.address-group label {
+    margin: 0;
+    color: #666;
+    min-width: 100px;
+    text-align: right;
+}
+
+.address-group select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: 14px;
+    appearance: none;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.address-group select {
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.address-group select:hover {
+    border-color: #007bff;
+}
+
+@media (max-width: 600px) {
+    .diaChi {
+        flex-direction: column;
+    }
+    .address-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .address-group label {
+        text-align: left;
+        min-width: auto;
+    }
+    .address-group select {
+        width: 100%;
+        min-width: auto;
+    }
 }
