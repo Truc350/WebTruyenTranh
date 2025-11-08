@@ -76,169 +76,442 @@
             <span class="tab-item">Đơn bị hủy</span>
         </div>
 
+        <!--        TAB CHỜ XÁC NHẬN-->
         <!-- Thanh tìm kiếm + chọn đơn vị vận chuyển -->
-        <div class="order-controls">
-            <input type="text" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng..." class="search-input">
+        <div class="tab-content" id="tab-pending">
+            <div class="order-controls">
+                <div class="search-box">
+                    <input type="text" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng..." class="search-input">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
 
-            <div class="shipping-select">
-                <select id="shipMethod">
-                    <option selected disabled>Đơn vị vận chuyển</option>
-                    <option>Hỏa tốc</option>
-                    <option>Giao nhanh</option>
-                    <option>Tiết kiệm</option>
-                </select>
+                <div class="shipping-select">
+                    <select id="shipMethod">
+                        <option selected disabled>Đơn vị vận chuyển</option>
+                        <option>Hỏa tốc</option>
+                        <option>Giao nhanh</option>
+                        <option>Tiết kiệm</option>
+                    </select>
+                </div>
+
+                <button class="apply-btn">Áp dụng</button>
+                <button class="confirm-all-btn">Xác nhận tất cả</button>
             </div>
 
-            <button class="apply-btn">Áp dụng</button>
-            <button class="confirm-all-btn">Xác nhận tất cả</button>
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
+                        <th>Tổng tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Sản phẩm</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th>Đơn vị vận chuyển</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="confirmTableBody">
+                    <!-- Dòng 1 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00123</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>10/05/2025</td>
+                        <td>155,400đ</td>
+                        <td>COD</td>
+                        <td class="product-cell">Shin – Cậu bé bút chì (3)</td>
+                        <td>123 Võ Văn Ngân, Thủ Đức</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+
+                    <!-- Dòng 2 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00124</td>
+                        <td>Trần Minh T</td>
+                        <td>11/05/2025</td>
+                        <td>245,000đ</td>
+                        <td>Đã thanh toán</td>
+                        <td class="product-cell">Doraemon Tập 1 (1), Conan Tập 10 (1)</td>
+                        <td>56 Tô Ngọc Vân, Thủ Đức</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+
+                    <!-- Dòng 3 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00125</td>
+                        <td>Lê Thu H</td>
+                        <td>12/05/2025</td>
+                        <td>89,000đ</td>
+                        <td>COD</td>
+                        <td class="product-cell">Thám tử Kindaichi (1)</td>
+                        <td>12 Nguyễn Huệ, Quận 1</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+
+                    <!-- Dòng 4 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00126</td>
+                        <td>Võ Thị Ng</td>
+                        <td>12/05/2025</td>
+                        <td>310,200đ</td>
+                        <td>Đã thanh toán</td>
+                        <td class="product-cell">One Piece (4)</td>
+                        <td>35 Quang Trung, Gò Vấp</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+
+                    <!-- Dòng 5 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00127</td>
+                        <td>Nguyễn Văn M</td>
+                        <td>12/05/2025</td>
+                        <td>310,200đ</td>
+                        <td>Đã thanh toán</td>
+                        <td class="product-cell">One Piece (4)</td>
+                        <td>35 Quang Trung, Gò Vấp</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+                    <!-- Dòng 6 -->
+                    <tr>
+                        <td><input type="checkbox"></td>
+                        <td>DH00128</td>
+                        <td>Lê Thị O</td>
+                        <td>12/05/2025</td>
+                        <td>310,200đ</td>
+                        <td>Đã thanh toán</td>
+                        <td class="product-cell">One Piece (4)</td>
+                        <td>35 Quang Trung, Gò Vấp</td>
+                        <td>—</td>
+                        <td>
+                            <button class="confirm-btn">Xác nhận</button>
+                            <button class="cancel-btn">Hủy</button>
+                        </td>
+                    </tr>
+
+                    <!-- Pagination -->
+                    <tr class="pagination-row">
+                        <td colspan="10">
+                            <div class="pagination" id="tablePagination">
+                                <button class="page-btn confirm-page" data-page="1">1</button>
+                                <button class="page-btn confirm-page" data-page="2">2</button>
+                                <button class="page-btn confirm-page" data-page="3">3</button>
+                                <button class="page-btn confirm-page" data-page="4">4</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cancel-popup" style="display:none;">
+                <div class="popup-box">
+                    <h3>Lý do hủy đơn</h3>
+                    <textarea placeholder="Nhập lý do..." rows="3"></textarea>
+                    <div class="popup-actions">
+                        <button class="close-popup">Đóng</button>
+                        <button class="confirm-cancel">Xác nhận hủy</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Bảng đơn hàng -->
-        <div class="table-wrapper">
-            <table class="order-table">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>Mã đơn hàng</th>
-                    <th>Khách hàng</th>
-                    <th>Ngày đặt</th>
-                    <th>Tổng tiền</th>
-                    <th>Thanh toán</th>
-                    <th>Sản phẩm</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Đơn vị vận chuyển</th>
-                    <th></th>
-                </tr>
-                </thead>
 
-                <tbody>
-                <!-- Dòng 1 -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>DH00123</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>10/05/2025</td>
-                    <td>155,400đ</td>
-                    <td>COD</td>
-                    <td class="product-cell">Shin – Cậu bé bút chì (3)</td>
-                    <td>123 Võ Văn Ngân, Thủ Đức</td>
-                    <td>—</td>
-                    <td>
-                        <button class="confirm-btn">Xác nhận</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </td>
-                </tr>
+        <!--        TAB CHỜ LẤY HÀNG-->
+        <!-- ========== TAB 2: CHỜ LẤY HÀNG ========== -->
+        <div class="tab-content" id="tab-pickup" style="display:none;">
+            <!-- Thanh tìm kiếm -->
+            <div class="order-controls">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Tìm kiếm mã đơn hoặc tên khách hàng...">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+            </div>
 
-                <!-- Dòng 2 -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>DH00124</td>
-                    <td>Trần Minh T</td>
-                    <td>11/05/2025</td>
-                    <td>245,000đ</td>
-                    <td>Đã thanh toán</td>
-                    <td class="product-cell">Doraemon Tập 1 (1), Conan Tập 10 (1)</td>
-                    <td>56 Tô Ngọc Vân, Thủ Đức</td>
-                    <td>—</td>
-                    <td>
-                        <button class="confirm-btn">Xác nhận</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </td>
-                </tr>
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Đơn vị vận chuyển</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="pickupTableBody">
+                    <tr>
+                        <td>DH00150</td>
+                        <td>Trần Văn Minh</td>
+                        <td>240,000đ</td>
+                        <td>Giao nhanh</td>
+                        <td>12 Lê Văn Việt, Thủ Đức</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DH00151</td>
+                        <td>Nguyễn Thị Hồng</td>
+                        <td>310,000đ</td>
+                        <td>Tiết kiệm</td>
+                        <td>45 Nguyễn Trãi, Q5</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DH00152</td>
+                        <td>Lê Hoàng Bảo</td>
+                        <td>145,000đ</td>
+                        <td>Hỏa tốc</td>
+                        <td>21 Hai Bà Trưng, Q1</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DH00153</td>
+                        <td>Trần Nhật Linh</td>
+                        <td>145,000đ</td>
+                        <td>Hỏa tốc</td>
+                        <td>21 Hai Bà Trưng, Q1</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DH00154</td>
+                        <td>Nguyễn Minh Hằng</td>
+                        <td>145,000đ</td>
+                        <td>Hỏa tốc</td>
+                        <td>21 Hai Bà Trưng, Q1</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DH00155</td>
+                        <td>Đặng Trường Vũ</td>
+                        <td>145,000đ</td>
+                        <td>Hỏa tốc</td>
+                        <td>21 Hai Bà Trưng, Q1</td>
+                        <td>
+                            <button class="ship-confirm-btn">Xác nhận đã giao cho ĐVVC</button>
+                        </td>
+                    </tr>
 
-                <!-- Dòng 3 -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>DH00125</td>
-                    <td>Lê Thu H</td>
-                    <td>12/05/2025</td>
-                    <td>89,000đ</td>
-                    <td>COD</td>
-                    <td class="product-cell">Thám tử Kindaichi (1)</td>
-                    <td>12 Nguyễn Huệ, Quận 1</td>
-                    <td>—</td>
-                    <td>
-                        <button class="confirm-btn">Xác nhận</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </td>
-                </tr>
+                    <!-- Pagination -->
+                    <tr class="pagination-row-pickup">
+                        <td colspan="10">
+                            <div class="pagination" id="pickupPagination">
+                                <button class="page-btn pickup-page" data-page="1">1</button>
+                                <button class="page-btn pickup-page" data-page="2">2</button>
+                                <button class="page-btn pickup-page" data-page="3">3</button>
+                                <button class="page-btn pickup-page" data-page="4">4</button>
+                            </div>
+                        </td>
+                    </tr>
 
-                <!-- Dòng 4 -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>DH00126</td>
-                    <td>Võ Thị Ng</td>
-                    <td>12/05/2025</td>
-                    <td>310,200đ</td>
-                    <td>Đã thanh toán</td>
-                    <td class="product-cell">One Piece (4)</td>
-                    <td>35 Quang Trung, Gò Vấp</td>
-                    <td>—</td>
-                    <td>
-                        <button class="confirm-btn">Xác nhận</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </td>
-                </tr>
-
-                <!-- Dòng 5 -->
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>DH00127</td>
-                    <td>Nguyễn Văn M</td>
-                    <td>12/05/2025</td>
-                    <td>310,200đ</td>
-                    <td>Đã thanh toán</td>
-                    <td class="product-cell">One Piece (4)</td>
-                    <td>35 Quang Trung, Gò Vấp</td>
-                    <td>—</td>
-                    <td>
-                        <button class="confirm-btn">Xác nhận</button>
-                        <button class="cancel-btn">Hủy</button>
-                    </td>
-                </tr>
-
-                <!-- Pagination -->
-                <tr class="pagination-row">
-                    <td colspan="10">
-                        <div class="pagination" id="tablePagination">
-                            <!-- nút sẽ được render bởi JS -->
-                        </div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
-
-
-    </div>
-
-    <div class="cancel-popup" style="display:none;">
-        <div class="popup-box">
-            <h3>Lý do hủy đơn</h3>
-            <textarea placeholder="Nhập lý do..." rows="3"></textarea>
-            <div class="popup-actions">
-                <button class="close-popup">Đóng</button>
-                <button class="confirm-cancel">Xác nhận hủy</button>
+                    </tbody>
+                </table>
             </div>
         </div>
+
+
+        <!-- ========== TAB 3: ĐANG GIAO ========== -->
+        <div class="tab-content" id="tab-delivering" style="display:none;">
+
+            <!-- Thanh tìm kiếm -->
+            <div class="order-controls delivering-controls">
+                <div class="search-box">
+                    <input type="text" id="deliverSearch" class="search-input"
+                           placeholder="Tìm kiếm mã đơn hoặc tên khách hàng...">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Đơn vị vận chuyển</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="deliverTableBody">
+
+                    <!-- Ví dụ mẫu -->
+                    <tr>
+                        <td>DH00201</td>
+                        <td>Nguyễn Minh Khôi</td>
+                        <td>Giao nhanh</td>
+                        <td class="action-cell">
+                            <button class="btn-delivered">Xác nhận đã giao</button>
+                            <button class="btn-return">Đơn hoàn trả</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>DH00202</td>
+                        <td>Lê Trúc Anh</td>
+                        <td>Tiết kiệm</td>
+                        <td class="action-cell">
+                            <button class="btn-delivered">Xác nhận đã giao</button>
+                            <button class="btn-return">Đơn hoàn trả</button>
+                        </td>
+                    </tr>
+
+                    <!-- Pagination -->
+                    <tr class="pagination-row-delivering">
+                        <td colspan="10">
+                            <div class="pagination" id="deliveringPagination">
+                                <button class="page-btn delivering-page" data-page="1">1</button>
+                                <button class="page-btn delivering-page" data-page="2">2</button>
+                                <button class="page-btn delivering-page" data-page="3">3</button>
+                                <button class="page-btn delivering-page" data-page="4">4</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== TAB 4: ĐÃ GIAO ========== -->
+        <div class="tab-content" id="tab-delivered" style="display:none;">
+
+            <!-- Thanh tìm kiếm -->
+            <div class="order-controls delivered-controls">
+                <div class="search-box">
+                    <input type="text" id="deliveredSearch" class="search-input" placeholder="Tìm kiếm mã đơn / tên khách / tháng...">
+                    <i class="bi bi-search search-icon"></i>
+                </div>
+            </div>
+
+            <!-- Bảng đơn hàng -->
+            <div class="table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Khách hàng</th>
+                        <th>Ngày giao thành công</th>
+                        <th>Tổng tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Đánh giá</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="deliveredTableBody">
+                    <tr>
+                        <td>DH00180</td>
+                        <td>Võ Thị Ngọc Hà</td>
+                        <td>05/11/2025</td>
+                        <td>310,000đ</td>
+                        <td>Online</td>
+                        <td class="stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>DH00181</td>
+                        <td>Nguyễn Duy Khánh</td>
+                        <td>04/11/2025</td>
+                        <td>420,000đ</td>
+                        <td>COD</td>
+                        <td class="stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star"></i>
+                            <i class="bi bi-star"></i>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>DH00182</td>
+                        <td>Đoàn Minh Châu</td>
+                        <td>02/11/2025</td>
+                        <td>150,000đ</td>
+                        <td>Online</td>
+                        <td class="stars">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </td>
+                    </tr>
+
+                    <!-- Phân trang -->
+                    <tr class="pagination-row-delivered">
+                        <td colspan="10">
+                            <div class="pagination" id="deliveredPagination">
+                                <button class="page-btn delivered-page" data-page="1">1</button>
+                                <button class="page-btn delivered-page" data-page="2">2</button>
+                                <button class="page-btn delivered-page" data-page="3">3</button>
+                                <button class="page-btn delivered-page" data-page="4">4</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
     </div>
 
 
 </div>
-<!--xu li chuyen tab-->
-<script>
-    const tabs = document.querySelectorAll(".tab-item");
 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", () => {
-            // Bỏ active ở tất cả tab
-            tabs.forEach(t => t.classList.remove("active"));
-            // Gán active vào tab được chọn
-            tab.classList.add("active");
-        });
-    });
-</script>
+
+<!--xu li chuyen tab-->
 
 <!--khi nhan huy don => hiện form dien-->
 <script>
@@ -252,147 +525,242 @@
     });
 </script>
 
-<!--Chuyển trang-->
+<!--Chuyển trang của tab CHỜ XÁC NHẬN-->
 <script>
-    /* ==== Pagination client-side cho bảng đơn hàng ==== */
+    const ROWS_PER_PAGE = 5;
+    const tbody = document.getElementById('confirmTableBody');
+    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+    const pageButtons = document.querySelectorAll('.confirm-page');
 
-    (function() {
-        const ROWS_PER_PAGE = 4; // thay đổi số hàng mỗi trang ở đây
-        const table = document.querySelector('.order-table');
-        const tbody = table.querySelector('tbody');
+    function showPage(page){
+        const start = (page - 1) * ROWS_PER_PAGE;
+        const end = start + ROWS_PER_PAGE;
 
-        // Lấy các hàng dữ liệu (loại tr.pagination-row)
-        const allRows = Array.from(tbody.querySelectorAll('tr'))
-            .filter(tr => !tr.classList.contains('pagination-row'));
+        rows.forEach((r, idx) => {
+            r.style.display = (idx >= start && idx < end) ? "" : "none";
+        });
 
-        // TẠO vùng chứa pagination
-        const paginationContainer = document.getElementById('tablePagination');
+        pageButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.confirm-page[data-page="${page}"]`)?.classList.add('active');
+    }
 
-        // trạng thái
-        let currentPage = 1;
-        const totalPages = Math.max(1, Math.ceil(allRows.length / ROWS_PER_PAGE));
+    pageButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showPage(Number(btn.dataset.page));
+        });
+    });
 
-        // ẩn/hiện hàng theo trang
-        function renderRows() {
-            const start = (currentPage - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-            allRows.forEach((row, idx) => {
-                if (idx >= start && idx < end) row.style.display = ''; // show
-                else row.style.display = 'none'; // hide
-            });
-        }
+    showPage(1);
 
-        // render các nút pagination (Prev, page numbers, Next)
-        function renderPaginationButtons() {
-            paginationContainer.innerHTML = '';
 
-            // Prev
-            const prevBtn = document.createElement('button');
-            prevBtn.innerHTML = '&lt;';
-            prevBtn.className = 'page-btn prev-btn';
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    refresh();
-                    // cuộn nhẹ về bảng khi chuyển trang (tùy thích)
-                    table.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            });
-            paginationContainer.appendChild(prevBtn);
-
-            // Nếu số trang <= 7 thì render tất cả, ngược lại rút gọn với dấu ...
-            const maxButtonsToShow = 7;
-            let startPage = 1;
-            let endPage = totalPages;
-
-            if (totalPages > maxButtonsToShow) {
-                const delta = Math.floor(maxButtonsToShow / 2);
-                startPage = Math.max(1, currentPage - delta);
-                endPage = startPage + maxButtonsToShow - 1;
-                if (endPage > totalPages) {
-                    endPage = totalPages;
-                    startPage = endPage - maxButtonsToShow + 1;
-                }
-            }
-
-            if (startPage > 1) {
-                paginationContainer.appendChild(createNumberButton(1));
-                if (startPage > 2) {
-                    const dots = document.createElement('span');
-                    dots.textContent = '...';
-                    dots.style.padding = '0 6px';
-                    paginationContainer.appendChild(dots);
-                }
-            }
-
-            for (let p = startPage; p <= endPage; p++) {
-                paginationContainer.appendChild(createNumberButton(p));
-            }
-
-            if (endPage < totalPages) {
-                if (endPage < totalPages - 1) {
-                    const dots = document.createElement('span');
-                    dots.textContent = '...';
-                    dots.style.padding = '0 6px';
-                    paginationContainer.appendChild(dots);
-                }
-                paginationContainer.appendChild(createNumberButton(totalPages));
-            }
-
-            // Next
-            const nextBtn = document.createElement('button');
-            nextBtn.innerHTML = '&gt;';
-            nextBtn.className = 'page-btn next-btn';
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.addEventListener('click', () => {
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    refresh();
-                    table.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            });
-            paginationContainer.appendChild(nextBtn);
-        }
-
-        // helper tạo nút số trang
-        function createNumberButton(p) {
-            const btn = document.createElement('button');
-            btn.textContent = p;
-            btn.className = 'page-number-btn' + (p === currentPage ? ' active' : '');
-            if (p === currentPage) btn.setAttribute('aria-current', 'page');
-            btn.addEventListener('click', () => {
-                currentPage = p;
-                refresh();
-                table.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-            return btn;
-        }
-
-        // cập nhật hiển thị rows + buttons
-        function refresh() {
-            renderRows();
-            renderPaginationButtons();
-        }
-
-        // khởi tạo lần đầu
-        refresh();
-
-        // Nếu dữ liệu thay đổi động (ví dụ sau khi xóa 1 hàng), có thể gọi updateAllRows()
-        window.updateOrderTableRows = function() {
-            // lấy lại rows (nếu DOM rows có thay đổi)
-            const newRows = Array.from(tbody.querySelectorAll('tr'))
-                .filter(tr => !tr.classList.contains('pagination-row'));
-            allRows.length = 0;
-            newRows.forEach(r => allRows.push(r));
-            // cập nhật totalPages và currentPage hợp lý
-            const newTotal = Math.max(1, Math.ceil(allRows.length / ROWS_PER_PAGE));
-            if (currentPage > newTotal) currentPage = newTotal;
-            refresh();
-        };
-
-    })();
 </script>
+
+<script>
+
+    const tabs = document.querySelectorAll(".tab-item");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    // Hiển thị tab theo index: 0 = chờ xác nhận, 1 = chờ lấy hàng, ...
+    function showTab(index) {
+        // Xóa active
+        tabs.forEach(t => t.classList.remove("active"));
+        if (tabs[index]) tabs[index].classList.add("active");
+
+        // Ẩn mọi nội dung, chỉ show cái index
+        tabContents.forEach((c, i) => {
+            if (i === index) c.style.display = ""; // show (mặc định)
+            else c.style.display = "none";
+        });
+    }
+
+    // Gắn sự kiện click cho tab
+    tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+            showTab(index);
+            // Nếu cần focus vào search input tương ứng:
+            const targetContent = tabContents[index];
+            const input = targetContent ? targetContent.querySelector('.search-input') : null;
+            if (input) input.focus();
+        });
+    });
+
+    // Khởi tạo: show tab đầu (Chờ xác nhận)
+    showTab(0);
+
+    /* --- XỬ LÝ NÚT "Xác nhận đã giao cho ĐVVC" trong tab-pickup --- */
+    document.addEventListener("click", (e) => {
+        // nút trong tab-pickup
+        if (e.target.classList.contains("ship-confirm-btn")) {
+            const row = e.target.closest("tr");
+            if (!row) return;
+            const orderId = row.children[0].textContent.trim();
+            // Gọi API / cập nhật DB ở đây nếu cần (fetch)
+            // Tạm: hiện thông báo và remove row
+            if (confirm(`Xác nhận đơn ${orderId} đã giao cho ĐVVC?`)) {
+                // TODO: gửi request lên server
+                row.remove();
+                // Nếu bạn muốn tự động chuyển sang tab "Đang giao",
+                // tìm index của tab "Đang giao" và gọi showTab(index)
+                // ví dụ: showTab(2);
+            }
+        }
+    });
+
+    /* ==============================
+      TAB ĐANG GIAO
+============================== */
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('deliverTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-delivering'));
+        const pageButtons = document.querySelectorAll('.delivering-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.delivering-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+
+
+    /* ==============================
+          TAB ĐÃ GIAO
+    ============================== */
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('deliveredTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-delivered'));
+        const pageButtons = document.querySelectorAll('.delivered-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.delivered-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+
+
+    /* ==============================
+          SEARCH ĐÃ GIAO
+    ============================== */
+    document.getElementById("deliveredSearch").addEventListener("keyup", function () {
+        const keyword = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#deliveredTableBody tr:not(.pagination-row-delivered)");
+        rows.forEach(r => {
+            const text = r.textContent.toLowerCase();
+            r.style.display = text.includes(keyword) ? "" : "none";
+        });
+    });
+
+        // /* --- XỬ LÝ NÚT (Delegation) --- */
+        // document.addEventListener('click', async (e) => {
+        //     // btn-delivered: xác nhận đã giao
+        //     if (e.target.classList.contains('btn-delivered')) {
+        //         const row = e.target.closest('tr');
+        //         if (!row) return;
+        //         const orderId = row.children[0].textContent.trim();
+        //
+        //         if (!confirm(`Xác nhận đơn ${orderId} đã giao thành công?`)) return;
+        //
+        //         // TODO: Gửi request lên backend để cập nhật status
+        //         // ví dụ (fetch):
+        //         // const res = await fetch('/api/orders/updateStatus', {method:'POST', body: JSON.stringify({id: orderId, status:'DELIVERED'})});
+        //         // const data = await res.json();
+        //         // if (!data.success) { alert('Cập nhật thất bại'); return; }
+        //
+        //         // Vì bạn chưa có backend, ta simulate success:
+        //         // --- remove row từ DOM ---
+        //         row.remove();
+        //
+        //         // --- cập nhật pagination / hiển thị lại bảng ---
+        //         update();
+        //
+        //         // --- (tùy chọn) chuyển tab Đã giao: chỉ khi backend OK
+        //         // showTab(3); // bỏ comment nếu bạn muốn tự động chuyển
+        //         return;
+        //     }
+        //
+        //     // btn-return: chuyển sang Trả hàng/Hoàn tiền
+        //     if (e.target.classList.contains('btn-return')) {
+        //         const row = e.target.closest('tr');
+        //         if (!row) return;
+        //         const orderId = row.children[0].textContent.trim();
+        //
+        //         if (!confirm(`Chuyển đơn ${orderId} sang Đơn trả hàng/Hoàn tiền?`)) return;
+        //
+        //         // TODO: Gọi API backend chuyển trạng thái
+        //         // simulate success: remove row
+        //         row.remove();
+        //         update();
+        //
+        //         // showTab(4); // bật nếu muốn chuyển
+        //         return;
+        //     }
+        // });
+
+</script>
+
+<script>
+    /* ==============================
+       TAB CHỜ LẤY HÀNG
+ ============================== */
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('pickupTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-pickup'));
+        const pageButtons = document.querySelectorAll('.pickup-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.pickup-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+
+</script>
+
 
 </body>
 </html>
