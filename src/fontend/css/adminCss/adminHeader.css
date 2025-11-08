@@ -1,0 +1,49 @@
+.admin-header {
+    width: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+/* Nhóm icon + admin info */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.header-icon {
+    font-size: 24px;   /* Tăng kích thước icon */
+    color: #000;       /* Đổi màu đen */
+    cursor: pointer;
+    opacity: 0.9;
+    transition: 0.2s;
+}
+
+.header-icon:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+/* Admin Avatar + Name */
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    /*border: 2px solid #000;*/
+}
+
+.admin-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111;
+}
+
