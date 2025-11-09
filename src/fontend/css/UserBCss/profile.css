@@ -91,10 +91,18 @@ body {
 }
 
 .menu ul li.active a {
-    color: #ff9494;
-    background-color: rgba(255, 148, 148, 0.2);
+    color: #ffffff;
+    background-color: #ff9494;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 10px; /* Thêm padding cho đẹp hơn */
+    display: block; /* Đảm bảo toàn bộ vùng được click */
 }
 
+/*.menu ul li:first-child {*/
+/*    background-color: rgba(0, 123, 255, 0.5);*/
+/*    border-radius: 10px;*/
+/*}*/
 
 .red-dot {
     width: 8px;
@@ -114,21 +122,125 @@ body {
 
 main {
     display: flex;
-    gap: 0;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: flex-start; /* Căn đầu theo chiều dọc */
+    gap: 20px; /* Khoảng cách giữa hai container */
     padding: 20px 40px;
+    min-height: calc(100vh - 120px); /* Đảm bảo chiều cao tối thiểu, điều chỉnh theo chiều cao header/footer */
 }
 
 .content-container {
     flex: 1;
     min-width: 0;
+    display: flex;
+    justify-content: center; /* Căn giữa form bên trong */
+    align-items: flex-start;
+    position: relative; /* Hỗ trợ vị trí tuyệt đối cho form ẩn */
+}
+/* Đồng bộ giao diện cho cả hai container */
+.profile-form-container, .change-password-container {
+    padding: 30px;
+    background: #ffffff; /* Màu nền trắng sạch */
+    border: 1px solid #e0e0e0; /* Viền nhẹ hơn */
+    border-radius: 12px; /* Bo góc nhẹ nhàng */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Bóng đổ mềm mại */
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Kích thước đồng bộ */
+    min-height: 500px; /* Đảm bảo chiều cao tối thiểu */
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Hiệu ứng chuyển đổi mượt */
+    visibility: visible;
+    position: relative;
 }
 
-.profile-form-container, .change-password-container {
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.profile-form-container.hidden, .change-password-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Cải thiện giao diện cụ thể cho .change-password-container */
+.change-password-container h2 {
+    font-size: 24px; /* Tiêu đề lớn hơn một chút */
+    color: #333; /* Màu chữ đậm */
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    font-weight: 600; /* Đậm hơn */
+}
+.change-password-container .form-group {
+    margin-bottom: 20px; /* Tăng khoảng cách giữa các trường */
+}
+.change-password-container .form-group label {
+    font-size: 14px; /* Kích thước chữ nhãn */
+    color: #555; /* Màu chữ nhãn nhẹ */
+    font-weight: 500; /* Đậm nhẹ */
+    margin-bottom: 8px; /* Khoảng cách dưới nhãn */
+    display: block;
+}
+.change-password-container .form-group input[type="password"] {
+    width: 100%;
+    padding: 12px; /* Tăng padding cho input thoải mái hơn */
+    border: 1px solid #d0d0d0; /* Viền nhẹ */
+    border-radius: 6px; /* Bo góc input */
+    font-size: 14px;
+    color: #333;
+    background-color: #f9f9f9; /* Nền input nhẹ */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng khi focus */
+}
+
+.change-password-container .form-group input[type="password"]:focus {
+    border-color: #007bff; /* Viền xanh khi focus */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* Bóng nhẹ khi focus */
+    outline: none;
+}
+
+.change-password-container .password-requirement {
+    font-size: 12px;
+    color: #777; /* Màu chữ nhạt hơn */
+    margin-top: 8px; /* Khoảng cách trên */
+    line-height: 1.5;
+    font-style: italic; /* Chữ nghiêng cho yêu cầu mật khẩu */
+}
+
+.change-password-container .security-note {
+    font-size: 12px;
+    color: #777;
+    margin-top: 15px;
+    line-height: 1.6;
+    background-color: #f0f8ff; /* Nền xanh nhạt cho ghi chú */
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid #007bff; /* Viền trái xanh nổi bật */
+}
+
+.change-password-container .save-btn {
+    background: #dc3545; /* Màu đỏ cho nút */
+    color: #fff;
+    padding: 12px 24px; /* Tăng kích thước nút */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Hiệu ứng hover */
+    display: block;
+    margin: 20px auto 0; /* Căn giữa nút */
+}
+
+
+
+.change-password-container .save-btn:hover {
+    background: #c82333; /* Màu đỏ đậm hơn khi hover */
+    transform: translateY(-2px); /* Nâng nhẹ nút khi hover */
+}
+
+.change-password-container .save-btn:active {
+    transform: translateY(0); /* Trở về vị trí ban đầu khi click */
 }
 
 .form-group {
@@ -242,22 +354,24 @@ main {
 
 .diaChi {
     display: flex;
-    gap: 20px;
-    align-items: flex-start;
+    flex-direction: column; /* Xếp dọc trên mọi màn hình */
+    gap: 15px; /* Khoảng cách giữa các mục */
+    align-items: flex-start; /* Căn trái các mục */
 }
 
 .address-group {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column; /* Đảm bảo label và select xếp dọc */
+    align-items: flex-start; /* Căn trái */
+    gap: 5px; /* Khoảng cách giữa label và select */
+    width: 100%; /* Chiếm toàn bộ chiều rộng */
 }
 
 .address-group label {
     margin: 0;
     color: #666;
-    min-width: 100px;
-    text-align: right;
+    text-align: left; /* Căn trái label */
+    min-width: auto; /* Loại bỏ chiều rộng tối thiểu */
 }
 
 .address-group select {
@@ -270,12 +384,10 @@ main {
     font-size: 14px;
     appearance: none;
     cursor: pointer;
-    min-width: 200px;
-}
-
-.address-group select {
+    width: 100%; /* Select chiếm toàn bộ chiều rộng */
+    min-width: auto; /* Loại bỏ chiều rộng tối thiểu */
     padding-right: 30px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    /*background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");*/
     background-repeat: no-repeat;
     background-position: right 10px center;
 }
@@ -283,21 +395,275 @@ main {
 .address-group select:hover {
     border-color: #007bff;
 }
+.change-password-container .form-group {
+    margin-bottom: 25px; /* Tăng khoảng cách giữa các nhóm */
+}
 
+.change-password-container .password-requirement {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.change-password-container .security-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 10px;
+    line-height: 1.5;
+}
+/*---------------------------ORDER -------------------------------*/
+.order-history-container {
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 600px; /* Đồng bộ với profile form */
+    min-height: 500px;
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    visibility: visible;
+    position: relative;
+}
+
+.order-history-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 600px;
+}
+
+.order-history-container h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.order-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease;
+}
+
+.filter-tab.active,
+.filter-tab:hover {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.search-bar {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 400px; /* Giới hạn chiều cao để scroll nếu nhiều đơn */
+    overflow-y: auto;
+}
+
+.order-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fafafa;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #666;
+}
+
+.order-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.order-status.completed { background: #d4edda; color: #155724; }
+.order-status.pending { background: #fff3cd; color: #856404; }
+.order-status.shipping { background: #cce5ff; color: #004085; }
+
+.order-content {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.product-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.product-info h3 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.price-details {
+    display: flex;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.original-price { text-decoration: line-through; color: #999; }
+.discount-price { color: #e74c3c; font-weight: bold; }
+
+.order-total {
+    text-align: right;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s ease;
+}
+
+.buy-again {
+    background: #28a745;
+    color: #fff;
+}
+
+.buy-again:hover { background: #218838; }
+
+.contact-seller {
+    background: #007bff;
+    color: #fff;
+}
+
+.contact-seller:hover { background: #0056b3; }
+
+.no-orders {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
-    .diaChi {
+    .order-filters {
         flex-direction: column;
+        align-items: stretch;
     }
-    .address-group {
+
+    .search-bar {
+        min-width: auto;
+    }
+
+    .order-header,
+    .order-content {
         flex-direction: column;
         align-items: flex-start;
     }
-    .address-group label {
-        text-align: left;
-        min-width: auto;
+
+    .order-actions {
+        flex-direction: column;
     }
+
+    .product-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .product-info h3 {
+        font-size: 12px;
+    }
+}
+
+
+
+
+
+@media (max-width: 600px) {
+    main {
+        flex-direction: column; /* Xếp dọc profile và content */
+        align-items: center; /* Căn giữa theo chiều ngang */
+    }
+
+    .profile-container, .content-container {
+        flex: none;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .profile-form-container, .change-password-container {
+        max-width: 100%;
+        min-height: 400px;
+    }
+
+    /* Không cần chỉnh lại .diaChi và .address-group vì đã xếp dọc mặc định */
     .address-group select {
         width: 100%;
         min-width: auto;
     }
+
 }

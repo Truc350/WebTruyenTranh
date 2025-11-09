@@ -51,14 +51,14 @@
                 <h2>Huỳnh Trúc</h2>
                 <p class="membership">Thành viên Bạc</p>
                 <p class="f-point">F-Point tích lũy: 0</p>
-<!--                <button class="add-point">Thêm 30.000 đé nâng hạng Vàng</button>-->
+                <!--                <button class="add-point">Thêm 30.000 đé nâng hạng Vàng</button>-->
             </div>
         </div>
         <div class="menu">
             <ul>
                 <li><a href="#">Thông tin tài khoản <span class="red-dot"></span></a></li>
                 <li><a href="#">Đổi mật khẩu</a></li>
-                <li><a href="#">Ưu đãi thành viên</a></li>
+                <li><a href="#">Ưu đãi F-Point</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
                 <li><a href="#">Ví voucher <span class="badge">14</span></a></li>
                 <li><a href="#">Thông Báo</a></li>
@@ -80,12 +80,12 @@
             <div class="form-group">
                 <label for="phone">Số điện thoại</label>
                 <input type="tel" id="phone" name="phone" value="0394158994" required>
-                <button type="button" class="edit-btn">Thay đổi</button>
+                <button type="button" class="edit-btn">Chỉnh sửa</button>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" value="Chưa có email" required>
-                <button type="button" class="edit-btn">Thêm mới</button>
+                <button type="button" class="edit-btn">Chỉnh sửa</button>
             </div>
             <div class="form-group">
                 <div class="genders">
@@ -135,23 +135,83 @@
             <button type="submit" class="save-btn">Lưu thay đổi</button>
         </form>
     </div>
-    <div class="change-password-container" style="display: none">
-        <h2>Đổi mật khẩu</h2>
-        <form action="">
+    <div class="change-password-container" style="display: none;">
+        <h2>Đổi Mật Khẩu</h2>
+        <form>
             <div class="form-group">
-                <label for="current-passord">Mật khẩu hiện tại*</label>
-                <input type="password" id="current-passord" name="current-passord" required>
+                <label for="current-password">Mật khẩu hiện tại*:</label>
+                <input type="password" id="current-password" name="current-password" required>
+
             </div>
             <div class="form-group">
-                <label for="new-password">Mật khẩu mới*</label>
+                <label for="new-password">Mật khẩu mới*:</label>
                 <input type="password" id="new-password" name="new-password" required>
+
+                <p class="password-requirement">Yêu cầu: Tối thiểu 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.</p>
             </div>
             <div class="form-group">
-                <label for="confirm-password">Xác nhận mật khẩu mới*</label>
+                <label for="confirm-password">Xác nhận mật khẩu mới*:</label>
                 <input type="password" id="confirm-password" name="confirm-password" required>
+
+            </div>
+            <div class="form-group">
+                <p class="security-note">Lưu ý: Để bảo mật, không chia sẻ mật khẩu với bất kỳ ai. Nếu quên mật khẩu, hãy
+                    liên hệ hỗ trợ qua email support@comicstore.vn.</p>
             </div>
             <button type="submit" class="save-btn">Lưu thay đổi</button>
         </form>
+    </div>
+
+
+    <div class="order-history-container" style="display: none;">
+        <h2>Đơn hàng của tôi</h2>
+        <div class="order-filters">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">Tất cả</button>
+                <button class="filter-tab" data-filter="pending">Chờ xác nhận</button>
+                <button class="filter-tab" data-filter="shipping">Vận chuyển</button>
+                <button class="filter-tab" data-filter="delivery">Chờ giao hàng</button>
+                <button class="filter-tab" data-filter="completed">Hoàn thành</button>
+                <button class="filter-tab" data-filter="canceled">Đã hủy</button>
+                <button class="filter-tab" data-filter="refund">Trả hàng/Hoàn tiền</button>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Bán chỗ tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm" class="search-input">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="orders-list">
+            <div class="order-item" data-status="completed">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000095</span>
+                    <span class="order-date">09/11/2025</span>
+                    <span class="order-status completed">Hoàn thành</span>
+                </div>
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://via.placeholder.com/80x80?text=Mực+Xé+Sợi" alt="Mực xé sợi hấp nước dừa" class="product-img">
+                        <div class="product-info">
+                            <h3>Mực xé sợi hấp nước dừa vị hủ 500g</h3>
+                            <p>Số lượng: x1</p>
+                            <div class="price-details">
+                                <span class="original-price">100.000đ</span>
+                                <span class="discount-price">95.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>95.000đ</strong></span>
+                </div>
+                <div class="order-actions">
+                    <button class="action-btn buy-again">Mua lại</button>
+                    <button class="action-btn contact-seller">Liên hệ Người bán</button>
+                </div>
+            </div>
+            <div class="no-orders" style="display: none; text-align: center; padding: 40px; color: #666;">
+                <p>Không có đơn hàng nào phù hợp.</p>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -229,7 +289,7 @@
     </div>
 </footer>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const provinceSelect = document.getElementById('province');
         const districtSelect = document.getElementById('district');
         const profileForm = document.querySelector('.profile-form-container');
@@ -238,9 +298,9 @@
 
         // Fallback tĩnh cho huyện
         const fallbackDistricts = {
-            '1': [{ code: '001', name: 'Ba Đình' }, { code: '002', name: 'Hoàn Kiếm' }, { code: '003', name: 'Cầu Giấy' }],
-            '79': [{ code: '268', name: 'Quận 1' }, { code: '269', name: 'Quận 3' }, { code: '270', name: 'Quận 7' }],
-            '48': [{ code: '161', name: 'Hải Châu' }, { code: '162', name: 'Thanh Khê' }]
+            '1': [{code: '001', name: 'Ba Đình'}, {code: '002', name: 'Hoàn Kiếm'}, {code: '003', name: 'Cầu Giấy'}],
+            '79': [{code: '268', name: 'Quận 1'}, {code: '269', name: 'Quận 3'}, {code: '270', name: 'Quận 7'}],
+            '48': [{code: '161', name: 'Hải Châu'}, {code: '162', name: 'Thanh Khê'}]
         };
 
         // Load tỉnh/thành
@@ -261,7 +321,7 @@
             .catch(error => console.error('Error loading provinces:', error));
 
         // Load huyện khi chọn tỉnh
-        provinceSelect.addEventListener('change', function() {
+        provinceSelect.addEventListener('change', function () {
             const provinceCode = this.value;
             districtSelect.innerHTML = '<option value="" disabled selected>Đang tải huyện...</option>';
             if (provinceCode) {
@@ -296,7 +356,7 @@
         // Hàm load fallback tĩnh
         function loadFallbackDistricts(provinceCode) {
             districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
-            const districts = fallbackDistricts[provinceCode] || [{ code: 'none', name: 'Không có dữ liệu' }];
+            const districts = fallbackDistricts[provinceCode] || [{code: 'none', name: 'Không có dữ liệu'}];
             districts.forEach(item => {
                 const option = document.createElement('option');
                 option.value = item.code;
@@ -308,7 +368,7 @@
 
         // Xử lý click menu item
         menuItems.forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 // Loại bỏ active từ tất cả
                 menuItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
