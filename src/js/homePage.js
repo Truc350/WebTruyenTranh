@@ -81,3 +81,10 @@ document.querySelectorAll('.product-slider').forEach(slider => {
         }
     });
 });
+
+
+//cái này click qua trang hành động
+  document.getElementById("actionLink").addEventListener("click", function(event) {
+    event.preventDefault(); // chặn hành vi mặc định của thẻ a
+    window.location.href = "CatagoryPage.html";
+});

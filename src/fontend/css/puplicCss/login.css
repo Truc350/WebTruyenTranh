@@ -19,7 +19,7 @@ body {
   background-color: #ffffff;
   padding: 12px 24px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 1000;
 }
@@ -39,7 +39,6 @@ body {
   margin: -10px;
 }
 
-/* Menu chính */
 .menu {
   display: flex;
   gap: 16px;
@@ -132,32 +131,111 @@ body {
 }
 
 .publish-btn ,.login-btn {
-  background-color: #e53935;
-  color: white !important;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-weight: bold;
-  text-decoration: none;
-  /* transition: background-color 0.2s ease; */
+  display: none;
 }
 
-.publish-btn:hover {
-  background-color: #d32f2f;
-}
 
+
+ 
 /* bên dưới là css login  */
+.img-Login .imglogin img {
+  background-size: cover;
+  width: 100vw;
+  height: 86vh;
+}
+.img-Login{
+    width: 100vw;
+  height: 60vh;
+}
 
 .register-container{
   position: relative;
   background-color:white ;
   display: flex;
-  top: 100px;
-  left: 900px;
+  top: -600px;
+  left: 800px;
   width: 400px;
   height: 500px;
   flex-direction: column;
 
 }
+/* .register-container{
+  background-image: url('https://studiovietnam.com/wp-content/uploads/2024/02/anh-raw-02.jpg');
+} */
+.social-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.btn {
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.facebook {
+  background-color: #3b5998; /* Màu Facebook */
+}
+
+.twitter {
+  background-color: #1da1f2; /* Màu Twitter */
+}
+.is-user{
+  display: flex;
+  justify-content: center;
+}
+.social-buttons{
+  margin-top: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.title h3 {
+  font-size: 32px;
+  color: black;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-top: -20px;
+  margin-bottom: 25px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forgot-password {
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+
 
 .register-container{
     align-items: center;
@@ -175,6 +253,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 
 .register-container p a{
@@ -182,7 +261,9 @@ body {
 }
 .register-container  .title{
   position: relative;
-  top: -70px;
+  top: -50px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 .register-container .title h3{
   font-weight: 400 bold;
@@ -193,18 +274,6 @@ body {
   font-size: larger;
 }
 .title a{
-  color: #007bff;
-}
-
-.method{
-  position: relative;
-  top: -50px;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  justify-content: center;
-}
-.method a{
   color: #007bff;
 }
 
@@ -225,41 +294,6 @@ body {
   top: 50px;
 }
 
-/* cái này là cho user nhập nó không bị chiếm qua con mắt */
-.sdt_maOTP #nhapmk{
-  padding-right: 60px ;
-}
-
-/* con mắt ẩn mật khẩu*/
-/* .sdt_maOTP .toggle-eye{
-  background-color: #d41616;
-  position: relative;
-  top: -127px;
-  left: 130px;
-
-}
-.toggle-eye i.fa-eye {
-    opacity: 1;
-    pointer-events: none;
-    position: relative;
-    left: 25px;
-    user-select: none;
-}
-.toggle-eye i.fa-eye-slash {
-    opacity: 0;
-    pointer-events: none;
-    user-select: none;
-}
-#eyeToggle:checked ~ i.fa-eye {
-    opacity: 0;
-}
-#eyeToggle:checked ~ i.fa-eye-slash {
-    opacity: 1;
-}
-.toggle-eye label {
-  cursor: pointer;
-} */
-
 
 
 
@@ -277,7 +311,22 @@ body {
 }
 
 
+.btn {
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
 
 
 
