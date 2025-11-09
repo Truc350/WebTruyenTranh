@@ -67,7 +67,10 @@
 
         <div class="table-container">
             <div class="search-add">
+                <div class="search-box">
                 <input type="text" placeholder="Tìm kiếm truyện...">
+                <i class="bi bi-search search-icon"></i>
+                </div>
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
@@ -89,7 +92,7 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="productTableBody">
             <tr>
                 <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
                 <td>Thám tử lừng danh Conan</td>
@@ -129,11 +132,11 @@
             </tr>
 
             <tr class="pagination-row">
-                <td colspan="7">
+                <td colspan="10">
                     <div class="pagination">
-                        <button >&lt;</button>
-                        <button>1</button>
-                        <button class="active">&gt;</button>
+                        <button class="page-btn product-page" data-page="1">1</button>
+                        <button class="page-btn product-page" data-page="2">2</button>
+                        <button class="page-btn product-page" data-page="3">3</button>
                     </div>
                 </td>
             </tr>
@@ -451,6 +454,34 @@
 
 </script>
 
+<script>
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('productTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        const pageButtons = document.querySelectorAll('.product-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.product-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    color: #333;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ==== MAIN CONTENT ==== */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.page-title {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* Search bar */
+.search-box {
+    position: relative;
+    width: 500px;
+    margin-bottom: 30px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 45px 10px 15px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    outline: none;
+    height: 50px;
+    transition: 0.2s;
+}
+
+.search-box input::placeholder {
+    font-size: 16px;
+    color: #A49F9F;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+    pointer-events: none; /* để click không ảnh hưởng input */
+}
+
+/* Popup */
+/* Popup phủ toàn màn hình */
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hộp popup */
+.popup-box {
+    background: #ffffff;
+    padding: 28px 25px;
+    width: 360px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+    animation: fadeInScale 0.25s ease-out;
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Tiêu đề */
+.popup-box h3 {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* User name */
+#popupUserName {
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 15px;
+}
+
+/* Dropdown */
+#upgradeSelect {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    border: 1px solid #cfcfcf;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+#upgradeSelect:focus {
+    border-color: #4e73df;
+}
+
+/* Các nút hành động */
+.popup-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.popup-actions button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+#upgradeConfirm {
+    background: #4e73df;
+    color: #fff;
+}
+
+#upgradeCancel {
+    background: #e0e0e0;
+    color: #333;
+}
+
+/* Hover */
+#upgradeConfirm:hover { background: #3b5cc3; }
+#upgradeCancel:hover { background: #d0d0d0; }
+
+/* === TABLE STYLE === */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table thead th {
+    text-align: left;
+    padding: 12px 15px;
+    background-color: #ffeaea;
+    font-weight: bold;
+    border-bottom: 1px solid #f0dcdc;
+}
+
+.user-table tbody tr td {
+    padding: 12px 15px;
+    border-top: 1px solid #f3f6f9;
+}
+
+.user-table tr:hover {
+    background-color: #fff1f1;
+}
+
+/* Badge cấp thành viên đẹp hơn */
+.badge {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Màu cấp */
+.level-Thường { background: #e0e0e0; color: #333; }
+.level-Silver { background: #d6eaff; color: #005bbb; }
+.level-Gold { background: #ffe8a3; color: #7a5600; }
+.level-Platinum { background: #e7dbff; color: #5b41b3; }
+
+
+/* Nút nâng cấp */
+.upgrade-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #4e73df;
+    color: #fff;
+    font-size: 13px;
+    transition: 0.25s;
+}
+.upgrade-btn:hover {
+    background: #2c54c6;
+}
+
+/* ==== PAGINATION ==== */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+    border-bottom: 1px solid #f3f6f9;
+}
+
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #FF7A7A;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button.active {
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
+}
+
+
