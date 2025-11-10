@@ -184,13 +184,61 @@ body {
   transform: scale(1.05);
 }
 
-.facebook {
-  background-color: #3b5998; /* Màu Facebook */
+/* .facebook {
+  background-color: #3b5998;
+} */
+
+/* .twitter {
+  background-color: #1da1f2;
+} */
+a.facebook, 
+a.twitter {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 50%; /* bo tròn */
+  color: white;
+  font-size: 24px;
+  margin: 5px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
 }
 
-.twitter {
-  background-color: #1da1f2; /* Màu Twitter */
+/* Facebook */
+a.facebook {
+  background-color: #1877f2; /* màu Facebook */
 }
+a.facebook:hover {
+  background-color: #145dbf;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+a.facebook:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Twitter */
+a.twitter {
+  background-color: #1da1f2; /* màu Twitter */
+}
+a.twitter:hover {
+  background-color: #0d8ddb;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+a.twitter:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+
+
+
+
+
 .is-user{
   display: flex;
   justify-content: center;
