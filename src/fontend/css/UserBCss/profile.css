@@ -137,6 +137,7 @@ main {
     align-items: flex-start;
     position: relative; /* Hỗ trợ vị trí tuyệt đối cho form ẩn */
 }
+
 /* Đồng bộ giao diện cho cả hai container */
 .profile-form-container, .change-password-container {
     padding: 30px;
@@ -172,9 +173,11 @@ main {
     margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
     font-weight: 600; /* Đậm hơn */
 }
+
 .change-password-container .form-group {
     margin-bottom: 20px; /* Tăng khoảng cách giữa các trường */
 }
+
 .change-password-container .form-group label {
     font-size: 14px; /* Kích thước chữ nhãn */
     color: #555; /* Màu chữ nhãn nhẹ */
@@ -182,6 +185,7 @@ main {
     margin-bottom: 8px; /* Khoảng cách dưới nhãn */
     display: block;
 }
+
 .change-password-container .form-group input[type="password"] {
     width: 100%;
     padding: 12px; /* Tăng padding cho input thoải mái hơn */
@@ -231,7 +235,6 @@ main {
     display: block;
     margin: 20px auto 0; /* Căn giữa nút */
 }
-
 
 
 .change-password-container .save-btn:hover {
@@ -395,6 +398,7 @@ main {
 .address-group select:hover {
     border-color: #007bff;
 }
+
 .change-password-container .form-group {
     margin-bottom: 25px; /* Tăng khoảng cách giữa các nhóm */
 }
@@ -411,6 +415,7 @@ main {
     margin-top: 10px;
     line-height: 1.5;
 }
+
 /*---------------------------ORDER -------------------------------*/
 .order-history-container {
     padding: 30px;
@@ -456,18 +461,83 @@ main {
 
 .filter-tabs {
     display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+    padding: 10px 40px; /* Tăng padding trái/phải để tạo không gian cho nút */
+    overflow: hidden;
 }
 
+.tabs-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    gap: 10px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 40px; /* Thêm padding để tránh nút che nội dung */
+}
+
+/* Ẩn thanh cuộn trên tất cả trình duyệt */
+.tabs-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+.tabs-container {
+    -ms-overflow-style: none; /* IE và Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.filter-tabs::-webkit-scrollbar {
+    height: 8px; /* Chiều cao thanh cuộn */
+}
+
+.filter-tabs::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Màu nền thanh cuộn */
+}
+
+.filter-tabs::-webkit-scrollbar-thumb {
+    background: #888; /* Màu thanh cuộn */
+    border-radius: 4px;
+}
+
+.filter-tabs::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Màu khi di chuột qua */
+}
+
+/* Kiểu dáng cho các nút filter-tab */
 .filter-tab {
     padding: 8px 16px;
-    border: 1px solid #ddd;
-    background: #f9f9f9;
-    border-radius: 6px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Bo góc nút */
+    background-color: #f9f9f9;
     cursor: pointer;
     font-size: 14px;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s, color 0.3s;
+    white-space: nowrap; /* Đảm bảo nội dung nút không xuống dòng */
+}
+
+.filter-tab:hover {
+    background-color: #e0e0e0;
+}
+
+/* Kiểu dáng cho nút cuộn trái/phải */
+.scroll-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Nút hình tròn */
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    z-index: 1; /* Đảm bảo nút nằm trên cùng */
+    position: absolute; /* Định vị cố định bên trái/phải */
 }
 
 .filter-tab.active,
@@ -475,6 +545,18 @@ main {
     background: #007bff;
     color: #fff;
     border-color: #007bff;
+}
+
+.scroll-btn:hover {
+    background-color: #0056b3; /* Màu khi hover */
+}
+
+.scroll-left {
+    left: 0; /* Nút trái dính bên trái */
+}
+
+.scroll-right {
+    right: 0; /* Nút phải dính bên phải */
 }
 
 .search-bar {
@@ -533,9 +615,28 @@ main {
     font-weight: bold;
 }
 
-.order-status.completed { background: #d4edda; color: #155724; }
-.order-status.pending { background: #fff3cd; color: #856404; }
-.order-status.shipping { background: #cce5ff; color: #004085; }
+.order-status.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Trạng thái: Chờ xác nhận */
+.order-status.pending {
+    color: #d35400;                /* cam đậm */
+    background: #fdf5e6;           /* nền cam nhạt */
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+.order-status.shipping {
+    color: #1e90ff;                /* xanh dương */
+    background: #e6f7ff;           /* nền xanh nhạt */
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
 
 .order-content {
     display: flex;
@@ -550,6 +651,15 @@ main {
     object-fit: cover;
 }
 
+.product-item {
+    display: flex;
+    gap: 10px;
+}
+
+#product-quantity {
+    font-size: 12px;
+}
+
 .product-info h3 {
     margin: 0 0 5px 0;
     font-size: 14px;
@@ -562,8 +672,15 @@ main {
     font-size: 12px;
 }
 
-.original-price { text-decoration: line-through; color: #999; }
-.discount-price { color: #e74c3c; font-weight: bold; }
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.discount-price {
+    color: #e74c3c;
+    font-weight: bold;
+}
 
 .order-total {
     text-align: right;
@@ -592,14 +709,18 @@ main {
     color: #fff;
 }
 
-.buy-again:hover { background: #218838; }
+.buy-again:hover {
+    background: #218838;
+}
 
 .contact-seller {
     background: #007bff;
     color: #fff;
 }
 
-.contact-seller:hover { background: #0056b3; }
+.contact-seller:hover {
+    background: #0056b3;
+}
 
 .no-orders {
     text-align: center;
@@ -607,6 +728,138 @@ main {
     color: #666;
     font-size: 14px;
 }
+.order-actions .cancel-order {
+    background: #ff4d4f;      /* màu đỏ mặc định */
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s ease;   /* mượt khi hover */
+}
+
+/* Hover: chuyển thành xám đậm */
+.order-actions .cancel-order:hover {
+    background: #a0a0a0;      /* xám đậm */
+}
+
+/* Trạng thái: Vận chuyển */
+.order-status.shipping {
+    color: #1e90ff;
+    background: #e6f7ff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Nút Theo dõi đơn */
+.action-btn.track-order {
+    background: #1e90ff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.action-btn.track-order:hover {
+    background: #1a7fd6;
+}
+/* Trạng thái: Chờ giao hàng */
+.order-status.delivery {
+    color: #ff8c00;               /* cam đậm */
+    background: #fff8e6;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Nút “Đã nhận hàng” */
+.action-btn.receive-order {
+    background: #28a745;          /* xanh lá */
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+.action-btn.receive-order:hover {
+    background: #218838;
+}
+
+/* Trạng thái: Trả hàng/Hoàn tiền */
+.order-status.refund {
+    color: #dc3545;
+    background: #ffe6e6;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Nút Xem chi tiết hoàn tiền */
+.action-btn.view-refund {
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.action-btn.view-refund:hover {
+    background: #5a6268;
+}
+/* Trạng thái: Đã hủy */
+.order-status.canceled {
+    color: #999;
+    background: #f5f5f5;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Trạng thái: Vận chuyển */
+.order-status.shipping {
+    color: #1e90ff;
+    background: #e6f7ff;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Nút Theo dõi đơn */
+.action-btn.track-order {
+    background: #1e90ff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.action-btn.track-order:hover {
+    background: #1a7fd6;
+}
+
 
 /* Responsive */
 @media (max-width: 600px) {
@@ -621,8 +874,10 @@ main {
 
     .order-header,
     .order-content {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex; /* Đảm bảo là flex container */
+        flex-direction: column; /* Sắp xếp item theo chiều dọc */
+        align-items: flex-start; /* Căn trái các item */
+        gap: 10px; /* Thêm khoảng cách giữa các item, tùy chọn */
     }
 
     .order-actions {
@@ -637,10 +892,8 @@ main {
     .product-info h3 {
         font-size: 12px;
     }
+
 }
-
-
-
 
 
 @media (max-width: 600px) {
