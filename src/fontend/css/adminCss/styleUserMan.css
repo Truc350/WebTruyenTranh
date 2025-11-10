@@ -48,7 +48,7 @@ body {
     color: #A49F9F;
 }
 
-.search-box .search-icon {
+.search-box .fa-magnifying-glass {
     position: absolute;
     right: 15px;
     top: 50%;
