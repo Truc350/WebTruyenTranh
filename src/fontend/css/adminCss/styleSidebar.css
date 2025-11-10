@@ -32,29 +32,44 @@
 }
 
 .sidebar li {
-    padding: 30px 20px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Đảm bảo toàn bộ <a> là vùng có thể click */
+.sidebar li a {
     display: flex;
     align-items: center;
     gap: 12px;
-    cursor: pointer;
-    transition: 0.3s;
+    padding: 30px 20px;
     color: #333;
-    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    transition: 0.3s;
+    cursor: pointer;
 }
 
-.sidebar li:hover,
-.sidebar li.active {
+/* Hover + Active */
+.sidebar li a:hover,
+.sidebar li a.active {
     background-color: #ff9494;
     font-weight: 600;
     color: white;
 }
 
+/* Icon */
 .sidebar .icon {
     width: 25px;
     height: 25px;
     object-fit: contain;
 }
 
+/* Text */
 .sidebar ul li span {
-    white-space: nowrap; /* không cho chữ xuống dòng hay nén */
+    white-space: nowrap;
 }
+
+:root{--tr:320ms}
+@media (prefers-reduced-motion: reduce){:root{--tr:0ms}}
+body.page-transition{opacity:0;transition:opacity var(--tr) ease;will-change:opacity}
+body.page-transition.is-loaded{opacity:1}
+body.page-transition.is-unloading{opacity:0;transition:opacity var(--tr) ease}

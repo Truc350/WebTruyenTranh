@@ -71,7 +71,7 @@ body {
     color: #A49F9F;
 }
 
-.search-add .search-box .search-icon {
+.search-add .search-box .fa-magnifying-glass {
     position: absolute;
     right: 15px;
     top: 50%;
