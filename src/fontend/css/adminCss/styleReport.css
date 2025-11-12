@@ -19,6 +19,8 @@ body {
 .main-content {
     flex: 1;
     padding: 30px;
+    overflow: auto;
+    height: 100vh;
 }
 
 /* Filter Time */
