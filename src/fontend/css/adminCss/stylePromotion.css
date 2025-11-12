@@ -1,0 +1,322 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    color: #333;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ==== MAIN CONTENT ==== */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.promotion-page { margin-top: 30px; }
+
+.promo-top {
+    display: flex;
+    margin-bottom: 40px;
+    gap: 30px;
+    align-items: center;
+    min-width: 500px;
+}
+
+
+.search-box {
+    position: relative;
+    width: 500px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 45px 10px 15px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    outline: none;
+    height: 50px;
+    transition: 0.2s;
+}
+
+.search-box input::placeholder {
+    font-size: 16px;
+    color: #A49F9F;
+}
+
+.search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+    pointer-events: none; /* để click không ảnh hưởng input */
+}
+
+.btn-add {
+    background-color: #ff4c4c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+#statusFilter{
+    border-radius: 8px;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+.btn-add:hover { background-color: #ff6a6a; }
+
+.promo-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.promo-table thead th{
+    text-align: left;
+    padding: 12px 15px;
+    background-color: #ffeaea;
+    font-weight: bold;
+    border-bottom: 1px solid #f0dcdc;
+}
+.promo-table tbody tr td {
+    padding: 12px 15px;
+    border-top: 1px solid #f3f6f9;
+}
+
+.promo-table tr:hover {
+    background-color: #fff1f1;
+}
+
+/* ===== POPUP BASE ===== */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.25);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.popup-box {
+    background: white;
+    width: 420px;
+    padding: 25px;
+    border-radius: 10px;
+    animation: popupFade 0.25s ease;
+}
+
+@keyframes popupFade {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.popup-box label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+.popup-box h3{
+    justify-content: center;
+}
+
+.popup-box input, .popup-box select {
+    width: 100%;
+    padding: 9px;
+    border-radius: 6px;
+    border: 1px solid #d2d2d2;
+    margin-top: 5px;
+}
+
+/* Nút */
+.btn-row {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.btn-cancel {
+    background: #ccc;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+.btn-save {
+    background: #ff4d4d;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.btn-save:hover { background: #ff7070; }
+
+/* ===== EDIT POPUP ===== */
+#editPopup .popup-box { width: 420px; }
+.readonly {
+    background: #f3f3f3;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #d2d2d2;
+}
+
+.status-active {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.status-out {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.edit-btn, .delete-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 6px;
+}
+
+.edit-btn:hover { color: #1d4ed8; }
+.delete-btn:hover { color: #dc2626; }
+
+/* ==== PAGINATION ==== */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+    border-bottom: 1px solid #f3f6f9;
+}
+
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #FF7A7A;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button.active {
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
+}
+
+/* ===== Popup xác nhận xóa ===== */
+#deleteConfirmPopup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease-in;
+}
+
+/* Hộp popup nhỏ */
+#deleteConfirmPopup .popup-box.small {
+    background: #fff;
+    width: 340px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    animation: scaleIn 0.2s ease-in;
+}
+
+#deleteConfirmPopup h3 {
+    font-size: 20px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+#deleteConfirmPopup p {
+    color: #555;
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Nút hàng ngang */
+#deleteConfirmPopup .btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Nút Có / Không */
+#deleteConfirmPopup .btn-save,
+#deleteConfirmPopup .btn-cancel {
+    border: none;
+    outline: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#deleteConfirmPopup .btn-cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+#deleteConfirmPopup .btn-cancel:hover {
+    background: #d5d5d5;
+}
+
+#deleteConfirmPopup .btn-save {
+    background: #e74c3c;
+    color: white;
+}
+#deleteConfirmPopup .btn-save:hover {
+    background: #c0392b;
+}
+
+/* Hiệu ứng */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+

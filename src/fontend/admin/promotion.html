@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Khuyến mãi</title>
+    <link rel="stylesheet" href="../css/adminCss/stylePromotion.css">
+    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="../../img/logo.png" alt="Logo" class="logo">
+            <h2>Comic Store</h2>
+        </div>
+
+        <ul>
+            <li>
+                <a href="dashboard.html">
+                <img src="../../img/home.png" class="icon">
+                <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="productManagement.html">
+                    <img src="../../img/product.png" class="icon">
+                    <span>Quản lý sản phẩm</span>
+                </a>
+            </li>
+            <li>
+                <a href="category.html">
+                    <img src="../../img/category.png" class="icon">
+                    <span>Quản lý thể loại</span>
+                </a>
+            </li>
+            <li>
+                <a href="order.html">
+                    <img src="../../img/order.png" class="icon">
+                    <span>Quản lý đơn hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="userManagement.html">
+                    <img src="../../img/user.png" class="icon">
+                    <span>Quản lý người dùng</span>
+                </a>
+            </li>
+            <li>
+                <a href="promotion.html">
+                    <img src="../../img/promo.png" class="icon">
+                    <span>Khuyến mãi</span>
+                </a>
+            </li>
+            <li>
+                <a href="report.html">
+                    <img src="../../img/report.png" class="icon">
+                    <span>Thống kê</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <header class="admin-header">
+            <div class="header-right">
+                <i class="fa-solid fa-bell"></i>
+                <a href="chatWithCus.html">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+
+                <div class="admin-profile">
+                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                    <span class="admin-name">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="promotion-page">
+
+            <!-- Thanh tìm kiếm + nút thêm -->
+            <div class="promo-top">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm mã...">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
+
+                <button class="btn-add" id="openAddPopup">
+                    <i class="fas fa-plus"></i> Thêm mã
+                </button>
+
+                <select id="statusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="running">Đang chạy</option>
+                    <option value="expired">Hết hạn</option>
+                    <option value="out">Hết lượt</option>
+                </select>
+            </div>
+
+            <!-- Bảng danh sách -->
+            <table class="promo-table">
+                <thead>
+                <tr>
+                    <th>Mã giảm giá</th>
+                    <th>Giá trị</th>
+                    <th>Số lượng còn lại</th>
+                    <th>Hạn sử dụng</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody id="promoTableBody">
+                <tr>
+                    <td>NEWUSER10</td>
+                    <td>10%</td>
+                    <td>54/100</td>
+                    <td>01/02/2026</td>
+                    <td><span class="status-active">Đang chạy</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>SIEUSALE15</td>
+                    <td>15%</td>
+                    <td>0/50</td>
+                    <td>08/10/2025</td>
+                    <td><span class="status-out">Hết lượt</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>FREESHIP20</td>
+                    <td>-20.000đ</td>
+                    <td>120/200</td>
+                    <td>31/12/2025</td>
+                    <td><span class="status-active">Đang chạy</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('FREESHIP20')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>BLACKFRIDAY50</td>
+                    <td>50%</td>
+                    <td>5/300</td>
+                    <td>27/11/2025</td>
+                    <td><span class="status-active">Đang chạy</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('BLACKFRIDAY50')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>WELCOME5</td>
+                    <td>5%</td>
+                    <td>0/150</td>
+                    <td>14/06/2025</td>
+                    <td><span class="status-out">Hết lượt</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('WELCOME5')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>VIPMEMBER30</td>
+                    <td>30%</td>
+                    <td>40/80</td>
+                    <td>19/09/2025</td>
+                    <td><span class="status-active">Đang chạy</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('VIPMEMBER30')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>TET2026</td>
+                    <td>-50.000đ</td>
+                    <td>200/500</td>
+                    <td>10/02/2026</td>
+                    <td><span class="status-active">Đang chạy</span></td>
+                    <td>
+                        <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></i></button>
+                    </td>
+                </tr>
+
+                <!-- Phân trang -->
+                <tr class="pagination-row">
+                    <td colspan="10">
+                        <div class="pagination" id="tablePagination">
+                            <button class="page-btn pro-page" data-page="1">1</button>
+                            <button class="page-btn pro-page" data-page="2">2</button>
+                            <button class="page-btn pro-page" data-page="3">3</button>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="popup-overlay" id="addPopup">
+    <div class="popup-box">
+        <h3>Thêm mã giảm giá</h3>
+
+        <label>Tên mã:</label>
+        <input type="text" id="addName">
+
+        <label>Giá trị giảm (% hoặc số tiền):</label>
+        <input type="text" id="addValue">
+
+        <label>Áp dụng cho:</label>
+        <select id="addApply">
+            <option>Toàn sản phẩm</option>
+            <option>Thể loại</option>
+        </select>
+
+        <div id="addCategoryBox" class="hide">
+            <label>Chọn thể loại:</label>
+            <select>
+                <option>Trinh thám</option>
+                <option>Hành động</option>
+                <option>Kinh dị</option>
+                <option>Giả tưởng</option>
+            </select>
+        </div>
+
+        <label>Số lượng:</label>
+        <input type="number" id="addQuantity">
+
+        <label>Ngày bắt đầu:</label>
+        <input type="date" id="addStart">
+
+        <label>Ngày kết thúc:</label>
+        <input type="date" id="addEnd">
+
+        <div class="btn-row">
+            <button class="btn-cancel" id="closeAddPopup">Hủy</button>
+            <button class="btn-save">Lưu</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup-overlay" id="editPopup">
+    <div class="popup-box">
+        <h3>Sửa mã giảm giá</h3>
+
+        <label>Tên mã:</label>
+        <p id="editName" class="readonly"></p>
+
+        <label>Giá trị giảm:</label>
+        <p id="editValue" class="readonly"></p>
+
+        <label>Số lượng:</label>
+        <input type="number" id="editQuantity">
+
+        <label>Ngày bắt đầu:</label>
+        <input type="date" id="editStart">
+
+        <label>Ngày kết thúc:</label>
+        <input type="date" id="editEnd">
+
+        <div class="btn-row">
+            <button class="btn-cancel" id="closeEditPopup">Hủy</button>
+            <button class="btn-save" id="saveEditBtn">Cập nhật</button>
+        </div>
+    </div>
+</div>
+
+<!-- Popup xác nhận xóa -->
+<div class="popup-overlay" id="deleteConfirmPopup">
+    <div class="popup-box small">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h3>Xác nhận xóa</h3>
+        <p>Bạn có chắc muốn xóa mã này không?<br></p>
+        <div class="btn-row">
+            <button class="btn-cancel" id="cancelDeleteBtn">Không</button>
+            <button class="btn-save" id="confirmDeleteBtn">Có</button>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    (function(){
+        // ---------- Helpers ----------
+        function ddmmyyyyFromInput(val){ // yyyy-mm-dd -> dd/mm/yyyy
+            if(!val) return "";
+            const parts = val.split("-");
+            return parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : val;
+        }
+        function inputFromDDMM(val){ // dd/mm/yyyy -> yyyy-mm-dd
+            if(!val) return "";
+            const p = val.split("/");
+            return p.length===3 ? `${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}` : "";
+        }
+
+        // ---------- Elements ----------
+        const tbody = document.getElementById('promoTableBody');
+        const addPopup = document.getElementById('addPopup');
+        const editPopup = document.getElementById('editPopup');
+        const deletePopup = document.getElementById('deleteConfirmPopup');
+
+        const openAddBtn = document.getElementById('openAddPopup');
+        const closeAddBtn = document.getElementById('closeAddPopup');
+
+        const editName = document.getElementById('editName');
+        const editValue = document.getElementById('editValue');
+        const editQuantity = document.getElementById('editQuantity');
+        const editStart = document.getElementById('editStart');
+        const editEnd = document.getElementById('editEnd');
+        const closeEditBtn = document.getElementById('closeEditPopup');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        // ---------- Popup Thêm ----------
+        openAddBtn.onclick = function(){
+            addPopup.style.display = 'flex';
+            document.getElementById("addName").value = "";
+            document.getElementById("addValue").value = "";
+            document.getElementById("addQuantity").value = "";
+            document.getElementById("addStart").value = "";
+            document.getElementById("addEnd").value = "";
+            const addApply = document.getElementById('addApply');
+            addApply.value = "";
+            const addCategoryBox = document.getElementById('addCategoryBox');
+            addCategoryBox.classList.add('hide');
+            const addCategorySelect = addCategoryBox.querySelector('select');
+            addCategorySelect.disabled = true;
+            addCategorySelect.value = "";
+        };
+        closeAddBtn.onclick = function(){
+            addPopup.style.display = 'none';
+        };
+
+        document.getElementById('addApply').onchange = function(){
+            const box = document.getElementById('addCategoryBox');
+            const sel = box.querySelector('select');
+            if(this.value === "Thể loại"){
+                box.classList.remove('hide');
+                sel.disabled = false;
+            } else {
+                box.classList.add('hide');
+                sel.disabled = true;
+                sel.value = "";
+            }
+        };
+
+        // ---------- Popup Sửa ----------
+        let currentRow = null;
+
+        window.openEdit = function(code){
+            const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+            const row = rows.find(r => r.children[0].innerText.trim() === code);
+            if(!row) return alert('Không tìm thấy mã');
+
+            currentRow = row;
+            editName.textContent = row.children[0].innerText.trim();
+            editValue.textContent = row.children[1].innerText.trim();
+
+            const qtyParts = row.children[2].innerText.trim().split('/');
+            const total = qtyParts.length>1 ? qtyParts[1].replace(/\D/g,'') : qtyParts[0].replace(/\D/g,'');
+            editQuantity.value = total || 0;
+
+            const displayedDate = row.children[3].innerText.trim();
+            editEnd.value = inputFromDDMM(displayedDate);
+            editStart.value = "";
+
+            saveEditBtn.disabled = true;
+            saveEditBtn.title = "Chưa kích hoạt backend - nút tạm thời bị vô hiệu";
+
+            editPopup.style.display = 'flex';
+        };
+
+        closeEditBtn.onclick = function(){
+            editPopup.style.display = 'none';
+        };
+
+        saveEditBtn.onclick = function(e){
+            e.preventDefault(); // không làm gì cả
+        };
+
+        // ---------- Popup Xóa ----------
+        tbody.addEventListener('click', function(e){
+            const delBtn = e.target.closest('.delete-btn');
+            if(delBtn){
+                deletePopup.style.display = 'flex';
+            }
+        });
+
+        cancelDeleteBtn.onclick = function(){
+            deletePopup.style.display = 'none';
+        };
+        confirmDeleteBtn.onclick = function(){
+            deletePopup.style.display = 'none';
+        };
+
+        // ---------- Phân trang ----------
+        const ROWS_PER_PAGE = 5;
+        const pageButtons = Array.from(document.querySelectorAll('.pro-page'));
+        let currentPage = 1;
+
+        function refreshPagedRows(){
+            return Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        }
+        function showPage(page){
+            const rows = refreshPagedRows();
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+            rows.forEach((r, idx) => r.style.display = (idx >= start && idx < end) ? "" : "none");
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.pro-page[data-page="${page}"]`)?.classList.add('active');
+            currentPage = page;
+        }
+        pageButtons.forEach(btn => btn.addEventListener('click', () => showPage(Number(btn.dataset.page))));
+        showPage(1);
+
+    })();
+</script>
+
+
+<script>
+    (function(){
+        let currentPage = 1;
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('promoTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        const pageButtons = document.querySelectorAll('.pro-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.pro-page[data-page="${page}"]`)?.classList.add('active');
+
+            currentPage = page;
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+</script>
+</body>
+</html>
