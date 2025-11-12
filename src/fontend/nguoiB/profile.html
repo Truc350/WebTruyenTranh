@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css">
-    <link rel="stylesheet" href="../css/puplicCss/nav.css">
+    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="../css/publicCss/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/UserBCss/profile.css">
 </head>
@@ -60,8 +60,9 @@
                 <li><a href="#">Đổi mật khẩu</a></li>
                 <li><a href="#">Ưu đãi F-Point</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
-                <li><a href="#">Ví voucher <span class="badge">14</span></a></li>
-                <li><a href="#">Thông Báo</a></li>
+                <li><a href="#">Ví voucher </a></li>
+<!--                <span class="badge">14</span>-->
+<!--                <li><a href="#">Thông Báo</a></li>-->
                 <li><a href="#">Sản phẩm yêu thích</a></li>
             </ul>
         </div>
@@ -70,26 +71,26 @@
         <h2>Hồ sơ cá nhân</h2>
         <form>
             <div class="form-group">
-                <label for="ho">Họ*</label>
-                <input type="text" id="ho" name="ho" value="Huỳnh" required>
+                <label for="ho">Họ: *</label>
+                <input type="text" id="ho" name="ho" value="" placeholder="Nhập họ" required>
             </div>
             <div class="form-group">
-                <label for="ten">Tên*</label>
-                <input type="text" id="ten" name="ten" value="Trúc" required>
+                <label for="ten">Tên: *</label>
+                <input type="text" id="ten" name="ten" value="" placeholder="Nhập tên" required>
             </div>
             <div class="form-group">
-                <label for="phone">Số điện thoại</label>
-                <input type="tel" id="phone" name="phone" value="0394158994" required>
+                <label for="phone">Số điện thoại:</label>
+                <input type="tel" id="phone" name="phone" value="" placeholder="Nhập số điện thoại" required>
                 <button type="button" class="edit-btn">Chỉnh sửa</button>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="Chưa có email" required>
+                <label for="email">Email: </label>
+                <input type="email" id="email" name="email" value="" placeholder="Nhập email" required>
                 <button type="button" class="edit-btn">Chỉnh sửa</button>
             </div>
             <div class="form-group">
                 <div class="genders">
-                    <label>Giới tính*</label>
+                    <label>Giới tính: *</label>
                     <div class="gender-options">
                         <label><input type="radio" name="gender" value="male" checked> Nam</label>
                         <label><input type="radio" name="gender" value="female"> Nữ</label>
@@ -98,7 +99,7 @@
             </div>
             <div class="form-group">
                 <div class="birthday">
-                    <label for="day">Birthday*</label>
+                    <label for="day">Ngày tháng năm sinh: *</label>
                     <input type="number" id="day" name="day" value="27" min="1" max="31" required> /
                     <input type="number" id="month" name="month" value="10" min="1" max="12" required> /
                     <input type="number" id="year" name="year" value="2005" min="1900" max="2025" required>
@@ -106,7 +107,7 @@
             </div>
             <div class="form-group">
                 <div class="address">
-                    <label for="country">Quốc gia*</label>
+                    <label for="country">Quốc gia: *</label>
                     <select id="country" name="country" required>
                         <option value="" disabled selected>Chọn quốc gia</option>
                         <option value="Vietnam">Việt Nam</option>
@@ -114,21 +115,21 @@
                     </select>
                     <div class="diaChi">
                         <div class="address-group">
-                            <label for="province">Tỉnh/Thành phố*</label>
+                            <label for="province">Tỉnh/Thành phố: *</label>
                             <select id="province" name="province" required>
                                 <option value="" disabled selected>Chọn tỉnh/thành phố</option>
                             </select>
                         </div>
 
                         <div class="address-group">
-                            <label for="district">Huyện*</label>
+                            <label for="district">Huyện: *</label>
                             <select id="district" name="district" required>
                                 <option value="" disabled selected>Chọn huyện</option>
                             </select>
                         </div>
                     </div>
 
-                    <label for="house-number">Số nhà*</label>
+                    <label for="house-number">Số nhà: *</label>
                     <input type="text" id="house-number" name="house-number" placeholder="Nhập số nhà, xã" required>
                 </div>
             </div>
@@ -179,11 +180,11 @@
                 </div>
                 <button class="scroll-btn scroll-right" title="Cuộn phải">&gt;</button>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Bán chỗ tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm"
-                       class="search-input">
-                <button class="search-btn"><i class="fas fa-search"></i></button>
-            </div>
+<!--            <div class="search-bar">-->
+<!--                <input type="text" placeholder="Bán chỗ tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm"-->
+<!--                       class="search-input">-->
+<!--                <button class="search-btn"><i class="fas fa-search"></i></button>-->
+<!--            </div>-->
         </div>
         <div class="orders-list">
             <div class="order-item" data-status="completed">
@@ -381,6 +382,164 @@
 
         </div>
     </div>
+
+    <div class="voucher-container" style="display: none;">
+        <h2>Ví voucher</h2>
+
+        <!-- Danh sách voucher (chỉ giữ chưa sử dụng, xóa hoặc ẩn .used) -->
+        <div class="vouchers-grid" id="vouchers-grid">
+            <!-- Voucher 1: Mã giảm 10K - Toàn sàn -->
+            <div class="voucher-card">
+                <div class="voucher-header">
+                    <span class="voucher-type">Voucher chưa sử dụng</span>
+                    <span class="voucher-status unused">Chưa sử dụng</span>
+                </div>
+                <div class="voucher-body">
+                    <div class="voucher-title">Mã Giảm 10K - Toàn Sàn</div>
+                    <div class="voucher-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại văn...</div>
+                    <div class="voucher-code">FHS10KT11</div>
+                    <button class="voucher-detail-btn">Chi tiết</button>
+                </div>
+                <div class="voucher-footer">
+                    <span class="voucher-expiry">HSD: 30/11/2025</span>
+                    <button class="copy-code-btn">Copy mã</button>
+                </div>
+            </div>
+
+            <!-- Voucher 2: Mã giảm 20K - Toàn sàn -->
+            <div class="voucher-card">
+                <div class="voucher-header">
+                    <span class="voucher-type">Voucher chưa sử dụng</span>
+                    <span class="voucher-status unused">Chưa sử dụng</span>
+                </div>
+                <div class="voucher-body">
+                    <div class="voucher-title">Mã Giảm 20K - Toàn Sàn</div>
+                    <div class="voucher-desc">Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại văn...</div>
+                    <div class="voucher-code">FHS20KT11</div>
+                    <button class="voucher-detail-btn">Chi tiết</button>
+                </div>
+                <div class="voucher-footer">
+                    <span class="voucher-expiry">HSD: 30/11/2025</span>
+                    <button class="copy-code-btn">Copy mã</button>
+                </div>
+            </div>
+
+            <!-- Voucher 3: Mã giảm 40K - Toàn sàn -->
+            <div class="voucher-card">
+                <div class="voucher-header">
+                    <span class="voucher-type">Voucher chưa sử dụng</span>
+                    <span class="voucher-status unused">Chưa sử dụng</span>
+                </div>
+                <div class="voucher-body">
+                    <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
+                    <div class="voucher-desc">Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại văn...</div>
+                    <div class="voucher-code">FHS40KT11</div>
+                    <button class="voucher-detail-btn">Chi tiết</button>
+                </div>
+                <div class="voucher-footer">
+                    <span class="voucher-expiry">HSD: 30/11/2025</span>
+                    <button class="copy-code-btn">Copy mã</button>
+                </div>
+            </div>
+
+            <!-- Voucher 4: Mã giảm 80K - Toàn sàn -->
+            <div class="voucher-card">
+                <div class="voucher-header">
+                    <span class="voucher-type">Voucher chưa sử dụng</span>
+                    <span class="voucher-status unused">Chưa sử dụng</span>
+                </div>
+                <div class="voucher-body">
+                    <div class="voucher-title">Mã Giảm 80K - Toàn Sàn</div>
+                    <div class="voucher-desc">Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại văn...</div>
+                    <div class="voucher-code">FHS80KT11</div>
+                    <button class="voucher-detail-btn">Chi tiết</button>
+                </div>
+                <div class="voucher-footer">
+                    <span class="voucher-expiry">HSD: 30/11/2025</span>
+                    <button class="copy-code-btn">Copy mã</button>
+                </div>
+            </div>
+
+            <!-- Xóa hoặc ẩn các voucher .used -->
+            <!-- Ví dụ: <div class="voucher-card used" style="display: none;">... </div> -->
+        </div>
+    </div>
+    <div class="wishlist-container" style="display: none;">
+        <h2>Sản phẩm yêu thích</h2>
+
+        <!-- Danh sách sản phẩm yêu thích -->
+        <div class="wishlist-grid">
+            <!-- Sản phẩm 1 -->
+            <div class="wishlist-item">
+                <img src="https://product.hstatic.net/200000343865/product/thanh-pho-len-day-cot-2_b38b1803c2894d72ba2852cacb606a78_master.jpg" alt="Doraemon" class="wishlist-img">
+                <div class="wishlist-info">
+                    <h3>Doraemon - Nobita và cuộc phiêu lưu ở thành phố dây cót</h3>
+                    <div class="wishlist-price">
+                        <span class="original-price">100.000đ</span>
+                        <span class="discount-price">95.000đ</span>
+                    </div>
+                    <div class="wishlist-actions">
+                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
+                        <button class="remove-wishlist-btn">Xóa</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sản phẩm 2 -->
+            <div class="wishlist-item">
+                <img src="https://salt.tikicdn.com/media/catalog/product/b/i/bia_1-_co_be_ban_diem_1.jpg" alt="Cô bé bán diêm" class="wishlist-img">
+                <div class="wishlist-info">
+                    <h3>Cô bé bán diêm</h3>
+                    <div class="wishlist-price">
+                        <span class="original-price">60.000đ</span>
+                        <span class="discount-price">55.000đ</span>
+                    </div>
+                    <div class="wishlist-actions">
+                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
+                        <button class="remove-wishlist-btn">Xóa</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sản phẩm 3 -->
+            <div class="wishlist-item">
+                <img src="https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/s/h/shin_pink_poster_social.jpg" alt="Shin cậu bé bút chì" class="wishlist-img">
+                <div class="wishlist-info">
+                    <h3>Shin cậu bé bút chì - Học viện hoa lệ Tenkasu</h3>
+                    <div class="wishlist-price">
+                        <span class="original-price">89.000đ</span>
+                        <span class="discount-price">80.000đ</span>
+                    </div>
+                    <div class="wishlist-actions">
+                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
+                        <button class="remove-wishlist-btn">Xóa</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sản phẩm 4 -->
+            <div class="wishlist-item">
+                <img src="https://product.hstatic.net/200000287623/product/5cm_5f3b4ebe155b4d6491c244b8623657b5_master.jpg" alt="5cm/s" class="wishlist-img">
+                <div class="wishlist-info">
+                    <h3>5cm/s</h3>
+                    <div class="wishlist-price">
+                        <span class="original-price">125.000đ</span>
+                        <span class="discount-price">120.000đ</span>
+                    </div>
+                    <div class="wishlist-actions">
+                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
+                        <button class="remove-wishlist-btn">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông báo nếu không có sản phẩm -->
+        <div class="no-wishlist" style="display: none; text-align: center; padding: 60px 20px; color: #666;">
+            <img src="https://png.pngtree.com/png-clipart/20230418/original/pngtree-heart-empty-line-icon-png-image_9065105.png" alt="No wishlist" style="width: 120px; height: auto;">
+            <p style="font-weight: 500; color: #555;">Bạn chưa có sản phẩm yêu thích nào</p>
+        </div>
+    </div>
 </main>
 
 <footer class="footer">
@@ -463,6 +622,8 @@
         const profileForm = document.querySelector('.profile-form-container');
         const changePasswordForm = document.querySelector('.change-password-container');
         const orderHistoryForm = document.querySelector('.order-history-container');
+        const voucherContainer = document.querySelector('.voucher-container');
+        const wishlistContainer = document.querySelector('.wishlist-container');
         const menuItems = document.querySelectorAll('.menu ul li');
 
         // Fallback tĩnh cho huyện
@@ -535,7 +696,7 @@
             console.log('Đã load fallback huyện cho tỉnh', provinceCode);
         }
 
-        // Xử lý click menu item
+        // Xử lý click menu item (thêm "Sản phẩm yêu thích")
         menuItems.forEach(item => {
             item.addEventListener('click', function (e) {
                 menuItems.forEach(i => i.classList.remove('active'));
@@ -545,14 +706,41 @@
                     profileForm.style.display = 'none';
                     changePasswordForm.style.display = 'block';
                     orderHistoryForm.style.display = 'none';
+                    voucherContainer.style.display = 'none';
+                    wishlistContainer.style.display = 'none';
                 } else if (text === 'Đơn hàng của tôi') {
                     profileForm.style.display = 'none';
                     changePasswordForm.style.display = 'none';
                     orderHistoryForm.style.display = 'block';
+                    voucherContainer.style.display = 'none';
+                    wishlistContainer.style.display = 'none';
+                } else if (text === 'Ví voucher') {
+                    profileForm.style.display = 'none';
+                    changePasswordForm.style.display = 'none';
+                    orderHistoryForm.style.display = 'none';
+                    voucherContainer.style.display = 'block';
+                    wishlistContainer.style.display = 'none';
+                    // Logic voucher (nếu có)
+                    const allVouchers = voucherContainer.querySelectorAll('.voucher-card');
+                    allVouchers.forEach(v => {
+                        if (v.classList.contains('used')) {
+                            v.style.display = 'none';
+                        } else {
+                            v.style.display = 'block';
+                        }
+                    });
+                } else if (text === 'Sản phẩm yêu thích') {
+                    profileForm.style.display = 'none';
+                    changePasswordForm.style.display = 'none';
+                    orderHistoryForm.style.display = 'none';
+                    voucherContainer.style.display = 'none';
+                    wishlistContainer.style.display = 'block';
                 } else {
                     profileForm.style.display = 'block';
                     changePasswordForm.style.display = 'none';
                     orderHistoryForm.style.display = 'none';
+                    voucherContainer.style.display = 'none';
+                    wishlistContainer.style.display = 'none';
                 }
                 e.preventDefault();
             });
@@ -563,6 +751,8 @@
         profileForm.style.display = 'block';
         changePasswordForm.style.display = 'none';
         orderHistoryForm.style.display = 'none';
+        voucherContainer.style.display = 'none';
+        wishlistContainer.style.display = 'none';
 
         // Xử lý cuộn cho nút trái/phải
         const tabsContainer = document.querySelector('.tabs-container');
@@ -570,52 +760,82 @@
         const scrollRightBtn = document.querySelector('.scroll-right');
 
         scrollLeftBtn.addEventListener('click', () => {
-            tabsContainer.scrollBy({left: -150, behavior: 'smooth'});
+            tabsContainer.scrollBy({ left: -150, behavior: 'smooth' });
         });
 
         scrollRightBtn.addEventListener('click', () => {
-            tabsContainer.scrollBy({left: 150, behavior: 'smooth'});
+            tabsContainer.scrollBy({ left: 150, behavior: 'smooth' });
         });
-    });
 
-    // Xử lý lọc đơn hàng theo tab
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    const orderItems = document.querySelectorAll('.order-item');
-    const noOrdersMessage = document.querySelector('.no-orders');
+        // Xử lý lọc đơn hàng theo tab
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const orderItems = document.querySelectorAll('.order-item');
+        const noOrdersMessage = document.querySelector('.no-orders');
 
-    filterTabs.forEach(tab => {
-        tab.addEventListener('click', function () {
-            // Xóa active khỏi tất cả tab
-            filterTabs.forEach(t => t.classList.remove('active'));
-            // Thêm active cho tab được click
-            this.classList.add('active');
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
 
-            const filterValue = this.getAttribute('data-filter');
+                const filterValue = this.getAttribute('data-filter');
+                let visibleCount = 0;
 
-            let visibleCount = 0;
+                orderItems.forEach(item => {
+                    const status = item.getAttribute('data-status');
+                    if (filterValue === 'all' || status === filterValue) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
 
-            // Lọc đơn hàng
-            orderItems.forEach(item => {
-                const status = item.getAttribute('data-status');
-                if (filterValue === 'all' || status === filterValue) {
-                    item.style.display = 'block';
-                    visibleCount++;
+                if (visibleCount === 0) {
+                    noOrdersMessage.style.display = 'block';
                 } else {
-                    item.style.display = 'none';
+                    noOrdersMessage.style.display = 'none';
                 }
             });
+        });
 
-            // Hiển thị/ẩn thông báo không có đơn
-            if (visibleCount === 0) {
-                noOrdersMessage.style.display = 'block';
-            } else {
-                noOrdersMessage.style.display = 'none';
+        // Kích hoạt tab mặc định (ví dụ: "Hoàn thành")
+        document.querySelector('.filter-tab.active').click();
+
+        // Xử lý nút Copy mã (nếu có voucher)
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
+                const code = e.target.closest('.voucher-card').querySelector('.voucher-code').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('Đã copy mã: ' + code);
+                }).catch(() => {
+                    alert('Không thể copy mã. Vui lòng copy thủ công.');
+                });
+            }
+        });
+
+        // Xử lý nút Chi tiết (nếu có voucher)
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('voucher-detail-btn')) {
+                const title = e.target.closest('.voucher-card').querySelector('.voucher-title').textContent;
+                alert('Chi tiết voucher: ' + title + '\n(Ở đây có thể mở modal hoặc trang mới)');
+            }
+        });
+
+        // Xử lý nút Thêm vào giỏ và Xóa trong wishlist
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('add-to-cart-btn')) {
+                const title = e.target.closest('.wishlist-item').querySelector('h3').textContent;
+                alert('Đã thêm "' + title + '" vào giỏ hàng!');
+                // Có thể thêm logic thực tế như redirect đến cart
+            } else if (e.target.classList.contains('remove-wishlist-btn')) {
+                const item = e.target.closest('.wishlist-item');
+                if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
+                    item.style.display = 'none'; // Ẩn item
+                    // Có thể thêm logic xóa thật từ server
+                }
             }
         });
     });
-
-    // Kích hoạt tab mặc định (ví dụ: "Hoàn thành")
-    document.querySelector('.filter-tab.active').click();
 </script>
 </body>
 </html>
