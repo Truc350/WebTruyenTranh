@@ -5,15 +5,15 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat Người Mua - Người Bán</title>
+    <title>Chat Người Bán - Người Mua</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminCss/chatWithCus.css">
     <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-
 </head>
 <body>
 <div class="container">
+
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
@@ -61,12 +61,13 @@
             <li>
                 <a href="report.html">
                     <img src="../../img/report.png" class="icon">
-                    <span>Thống kê/ Báo cáo</span>
+                    <span>Thống kê</span>
                 </a>
             </li>
         </ul>
     </aside>
 
+    <!-- Main content -->
     <div class="main-content">
         <header class="admin-header">
             <div class="header-right">
@@ -81,142 +82,132 @@
                 </div>
             </div>
         </header>
-<!-- ==================== CHỈ CẬP NHẬT PHẦN NÀY ==================== -->
-<div class="chat-container">
-    <!-- Danh sách người dùng -->
-    <div class="user-list">
-        <div class="user-list-header">Tin nhắn</div>
-        <ul id="userList">
-            <li data-user-id="1" onclick="selectUser(1)" class="active">
-                <img src="https://i.pravatar.cc/150?img=1" alt="User 1" class="user-avatar">
-                <div class="user-info">
-                    <div class="user-name">Người bán 1</div>
-                    <div class="user-preview">Cảm ơn bạn đã mua hàng!</div>
+
+        <!-- ==================== CHAT ==================== -->
+        <div class="chat-container">
+
+            <!-- Danh sách khách hàng -->
+            <div class="user-list">
+                <div class="user-list-header">Khách hàng</div>
+                <ul id="userList">
+                    <li data-user-id="1" onclick="selectUser(1)" class="active">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="User 1" class="user-avatar">
+                        <div class="user-info">
+                            <div class="user-name">Trâm Nguyễn</div>
+                            <div class="user-preview">Shop ơi, bộ One Piece tập 107 còn hàng không ạ?</div>
+                        </div>
+                        <div class="user-status online"></div>
+                        <span class="unread-badge">1</span>
+                    </li>
+                    <li data-user-id="2" onclick="selectUser(2)">
+                        <img src="https://i.pravatar.cc/150?img=15" alt="User 2" class="user-avatar">
+                        <div class="user-info">
+                            <div class="user-name">Minh Anh</div>
+                            <div class="user-preview">Bộ Naruto bản đặc biệt khi nào có hàng lại vậy?</div>
+                        </div>
+                        <div class="user-status"></div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Khu vực chat -->
+            <div class="chat-area">
+                <div class="chat-header" id="chatHeader">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="" class="user-avatar">
+                    <div class="header-info">
+                        <h3>Trâm Nguyễn</h3>
+                        <small><i class="fas fa-circle online-dot"></i> Đang hoạt động</small>
+                    </div>
+                    <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
                 </div>
-                <div class="user-status online"></div>
-                <span class="unread-badge">2</span>
-            </li>
-            <li data-user-id="2" onclick="selectUser(2)">
-                <img src="https://i.pravatar.cc/150?img=2" alt="User 2" class="user-avatar">
-                <div class="user-info">
-                    <div class="user-name">Người bán 2</div>
-                    <div class="user-preview">Sản phẩm còn không ạ?</div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message received">
+                        <div class="bubble">Shop ơi, bộ One Piece tập 107 còn hàng không ạ?</div>
+                        <div class="timestamp">10:32</div>
+                    </div>
+                    <div class="message sent">
+                        <div class="bubble">Chào bạn, One Piece tập 107 hiện còn hàng nhé 😊</div>
+                        <div class="timestamp">10:33</div>
+                    </div>
                 </div>
-                <div class="user-status"></div>
-            </li>
-        </ul>
-    </div>
 
-    <!-- Khu vực chat -->
-    <div class="chat-area">
-        <div class="chat-header" id="chatHeader">
-            <img src="https://i.pravatar.cc/150?img=1" alt="" class="user-avatar">
-            <div class="header-info">
-                <h3>Người bán 1</h3>
-                <small><i class="fas fa-circle online-dot"></i> Đang hoạt động</small>
+                <!-- Typing indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <!-- Nhập tin -->
+                <div class="chat-input">
+                    <label class="input-action" for="imageInput" title="Gửi ảnh">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;"/>
+                    <textarea id="messageInput" placeholder="Nhập nội dung trả lời..." rows="1"></textarea>
+                    <button class="input-action emoji-btn"><i class="fas fa-smile"></i></button>
+                    <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+
+                <!-- Xem trước ảnh -->
+                <div id="imagePreview" class="image-preview" style="display: none;">
+                    <img id="previewImg" src="" alt="Preview"/>
+                    <button class="close-preview" onclick="closePreview()">×</button>
+                    <button class="send-image-btn" onclick="sendImage()">Gửi</button>
+                </div>
             </div>
-            <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
-        </div>
-
-        <div class="chat-messages" id="chatMessages">
-            <div class="message received">
-                <div class="bubble">Chào bạn! Mình có thể giúp gì ạ?</div>
-                <div class="timestamp">10:32</div>
-            </div>
-            <div class="message sent">
-                <div class="bubble">Mình cần tư vấn về sản phẩm</div>
-                <div class="timestamp">10:33</div>
-            </div>
-        </div>
-
-        <!-- Typing indicator -->
-        <div class="typing-indicator" id="typingIndicator" style="display: none;">
-            <span></span><span></span><span></span>
-        </div>
-
-        <!-- Trong phần .chat-input -->
-        <div class="chat-input">
-            <label class="input-action" for="imageInput" title="Gửi ảnh">
-                <i class="fas fa-image"></i>
-            </label>
-            <input type="file" id="imageInput" accept="image/*" style="display: none;"/>
-
-            <textarea id="messageInput" placeholder="Nhập tin nhắn..." rows="1"></textarea>
-
-            <button class="input-action emoji-btn"><i class="fas fa-smile"></i></button>
-            <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-
-        <!-- Xem trước ảnh -->
-        <div id="imagePreview" class="image-preview" style="display: none;">
-            <img id="previewImg" src="" alt="Preview"/>
-            <button class="close-preview" onclick="closePreview()">×</button>
-            <button class="send-image-btn" onclick="sendImage()">Gửi</button>
         </div>
     </div>
 </div>
-    </div>
-</div>
-<!-- ============================================================ -->
 
+<!-- ==================== SCRIPT ==================== -->
 <script>
-    // === KEY LƯU TRỮ TRONG LOCALSTORAGE ===
-    const STORAGE_KEY = 'comicstore_chat_history';
-
-    // === LOAD DỮ LIỆU TỪ LOCALSTORAGE (nếu có) ===
+    const STORAGE_KEY = 'seller_chat_history';
     let conversations = {};
+
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-            conversations = JSON.parse(saved);
-        }
+        if (saved) conversations = JSON.parse(saved);
     } catch (e) {
-        console.warn("Không thể đọc lịch sử chat:", e);
+        console.warn("Không thể đọc dữ liệu:", e);
     }
 
-    // === DỮ LIỆU MẶC ĐỊNH (nếu chưa có) ===
+    // Dữ liệu mặc định
     const defaultConversations = {
         1: {
-            user: {name: "Người bán 1", avatar: "https://i.pravatar.cc/150?img=1", online: true},
+            user: {name: "Trâm Nguyễn", avatar: "https://i.pravatar.cc/150?img=12", online: true},
             messages: [
-                {text: "Chào bạn! Mình có thể giúp gì ạ?", type: "received", time: "10:32"},
-                {text: "Mình cần tư vấn về sản phẩm", type: "sent", time: "10:33"}
+                {text: "Shop ơi, bộ One Piece tập 107 còn hàng không ạ?", type: "received", time: "10:32"},
+                {text: "Chào bạn, One Piece tập 107 hiện còn hàng nhé 😊", type: "sent", time: "10:33"}
             ]
         },
         2: {
-            user: {name: "Người bán 2", avatar: "https://i.pravatar.cc/150?img=2", online: false},
+            user: {name: "Minh Anh", avatar: "https://i.pravatar.cc/150?img=15", online: false},
             messages: [
-                {text: "Sản phẩm còn không ạ?", type: "sent", time: "09:15"},
-                {text: "Dạ còn ạ, bạn muốn đặt hàng không?", type: "received", time: "09:16"}
+                {text: "Bộ Naruto bản đặc biệt khi nào có hàng lại vậy?", type: "received", time: "09:15"},
+                {text: "Bộ Naruto bản đặc biệt dự kiến về hàng vào tuần sau ạ.", type: "sent", time: "09:16"}
             ]
         }
     };
 
-    // Gộp dữ liệu mặc định nếu chưa tồn tại
     Object.keys(defaultConversations).forEach(id => {
-        if (!conversations[id]) {
-            conversations[id] = defaultConversations[id];
-        }
+        if (!conversations[id]) conversations[id] = defaultConversations[id];
     });
 
     let currentUserId = 1;
 
-    // === LƯU VÀO LOCALSTORAGE ===
     function saveToStorage() {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
         } catch (e) {
-            console.warn("Không thể lưu lịch sử chat:", e);
+            console.warn("Không thể lưu dữ liệu:", e);
         }
     }
 
-    // === HIỂN THỊ HỘI THOẠI ===
     function loadConversation(userId) {
         const conv = conversations[userId];
         const header = document.getElementById('chatHeader');
         const messagesDiv = document.getElementById('chatMessages');
 
-        // Cập nhật header
         header.innerHTML = `
             <img src="${conv.user.avatar}" alt="" class="user-avatar">
             <div class="header-info">
@@ -226,7 +217,6 @@
             <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
         `;
 
-        // Load tin nhắn
         messagesDiv.innerHTML = '';
         conv.messages.forEach(msg => {
             const messageEl = document.createElement('div');
@@ -241,88 +231,71 @@
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 
-    // === CHỌN NGƯỜI BÁN ===
     function selectUser(userId) {
         if (currentUserId === userId) return;
-
         document.querySelectorAll('#userList li').forEach(li => li.classList.remove('active'));
         document.querySelector(`#userList li[data-user-id="${userId}"]`).classList.add('active');
-
         currentUserId = userId;
         loadConversation(userId);
     }
 
-    // === GỬI TIN NHẮN ===
     function sendMessage() {
         const input = document.getElementById('messageInput');
         const text = input.value.trim();
         if (!text) return;
-
         const time = new Date().toLocaleTimeString('vi', {hour: '2-digit', minute: '2-digit'});
 
-        // Thêm tin nhắn gửi
-        const messagesDiv = document.getElementById('chatMessages');
         const msg = document.createElement('div');
         msg.className = 'message sent';
         msg.innerHTML = `<div class="bubble">${text}</div><div class="timestamp">${time}</div>`;
-        messagesDiv.appendChild(msg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        document.getElementById('chatMessages').appendChild(msg);
+        document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
 
-        // Lưu vào dữ liệu + localStorage
         conversations[currentUserId].messages.push({text, type: 'sent', time});
         saveToStorage();
-
         input.value = '';
         input.style.height = 'auto';
 
-        // Typing + phản hồi
+        // Mô phỏng khách phản hồi
         showTyping();
         setTimeout(() => {
             hideTyping();
             const reply = getAutoReply();
             const replyTime = new Date().toLocaleTimeString('vi', {hour: '2-digit', minute: '2-digit'});
             addReceivedMessage(reply, replyTime);
-
-            // Lưu phản hồi
             conversations[currentUserId].messages.push({text: reply, type: 'received', time: replyTime});
             saveToStorage();
         }, 1000 + Math.random() * 1000);
     }
 
-    // === HIỆU ỨNG TYPING ===
     function showTyping() {
-        const typing = document.getElementById('typingIndicator');
-        typing.style.display = 'flex';
-        document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        document.getElementById('typingIndicator').style.display = 'flex';
     }
-
     function hideTyping() {
         document.getElementById('typingIndicator').style.display = 'none';
     }
 
-    // === THÊM TIN NHẬN ===
     function addReceivedMessage(text, time) {
-        const messagesDiv = document.getElementById('chatMessages');
         const msg = document.createElement('div');
         msg.className = 'message received';
         msg.innerHTML = `<div class="bubble">${text}</div><div class="timestamp">${time}</div>`;
-        messagesDiv.appendChild(msg);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        const chat = document.getElementById('chatMessages');
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
     }
 
-    // === PHẢN HỒI TỰ ĐỘNG ===
     function getAutoReply() {
         const replies = [
-            "Cảm ơn bạn! Mình đang kiểm tra giúp bạn nhé!",
-            "Sản phẩm đang có sẵn ạ, bạn cần size nào?",
-            "Mình sẽ gửi hình ảnh chi tiết ngay!",
-            "Bạn muốn đặt hàng luôn không ạ?",
-            "Đã nhận được yêu cầu, mình xử lý ngay!"
+            "Dạ vâng, cảm ơn shop ạ!",
+            "Cho mình xin thêm vài hình ảnh thực tế nha.",
+            "Tuyệt quá, cảm ơn shop đã tư vấn!",
+            "Mình sẽ ghé mua thêm vài bộ khác sau nha 😊",
+            "Shop ơi, mình đổi địa chỉ nhận được không?"
         ];
         return replies[Math.floor(Math.random() * replies.length)];
     }
 
-    // === ENTER GỬI TIN ===
+
     document.getElementById('messageInput').addEventListener('keypress', e => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -330,17 +303,18 @@
         }
     });
 
-    // === TỰ ĐỘNG RESIZE ===
     const textarea = document.getElementById('messageInput');
     textarea.addEventListener('input', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });
 
-    // === KHỞI TẠO ===
     document.addEventListener('DOMContentLoaded', () => {
         loadConversation(1);
     });
+
+
+
 </script>
 </body>
 </html>

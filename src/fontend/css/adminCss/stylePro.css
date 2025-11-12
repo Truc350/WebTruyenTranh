@@ -177,12 +177,6 @@ th, td {
     white-space: nowrap; /* giữ chữ 1 dòng, không xuống */
 }
 
-td img {
-    width: 45px;
-    height: 60px;
-    border-radius: 4px;
-}
-
 .edit-btn {
     background-color: #ff7070;
     color: white;

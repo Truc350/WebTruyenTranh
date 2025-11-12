@@ -22,8 +22,8 @@ body {
 }
 
 .page-title {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 /* ==== ORDER STATUS TABS ==== */
@@ -37,7 +37,7 @@ body {
 }
 
 .tab-item {
-    font-size: 15px;
+    font-size: 16px;
     color: #333;
     cursor: pointer;
     padding-bottom: 6px;
@@ -79,6 +79,7 @@ body {
     position: relative;
     display: flex;
     width: 500px;
+    height: 40px;
 }
 
 #tab-pending .search-box .search-input {
@@ -86,8 +87,12 @@ body {
     padding: 8px 35px 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 14px;
 }
 
+#tab-pending .search-box .search-input::placeholder {
+    font-size: 14px;
+}
 #tab-pending .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
@@ -103,12 +108,15 @@ body {
     padding: 9px 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
+    height: 40px;
+    font-size: 14px;
 }
 
 .shipping-select select option {
     padding: 9px 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
+    font-size: 14px;
 }
 
 .apply-btn,
@@ -124,18 +132,21 @@ body {
 }
 
 .apply-btn {
-    background: #FFA68D;
+    background: #ff5e5e;
     color: white;
+    font-size: 14px;
 }
 
 .confirm-all-btn {
-    background: #ff4d4d;
+    background: #ff4c4c;
     color: white;
+    font-size: 14px;
 }
 
 .confirm-btn {
-    background: #4CAF50;
+    background: #28a745;
     color: white;
+    font-size: 14px;
 }
 
 .cancel-btn {
@@ -143,7 +154,7 @@ body {
 }
 
 .apply-btn:hover {
-    background: #ff8f76;
+    background: #ff7070;
 }
 
 .confirm-all-btn:hover {
@@ -151,7 +162,7 @@ body {
 }
 
 .confirm-btn:hover {
-    background: #45a049;
+    background: #218838;
 }
 
 .cancel-btn:hover {
@@ -182,7 +193,7 @@ body {
     padding: 10px 8px;
     vertical-align: middle;
     border-bottom: 1px solid #f4d6d6;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.4;
     white-space: nowrap; /* không bị dồn xuống dòng */
 }
@@ -201,7 +212,7 @@ body {
 
 .confirm-btn, .cancel-btn {
     padding: 6px 10px;
-    font-size: 15px;
+    font-size: 14px;
     border-radius: 6px;
 }
 
@@ -363,6 +374,7 @@ body {
     position: relative;
     display: flex;
     width: 500px;
+    height: 40px;
 }
 
 #tab-pickup .search-box .search-input {
@@ -370,6 +382,10 @@ body {
     padding: 8px 35px 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+#tab-pickup .search-box .search-input::placeholder {
+    font-size: 14px;
 }
 
 #tab-pickup .search-box .fa-magnifying-glass {
@@ -408,7 +424,7 @@ body {
 
 /* Nút xác nhận giao */
 .ship-confirm-btn {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: white;
     border: none;
     padding: 6px 10px;
@@ -419,7 +435,7 @@ body {
 }
 
 .ship-confirm-btn:hover {
-    background-color: #45A049;
+    background-color: #218838;
 }
 
 #tab-pickup .pagination-row-pickup td {
@@ -434,6 +450,7 @@ body {
     position: relative;
     display: flex;
     width: 500px;
+    height: 40px;
 }
 
 #tab-delivering .search-box .search-input {
@@ -441,6 +458,10 @@ body {
     padding: 8px 35px 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+#tab-delivering .search-box .search-input::placeholder {
+    font-size: 14px;
 }
 
 #tab-delivering .search-box .fa-magnifying-glass {
@@ -476,13 +497,13 @@ body {
 }
 
 #tab-delivering .btn-delivered {
-    background: #3cb371;
+    background: #28a745;
     color: white;
     font-size: 14px;
 }
 
 #tab-delivering .btn-return {
-    background: #ff7043;
+    background: #ff5e5e;
     color: white;
     font-size: 14px;
 }
@@ -494,17 +515,23 @@ body {
 }
 /* ====== TAB: ĐÃ GIAO ====== */
 /* ==== ICON TÌM KIẾM TRONG INPUT ===== */
-.search-box {
+#tab-delivered .search-box {
     position: relative;
+    display: flex;
     width: 500px;
+    height: 40px;
 }
-.search-box .search-input {
+#tab-delivered .search-box .search-input {
     width: 100%;
     padding: 8px 34px 8px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
-.search-box .fa-magnifying-glass {
+
+#tab-delivered .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+#tab-delivered .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -531,15 +558,40 @@ body {
 }
 
 /* ====== TAB: TRA TIEN/ HOAN TIEN ====== */
+#tab-return .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+#tab-return .search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-return .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-return .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
 /* Trạng thái */
 .status {
     padding: 4px 10px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
 }
 .status.yellow { background: #ffe6b3; color: #b36b00; }
-.status.green { background: #d6ffd8; color: #1d7a24; }
+.status.green { background: #d4edda; color: #28a745; }
 
 /* Nút */
 .btn-detail, .btn-refund {
@@ -547,7 +599,7 @@ body {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
 }
 .btn-detail { background: #e8e8e8; }
 .btn-refund { background: #ffb84d; }
@@ -565,7 +617,6 @@ body {
     display: none;
     z-index: 9999;
     animation: fadeIn 0.25s ease;
-    font-family: "Segoe UI", sans-serif;
 }
 
 @keyframes fadeIn {
@@ -638,7 +689,7 @@ body {
 }
 
 .popup-close {
-    background: #424ef5;
+    background: #007bff;
     color: white;
     border: none;
     padding: 8px 18px;
@@ -646,10 +697,6 @@ body {
     cursor: pointer;
     font-size: 14px;
 }
-.popup-close:hover {
-    background: #2933d1;
-}
-
 
 #tab-return .order-table tbody tr:hover {
     background: #fff5f5;
@@ -662,6 +709,32 @@ body {
 }
 
 /* ====== TAB: DON BI HUY ====== */
+#tab-cancelled .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+#tab-cancelled .search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-cancelled .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-cancelled .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
 #tab-cancelled .order-table tbody tr:hover {
     background: #fff5f5;
     transition: 0.25s;
@@ -670,6 +743,12 @@ body {
 #tab-cancelled .pagination-row-cancelled td {
     text-align: right;
     background: #fff;
+}
+
+.search-input:focus {
+    outline: none; /* bỏ viền mặc định màu đen */
+    border-color: #ff8282; /* đổi sang màu bạn muốn */
+    /*box-shadow: 0 0 4px rgba(255, 94, 94, 0.4); !* hiệu ứng sáng nhẹ (tùy chọn) *!*/
 }
 
 
