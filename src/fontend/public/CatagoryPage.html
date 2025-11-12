@@ -5,10 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="../css/puplicCss/nav.css ">
-  <link rel="stylesheet" href="../css/puplicCss/CatagoryPage.css">
-  <link rel="stylesheet" href="../css/puplicCss/FooterStyle.css ">
+  <link rel="stylesheet" href="../css/publicCss/nav.css ">
+  <link rel="stylesheet" href="../css/publicCss/CatagoryPage.css">
+  <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="../../js/CatagoryPage.js" defer></script>
 </head>
 
 <body>
@@ -58,7 +59,7 @@
 
         <h2>Bộ lọc sản phẩm</h2>
         <section>
-          <h3>GIÁ</h3>
+          <h3>GIÁ:</h3>
           <ul>
             <li><input type="checkbox" id="price1"><label for="price1">0đ - 15,000đ</label></li>
             <li><input type="checkbox" id="price2"><label for="price2">15,000đ - 30,000đ</label></li>
@@ -70,32 +71,40 @@
         </section>
 
         <section>
-          <h3>Nơi xuất bản</h3>
+          <h3>Nơi xuất bản:</h3>
           <ul>
             <li><input type="checkbox" id="brand1"><label for="brand1">Việt Nam</label></li>
             <li><input type="checkbox" id="brand2"><label for="brand2">Trung Quốc</label></li>
             <li><input type="checkbox" id="brand3"><label for="brand3">Nhật Bản</label></li>
             <li><input type="checkbox" id="brand4"><label for="brand4">Thái Lan</label></li>
             <li><input type="checkbox" id="brand5"><label for="brand5">Hàn Quốc</label></li>
-            <li><input type="checkbox" id="brand6"><label for="brand6">Campuchia</label></li>
             <li><input type="checkbox" id="brand7"><label for="brand7">Hoa Kỳ</label></li>
-            <li><input type="checkbox" id="brand8"><label for="brand8">Anh</label></li>
             <li><input type="checkbox" id="brand9"><label for="brand9">Ai Cập</label></li>
           </ul>
         </section>
 
-        <section >
-          <h3>NHÀ CUNG CẤP</h3>
+        <section>
+          <h3>NHÀ CUNG CẤP:</h3>
           <ul>
             <li><input type="checkbox" id="supplier1"><label for="supplier1">Nhà sách Phương Nam</label></li>
             <li><input type="checkbox" id="supplier2"><label for="supplier2">Tân Việt Books</label></li>
-            <li><input type="checkbox" id="supplier3"><label for="supplier3">Nhà sách Tiền Phong, Thái Hà, Tiến Thọ</label>
+            <li><input type="checkbox" id="supplier3"><label for="supplier3">Nhà sách Tiền Phong, Thái Hà, Tiến
+                Thọ</label>
             </li>
             <li><input type="checkbox" id="supplier4"><label for="supplier4">NXB Trẻ</label></li>
             <li><input type="checkbox" id="supplier5"><label for="supplier5">Nền tảng truyện online</label></li>
             <li><input type="checkbox" id="supplier6"><label for="supplier6">MangaDex Việt</label></li>
             <li><input type="checkbox" id="supplier7"><label for="supplier7">Kim Đồng</label></li>
             <li><input type="checkbox" id="supplier8"><label for="supplier8">Skybooks</label></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Lượt truy cập:</h3>
+          <ul>
+            <li><input type="checkbox" id="supplier1"><label for="supplier1">Hot</label></li>
+            <li><input type="checkbox" id="supplier2"><label for="supplier2">Medium</label></li>
+            <li><input type="checkbox" id="supplier3"><label for="supplier3">Low</label></li>
           </ul>
         </section>
 
@@ -119,207 +128,555 @@
         <h1>Hành động</h1>
 
         <div id="sum-items">
-          <p><strong>Tổng sản phẩm hiển thị:</strong> 12</p>
+          <p><strong>Tổng sản phẩm hiển thị:</strong> 36</p>
         </div>
 
         <!-- Lưới sản phẩm -->
         <section aria-label="Danh sách sản phẩm gôm tẩy">
 
-          <!-- Sản phẩm 1 -->
-          <article>
-            <figure>
-              <img
-                src="https://images2.thanhnien.vn/528068263637045248/2023/2/17/ant-man-3-4x5-16766045112201851823482.jpeg"
-                alt="">
-              <figcaption>Thế giới Lượng Từ - Quantumania</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> Acmelae</p>
-              <p><strong>Giá:</strong> 7.500₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+          <!-- trang 1 nó hiện -->
+          <div class="page" data-page="1">
+            <!-- ... (sản phẩm 1 đến 12) ... -->
 
-          <!-- Sản phẩm 2 -->
-          <article>
-            <figure>
-              <img
-                src="https://1.bp.blogspot.com/-_4tMiTXLiUo/XcgpmUGMteI/AAAAAAAAFW4/kpGxwVNcl00xeJjrgUCONjV5-M8PNpQkwCLcBGAsYHQ/s1600/LA%2BHAN%2BQUYEN.png"
-                alt="">
-              <figcaption>Thiếu lâm tự quyền hổ - La hán quyền</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> Acmelae</p>
-              <p><strong>Giá:</strong> 10.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 1 -->
+            <article>
+              <figure>
+                <img
+                  src="https://images2.thanhnien.vn/528068263637045248/2023/2/17/ant-man-3-4x5-16766045112201851823482.jpeg"
+                  alt="">
+                <figcaption>1 Thế giới Lượng Từ - Quantumania</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 7.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 3 -->
-          <article>
-            <figure>
-              <img
-                src="https://tse2.mm.bing.net/th/id/OIP.Xt1Ul32rUSqFN3j53FGlXQAAAA?cb=ucfimgc2&w=369&h=544&rs=1&pid=ImgDetMain&o=7&rm=3"
-                alt="">
-              <figcaption>Thủy Hử - Tống Giáng giết bà Tích</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> Acmelae</p>
-              <p><strong>Giá:</strong> 11.500₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 2 -->
+            <article>
+              <figure>
+                <img
+                  src="https://1.bp.blogspot.com/-_4tMiTXLiUo/XcgpmUGMteI/AAAAAAAAFW4/kpGxwVNcl00xeJjrgUCONjV5-M8PNpQkwCLcBGAsYHQ/s1600/LA%2BHAN%2BQUYEN.png"
+                  alt="">
+                <figcaption>Thiếu lâm tự quyền hổ - La hán quyền</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 10.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 4 -->
-          <article>
-            <figure>
-              <img
-                src="https://thegioivanhoc.com/wp-content/uploads/2024/02/luc-tieu-phung-350x476.jpg"
-                alt="">
-              <figcaption>Lục Tiểu Phụng - Maped (Màu Ngẫu Nhiên)</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> Maped</p>
-              <p><strong>Giá:</strong> 15.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 3 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse2.mm.bing.net/th/id/OIP.Xt1Ul32rUSqFN3j53FGlXQAAAA?cb=ucfimgc2&w=369&h=544&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Thủy Hử - Tống Giáng giết bà Tích</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 11.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 5 -->
-          <article>
-            <figure>
-              <img
-                src="https://online.fliphtml5.com/qyhf/vkiv/files/large/1.webp"
-                alt="">
-              <figcaption>Nữ Hoàng Ai Cập (Màu Ngẫu Nhiên)</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 4 -->
+            <article>
+              <figure>
+                <img src="https://thegioivanhoc.com/wp-content/uploads/2024/02/luc-tieu-phung-350x476.jpg" alt="">
+                <figcaption>Lục Tiểu Phụng - Maped (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Maped</p>
+                <p><strong>Giá:</strong> 15.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 6 -->
-          <article>
-            <figure>
-              <img
-                src="https://tse3.mm.bing.net/th/id/OIP.o9JBkwLR0W1_gmZ9LZm4JQAAAA?cb=ucfimgc2&rs=1&pid=ImgDetMain&o=7&rm=3"
-                alt="">
-              <figcaption>Song long đại đường</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 5 -->
+            <article>
+              <figure>
+                <img src="https://online.fliphtml5.com/qyhf/vkiv/files/large/1.webp" alt="">
+                <figcaption>Nữ Hoàng Ai Cập (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 7 -->
-          <article>
-            <figure>
-              <img
-                src="https://xemsachhay.com/wp-content/uploads/2018/04/29327_35837.jpg"
-                alt="">
-              <figcaption>Sơn Tinh Thủy Tinh</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 6 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse3.mm.bing.net/th/id/OIP.o9JBkwLR0W1_gmZ9LZm4JQAAAA?cb=ucfimgc2&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Song long đại đường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 7 -->
+            <article>
+              <figure>
+                <img src="https://xemsachhay.com/wp-content/uploads/2018/04/29327_35837.jpg" alt="">
+                <figcaption>Sơn Tinh Thủy Tinh</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
 
-          <!-- Sản phẩm 8 -->
-          <article>
-            <figure>
-              <img
-                src="https://bookbuy.vn/Res/Images/Product/nhiem-vu-dac-biet-tap-8_23819_1.jpg"
-                alt="">
-              <figcaption>Nhiệm vụ đặc biệt</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 8 -->
+            <article>
+              <figure>
+                <img src="https://bookbuy.vn/Res/Images/Product/nhiem-vu-dac-biet-tap-8_23819_1.jpg" alt="">
+                <figcaption>Nhiệm vụ đặc biệt</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-         <!-- Sản phẩm 9 -->
-          <article>
-            <figure>
-              <img
-                src="https://cdn0.fahasa.com/media/catalog/product/8/a/8a03452591c41300acc485c8bc41663d.jpg"
-                alt="">
-              <figcaption>Thám tử Kindaichi</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 9 -->
+            <article>
+              <figure>
+                <img src="https://cdn0.fahasa.com/media/catalog/product/8/a/8a03452591c41300acc485c8bc41663d.jpg"
+                  alt="">
+                <figcaption>Thám tử Kindaichi</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
 
-          <!-- Sản phẩm 10 -->
-          <article>
-            <figure>
-              <img
-                src="https://i.pinimg.com/736x/21/7f/49/217f49e1ed9474a04ffbf23105a35d1f.jpg"
-                alt="">
-              <figcaption>Hồ sơ thật - The top secret</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 10 -->
+            <article>
+              <figure>
+                <img src="https://i.pinimg.com/736x/21/7f/49/217f49e1ed9474a04ffbf23105a35d1f.jpg" alt="">
+                <figcaption>Hồ sơ thật - The top secret</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
-          <!-- Sản phẩm 11 -->
-          <article>
-            <figure>
-              <img
-                src="https://bookbuy.vn/Res/Images/Product/hanh-trinh-u-linh-gioi-tap-14-qua-khu-dam-mau_53979_1.jpg"
-                alt="">
-              <figcaption>Quá khứ đẫm máu</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 11 -->
+            <article>
+              <figure>
+                <img
+                  src="https://bookbuy.vn/Res/Images/Product/hanh-trinh-u-linh-gioi-tap-14-qua-khu-dam-mau_53979_1.jpg"
+                  alt="">
+                <figcaption>Quá khứ đẫm máu</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
 
-          <!-- Sản phẩm 12 -->
-          <article>
-            <figure>
-              <img
-                src="https://tse4.mm.bing.net/th/id/OIP.FZtbFiffZnS4J_ioM2qk3QHaLb?cb=ucfimgc2&w=918&h=1416&rs=1&pid=ImgDetMain&o=7&rm=3"
-                alt="">
-              <figcaption>Itto Sóng gió cầu trường</figcaption>
-            </figure>
-            <div>
-              <p><strong>Thương hiệu:</strong> iGEN</p>
-              <p><strong>Giá:</strong> 6.000₫</p>
-              <p><strong>Giảm giá:</strong> -11%</p>
-            </div>
-          </article>
+            <!-- Sản phẩm 12 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse4.mm.bing.net/th/id/OIP.FZtbFiffZnS4J_ioM2qk3QHaLb?cb=ucfimgc2&w=918&h=1416&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Itto Sóng gió cầu trường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
 
 
+          </div>
+
+          <!-- trang 2 -->
+          <div class="page" data-page="2" style="display:none;">
+            <!-- Sản phẩm 13 đến 24 -->
+            <!-- Ví dụ -->
+            <!-- Sản phẩm 1 -->
+            <article>
+              <figure>
+                <img
+                  src="https://dwgkfo5b3odmw.cloudfront.net/manga/thumbs/thumb-157628-OnePunchMan_GN27_C1_Web-3-gLWSq6Fk8H7qqa0kwZlEiA.jpg"
+                  alt="">
+                <figcaption>Saitama - tập 27</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 7.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 2 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse2.mm.bing.net/th/id/OIP.Xt1Ul32rUSqFN3j53FGlXQAAAA?cb=ucfimgc2&w=369&h=544&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Thủy Hử - Tống Giáng giết bà Tích</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 11.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 3 -->
+            <article>
+              <figure>
+                <img
+                  src="https://1.bp.blogspot.com/-_4tMiTXLiUo/XcgpmUGMteI/AAAAAAAAFW4/kpGxwVNcl00xeJjrgUCONjV5-M8PNpQkwCLcBGAsYHQ/s1600/LA%2BHAN%2BQUYEN.png"
+                  alt="">
+                <figcaption>Thiếu lâm tự quyền hổ - La hán quyền</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 10.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 8 -->
+            <article>
+              <figure>
+                <img src="https://bookbuy.vn/Res/Images/Product/nhiem-vu-dac-biet-tap-8_23819_1.jpg" alt="">
+                <figcaption>Nhiệm vụ đặc biệt</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+            <!-- Sản phẩm 5 -->
+            <article>
+              <figure>
+                <img src="https://online.fliphtml5.com/qyhf/vkiv/files/large/1.webp" alt="">
+                <figcaption>Nữ Hoàng Ai Cập (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 6 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse3.mm.bing.net/th/id/OIP.o9JBkwLR0W1_gmZ9LZm4JQAAAA?cb=ucfimgc2&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Song long đại đường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+
+
+            <!-- Sản phẩm 4 -->
+            <article>
+              <figure>
+                <img src="https://thegioivanhoc.com/wp-content/uploads/2024/02/luc-tieu-phung-350x476.jpg" alt="">
+                <figcaption>Lục Tiểu Phụng - Maped (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Maped</p>
+                <p><strong>Giá:</strong> 15.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 7 -->
+            <article>
+              <figure>
+                <img src="https://xemsachhay.com/wp-content/uploads/2018/04/29327_35837.jpg" alt="">
+                <figcaption>Sơn Tinh Thủy Tinh</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 9 -->
+            <article>
+              <figure>
+                <img src="https://cdn0.fahasa.com/media/catalog/product/8/a/8a03452591c41300acc485c8bc41663d.jpg"
+                  alt="">
+                <figcaption>Thám tử Kindaichi</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 10 -->
+            <article>
+              <figure>
+                <img src="https://i.pinimg.com/736x/21/7f/49/217f49e1ed9474a04ffbf23105a35d1f.jpg" alt="">
+                <figcaption>Hồ sơ thật - The top secret</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 11 -->
+            <article>
+              <figure>
+                <img
+                  src="https://bookbuy.vn/Res/Images/Product/hanh-trinh-u-linh-gioi-tap-14-qua-khu-dam-mau_53979_1.jpg"
+                  alt="">
+                <figcaption>Quá khứ đẫm máu</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 12 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse4.mm.bing.net/th/id/OIP.FZtbFiffZnS4J_ioM2qk3QHaLb?cb=ucfimgc2&w=918&h=1416&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Itto Sóng gió cầu trường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Trang 3 -->
+          <div class="page" data-page="3" style="display:none;">
+            <!-- Sản phẩm 25 đến 36 -->
+            <!-- Sản phẩm 1 -->
+            <article>
+              <figure>
+                <img src="https://genk.mediacdn.vn/2019/11/27/photo-1-15748243687411891563142.jpg" alt="">
+                <figcaption>Saitama - tập 21</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 7.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 2 -->
+            <article>
+              <figure>
+                <img
+                  src="https://1.bp.blogspot.com/-_4tMiTXLiUo/XcgpmUGMteI/AAAAAAAAFW4/kpGxwVNcl00xeJjrgUCONjV5-M8PNpQkwCLcBGAsYHQ/s1600/LA%2BHAN%2BQUYEN.png"
+                  alt="">
+                <figcaption>Thiếu lâm tự quyền hổ - La hán quyền</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 10.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 9 -->
+            <article>
+              <figure>
+                <img src="https://cdn0.fahasa.com/media/catalog/product/8/a/8a03452591c41300acc485c8bc41663d.jpg"
+                  alt="">
+                <figcaption>Thám tử Kindaichi</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+
+            <!-- Sản phẩm 3 -->
+            <article>
+              <figure>
+                <img src="https://i.pinimg.com/736x/ed/d3/a7/edd3a77ad331ec6aad28c9e70c1f5cf2.jpg" alt="">
+                <figcaption>Saitama - tập đặc biệt</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Acmelae</p>
+                <p><strong>Giá:</strong> 11.500₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 4 -->
+            <article>
+              <figure>
+                <img src="https://thegioivanhoc.com/wp-content/uploads/2024/02/luc-tieu-phung-350x476.jpg" alt="">
+                <figcaption>Lục Tiểu Phụng - Maped (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> Maped</p>
+                <p><strong>Giá:</strong> 15.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 5 -->
+            <article>
+              <figure>
+                <img src="https://online.fliphtml5.com/qyhf/vkiv/files/large/1.webp" alt="">
+                <figcaption>Nữ Hoàng Ai Cập (Màu Ngẫu Nhiên)</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 6 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse3.mm.bing.net/th/id/OIP.o9JBkwLR0W1_gmZ9LZm4JQAAAA?cb=ucfimgc2&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Song long đại đường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 7 -->
+            <article>
+              <figure>
+                <img src="https://xemsachhay.com/wp-content/uploads/2018/04/29327_35837.jpg" alt="">
+                <figcaption>Sơn Tinh Thủy Tinh</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 8 -->
+            <article>
+              <figure>
+                <img src="https://bookbuy.vn/Res/Images/Product/nhiem-vu-dac-biet-tap-8_23819_1.jpg" alt="">
+                <figcaption>Nhiệm vụ đặc biệt</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 10 -->
+            <article>
+              <figure>
+                <img src="https://i.pinimg.com/736x/21/7f/49/217f49e1ed9474a04ffbf23105a35d1f.jpg" alt="">
+                <figcaption>Hồ sơ thật - The top secret</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+            <!-- Sản phẩm 11 -->
+            <article>
+              <figure>
+                <img
+                  src="https://bookbuy.vn/Res/Images/Product/hanh-trinh-u-linh-gioi-tap-14-qua-khu-dam-mau_53979_1.jpg"
+                  alt="">
+                <figcaption>Quá khứ đẫm máu</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+
+
+            <!-- Sản phẩm 12 -->
+            <article>
+              <figure>
+                <img
+                  src="https://tse4.mm.bing.net/th/id/OIP.FZtbFiffZnS4J_ioM2qk3QHaLb?cb=ucfimgc2&w=918&h=1416&rs=1&pid=ImgDetMain&o=7&rm=3"
+                  alt="">
+                <figcaption>Itto Sóng gió cầu trường</figcaption>
+              </figure>
+              <div>
+                <p><strong>Thương hiệu:</strong> iGEN</p>
+                <p><strong>Giá:</strong> 6.000₫</p>
+                <p><strong>Giảm giá:</strong> -11%</p>
+              </div>
+            </article>
+          </div>
 
         </section>
 
         <!-- Phân trang -->
         <nav aria-label="Phân trang">
           <ul>
-            <li><a href="#">«</a></li>
-            <li><a href="#" aria-current="page">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">»</a></li>
+            <li><a href="#" onclick="prevPage()">«</a></li>
+            <li><a href="#" onclick="changePage(1)" id="page-1">1</a></li>
+            <li><a href="#" onclick="changePage(2)" id="page-2">2</a></li>
+            <li><a href="#" onclick="changePage(3)" id="page-3">3</a></li>
+            <li><a href="#" onclick="nextPage()">»</a></li>
           </ul>
         </nav>
 
@@ -522,7 +879,7 @@
     </div>
 
   </div>
-  
+
   <footer class="footer">
     <div class="footer-container">
       <!-- Cột 1: Giới thiệu -->

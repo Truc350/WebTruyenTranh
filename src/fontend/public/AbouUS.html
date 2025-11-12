@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../css/publicCss/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="../../js/Login.js" defer></script>
+    <title>About Us</title>
+    <link rel="stylesheet" href="../css/publicCss/AboutUs.css">
+    <link rel="stylesheet" href="../css/publicCss/nav.css ">
+    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
+
+
     <header class="navbar">
         <div class="logo">
             <img id="logo" src="../../img/logo.png" alt="Comic Store">
             <span>Comic Store</span>
         </div>
         <nav class="menu">
-
             <a href="#">Trang chủ</a>
 
             <div class="dropdown">
@@ -30,74 +32,90 @@
             </div>
 
             <a href="#">Liên hệ</a>
-            <a href="#">Thông báo</a>
         </nav>
         <div class="actions">
-            <div class="search">
-                <i class="fas fa-magnifying-glass"></i>
+            <div class="search-bar">
+                <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+                <button class="search-button">
+                    <i class="fas fa-magnifying-glass"></i>
+                </button>
             </div>
+            <i class="fa-solid fa-bell"></i>
             <a href="#" class="publish-btn">Publish</a>
-            <a href="#" class="login-btn">Log in</a>
+            <i class="fa-solid fa-user"></i>
+            <a href="#" class="login-btn">Log out</a>
+            <i class="fa-solid fa-comment"></i>
 
         </div>
     </header>
 
 
 
-    <!-- Form đăng ký -->
-    <div class="img-Login">
-        <div class="imglogin">
-            <img src="../../img/imgLogin.png" alt="">
+
+    <div class="container">
+        <!-- Hero -->
+        <div>
+            <section class="hero">
+                <div class="hero-text">
+                    <h1>About Us</h1>
+                    <p>Chúng tôi mang đến trải nghiệm đọc truyện tranh hiện đại, tiện lợi và đầy cảm hứng cho độc giả
+                        Việt Nam.</p>
+                </div>
+                <div>
+                    <img id="logo" src="../../img/AboutUs.png" alt="Comic Store">
+                </div>
+            </section>
         </div>
-        <div class="register-container">
-            <div class="title">
-                <h3>Đăng nhập Comic Store</h3>
-            </div>
-            <div class="container">
 
-                <div class="sdt_maOTP">
-                    <input id="nhapstk" type="text" placeholder="Số điện thoại hoặc Email">
-                    <input id="nhapmk" type="text" placeholder="Nhập mật khẩu">
+        <!-- About -->
+        <section class="about-us" id="about">
 
-                </div>
+            <h2>Về chúng tôi</h2>
+            <p>
+                Comic Store là nơi hội tụ của những câu chuyện kỳ ảo, hài hước, cảm động và đầy cảm hứng từ khắp nơi
+                trên thế giới. Chúng tôi mang đến cho độc giả Việt Nam trải nghiệm đọc truyện tranh hiện đại, tiện lợi
+                và phong phú – từ manga Nhật Bản, manhwa Hàn Quốc đến comic phương Tây và truyện tranh Việt.
+            </p>
+            <p>
+                Mỗi đầu truyện đều được tuyển chọn kỹ lưỡng, đảm bảo chất lượng nội dung, hình ảnh và bản dịch, giúp bạn
+                đắm chìm trong thế giới truyện tranh một cách trọn vẹn nhất.
+            </p>
+        </section>
 
-                <div class="login-options">
-                    <label class="remember-me">
-                        <input type="checkbox" checked>
-                        Remember Me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password</a>
-                </div>
+        <!-- Mission -->
+        <section class="mission" id="mission">
+            <h3>Sứ mệnh của chúng tôi</h3>
+            <p>
+                Chúng tôi mong muốn xây dựng một cộng đồng yêu truyện tranh sôi động, nơi mọi người có thể khám phá,
+                chia sẻ và kết nối qua những câu chuyện đầy màu sắc. ComicVerse không chỉ là nơi bán truyện – mà là nơi
+                khơi nguồn cảm hứng và nuôi dưỡng đam mê.
+            </p>
+        </section>
 
+        <!-- Features -->
+        <section class="features" id="features">
+            <article class="feature-card">
+                <h4>Kho truyện phong phú</h4>
+                <p>Hơn 10.000 đầu truyện đủ thể loại: hành động, lãng mạn, hài hước, kinh dị, giả tưởng, slice of
+                    life...</p>
+                <p>Cập nhật liên tục các bộ truyện hot, trending và mới phát hành.</p>
+            </article>
 
-                <button class="btn btn_guiOTP" id="loginBtn">Login</button>
+            <article class="feature-card">
+                <h4>Tư vấn chọn truyện</h4>
+                <p>Gợi ý truyện theo sở thích, độ tuổi và tâm trạng của bạn.</p>
+                <p>Đội ngũ biên tập viên am hiểu truyện tranh luôn sẵn sàng hỗ trợ.</p>
+            </article>
 
-                <div class="quenmk">
-                    <span><a href="#">Bạn đã quên mật khẩu?</a></span>
-                </div>
-                <div class="is-user">
-                    <p>- Hoặc đăng kí với -</p>
-                </div>
-                <div class="social-buttons">
-                    <!-- <button class="btn facebook">Facebook</button>
-                    <button class="btn twitter">Zalo</button> -->
-                    <a class="facebook" href="https://facebook.com" target="_blank">
-                        <i class="fa-brands fa-facebook"></i>
-                    </a>
-                    <a class="twitter" href="https://twitter.com" target="_blank">
-                        <i class="fa-brands fa-twitter"></i>
-                    </a>
-                </div>
-
-
-
-            </div>
-        </div>
+            <article class="feature-card">
+                <h4>Trải nghiệm đọc truyện đỉnh cao</h4>
+                <p>Chất lượng hình ảnh sắc nét, bản dịch chuẩn chỉnh.</p>
+                <p>Dịch vụ chăm sóc khách hàng tận tâm, thân thiện.</p>
+            </article>
+        </section>
     </div>
 
-
 </body>
-
 
 
 <footer class="footer">
@@ -106,7 +124,6 @@
         <div class="footer-column">
             <div class="logo">
                 <a href="#">
-
                     <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
@@ -174,6 +191,5 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-
 
 </html>
