@@ -134,7 +134,7 @@ body {
 }
 
 #upgradeConfirm {
-    background: #4e73df;
+    background: #007bff;
     color: #fff;
 }
 
@@ -144,7 +144,7 @@ body {
 }
 
 /* Hover */
-#upgradeConfirm:hover { background: #3b5cc3; }
+#upgradeConfirm:hover { background: #0056b3; }
 #upgradeCancel:hover { background: #d0d0d0; }
 
 /* === TABLE STYLE === */
@@ -192,13 +192,13 @@ body {
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    background: #4e73df;
+    background: #007bff;
     color: #fff;
-    font-size: 13px;
+    font-size: 14px;
     transition: 0.25s;
 }
 .upgrade-btn:hover {
-    background: #2c54c6;
+    background: #0056b3;
 }
 
 /* ==== PAGINATION ==== */

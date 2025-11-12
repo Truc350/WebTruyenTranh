@@ -20,7 +20,7 @@
 
         <ul>
             <li>
-                <a href="index.html">
+                <a href="dashboard.html">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
                 </a>
@@ -58,7 +58,7 @@
             <li>
                 <a href="report.html">
                     <img src="../../img/report.png" class="icon">
-                    <span>Thống kê/ Báo cáo</span>
+                    <span>Thống kê</span>
                 </a>
             </li>
         </ul>
@@ -68,7 +68,9 @@
         <header class="admin-header">
             <div class="header-right">
                 <i class="fa-solid fa-bell"></i>
-                <i class="fa-solid fa-comment"></i>
+                <a href="chatWithCus.html">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
 
                 <div class="admin-profile">
                     <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
@@ -193,25 +195,11 @@
         }
     });
 
-    document.getElementById("upgradeConfirm").onclick = function(){
-        let level = document.getElementById("upgradeSelect").value;
-        let levelSpan = selectedRow.cells[4].querySelector("span");
-        levelSpan.textContent = level;
-        levelSpan.className = "badge level-" + level;
-        popup.style.display = "none";
-    };
 
     document.getElementById("upgradeCancel").onclick = function(){
         popup.style.display = "none";
     };
 
-    document.getElementById("searchInput").onkeyup = function(){
-        let filter = this.value.toLowerCase();
-        rows.forEach(row => {
-            let text = row.innerText.toLowerCase();
-            row.style.display = text.includes(filter) ? "" : "none";
-        });
-    };
 </script>
 
 <script>

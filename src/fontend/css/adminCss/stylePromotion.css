@@ -238,3 +238,85 @@ body {
     border-color: #FF7A7A;
 }
 
+/* ===== Popup xác nhận xóa ===== */
+#deleteConfirmPopup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease-in;
+}
+
+/* Hộp popup nhỏ */
+#deleteConfirmPopup .popup-box.small {
+    background: #fff;
+    width: 340px;
+    padding: 20px 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    animation: scaleIn 0.2s ease-in;
+}
+
+#deleteConfirmPopup h3 {
+    font-size: 20px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+}
+
+#deleteConfirmPopup p {
+    color: #555;
+    font-size: 15px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Nút hàng ngang */
+#deleteConfirmPopup .btn-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* Nút Có / Không */
+#deleteConfirmPopup .btn-save,
+#deleteConfirmPopup .btn-cancel {
+    border: none;
+    outline: none;
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#deleteConfirmPopup .btn-cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+#deleteConfirmPopup .btn-cancel:hover {
+    background: #d5d5d5;
+}
+
+#deleteConfirmPopup .btn-save {
+    background: #e74c3c;
+    color: white;
+}
+#deleteConfirmPopup .btn-save:hover {
+    background: #c0392b;
+}
+
+/* Hiệu ứng */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+

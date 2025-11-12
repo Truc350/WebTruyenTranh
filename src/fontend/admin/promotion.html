@@ -19,7 +19,7 @@
 
         <ul>
             <li>
-                <a href="index.html">
+                <a href="dashboard.html">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
                 </a>
@@ -57,7 +57,7 @@
             <li>
                 <a href="report.html">
                     <img src="../../img/report.png" class="icon">
-                    <span>Thống kê/ Báo cáo</span>
+                    <span>Thống kê</span>
                 </a>
             </li>
         </ul>
@@ -67,7 +67,9 @@
         <header class="admin-header">
             <div class="header-right">
                 <i class="fa-solid fa-bell"></i>
-                <i class="fa-solid fa-comment"></i>
+                <a href="chatWithCus.html">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
 
                 <div class="admin-profile">
                     <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
@@ -118,8 +120,8 @@
                     <td>01/02/2026</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -130,8 +132,8 @@
                     <td>08/10/2025</td>
                     <td><span class="status-out">Hết lượt</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -142,8 +144,8 @@
                     <td>31/12/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('FREESHIP20')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('FREESHIP20')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -154,8 +156,8 @@
                     <td>27/11/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('BLACKFRIDAY50')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('BLACKFRIDAY50')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -166,8 +168,8 @@
                     <td>14/06/2025</td>
                     <td><span class="status-out">Hết lượt</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('WELCOME5')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('WELCOME5')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -178,8 +180,8 @@
                     <td>19/09/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('VIPMEMBER30')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('VIPMEMBER30')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -190,8 +192,8 @@
                     <td>10/02/2026</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('TET2026')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="delete-btn"><i class="bi bi-trash"></i></button>
+                        <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></i></button>
                     </td>
                 </tr>
 
@@ -281,240 +283,159 @@
     </div>
 </div>
 
+<!-- Popup xác nhận xóa -->
+<div class="popup-overlay" id="deleteConfirmPopup">
+    <div class="popup-box small">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h3>Xác nhận xóa</h3>
+        <p>Bạn có chắc muốn xóa mã này không?<br></p>
+        <div class="btn-row">
+            <button class="btn-cancel" id="cancelDeleteBtn">Không</button>
+            <button class="btn-save" id="confirmDeleteBtn">Có</button>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     (function(){
-        // ----- Helpers -----
-        function ddmmyyyyFromInput(val){ // val = "yyyy-mm-dd" -> "dd/mm/yyyy"
+        // ---------- Helpers ----------
+        function ddmmyyyyFromInput(val){ // yyyy-mm-dd -> dd/mm/yyyy
             if(!val) return "";
             const parts = val.split("-");
             return parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : val;
         }
-        function inputFromDDMM(val){ // val = "dd/mm/yyyy" -> "yyyy-mm-dd"
+        function inputFromDDMM(val){ // dd/mm/yyyy -> yyyy-mm-dd
             if(!val) return "";
             const p = val.split("/");
             return p.length===3 ? `${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}` : "";
         }
-        function isExpired(dateInputValue){ // dateInputValue = "yyyy-mm-dd"
-            if(!dateInputValue) return false;
-            const today = new Date(); today.setHours(0,0,0,0);
-            const d = new Date(dateInputValue);
-            return d < today;
-        }
 
-        // ----- Elements -----
+        // ---------- Elements ----------
         const tbody = document.getElementById('promoTableBody');
         const addPopup = document.getElementById('addPopup');
         const editPopup = document.getElementById('editPopup');
-        const openAdd = document.getElementById('openAddPopup');
-        const closeAdd = document.getElementById('closeAddPopup');
-        const addApply = document.getElementById('addApply');
-        const addCategoryBox = document.getElementById('addCategoryBox');
-        const addCategorySelect = addCategoryBox?.querySelector('select');
-        const searchInput = document.getElementById('searchInput');
-        const statusFilter = document.getElementById('statusFilter');
+        const deletePopup = document.getElementById('deleteConfirmPopup');
 
-        const ROWS_PER_PAGE = 5;
-        let pageButtons = Array.from(document.querySelectorAll('.pro-page'));
-        let currentPage = 1;
-        let pagedRows = [];
-        let selectedRow = null;
+        const openAddBtn = document.getElementById('openAddPopup');
+        const closeAddBtn = document.getElementById('closeAddPopup');
 
-        // ----- Pagination -----
-        function refreshPagedRows(){
-            pagedRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-        }
-        function showPage(page){
-            refreshPagedRows();
-            currentPage = page;
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-            pagedRows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.querySelector(`.pro-page[data-page="${page}"]`);
-            if(activeBtn) activeBtn.classList.add('active');
-        }
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-        refreshPagedRows();
-        showPage(1);
+        const editName = document.getElementById('editName');
+        const editValue = document.getElementById('editValue');
+        const editQuantity = document.getElementById('editQuantity');
+        const editStart = document.getElementById('editStart');
+        const editEnd = document.getElementById('editEnd');
+        const closeEditBtn = document.getElementById('closeEditPopup');
+        const saveEditBtn = document.getElementById('saveEditBtn');
 
-        // ----- Popup thêm -----
-        openAdd.onclick = () => {
-            addPopup.style.display = "flex";
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        // ---------- Popup Thêm ----------
+        openAddBtn.onclick = function(){
+            addPopup.style.display = 'flex';
             document.getElementById("addName").value = "";
             document.getElementById("addValue").value = "";
             document.getElementById("addQuantity").value = "";
             document.getElementById("addStart").value = "";
             document.getElementById("addEnd").value = "";
+            const addApply = document.getElementById('addApply');
             addApply.value = "";
+            const addCategoryBox = document.getElementById('addCategoryBox');
             addCategoryBox.classList.add('hide');
-            if(addCategorySelect) {
-                addCategorySelect.disabled = true;
-                addCategorySelect.value = "";
-            }
+            const addCategorySelect = addCategoryBox.querySelector('select');
+            addCategorySelect.disabled = true;
+            addCategorySelect.value = "";
         };
-        closeAdd.onclick = () => addPopup.style.display = "none";
+        closeAddBtn.onclick = function(){
+            addPopup.style.display = 'none';
+        };
 
-        // Dropdown “Áp dụng”: nếu chọn Toàn sản phẩm → disable thể loại
-        addApply.onchange = function(){
+        document.getElementById('addApply').onchange = function(){
+            const box = document.getElementById('addCategoryBox');
+            const sel = box.querySelector('select');
             if(this.value === "Thể loại"){
-                addCategoryBox.classList.remove('hide');
-                if(addCategorySelect) addCategorySelect.disabled = false;
+                box.classList.remove('hide');
+                sel.disabled = false;
             } else {
-                addCategoryBox.classList.add('hide');
-                if(addCategorySelect) {
-                    addCategorySelect.disabled = true;
-                    addCategorySelect.value = "";
-                }
+                box.classList.add('hide');
+                sel.disabled = true;
+                sel.value = "";
             }
         };
 
-        // ----- Thêm hàng -----
-        document.querySelector("#addPopup .btn-save").onclick = function(){
-            const name = document.getElementById("addName").value.trim();
-            const val = document.getElementById("addValue").value.trim();
-            const qty = document.getElementById("addQuantity").value.trim();
-            const end = document.getElementById("addEnd").value;
+        // ---------- Popup Sửa ----------
+        let currentRow = null;
 
-            if(!name || !val || !qty || !end){
-                return alert("Hãy nhập đầy đủ thông tin!");
-            }
+        window.openEdit = function(code){
+            const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+            const row = rows.find(r => r.children[0].innerText.trim() === code);
+            if(!row) return alert('Không tìm thấy mã');
 
-            const tr = document.createElement("tr");
-            const endDisplay = ddmmyyyyFromInput(end);
-            const total = Number(qty);
-            let statusText = (total <= 0) ? "Hết lượt" : (isExpired(end) ? "Hết hạn" : "Đang chạy");
-            const statusClass = statusText === "Đang chạy" ? "status-active" : "status-out";
+            currentRow = row;
+            editName.textContent = row.children[0].innerText.trim();
+            editValue.textContent = row.children[1].innerText.trim();
 
-            tr.innerHTML = `
-            <td>${name}</td>
-            <td>${val}</td>
-            <td>${total}/${total}</td>
-            <td>${endDisplay}</td>
-            <td><span class="${statusClass}">${statusText}</span></td>
-            <td>
-                <button class="edit-btn" onclick="openEdit('${name}')"><i class="bi bi-pencil-square"></i></button>
-                <button class="delete-btn"><i class="bi bi-trash"></i></button>
-            </td>
-        `;
+            const qtyParts = row.children[2].innerText.trim().split('/');
+            const total = qtyParts.length>1 ? qtyParts[1].replace(/\D/g,'') : qtyParts[0].replace(/\D/g,'');
+            editQuantity.value = total || 0;
 
-            const pagRow = tbody.querySelector('.pagination-row');
-            tbody.insertBefore(tr, pagRow);
+            const displayedDate = row.children[3].innerText.trim();
+            editEnd.value = inputFromDDMM(displayedDate);
+            editStart.value = "";
 
-            refreshPagedRows();
-            const newTotalPages = Math.max(1, Math.ceil(pagedRows.length / ROWS_PER_PAGE));
-            showPage(newTotalPages);
+            saveEditBtn.disabled = true;
+            saveEditBtn.title = "Chưa kích hoạt backend - nút tạm thời bị vô hiệu";
 
-            addPopup.style.display = "none";
+            editPopup.style.display = 'flex';
         };
 
-        // ----- Xóa -----
+        closeEditBtn.onclick = function(){
+            editPopup.style.display = 'none';
+        };
+
+        saveEditBtn.onclick = function(e){
+            e.preventDefault(); // không làm gì cả
+        };
+
+        // ---------- Popup Xóa ----------
         tbody.addEventListener('click', function(e){
             const delBtn = e.target.closest('.delete-btn');
             if(delBtn){
-                if(!confirm('Bạn chắc muốn xóa mã này?')) return;
-                const row = delBtn.closest('tr');
-                row.remove();
-                refreshPagedRows();
-                const maxPage = Math.max(1, Math.ceil(pagedRows.length / ROWS_PER_PAGE));
-                if(currentPage > maxPage) currentPage = maxPage;
-                showPage(currentPage);
+                deletePopup.style.display = 'flex';
             }
         });
 
-        // ----- Sửa -----
-        window.openEdit = function(code){
-            refreshPagedRows();
-            selectedRow = pagedRows.find(r => r.children[0].innerText.trim() === code) || null;
-            if(!selectedRow) { alert('Không tìm thấy mã'); return; }
-
-            document.getElementById('editName').textContent = selectedRow.children[0].innerText.trim();
-            document.getElementById('editValue').textContent = selectedRow.children[1].innerText.trim();
-
-            const qtyParts = selectedRow.children[2].innerText.trim().split('/');
-            const total = qtyParts.length>1 ? qtyParts[1].replace(/\D/g,'') : qtyParts[0].replace(/\D/g,'');
-            document.getElementById('editQuantity').value = total || 0;
-
-            const displayedDate = selectedRow.children[3].innerText.trim();
-            document.getElementById('editEnd').value = inputFromDDMM(displayedDate);
-
-            editPopup.style.display = "flex";
+        cancelDeleteBtn.onclick = function(){
+            deletePopup.style.display = 'none';
+        };
+        confirmDeleteBtn.onclick = function(){
+            deletePopup.style.display = 'none';
         };
 
-        document.getElementById('closeEditPopup').onclick = function(){
-            editPopup.style.display = 'none';
-        };
+        // ---------- Phân trang ----------
+        const ROWS_PER_PAGE = 5;
+        const pageButtons = Array.from(document.querySelectorAll('.pro-page'));
+        let currentPage = 1;
 
-        document.getElementById('saveEditBtn').onclick = function(){
-            if(!selectedRow) return alert('Không có hàng được chọn');
-
-            const newTotal = Number(document.getElementById('editQuantity').value || 0);
-            const newEnd = document.getElementById('editEnd').value;
-            selectedRow.children[2].innerText = `${newTotal}/${newTotal}`;
-            selectedRow.children[3].innerText = ddmmyyyyFromInput(newEnd);
-
-            let statusText = (newTotal <= 0) ? "Hết lượt" : (isExpired(newEnd) ? "Hết hạn" : "Đang chạy");
-            const statusSpan = selectedRow.children[4].querySelector('span');
-            statusSpan.innerText = statusText;
-            statusSpan.className = statusText === "Đang chạy" ? "status-active" : "status-out";
-
-            editPopup.style.display = 'none';
-            refreshPagedRows();
-            showPage(currentPage);
-        };
-
-        // ----- Tìm kiếm -----
-        searchInput.addEventListener('keyup', function(){
-            const q = this.value.trim().toLowerCase();
-            document.querySelectorAll('#promoTableBody tr:not(.pagination-row)').forEach(r=>{
-                const code = r.children[0].innerText.toLowerCase();
-                r.style.display = code.includes(q) ? '' : 'none';
-            });
-            refreshPagedRows();
-            pagedRows = pagedRows.filter(r => r.style.display !== 'none');
-            const maxPage = Math.max(1, Math.ceil(pagedRows.length / ROWS_PER_PAGE));
-            currentPage = Math.min(currentPage, maxPage);
-            document.querySelectorAll('#promoTableBody tr:not(.pagination-row)').forEach(r => r.style.display = 'none');
-            const start = (currentPage - 1) * ROWS_PER_PAGE;
+        function refreshPagedRows(){
+            return Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        }
+        function showPage(page){
+            const rows = refreshPagedRows();
+            const start = (page - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
-            pagedRows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? '' : 'none';
-            });
+            rows.forEach((r, idx) => r.style.display = (idx >= start && idx < end) ? "" : "none");
             pageButtons.forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.querySelector(`.pro-page[data-page="${currentPage}"]`);
-            if(activeBtn) activeBtn.classList.add('active');
-        });
+            document.querySelector(`.pro-page[data-page="${page}"]`)?.classList.add('active');
+            currentPage = page;
+        }
+        pageButtons.forEach(btn => btn.addEventListener('click', () => showPage(Number(btn.dataset.page))));
+        showPage(1);
 
-        // ----- Lọc trạng thái -----
-        statusFilter.onchange = function(){
-            const val = this.value;
-            document.querySelectorAll('#promoTableBody tr:not(.pagination-row)').forEach(r=>{
-                const statusText = r.children[4].innerText.trim();
-                if(!val) r.style.display = '';
-                else if(val === 'running') r.style.display = statusText.includes('Đang chạy') ? '' : 'none';
-                else if(val === 'expired') r.style.display = statusText.includes('Hết hạn') ? '' : 'none';
-                else if(val === 'out') r.style.display = statusText.includes('Hết lượt') ? '' : 'none';
-            });
-            refreshPagedRows();
-            pagedRows = Array.from(tbody.querySelectorAll('tr:not(.pagination-row)')).filter(r => r.style.display !== 'none');
-            currentPage = 1;
-            document.querySelectorAll('#promoTableBody tr:not(.pagination-row)').forEach(r => r.style.display = 'none');
-            pagedRows.forEach((r, idx) => {
-                if(idx < ROWS_PER_PAGE) r.style.display = '';
-            });
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            const firstBtn = document.querySelector(`.pro-page[data-page="1"]`);
-            if(firstBtn) firstBtn.classList.add('active');
-        };
     })();
 </script>
-
 
 
 <script>
