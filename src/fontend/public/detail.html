@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/publicCss/nav.css ">
+    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
     <link rel="stylesheet" href="../css/publicCss/detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,46 +14,77 @@
 <body>
 
     <header class="navbar">
-    <div class="logo">
-        <img id="logo" src="../../img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
-    <nav class="menu">
-        <a href="#">Trang chủ</a>
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+        <nav class="menu">
+            <a href="#">Trang chủ</a>
 
-        <div class="dropdown">
-            <a href="#">Thể loại &#9662;</a>
-            <div class="dropdown-content">
-                <a href="CatagoryPage.html">Hành động</a>
-                <a href="#">Trinh thám</a>
-                <a href="#">Hài hước</a>
+            <div class="dropdown">
+                <a href="#">Thể loại &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="CatagoryPage.html">Hành động</a>
+                    <a href="#">Trinh thám</a>
+                    <a href="#">Hài hước</a>
+                </div>
             </div>
-        </div>
 
-        <a href="#">Liên hệ</a>
-    </nav>
-    <div class="actions">
-        <div class="search-bar">
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="actions">
+            <div class="search-bar">
                 <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
-            <button class="search-button">
-                <i class="fas fa-magnifying-glass"></i>
-            </button>
-        </div>
-        <i class="fa-solid fa-bell"></i>
-        <a href="#" class="publish-btn">Publish</a>
-        <i class="fa-solid fa-user"></i>
-        <a href="#" class="login-btn">Log out</a>
-        <i class="fa-solid fa-comment"></i>
+                <button class="search-button">
+                    <i class="fas fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <i class="fa-solid fa-bell"></i>
+            <a href="#" class="publish-btn">Publish</a>
+            <i class="fa-solid fa-user"></i>
+            <a href="#" class="login-btn">Log out</a>
+            <i class="fa-solid fa-comment"></i>
 
-    </div>
-</header>
+        </div>
+    </header>
 
     <!-- phần này là body chính cửa trang -->
     <div class="container-body">
-        <div class="img">
-            <img id="img"
-                src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
+
+
+
+
+        <div class="content-left">
+            <div class="cont-left-body">
+                <div class="img-container">
+                    <img id="img"
+                        src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
+                        alt="">
+                </div>
+
+                <div class="warehouse-img">
+                    <img class="img-small"
+                        src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
+                        alt="">
+                    <img class="img-small"
+                        src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_2-390x510.jpg?_gl=1*192eztq*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5MzY0NDAkbzE1JGcxJHQxNzYyOTM2NTY2JGo2MCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5MzY0MzMkbzE2JGcxJHQxNzYyOTM2NTY2JGo0OSRsMCRoOTUyODE0MzQy"
+                        alt="">
+                    <img class="img-small"
+                        src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_3-390x510.jpg"
+                        alt="">
+                    <img class="img-small"
+                        src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/_104__detective_conan_104/2023_12_13_16_37_44_3-390x510.jpg?_gl=1*ey826x*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5NTQxNDYkbzE4JGcxJHQxNzYyOTU0MTYyJGo0NCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5NTQxNDYkbzE5JGcxJHQxNzYyOTU0MTYzJGo0MyRsMCRoOTM4MTE4NDA."
+                        alt="">
+                </div>
+
+
+                <div class="actions-btn">
+                    <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
+                    <button class="btn buy-now">Mua ngay</button>
+                </div>
+            </div>
         </div>
+
 
         <div class="all-content">
             <div class="content">
@@ -189,7 +222,7 @@
                             <span class="label">Số trang:</span>
                             <span class="label">Nhà xuất bản:</span>
                         </div>
-                        
+
                         <div class="detail-right">
                             <span class="value">NXB Trẻ</span>
                             <span class="value">2020-05-22 11:17:19</span>
