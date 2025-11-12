@@ -88,7 +88,7 @@ body {
     border-radius: 6px;
 }
 
-#tab-pending .search-box .search-icon {
+#tab-pending .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -372,7 +372,7 @@ body {
     border-radius: 6px;
 }
 
-#tab-pickup .search-box .search-icon {
+#tab-pickup .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -443,7 +443,7 @@ body {
     border-radius: 6px;
 }
 
-#tab-delivering .search-box .search-icon {
+#tab-delivering .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -504,7 +504,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 6px;
 }
-.search-box .search-icon {
+.search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
     top: 50%;

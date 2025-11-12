@@ -331,7 +331,7 @@ td img {
     display: block;
 }
 
-/* ---------- POPUP THÊM TRUYỆN DẠNG NGANG ---------- */
+/* ---------- POPUP THÊM TRUYỆN ---------- */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -363,7 +363,6 @@ td img {
     gap: 40px;
 }
 
-/* Bên trái */
 .form-left, .form-right {
     flex: 1;
     display: flex;
@@ -371,11 +370,44 @@ td img {
     gap: 15px;
 }
 
+.form-left { min-width: 320px; }
+
+
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
+
+/* --- Đảm bảo hai cột trên cùng hàng (Mã truyện + Số lượng) --- */
+.form-group.two-columns {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end; /* canh bottom nếu label khác cao */
+    flex-direction: row;
+}
+
+/* mỗi ô trong two-columns chiếm đều nhau */
+.form-group.two-columns > div {
+    flex: 1 ;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+/* input trong hai cột chiếm hết chiều ngang ô của nó */
+.form-group.two-columns input,
+.form-group.two-columns select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group.two-columns.align-bottom {
+    align-items: flex-end;
+}
+
 
 .form-group label {
     font-weight: bold;
@@ -401,38 +433,33 @@ td img {
 
 /* Khung upload ảnh */
 .image-upload {
-    position: relative;
     width: 100%;
-    height: 220px;
+    height: 260px;
+    aspect-ratio: 3 / 4;
     background: #e7e7e7;
     border-radius: 10px;
     cursor: pointer;
     overflow: hidden;
     border: 2px dashed #b0a9a9;
-}
-
-.upload-placeholder {
-    width: 100%;
-    height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: #9b9494;
-    font-size: 60px;
-    transition: 0.3s;
+    justify-content: center;
+    margin: 0 auto;        /* canh giữa trong .form-right */
 }
 
-.upload-placeholder:hover {
-    background-color: #f2f2f2;
-}
-
-#previewImg {
+/* đảm bảo ảnh preview lấp đầy khung theo object-fit */
+.image-upload img#previewImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
-/* Nút */
+.upload-placeholder {
+    color: #9b9494;
+    font-size: 60px;
+}
+
 .form-buttons {
     display: flex;
     justify-content: flex-end;
@@ -467,11 +494,23 @@ td img {
 .save-btn:hover {
     background-color: #ff6a6a;
 }
+@supports not (aspect-ratio: 1/1) {
+    .image-upload {
+        height: 260px;       /* fallback chiều cao cố định */
+    }
+}
+
+@media (max-width: 700px) {
+    .form-horizontal { flex-direction: column; gap: 18px; }
+    .image-upload { max-width: 100%; aspect-ratio: 16/9; height: auto; }
+}
 
 @keyframes fadeIn {
     from {opacity: 0; transform: translateY(-10px);}
     to {opacity: 1; transform: translateY(0);}
 }
+
+
 
 /* ----- POPUP CHỈNH SỬA TRUYỆN ----- */
 #editModal .modal-rectangle {
@@ -590,6 +629,88 @@ td img {
 .delete-confirm-btn:hover {
     background-color: #c0392b;
 }
+
+/* --- đảm bảo hàng Mã truyện + Số lượng nằm cạnh nhau --- */
+.form-group.two-columns {
+    display: flex;
+    flex-direction: row;    /* bắt hàng ngang */
+    gap: 12px;
+    align-items: flex-end;  /* canh đáy để label & input thẳng hàng */
+}
+
+/* mỗi cột bên trong two-columns */
+.form-group.two-columns > div {
+    flex: 1 1 0;
+    min-width: 0;           /* thiết yếu để input width:100% không bị overflow */
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* input trong two-columns chiếm nguyên chiều ngang ô */
+.form-group.two-columns input,
+.form-group.two-columns select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tối thiểu chiều rộng cho phần bên trái để tránh xuống hàng khi modal hơi hẹp */
+.form-left {
+    min-width: 320px;
+}
+
+/* --- Khung ảnh: ép tỉ lệ vuông --- */
+.image-upload {
+    width: 100%;
+    max-width: 260px;    /* chiều rộng tối đa của khung ảnh */
+    aspect-ratio: 1 / 1; /* đảm bảo vuông */
+    height: auto;
+    background: #e7e7e7;
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    border: 2px dashed #b0a9a9;
+    position: relative;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ảnh preview lấp đầy khung (cover) */
+.image-upload img#editPreviewImg,
+.image-upload img#previewImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* overlay nhỏ để hiển thị dấu + khi hover */
+.image-upload .upload-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.9);
+    font-size: 28px;
+    background: rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+
+.image-upload:hover .upload-overlay {
+    opacity: 1;
+}
+
+/* responsive: khi màn hình nhỏ, cho form xuống hàng */
+@media (max-width: 720px) {
+    .form-horizontal { flex-direction: column; gap: 18px; }
+    .form-left, .form-right { min-width: 0; }
+    .image-upload { max-width: 100%; aspect-ratio: 16 / 9; }
+}
+
 
 /* ----- POPUP XÁC NHẬN XÓA ----- */
 .confirm-box {

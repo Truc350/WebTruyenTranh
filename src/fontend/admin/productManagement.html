@@ -20,7 +20,7 @@
 
         <ul>
             <li>
-                <a href="index.html">
+                <a href="dashboard.html">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
                 </a>
@@ -69,7 +69,9 @@
         <header class="admin-header">
             <div class="header-right">
                 <i class="fa-solid fa-bell"></i>
+                <a href="chatWithCus.html">
                 <i class="fa-solid fa-comment"></i>
+                </a>
 
                 <div class="admin-profile">
                     <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
@@ -97,7 +99,7 @@
         <table>
             <thead>
             <tr>
-                <th>Bìa truyện</th>
+                <th>Mã truyện</th>
                 <th>Tên truyện</th>
                 <th>Thể loại</th>
                 <th>Tác giả</th>
@@ -108,7 +110,7 @@
             </thead>
             <tbody id="productTableBody">
             <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                <td>TT001</td>
                 <td>Thám tử lừng danh Conan</td>
                 <td>Trinh thám</td>
                 <td>Gosho Aoyama</td>
@@ -127,7 +129,7 @@
             </tr>
 
             <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/8/8c/Doraemon_Volume_1_Cover.jpg" alt="bia"></td>
+                <td>TT002</td>
                 <td>Doraemon</td>
                 <td>Hài hước</td>
                 <td>Fujiko F. Fujio</td>
@@ -165,14 +167,24 @@
                 <h3>Thêm truyện mới</h3>
                 <form id="addForm" class="form-horizontal">
                     <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" placeholder="Nhập mã truyện">
+
+                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Mã truyện:</label>
+                                <input type="text" placeholder="Nhập mã truyện">
+                            </div>
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1">
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>Tên truyện:</label>
                             <input type="text" placeholder="Nhập tên truyện">
                         </div>
+
                         <div class="form-group">
                             <label>Thể loại:</label>
                             <select>
@@ -183,10 +195,12 @@
                                 <option>Kinh dị</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" placeholder="Nhập tên tác giả">
                         </div>
+
                         <div class="form-group">
                             <label>Ngày đăng:</label>
                             <input type="date">
@@ -194,13 +208,14 @@
                     </div>
 
                     <div class="form-right">
-                        <div class="image-upload" id="imageBox">
+                        <div class="image-upload vertical" id="imageBox">
                             <input type="file" id="imageInput" accept="image/*" hidden>
                             <div class="upload-placeholder" id="imagePreview">
                                 <i class="icon">+</i>
                                 <img id="previewImg" src="" alt="Preview" style="display:none;">
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
                             <textarea rows="4" placeholder="Nhập mô tả ngắn..."></textarea>
@@ -219,28 +234,43 @@
         <div class="modal-overlay" id="editModal">
             <div class="modal-rectangle">
                 <h3>Chỉnh sửa truyện</h3>
+
                 <form id="editForm" class="form-horizontal">
                     <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" value="TT001" readonly>
+
+                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Mã truyện:</label>
+                                <input type="text" value="TT001" readonly>
+                            </div>
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1" value="550">
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>Tên truyện:</label>
                             <input type="text" value="Thám tử lừng danh Conan">
                         </div>
+
                         <div class="form-group">
                             <label>Thể loại:</label>
                             <select>
                                 <option selected>Trinh thám</option>
                                 <option>Hài hước</option>
                                 <option>Tình cảm</option>
+                                <option>Hành động</option>
+                                <option>Kinh dị</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" value="Gosho Aoyama">
                         </div>
+
                         <div class="form-group">
                             <label>Ngày đăng:</label>
                             <input type="date" value="2024-12-01">
@@ -248,17 +278,19 @@
                     </div>
 
                     <div class="form-right">
-                        <div class="image-upload" id="editImageBox">
+                        <div class="image-upload vertical" id="editImageBox">
                             <input type="file" id="editImageInput" accept="image/*" hidden>
                             <div class="upload-placeholder" id="editImagePreview">
                                 <img id="editPreviewImg"
-                                     src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg"
+                                     src="../../img/biaTruyen.jpg"
                                      alt="Preview">
+                                <!-- overlay hiển thị icon + khi hover -->
                                 <div class="upload-overlay">
-                                    <span>+</span>
+                                    <i class="icon">+</i>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
                             <textarea rows="4">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
@@ -272,6 +304,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <!-- POPUP XÓA TRUYỆN -->
@@ -348,6 +381,8 @@
         document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
     });
 </script>
+
+<!--THEM TRUYEN-->
 <script>
     const addBtn = document.querySelector('.add-btn');
     const modal = document.getElementById('addModal');
