@@ -51,18 +51,34 @@ body {
     flex-shrink: 0; /* Không cho nhóm nút bị co lại */
 }
 
-.search-add input {
-    padding: 10px;
+.search-add .search-box {
+    position: relative;
+    width: 500px;
+}
+
+.search-add .search-box input {
+    width: 100%;
+    padding: 10px 45px 10px 15px;
     border: 2px solid #ff8282;
     border-radius: 8px;
     outline: none;
     height: 50px;
-    min-width: 500px;
+    transition: 0.2s;
 }
 
-.search-add input::placeholder {
+.search-add .search-box input::placeholder {
     font-size: 16px;
     color: #A49F9F;
+}
+
+.search-add .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+    pointer-events: none; /* để click không ảnh hưởng input */
 }
 
 .search-add .add-btn {
@@ -202,16 +218,22 @@ td img {
 }
 
 /* Phân trang bên trong bảng */
+/* ==== PAGINATION ==== */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+}
+
 .pagination {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
 .pagination button {
     background-color: #fff;
     border: 1px solid #FF7A7A;
-    color: #333;
     border-radius: 6px;
     padding: 4px 10px;
     cursor: pointer;
@@ -219,8 +241,19 @@ td img {
 }
 
 .pagination button.active {
-    background-color: #ff7070;
-    color: white;
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
 }
 
 /* Ô chứa nút sửa và 3 chấm */

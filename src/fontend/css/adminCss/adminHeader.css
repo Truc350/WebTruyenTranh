@@ -14,7 +14,14 @@
     gap: 30px;
 }
 
-.header-icon {
+.fa-bell {
+    font-size: 24px;   /* Tăng kích thước icon */
+    color: #000;       /* Đổi màu đen */
+    cursor: pointer;
+    opacity: 0.9;
+    transition: 0.2s;
+}
+.fa-comment {
     font-size: 24px;   /* Tăng kích thước icon */
     color: #000;       /* Đổi màu đen */
     cursor: pointer;
@@ -22,7 +29,11 @@
     transition: 0.2s;
 }
 
-.header-icon:hover {
+.fa-bell:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
+.fa-comment:hover {
     opacity: 1;
     transform: scale(1.15);
 }

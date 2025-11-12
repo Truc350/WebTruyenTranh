@@ -43,7 +43,6 @@ body {
   display: flex;
   gap: 16px;
     position: relative;
-    /*left: 00px;*/
     font-size: 20px;
 }
 
@@ -198,12 +197,6 @@ body {
   .container-content .describe{
   margin-left: 100px;
 }
-/* chỗ này css cho thẻ a link qua trang detail
-a {
-  text-decoration: none;
-  color: inherit;
-  display: inline-block;
-} */
 
 
 

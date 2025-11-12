@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
 }
 body {
     color: #333;
@@ -19,10 +20,7 @@ body {
     flex: 1;
     padding: 30px 40px;
     background-color:white;
-    box-sizing: border-box;
-    overflow-y: auto;
     max-height: 100vh;
-    overflow-x: auto;
 }
 
 .page-title {
@@ -36,29 +34,40 @@ body {
     margin-bottom: 40px;
     gap: 30px;
     align-items: center;
-    white-space: nowrap;       /* Không cho xuống hàng */
+    /*white-space: nowrap;       !* Không cho xuống hàng *!*/
 }
 
-.search-add-container input {
-    flex: 0 1 500px;
-    padding: 10px;
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-box input {
+    width: 100%;
+    padding:8px 38px 8px 14px;
     border: 2px solid #ff8282;
     border-radius: 8px;
     outline: none;
-    height: 30px;
-    min-width: 300px;
+    height: 50px;
+    transition: 0.2s;
 }
 
-.search-add-container input::placeholder {
+.search-box input::placeholder {
     font-size: 16px;
     color: #A49F9F;
 }
 
-
-.search-input:focus {
-    border-color: #ff9999;
-    box-shadow: 0 0 4px rgba(255, 153, 153, 0.5);
+.search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 15px;             /* icon sát hơn về phía phải */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+    pointer-events: none;
 }
+
 
 .search-add-container .add-btn {
     background-color: #ff4c4c;
@@ -69,7 +78,6 @@ body {
     cursor: pointer;
     transition: 0.3s;
     font-size: 16px;
-
 }
 
 .add-btn:hover {
@@ -146,20 +154,21 @@ body {
 }
 
 /* Phân trang bên trong bảng */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+}
+
 .pagination {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-}
-
-.pagination-row td {
-    text-align: right;
+    gap: 6px;
 }
 
 .pagination button {
     background-color: #fff;
     border: 1px solid #FF7A7A;
-    color: #333;
     border-radius: 6px;
     padding: 4px 10px;
     cursor: pointer;
@@ -167,8 +176,19 @@ body {
 }
 
 .pagination button.active {
-    background-color: #ff7070;
-    color: white;
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
 }
 /* POPUP THÊM THỂ LOẠI*/
 /* Overlay mờ toàn màn */
