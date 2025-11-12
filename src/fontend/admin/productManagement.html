@@ -5,7 +5,7 @@
     <title>Quản lý sản phẩm</title>
     <link rel="stylesheet" href="../css/adminCss/stylePro.css">
     <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
 </head>
 <body>
@@ -20,32 +20,46 @@
 
         <ul>
             <li>
+                <a href="dashboard.html">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
+                </a>
             </li>
-            <li class="active">
+            <li>
+                <a href="productManagement.html">
                 <img src="../../img/product.png" class="icon">
                 <span>Quản lý sản phẩm</span>
+                </a>
             </li>
             <li>
+                <a href="category.html">
                 <img src="../../img/category.png" class="icon">
                 <span>Quản lý thể loại</span>
+                </a>
             </li>
             <li>
+                <a href="order.html">
                 <img src="../../img/order.png" class="icon">
                 <span>Quản lý đơn hàng</span>
+                </a>
             </li>
             <li>
+                <a href="userManagement.html">
                 <img src="../../img/user.png" class="icon">
                 <span>Quản lý người dùng</span>
+                </a>
             </li>
             <li>
+                <a href="promotion.html">
                 <img src="../../img/promo.png" class="icon">
                 <span>Khuyến mãi</span>
+                </a>
             </li>
             <li>
+                <a href="report.html">
                 <img src="../../img/report.png" class="icon">
-                <span>Thống kê/ Báo cáo</span>
+                <span>Thống kê</span>
+                </a>
             </li>
         </ul>
     </aside>
@@ -54,8 +68,10 @@
     <main class="main-content">
         <header class="admin-header">
             <div class="header-right">
-                <i class="bi bi-bell header-icon"></i>
-                <i class="bi bi-chat-dots header-icon"></i>
+                <i class="fa-solid fa-bell"></i>
+                <a href="chatWithCus.html">
+                <i class="fa-solid fa-comment"></i>
+                </a>
 
                 <div class="admin-profile">
                     <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
@@ -67,7 +83,10 @@
 
         <div class="table-container">
             <div class="search-add">
+                <div class="search-box">
                 <input type="text" placeholder="Tìm kiếm truyện...">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
@@ -80,7 +99,7 @@
         <table>
             <thead>
             <tr>
-                <th>Bìa truyện</th>
+                <th>Mã truyện</th>
                 <th>Tên truyện</th>
                 <th>Thể loại</th>
                 <th>Tác giả</th>
@@ -89,9 +108,9 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="productTableBody">
             <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg" alt="bia"></td>
+                <td>TT001</td>
                 <td>Thám tử lừng danh Conan</td>
                 <td>Trinh thám</td>
                 <td>Gosho Aoyama</td>
@@ -110,7 +129,7 @@
             </tr>
 
             <tr>
-                <td><img src="https://upload.wikimedia.org/wikipedia/vi/8/8c/Doraemon_Volume_1_Cover.jpg" alt="bia"></td>
+                <td>TT002</td>
                 <td>Doraemon</td>
                 <td>Hài hước</td>
                 <td>Fujiko F. Fujio</td>
@@ -129,11 +148,11 @@
             </tr>
 
             <tr class="pagination-row">
-                <td colspan="7">
+                <td colspan="10">
                     <div class="pagination">
-                        <button >&lt;</button>
-                        <button>1</button>
-                        <button class="active">&gt;</button>
+                        <button class="page-btn product-page" data-page="1">1</button>
+                        <button class="page-btn product-page" data-page="2">2</button>
+                        <button class="page-btn product-page" data-page="3">3</button>
                     </div>
                 </td>
             </tr>
@@ -148,14 +167,24 @@
                 <h3>Thêm truyện mới</h3>
                 <form id="addForm" class="form-horizontal">
                     <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" placeholder="Nhập mã truyện">
+
+                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Mã truyện:</label>
+                                <input type="text" placeholder="Nhập mã truyện">
+                            </div>
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1">
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>Tên truyện:</label>
                             <input type="text" placeholder="Nhập tên truyện">
                         </div>
+
                         <div class="form-group">
                             <label>Thể loại:</label>
                             <select>
@@ -166,10 +195,12 @@
                                 <option>Kinh dị</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" placeholder="Nhập tên tác giả">
                         </div>
+
                         <div class="form-group">
                             <label>Ngày đăng:</label>
                             <input type="date">
@@ -177,13 +208,14 @@
                     </div>
 
                     <div class="form-right">
-                        <div class="image-upload" id="imageBox">
+                        <div class="image-upload vertical" id="imageBox">
                             <input type="file" id="imageInput" accept="image/*" hidden>
                             <div class="upload-placeholder" id="imagePreview">
                                 <i class="icon">+</i>
                                 <img id="previewImg" src="" alt="Preview" style="display:none;">
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
                             <textarea rows="4" placeholder="Nhập mô tả ngắn..."></textarea>
@@ -202,28 +234,43 @@
         <div class="modal-overlay" id="editModal">
             <div class="modal-rectangle">
                 <h3>Chỉnh sửa truyện</h3>
+
                 <form id="editForm" class="form-horizontal">
                     <div class="form-left">
-                        <div class="form-group">
-                            <label>Mã truyện:</label>
-                            <input type="text" value="TT001" readonly>
+
+                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Mã truyện:</label>
+                                <input type="text" value="TT001" readonly>
+                            </div>
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1" value="550">
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label>Tên truyện:</label>
                             <input type="text" value="Thám tử lừng danh Conan">
                         </div>
+
                         <div class="form-group">
                             <label>Thể loại:</label>
                             <select>
                                 <option selected>Trinh thám</option>
                                 <option>Hài hước</option>
                                 <option>Tình cảm</option>
+                                <option>Hành động</option>
+                                <option>Kinh dị</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" value="Gosho Aoyama">
                         </div>
+
                         <div class="form-group">
                             <label>Ngày đăng:</label>
                             <input type="date" value="2024-12-01">
@@ -231,17 +278,19 @@
                     </div>
 
                     <div class="form-right">
-                        <div class="image-upload" id="editImageBox">
+                        <div class="image-upload vertical" id="editImageBox">
                             <input type="file" id="editImageInput" accept="image/*" hidden>
                             <div class="upload-placeholder" id="editImagePreview">
                                 <img id="editPreviewImg"
-                                     src="https://upload.wikimedia.org/wikipedia/vi/0/0b/Detective_Conan_volume_1.jpg"
+                                     src="../../img/biaTruyen.jpg"
                                      alt="Preview">
+                                <!-- overlay hiển thị icon + khi hover -->
                                 <div class="upload-overlay">
-                                    <span>+</span>
+                                    <i class="icon">+</i>
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
                             <textarea rows="4">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
@@ -255,6 +304,7 @@
                 </div>
             </div>
         </div>
+
 
 
         <!-- POPUP XÓA TRUYỆN -->
@@ -331,6 +381,8 @@
         document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
     });
 </script>
+
+<!--THEM TRUYEN-->
 <script>
     const addBtn = document.querySelector('.add-btn');
     const modal = document.getElementById('addModal');
@@ -451,6 +503,34 @@
 
 </script>
 
+<script>
+    (function(){
+        const ROWS_PER_PAGE = 5;
+        const tbody = document.getElementById('productTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        const pageButtons = document.querySelectorAll('.product-page');
+
+        function showPage(page){
+            const start = (page - 1) * ROWS_PER_PAGE;
+            const end = start + ROWS_PER_PAGE;
+
+            rows.forEach((r, idx) => {
+                r.style.display = (idx >= start && idx < end) ? "" : "none";
+            });
+
+            pageButtons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.product-page[data-page="${page}"]`)?.classList.add('active');
+        }
+
+        pageButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                showPage(Number(btn.dataset.page));
+            });
+        });
+
+        showPage(1);
+    })();
+</script>
 
 </body>
 </html>
