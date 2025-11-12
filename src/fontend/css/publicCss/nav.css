@@ -175,16 +175,20 @@ body {
     font-weight: 500;
 }
 
-.publish-btn, .login-btn {
-    background-color: #e53935;
+.login-btn {
+    background-color: #ff4c4c;
     color: white !important;
     padding: 6px 14px;
     border-radius: 4px;
     font-weight: bold;
     text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.publish-btn:hover {
-    background-color: #d32f2f;
+.login-btn:hover {
+    /* background-color: #ff5d5d;  */
+    /* transform: scale(1.05);   */
+    transform: translateY(-3px);
+    cursor: pointer;          
 }
 
