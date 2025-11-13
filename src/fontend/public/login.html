@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/publicCss/login.css">
+    <link rel="stylesheet" href="../css/publicCss/Register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../../js/Login.js" defer></script>
 </head>
@@ -49,6 +50,9 @@
         <div class="imglogin">
             <img src="../../img/imgLogin.png" alt="">
         </div>
+
+
+        <!-- phần này login -->
         <div class="register-container">
             <div class="title">
                 <h3>Đăng nhập Comic Store</h3>
@@ -63,11 +67,13 @@
 
                 <div class="login-options">
                     <label class="remember-me">
-                        <input type="checkbox" checked>
+                        <input type="checkbox">
                         Remember Me
                     </label>
                     <a href="#" class="forgot-password">Forgot Password</a>
                 </div>
+                
+                
 
 
                 <button class="btn btn_guiOTP" id="loginBtn">Login</button>
@@ -79,8 +85,6 @@
                     <p>- Hoặc đăng kí với -</p>
                 </div>
                 <div class="social-buttons">
-                    <!-- <button class="btn facebook">Facebook</button>
-                    <button class="btn twitter">Zalo</button> -->
                     <a class="facebook" href="https://facebook.com" target="_blank">
                         <i class="fa-brands fa-facebook"></i>
                     </a>
@@ -89,13 +93,89 @@
                     </a>
                 </div>
 
-
+                
+                
 
             </div>
         </div>
+
+        <!-- phần này login up -->
+        <div class="container-register">
+            <div class="glass-card">
+                <!-- Header -->
+                <div class="form-container active" id="registerForm">
+                    <div class="form-header">
+                        <h2>Create your account</h2>
+                        <p>Fill in the details to register</p>
+                    </div>
+                </div>
+
+                <div class="auth-form" id="registerFormElement">
+                    <div class="input-group">
+                        <!--name-->
+                        <div class="input-child">
+                            <div class="name-register">
+                                <i class="fa-solid fa-user"></i>
+                                <input id="firstName" name="firstName" type="text" placeholder="Họ và tên" />
+                            </div>
+                        </div>
+
+
+                        <!-- Email -->
+                        <div class="input-child">
+                            <div class="email-container">
+                                <i class="fa-solid fa-envelope"></i>
+                                <input id="email" name="email" type="text" placeholder="Địa chỉ Email" />
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="input-child">
+                            <div class="pw-container">
+                                <i class="fa-solid fa-lock"></i>
+                                <input id="pw" name="pw" type="text" placeholder="Mật khẩu" />
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="input-child">
+                            <div class="cf-pw-container">
+                                <i class="fa-solid fa-lock"></i>
+                                <input id="cf-pw" name="cf-pw" type="text" placeholder="Xác nhận mật khẩu" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Terms checkbox -->
+                    <div class="input-group">
+                        <div class="input-container" data-doc="TheDoc">
+                            <input id="agree" name="agree" type="checkbox" placeholder="Confirm Password" />
+                            <label for="agree">I agree to the Terms and Privacy Policy</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+
+                    <div class="btn-sign-up">
+                        <button>Sign Up</button>
+                    </div>
+
+                    <div class="form-footer">
+                        <p>Or sign up with</p>
+                    </div>
+
+                    <div class="btn-form-footer">
+                        <i class="fa-brands fa-facebook"></i>
+                        <i class="fa-brands fa-twitter"></i>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
-
-
 </body>
 
 
