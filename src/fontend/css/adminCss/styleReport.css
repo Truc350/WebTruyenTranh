@@ -20,12 +20,12 @@ body {
     flex: 1;
     padding: 30px;
     overflow: auto;
-    height: 100vh;
 }
 
 /* Filter Time */
 .filter-time {
     margin-bottom: 20px;
+    margin-top: 30px;
 }
 .time-btn {
     padding: 8px 15px;

@@ -19,13 +19,9 @@ body {
 /* Main content */
 .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 30px;
     background-color: white;
     overflow-x: auto; /* cho phép cuộn ngang nếu bảng to hơn màn hình */
-}
-
-.dashboard {
-    padding: 20px 30px;
 }
 
 .stats-grid {
