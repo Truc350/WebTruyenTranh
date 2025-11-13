@@ -6,9 +6,10 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
+
     <link rel="stylesheet" href="../css/publicCss/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/UserBCss/checkout.css">
 
 </head>
 <body>
@@ -44,77 +45,112 @@
         <i class="fa-solid fa-comment"></i>
     </div>
 </header>
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
-        <div class="footer-column">
-            <div class="logo">
-                <a href="#">
-                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
-                </a>
+<!-- Main Content -->
+<div class="container">
+    <header>
+        <h1>THANH TOÁN</h1>
+        <img src="logo.png" alt="Logo" class="logo">
+    </header>
+    <nav>
+        <a href="#">Vào cửa hàng trước khi dùng</a> | <a href="#">Kết nối</a>
+    </nav>
+    <main>
+
+        <section class="address">
+            <div class="form-group">
+                <label>Họ và tên người nhận</label>
+                <input type="text" value="" placeholder="Nhập họ tên">
             </div>
-            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
-                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
-                truyện hấp dẫn cho bạn
-            </p>
 
-
-        </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
-            <ul>
-                <li><a href="#">Trang chủ</a></li>
-                <li><a href="#">Thể loại truyện</a></li>
-                <li><a href="#">Khuyến mãi</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">Liên hệ</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
-            <ul>
-                <li><a href="#">Hướng dẫn mua hàng</a></li>
-                <li><a href="#">Chính sách đổi trả</a></li>
-                <li><a href="#">Chính sách vận chuyển</a></li>
-                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
-            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
-            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
-            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
-
-            <div class="social-links">
-                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="text" value="" placeholder="Nhập số điện thoại">
             </div>
-        </div>
 
-        <!-- Cột 5: Thanh toán -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
-            <p>Hỗ trợ thanh toán qua:</p>
-            <div class="payment-icons">
-                <img src="../../img/momo.png" alt="Momo">
-                <img src="../../img/zalopay.png" alt="ZaloPay">
+            <div class="form-group">
+                <label>Quốc gia</label>
+                <select>
+                    <option selected>Việt Nam</option>
+                </select>
             </div>
-            <p>Website đã đăng ký với Bộ Công Thương.</p>
-        </div>
-    </div>
 
-    <div class="footer-bottom">
-        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
-    </div>
-</footer>
+            <div class="form-group">
+                <label>Tỉnh/Thành Phố</label>
+                <select>
+                    <option selected>Hồ Chí Minh</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Quận/Huyện</label>
+                <select>
+                    <option selected>Thành Phố Thủ Đức</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Phường/Xã</label>
+                <select>
+                    <option selected>Phường Linh Trung</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ nhận hàng</label>
+                <input type="text" value="" placeholder="Nhập địa chỉ cụ thể">
+            </div>
+        </section>
+        <section class="shipping">
+            <h2>Phương thức Vận chuyển</h2>
+            <label><input type="radio" name="shipping" checked> Giao hàng Tiêu Chuẩn - 25.000đ</label><br>
+            <label><input type="radio" name="shipping"> Giao hàng Hỏa Tốc - 50.000đ</label>
+        </section>
+        <section class="payment">
+            <h2>Phương thức Thanh toán</h2>
+            <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
+            <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br>
+            <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>
+        </section>
+        <section class="order-summary">
+            <h2>Tổng đắt Đơn hàng</h2>
+            <p>Lò đế bánh mini nhôm gòn... <span>162.000đ</span></p>
+            <p>Máy làm tỏa đà nằng 3 trong 1... <span>266.000đ</span></p>
+            <p>Tấm lót (2 SP): <span>428.000đ</span></p>
+            <p>Phí vận chuyển: <span>25.000đ</span></p>
+            <p>Mã giảm giá: <span>-50.000đ</span></p>
+            <p><strong>TỔNG THANH TOÁN: <span>403.000đ</span></strong></p>
+            <button>ĐẶT HÀNG</button>
+        </section>
+    </main>
+</div>
+
+<!-- Popup -->
+<!-- Popup -->
+<div class="overlay" id="overlay"></div>
+<div class="popup" id="qrPopup">
+    <img src="qr_code.png" alt="QR Code Ngân Hàng">
+    <button class="close-btn" onclick="closePopup()">Đóng</button>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const bankRadio = document.querySelector('input[name="payment"][value="bank"]');
+        const qrPopup = document.getElementById('qrPopup');
+        const overlay = document.getElementById('overlay');
+
+        bankRadio.addEventListener('change', function() {
+            if (this.checked) {
+                qrPopup.style.display = 'block';
+                overlay.style.display = 'block';
+            }
+        });
+
+        function closePopup() {
+            qrPopup.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        overlay.addEventListener('click', closePopup);
+    });
+</script>
 </body>
 </html>

@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    background-color: #f5a623;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+}
+
+.logo {
+    width: 50px;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+nav {
+    background-color: #fff;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #f5a623;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+ .shipping, .payment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.shipping label, .payment label {
+    display: block;
+    margin: 5px 0;
+}
+
+.order-summary {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.order-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.order-summary p span {
+    color: #ff4c4c;
+}
+
+.order-summary button {
+    background-color: #f5a623;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.order-summary button:hover {
+    background-color: #e5941a;
+}
+/* ===== FORM ĐỊA CHỈ GIAO HÀNG ===== */
+.address {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 10px 35px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #333;
+}
+
+.address h3 {
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    color: #d32f2f;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    background: #fdfdfd;
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #d32f2f;
+    box-shadow: 0 0 3px rgba(211, 47, 47, 0.3);
+    outline: none;
+}
+
+/* Nếu bạn muốn bố cục gọn hơn (2 cột cho điện thoại & họ tên) */
+.address .form-group.inline {
+    display: flex;
+    gap: 15px;
+}
+
+.address .form-group.inline > div {
+    flex: 1;
+}
