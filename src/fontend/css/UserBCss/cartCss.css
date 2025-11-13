@@ -264,7 +264,7 @@ body {
     border-radius: 12px;
     padding: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    font-size: 14px;
+    font-size: 16px;
     height: fit-content;
     position: sticky;
     top: 20px;
@@ -287,7 +287,7 @@ body {
     font-weight: bold;
     color: #007bff;
     margin-bottom: 12px;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .promo-header i,
@@ -300,7 +300,7 @@ body {
     color: #007bff;
     text-decoration: none;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .view-more:hover {
@@ -329,7 +329,7 @@ body {
 }
 
 .promo-desc {
-    font-size: 12px;
+    font-size: 15px;
     color: #666;
     margin-bottom: 4px;
     line-height: 1.4;
@@ -342,7 +342,7 @@ body {
 }
 
 .progress-bar {
-    height: 6px;
+    height: 10px;
     background: #e0e0e0;
     border-radius: 3px;
     overflow: hidden;
@@ -357,7 +357,7 @@ body {
 }
 
 .progress-label {
-    font-size: 12px;
+    font-size: 14px;
     color: #007bff;
     text-align: left;
 }
