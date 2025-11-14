@@ -135,24 +135,26 @@ body {
 
 
 /* bên dưới là css login  */
-
+.container{
+  margin-top: 20px;
+}
 
 .img-Login .imglogin img {
   background-size: cover;
   width: 100vw;
-  height: 86vh;
+  height: 90vh;
 }
 .img-Login{
     width: 100vw;
   height: 60vh;
 }
 
-.register-container{
+.container-signup{
   position: relative;
   background-color:white ;
   display: flex;
-  top: -600px;
-  left: 800px;
+  top: -700px;
+  left: 900px;
   width: 400px;
   height: 500px;
   flex-direction: column;
@@ -163,7 +165,7 @@ body {
   display: flex;
   gap: 20px;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .btn {
@@ -229,9 +231,6 @@ a.twitter:active {
   display: flex;
   justify-content: center;
 }
-.social-buttons{
-  margin-top: 20px;
-}
 
 .title {
   text-align: center;
@@ -243,7 +242,7 @@ a.twitter:active {
   color: #ff4c4c;
   font-weight: bold;
   letter-spacing: 1px;
-    margin-top: 50px;
+    margin-top: 60px;
 }
 
 .login-options {
@@ -269,7 +268,7 @@ a.twitter:active {
   text-decoration: underline;
 }
 
-.register-container{
+.container-signup{
     align-items: center;
   justify-content: center;
 }
@@ -281,25 +280,18 @@ a.twitter:active {
   justify-content: center;
 }
 
-.btn_guiOTP{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-}
 
-.register-container p a{
+.container-signup p a{
   text-decoration: none;
 }
-.register-container  .title{
+.container-signup  .title{
   position: relative;
   top: -50px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.register-container .title h3{
+.container-signup .title h3{
   font-weight: 400 bold;
-  /* font-size: medium; */
 }
 
 .title a{
@@ -309,18 +301,16 @@ a.twitter:active {
 
 .sdt_maOTP input {
     position: relative;
-    top: -80px;
+    top: -40px;
     width: 350px;         
     height: 50px;       
     font-size: 18px;     
     padding: 10px;       
     box-sizing: border-box; 
-  
 }
+
 .sdt_maOTP{
   gap: 10px;
-  position: relative;
-  top: 50px;
 }
 
 .btn_guiOTP{
@@ -328,12 +318,13 @@ a.twitter:active {
     height: 50px;   
     background-color: #007bff;
     border: none;
+    border-radius: 10px;
     
 }
-.quenmk{
+.dktk{
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 }
 
 

@@ -1,17 +1,9 @@
-// cho truyện link qua trang detail.html
-  document.addEventListener("DOMContentLoaded", function () {
-    const product = document.querySelector("#clickon");
-    product.addEventListener("click", function () {
-      window.location.href = "detail.html";
-    });
-  });
-
 // banner
-const listImage = document.querySelector('.list-images'); 
-const imgs = document.querySelectorAll('.list-images img'); 
-const dots = document.querySelectorAll('.dot'); 
+const listImage = document.querySelector('.list-images');
+const imgs = document.querySelectorAll('.list-images img');
+const dots = document.querySelectorAll('.dot');
 const btnPrev = document.querySelector('.btn.prev');
-const btnNext = document.querySelector('.btn.next'); 
+const btnNext = document.querySelector('.btn.next');
 
 let index = 0;
 
@@ -57,34 +49,51 @@ document.querySelectorAll('.product-slider').forEach(slider => {
 
     let currentPosition = 0;
 
-    //Lấy đúng kích thước 1 item thực tế (bao gồm margin/gap)
-    const itemWidth = items[0].offsetWidth + 10; // 10 = gap trong CSS
-    const visibleItems = 5;
+    // Kích thước 1 item + khoảng cách giữa các item
+    const itemWidth = items[0].offsetWidth + 10; // 10 = gap
+    const totalItems = items.length;
 
-    // Tính toán vị trí tối đa KHÔNG bị trống
-    const maxPosition = -((items.length * itemWidth) - (itemWidth * visibleItems));
+    // Tổng chiều rộng của toàn bộ track
+    const trackWidth = totalItems * itemWidth;
 
-    // 🔹 Khi nhấn nút next
+    // Chiều rộng của vùng hiển thị slider
+    const containerWidth = slider.offsetWidth;
+
+    // Vị trí trượt tối đa (âm)
+    const maxPosition = containerWidth - trackWidth;
+
+    // Xử lý nút next
     nextBtn.addEventListener('click', () => {
         if (currentPosition > maxPosition) {
             currentPosition -= itemWidth;
-            // Dịch chuyển đúng khoảng cần thiết
+
+            // Giới hạn không vượt quá maxPosition
+            if (currentPosition < maxPosition) {
+                currentPosition = maxPosition;
+            }
+
             track.style.transform = `translateX(${currentPosition}px)`;
         }
     });
 
-    //Khi nhấn nút prev
+    // Xử lý nút prev
     prevBtn.addEventListener('click', () => {
         if (currentPosition < 0) {
             currentPosition += itemWidth;
+
+            // Giới hạn không vượt quá 0
+            if (currentPosition > 0) {
+                currentPosition = 0;
+            }
+
             track.style.transform = `translateX(${currentPosition}px)`;
         }
-    });
+    })
 });
 
 
 //cái này click qua trang hành động
-  document.getElementById("actionLink").addEventListener("click", function(event) {
-    event.preventDefault(); // chặn hành vi mặc định của thẻ a
+document.getElementById("actionLink").addEventListener("click", function (event) {
+    event.preventDefault(); 
     window.location.href = "CatagoryPage.html";
 });

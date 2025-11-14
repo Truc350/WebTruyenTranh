@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/publicCss/nav.css ">
     <link rel="stylesheet" href="../css/publicCss/homePage.css ">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../../js/homePage.js" defer></script>
@@ -23,7 +24,7 @@
             <div class="dropdown">
                 <a href="#">Thể loại &#9662;</a>
                 <div class="dropdown-content">
-                    <a  id="actionLink">Hành động</a>
+                    <a href="#">Hành động</a>
                     <a href="#">Trinh thám</a>
                     <a href="#">Hài hước</a>
                 </div>
@@ -31,20 +32,66 @@
 
             <a href="#">Liên hệ</a>
         </nav>
-        <div class="actions">
-            <div class="search-bar">
-                <input id="search" type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
-                <button class="search-button">
-                    <i class="fas fa-magnifying-glass"></i>
-                </button>
+        <div class="search-bar">
+            <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+            <button class="search-button">
+                <i class="fas fa-magnifying-glass"></i>
+            </button>
+        </div>
+        <div class="contain-left">
+            <div class="actions">
+                <div class="notify-wrapper">
+                    <a href="#" class="bell-icon">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="span-bell">1</span>
+                    </a>
+                    <!-- Khung thông báo -->
+                    <div class="notification-panel">
+                        <div class="notification-header">
+                            <div class="inform-num">
+                                <i class="fa-solid fa-bell"></i>
+                                <span>Thông báo</span>
+                                <span class="notification-badge">(1)</span>
+                            </div>
+                            <div class="inform-all">
+                                <a href="#">Xem tất cả</a>
+                            </div>
+                        </div>
+                        <div class="notification-content inform1">
+                            <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                            hấp
+                            dẫn.
+                        </div>
+                        <div class="notification-content inform2">
+                            <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                            dẫn.
+                        </div>
+                    </div>
+                </div>
             </div>
-            <i class="fa-solid fa-bell"></i>
-            <a href="#" class="publish-btn">Publish</a>
-            <i class="fa-solid fa-user"></i>
-            <a href="#" class="login-btn">Log out</a>
-            <i class="fa-solid fa-comment"></i>
+
+
+            <div class="actions">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="login-btn">
+                <a href="#" class="login-btn">Log out</a>
+            </div>
+
+            <div class="actions">
+                <i class="fa-solid fa-comment"></i>
+            </div>
 
         </div>
+
+
+
+
+
+
     </header>
 
 
@@ -52,15 +99,15 @@
     <div class="container-content">
         <!-- chỗ này banner đang làm -->
         <div class="bannder-des">
-            <div id="banner">
+            <div class="banner">
                 <div class="list-images">
-                    <img class="img" src="https://mrwallpaper.com/images/hd/inuyasha-fan-poster-f9t21oh2uw6fw3ri.jpg"
+                    <img class="img" id="img-banner"
+                        src="https://mrwallpaper.com/images/hd/inuyasha-fan-poster-f9t21oh2uw6fw3ri.jpg" alt="">
+                    <img class="img" id="img-banner"
+                        src="https://img1.kienthucvui.vn/uploads/2021/12/23/hinh-anh-conan-cuc-chat_110709324.png"
                         alt="">
-                    <img class="img"
-                        src="https://th.bing.com/th/id/R.142bb2c2a35993717d8966db659cae36?rik=EC%2flBnEo2VjbZg&pid=ImgRaw&r=0"
-                        alt="">
-                    <img class="img" src="https://i.ytimg.com/vi/LjCimywqJ94/maxresdefault.jpg" alt="">
-                    <img class="img"
+                    <img class="img" id="img-banner" src="https://i.ytimg.com/vi/LjCimywqJ94/maxresdefault.jpg" alt="">
+                    <img class="img" id="img-banner"
                         src="https://baodongnai.com.vn/file/e7837c02876411cd0187645a2551379f/082024/crayon-shin-chan-cau-be-but-chi_20240823002508.jpg"
                         alt="">
                 </div>
@@ -122,32 +169,40 @@
 
             <div class="list-product-sale">
                 <div>
-                    <h3>Shin cậu bé bút chì - ước muốn điểm cao</h3>
-                    <p>Giá khuyến mãi: 70,000₫</p>
-                    <p>Giá gốc: <s>100,000₫</s></p>
-                    <p>Giảm giá: 30%</p>
+                    <a href="detail.html">
+                        <h3>Thám Tử Lừng Danh Conan Tập 100</h3>
+                        <p>Giá khuyến mãi: 36.750₫</p>
+                        <p>Giá gốc: <s>43,300₫</s></p>
+                        <p>Giảm giá: 30%</p>
+                    </a>
                 </div>
 
                 <div>
+
                     <h3>Kiếm sĩ mạnh nhất (Tái Bản)</h3>
                     <p>Tác giả: Jared Diamond</p>
                     <p>Giá khuyến mãi: 47,650₫</p>
                     <p>Giá gốc: <s>75,000₫</s></p>
                     <p>Giảm giá: 37%</p>
+
                 </div>
 
                 <div>
+
                     <h3>Oggy và những chú gián - Sân Băng</h3>
                     <p>Giá khuyến mãi: 134,000₫</p>
                     <p>Giá gốc: <s>213,000₫</s></p>
                     <p>Giảm giá: 37%</p>
+
                 </div>
 
                 <div>
+
                     <h3>Tấm Cám (2025)</h3>
                     <p>Giá khuyến mãi: 119,000₫</p>
                     <p>Giá gốc: <s>189,000₫</s></p>
                     <p>Giảm giá: 37%</p>
+
                 </div>
 
             </div>
@@ -172,47 +227,47 @@
                     <div class="product-item">
                         <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 23</p>
                         <p class="product-price">₫18,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 1</p>
                         <p class="product-price">₫27,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 11</p>
                         <p class="product-price">₫16,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 6</p>
                         <p class="product-price">₫19,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 3</p>
                         <p class="product-price">₫22,000</p>
                     </div>
 
                     <div class="product-item">
                         <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 15</p>
                         <p class="product-price">₫19,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 13</p>
                         <p class="product-price">₫21,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Doraemon Tập 6</p>
                         <p class="product-price">₫17,000</p>
                     </div>
 
@@ -230,50 +285,52 @@
                 <div class="arrow prev">&#10094;</div>
 
                 <div class="slider-track">
-                    <div id="clickon" class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="">
-                        <p class="product-name">doraemon123</p>
-                        <p class="product-price">₫18,000</p>
+                    <div class="product-item">
+                        <a href="detail.html">
+                            <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
+                                alt="">
+                            <p class="product-name">Thám tử lừng danh Conan tập 100</p>
+                            <p class="product-price">₫18,000</p>
+                        </a>
                     </div>
                     <div class="product-item">
                         <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 36</p>
                         <p class="product-price">₫27,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 98</p>
                         <p class="product-price">₫18,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://www.detectiveconanworld.com/wiki/images/a/aa/Volume28v.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 28</p>
                         <p class="product-price">₫18,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 86</p>
                         <p class="product-price">₫22,000</p>
                     </div>
 
                     <div class="product-item">
                         <img src="https://www.detectiveconanworld.com/wiki/images/thumb/7/7d/Volume75v.jpg/225px-Volume75v.jpg"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 75</p>
                         <p class="product-price">₫19,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://www.detectiveconanworld.com/wiki/images/d/d8/Volume72v.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 72</p>
                         <p class="product-price">₫21,000</p>
                     </div>
                     <div class="product-item">
                         <img src="https://www.detectiveconanworld.com/wiki/images/3/30/Volume76v.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 76</p>
                         <p class="product-price">₫17,000</p>
                     </div>
 
@@ -292,50 +349,47 @@
 
                 <div class="slider-track">
                     <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="">
-                        <p class="product-name">doraemon123</p>
-                        <p class="product-price">₫183,000</p>
+                        <img src="https://m.media-amazon.com/images/I/61E6Vvsc6pL.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 24</p>
+                        <p class="product-price">₫25,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
-                            alt="">
-                        <p class="product-name">doraemon123</p>
-                        <p class="product-price">₫270,000</p>
+                        <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 45</p>
+                        <p class="product-price">₫27,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
-                        <p class="product-price">₫168,000</p>
+                        <img src="https://m.media-amazon.com/images/I/818RM6H2oHL._SL1500_.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 160</p>
+                        <p class="product-price">₫18,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="">
-                        <p class="product-name">doraemon123</p>
+                        <img src="https://m.media-amazon.com/images/I/81W0jEvdO9L.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 62</p>
                         <p class="product-price">₫189,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
-                            alt="">
-                        <p class="product-name">doraemon123</p>
+                        <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 208</p>
                         <p class="product-price">₫228,000</p>
                     </div>
 
                     <div class="product-item">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                        <img src="https://tse4.mm.bing.net/th/id/OIP.9v3RcOMUqWTRHXD8RwdBqwHaK0?cb=ucfimg2ucfimg=1&w=876&h=1280&rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
-                        <p class="product-name">doraemon123</p>
+                        <p class="product-name">Naruto Tâp 187</p>
                         <p class="product-price">₫190,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
+                        <img src="https://cdn0.fahasa.com/media/catalog/product/n/a/naruto1-2-page-001.jpg" alt="">
+                        <p class="product-name">Naruto Tâp 1</p>
                         <p class="product-price">₫210,000</p>
                     </div>
                     <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
-                        <p class="product-name">doraemon123</p>
-                        <p class="product-price">₫175,000</p>
+                        <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
+                            alt="">
+                        <p class="product-name">Naruto Tâp 123</p>
+                        <p class="product-price">₫25,000</p>
                     </div>
 
 
