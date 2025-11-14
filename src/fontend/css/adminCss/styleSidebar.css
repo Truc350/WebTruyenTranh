@@ -17,11 +17,11 @@
 }
 
 .sidebar-header .logo {
-    width: 70px;              /* tùy chỉnh kích thước logo */
-    height: 70px;
+    width: 80px;              /* tùy chỉnh kích thước logo */
+    height: 80px;
     object-fit: contain;
-    /*margin-bottom: 5px;       !* tạo khoảng cách giữa logo và chữ *!*/
-    margin-top: 5px;
+    margin-bottom: 2px;       /* tạo khoảng cách giữa logo và chữ */
+    margin-top: 2px;
 }
 
 

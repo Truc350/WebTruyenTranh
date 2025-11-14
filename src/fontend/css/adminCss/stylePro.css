@@ -118,7 +118,6 @@ table {
     width: 100%;
     min-width: 700px;
     border-collapse: collapse;
-    background-color: #fff5f5;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -134,6 +133,10 @@ table th, table td {
     text-align: left;
 }
 
+.table-wrapper tbody tr:hover{
+    background-color: #fff1f1;
+}
+
 
 /* Cho phép phần chứa bảng hiển thị menu tràn ra ngoài */
 .table-container {
@@ -143,20 +146,6 @@ table th, table td {
 
 /* Khi một menu mở, vô hiệu hover của toàn bảng */
 .table-container.menu-open tbody tr:hover {
-    background-color: inherit !important;
-}
-
-
-/* Màu nền xen kẽ các hàng */
-tbody tr:nth-child(odd):not(.pagination-row) {
-    background-color: #fff;
-}
-
-tbody tr:nth-child(even):not(.pagination-row) {
-    background-color: #fff5f5;
-}
-
-tbody tr:hover {
     background-color: inherit !important;
 }
 
