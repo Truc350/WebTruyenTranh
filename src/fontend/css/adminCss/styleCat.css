@@ -99,6 +99,10 @@ body {
     font-size: 16px;
 }
 
+.table-container thead th{
+    background-color: #ffeaea;
+}
+
 .table-container th,
 .table-container td {
     text-align: left;
@@ -106,19 +110,13 @@ body {
 }
 
 .table-container th {
-    background-color: #fff5f5;
+    background-color: #ffeaea;
     color: #333;
     font-weight: 600;
 }
 
-
-
-.table-container tr:nth-child(even) {
-    background-color: #fffafc;
-}
-
 .table-container tr:hover {
-    background-color: #fff1f1;
+    background-color:  #fff1f1;
 }
 
 /* Nút hành động */

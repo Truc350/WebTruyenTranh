@@ -321,8 +321,22 @@
         loadConversation(1);
     });
 
-
-
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll(".sidebar li a");
+
+        links.forEach(link => {
+            const linkPage = link.getAttribute("href");
+
+            if (linkPage === current) {
+                link.classList.add("active");
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
