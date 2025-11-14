@@ -58,3 +58,17 @@
     color: #111;
 }
 
+.btn-logout {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+.btn-logout i{
+    color: #ff4c4c !important;
+}
+.btn-logout:hover {
+    transform: scale(1.1);
+}
+
