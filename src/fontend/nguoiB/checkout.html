@@ -46,73 +46,77 @@
     </div>
 </header>
 <!-- Main Content -->
-<div class="container">
-    <header>
-        <h1>THANH TOÁN</h1>
-        <img src="logo.png" alt="Logo" class="logo">
-    </header>
-    <nav>
-        <a href="#">Vào cửa hàng trước khi dùng</a> | <a href="#">Kết nối</a>
-    </nav>
-    <main>
+<div class="titleCheckout">
+    <h1>THANH TOÁN</h1>
+</div>
 
-        <section class="address">
-            <div class="form-group">
-                <label>Họ và tên người nhận</label>
-                <input type="text" value="" placeholder="Nhập họ tên">
-            </div>
 
-            <div class="form-group">
-                <label>Số điện thoại</label>
-                <input type="text" value="" placeholder="Nhập số điện thoại">
-            </div>
 
-            <div class="form-group">
-                <label>Quốc gia</label>
-                <select>
-                    <option selected>Việt Nam</option>
-                </select>
-            </div>
+<div class="mainContainer" style="display: flex">
+    <div class="container">
+        <main>
+            <section class="address">
+                <div class="form-group">
+                    <label>Họ và tên người nhận</label>
+                    <input type="text" value="" placeholder="Nhập họ tên">
+                </div>
 
-            <div class="form-group">
-                <label>Tỉnh/Thành Phố</label>
-                <select>
-                    <option selected>Hồ Chí Minh</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="text" value="" placeholder="Nhập số điện thoại">
+                </div>
 
-            <div class="form-group">
-                <label>Quận/Huyện</label>
-                <select>
-                    <option selected>Thành Phố Thủ Đức</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Quốc gia</label>
+                    <select>
+                        <option selected>Việt Nam</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Phường/Xã</label>
-                <select>
-                    <option selected>Phường Linh Trung</option>
-                </select>
-            </div>
+                <div class="form-group">
+                    <label>Tỉnh/Thành Phố</label>
+                    <select>
+                        <option selected>Hồ Chí Minh</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label>Địa chỉ nhận hàng</label>
-                <input type="text" value="" placeholder="Nhập địa chỉ cụ thể">
-            </div>
-        </section>
-        <section class="shipping">
-            <h2>Phương thức Vận chuyển</h2>
-            <label><input type="radio" name="shipping" checked> Giao hàng Tiêu Chuẩn - 25.000đ</label><br>
-            <label><input type="radio" name="shipping"> Giao hàng Hỏa Tốc - 50.000đ</label>
-        </section>
-        <section class="payment">
-            <h2>Phương thức Thanh toán</h2>
-            <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
-            <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br>
-            <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>
-        </section>
+                <div class="form-group">
+                    <label>Quận/Huyện</label>
+                    <select>
+                        <option selected>Thành Phố Thủ Đức</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Phường/Xã</label>
+                    <select>
+                        <option selected>Phường Linh Trung</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ nhận hàng</label>
+                    <input type="text" value="" placeholder="Nhập địa chỉ cụ thể">
+                </div>
+            </section>
+            <section class="shipping">
+                <h2>Phương thức Vận chuyển</h2>
+                <label><input type="radio" name="shipping" checked> Giao hàng Tiêu Chuẩn - 25.000đ</label><br>
+                <label><input type="radio" name="shipping"> Giao hàng Hỏa Tốc - 50.000đ</label>
+            </section>
+            <section class="payment">
+                <h2>Phương thức Thanh toán</h2>
+                <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
+                <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br>
+                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>
+            </section>
+        </main>
+
+
+    </div>
+    <div class="totalCost">
         <section class="order-summary">
-            <h2>Tổng đắt Đơn hàng</h2>
+            <h2>Tổng đặt Đơn hàng</h2>
             <p>Lò đế bánh mini nhôm gòn... <span>162.000đ</span></p>
             <p>Máy làm tỏa đà nằng 3 trong 1... <span>266.000đ</span></p>
             <p>Tấm lót (2 SP): <span>428.000đ</span></p>
@@ -121,7 +125,7 @@
             <p><strong>TỔNG THANH TOÁN: <span>403.000đ</span></strong></p>
             <button>ĐẶT HÀNG</button>
         </section>
-    </main>
+    </div>
 </div>
 
 <!-- Popup -->
@@ -132,12 +136,12 @@
     <button class="close-btn" onclick="closePopup()">Đóng</button>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const bankRadio = document.querySelector('input[name="payment"][value="bank"]');
         const qrPopup = document.getElementById('qrPopup');
         const overlay = document.getElementById('overlay');
 
-        bankRadio.addEventListener('change', function() {
+        bankRadio.addEventListener('change', function () {
             if (this.checked) {
                 qrPopup.style.display = 'block';
                 overlay.style.display = 'block';

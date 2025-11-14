@@ -1,3 +1,4 @@
+/* Body */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -5,100 +6,70 @@ body {
     background-color: #f9f9f9;
 }
 
-.container {
+/* Wrapper styling */
+.wrapper {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px;
+}
+
+/* Container styling */
+.container {
+    flex: 2;
+    min-width: 300px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-header {
-    background-color: #f5a623;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    position: relative;
-}
-
-.logo {
-    width: 50px;
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-nav {
+/* TotalCost */
+.totalCost {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
     background-color: #fff;
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-nav a {
-    color: #333;
-    text-decoration: none;
-    margin: 0 10px;
-}
-
-main {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
-section {
-    margin-bottom: 20px;
+/* Checkout Header */
+/* Checkout Header */
+.titleCheckout {
+    background: #007bff;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    width: 1200px;
+    padding: 15px 0;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-    color: #f5a623;
-    font-size: 18px;
-    margin-bottom: 10px;
+.titleCheckout h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
 }
 
- .shipping, .payment {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-}
 
-.shipping label, .payment label {
-    display: block;
-    margin: 5px 0;
-}
 
-.order-summary {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.order-summary p {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-}
-
-.order-summary p span {
-    color: #ff4c4c;
-}
-
-.order-summary button {
-    background-color: #f5a623;
-    color: white;
-    border: none;
-    padding: 10px 20px;
+/* Main */
+main {
     width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-.order-summary button:hover {
-    background-color: #e5941a;
-}
-/* ===== FORM ĐỊA CHỈ GIAO HÀNG ===== */
+/* Address Section */
 .address {
-    max-width: 800px;
-    margin: 20px auto;
+    max-width: 500px;
+    margin: 10px 0;
     background: #ffffff;
     padding: 10px 35px;
     border-radius: 10px;
@@ -150,7 +121,6 @@ h2 {
     outline: none;
 }
 
-/* Nếu bạn muốn bố cục gọn hơn (2 cột cho điện thoại & họ tên) */
 .address .form-group.inline {
     display: flex;
     gap: 15px;
@@ -158,4 +128,134 @@ h2 {
 
 .address .form-group.inline > div {
     flex: 1;
+}
+
+/* Shipping and Payment */
+.shipping, .payment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    max-width: 500px;
+}
+
+.shipping h2, .payment h2 {
+    color: #007bff;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.shipping label, .payment label {
+    display: block;
+    margin: 5px 0;
+}
+
+/* Order Summary */
+.order-summary {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    font-family: "Segoe UI", Arial, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.order-summary h2 {
+    color: #007bff;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.order-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.order-summary p span {
+    color: #000000;
+    font-weight: 500;
+}
+
+.order-summary p.discount {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.order-summary p.total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #d32f2f;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.order-summary button {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    width: 140px;
+    height: 50px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    align-self: flex-end;
+    margin-top: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.order-summary button:hover {
+    background-color: #ff6a6a;
+    transform: translateY(-2px);
+}
+
+.order-summary button:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .wrapper {
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .container {
+        min-width: 100%;
+    }
+
+    .totalCost {
+        max-width: 100%;
+    }
+
+    .address, .shipping, .payment {
+        max-width: 100%;
+        margin: 10px 0;
+    }
+
+    .order-summary {
+        width: 100%;
+    }
+
+    header {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
 }
