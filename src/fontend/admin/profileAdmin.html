@@ -53,7 +53,7 @@
             <li>
                 <a href="promotion.html">
                     <img src="../../img/promo.png" class="icon">
-                    <span>Khuyến mãi</span>
+                    <span>Quản lý khuyến mãi</span>
                 </a>
             </li>
             <li>
@@ -76,6 +76,13 @@
                     <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
                     <span class="admin-name">Admin</span>
                 </div>
+
+                <!-- Nút đăng xuất -->
+                <button class="btn-logout" title="Đăng xuất">
+                    <a href="../public/login.html">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                </button>
             </div>
         </header>
 
@@ -84,11 +91,15 @@
             <!-- LEFT SIDE -->
             <div class="profile-left">
                 <div class="avatar-box">
-                    <img src="/path/to/avatar.jpg" alt="Avatar" class="avatar-lg">
-                    <button id="btn-change-avatar" class="btn small">Đổi ảnh</button>
+                    <div class="avatar-wrapper">
+                        <img id="avatar-img" src="../../img/admin.png" alt="Avatar">
+                        <div class="avatar-overlay">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <input type="file" id="avatar-upload" accept="image/*" hidden>
+                    </div>
+                    <h3>Nguyễn Ngọc Linh</h3>
                 </div>
-                <h3>Trâm Trần</h3>
-                <p class="role">Admin & Người bán</p>
             </div>
 
             <!-- RIGHT SIDE -->
@@ -100,7 +111,7 @@
                         <input name="fullname" value="Nguyễn Ngọc Linh">
                     </label>
                     <label>Email
-                        <input type="email" name="email" value="tramtran@example.com">
+                        <input type="email" name="email" value="linhnguyen123@gmail.com">
                     </label>
                     <label>Số điện thoại
                         <input name="phone" value="0123456789">
@@ -119,38 +130,55 @@
                 <hr>
 
                 <!-- Thông tin thanh toán -->
-                <h4>Thông tin thanh toán / Ngân hàng</h4>
+                <h4>Thông tin ngân hàng</h4>
 
                 <!-- Hiển thị Bản đọc (masked) -->
+                <div class="bank-container">
                 <div class="bank-info" id="bankView">
+                    <button id="btn-edit-bank" class="edit-btn" title="Chỉnh sửa">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+
                     <p><strong>Ngân hàng:</strong> <span id="bankNameText">Vietcombank</span></p>
-                    <p><strong>Số tài khoản:</strong> <span id="acctMasked">**** **** 1234</span> <button id="btn-edit-bank" class="btn small inline">Chỉnh sửa</button></p>
-                    <p><strong>Chủ tài khoản:</strong> <span id="acctNameText">Trâm Trần</span></p>
-                    <p class="muted">* Bạn có thể chỉnh sửa thông tin thanh toán nếu cần.</p>
+                    <p><strong>Số tài khoản:</strong> <span id="acctMasked">**** **** 1234</span></p>
+                    <p><strong>Chủ tài khoản:</strong> <span id="acctNameText">Nguyễn Ngọc Linh</span></p>
                 </div>
 
-                <!-- Form chỉnh sửa (ẩn ban đầu) -->
+
                 <div class="bank-info-edit hidden" id="bankEdit">
                     <form id="bankForm">
                         <label>Ngân hàng
-                            <input name="bankName" id="bankName" value="Vietcombank" required>
-                        </label>
-                        <label>Số tài khoản
-                            <div style="display:flex; gap:8px; align-items:center;">
-                                <input name="accountNumber" id="accountNumber" value="12341234" required style="flex:1">
-                                <button type="button" id="btnToggleMask" class="btn small inline" title="Hiện/Mã hóa">Hiện</button>
-                            </div>
-                        </label>
-                        <label>Chủ tài khoản
-                            <input name="accountHolder" id="accountHolder" value="Trâm Trần" required>
+                            <select name="bankName" id="bankName" required>
+                                <option value="">-- Chọn ngân hàng --</option>
+                                <option value="Momo">Momo</option>
+                                <option value="VNPay">VNPay</option>
+                                <option value="Vietcombank">Vietcombank</option>
+                                <option value="BIDV">BIDV</option>
+                                <option value="Techcombank">Techcombank</option>
+                                <option value="MB Bank">MB Bank</option>
+                                <option value="Agribank">Agribank</option>
+                                <option value="ACB">ACB</option>
+                                <option value="Sacombank">Sacombank</option>
+                            </select>
                         </label>
 
-                        <div class="actions" style="margin-top:8px;">
+                        <label>Số tài khoản
+                            <div class="account-field">
+                                <input name="accountNumber" id="accountNumber" value="12341234" required>
+                                <i id="toggleEye" class="fa-solid fa-eye"></i>
+                            </div>
+                        </label>
+
+                        <label>Chủ tài khoản
+                            <input name="accountHolder" id="accountHolder" value="Nguyễn Ngọc Linh" required>
+                        </label>
+
+                        <div class="btn-group">
                             <button type="submit" class="btn">Lưu</button>
                             <button type="button" id="btnCancelBank" class="btn btn-secondary">Hủy</button>
                         </div>
-                        <p id="bankMsg" class="muted" style="margin-top:8px"></p>
                     </form>
+                </div>
                 </div>
 
                 <hr>
@@ -187,14 +215,17 @@
                 <!-- Đổi mật khẩu -->
                 <h4>Đổi mật khẩu</h4>
                 <form id="changePassForm">
+                    <small class="password-hint">
+                        Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.
+                    </small>
                     <label>Mật khẩu cũ
-                        <input type="password" name="oldPassword" required>
+                        <input type="text" name="oldPassword" required>
                     </label>
                     <label>Mật khẩu mới
-                        <input type="password" name="newPassword" required minlength="8">
+                        <input type="text" name="newPassword" required minlength="8">
                     </label>
                     <label>Xác nhận mật khẩu
-                        <input type="password" name="confirmPassword" required>
+                        <input type="text" name="confirmPassword" required>
                     </label>
                     <div class="actions">
                         <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
@@ -223,145 +254,104 @@
         const bankNameInput = document.getElementById('bankName');
         const accountNumberInput = document.getElementById('accountNumber');
         const accountHolderInput = document.getElementById('accountHolder');
-        const btnToggleMask = document.getElementById('btnToggleMask');
+        const toggleEye = document.getElementById('toggleEye');
         const bankMsg = document.getElementById('bankMsg');
 
-        // initial actual account value: NOTE: in real app do NOT embed full account in HTML.
-        // This is for demo. On real app fetch securely from server (e.g. via JS fetch).
-        let actualAcct = accountNumberInput.value || '';
-        let masked = true;
-
+        // --- Helper: Mask account number ---
         function maskAccount(acct){
-            // mask all but last 4 digits, group by 4 for readability
             const s = (acct || '').toString().replace(/\s+/g,'').replace(/[^0-9]/g,'');
             if(!s) return '----';
             const last4 = s.slice(-4);
             const maskedPart = s.slice(0, -4).replace(/\d/g,'*');
-            // group by 4 with spaces
-            const combined = maskedPart + last4;
-            return combined.replace(/(.{4})/g,'$1 ').trim();
+            return (maskedPart + last4).replace(/(.{4})/g,'$1 ').trim();
         }
 
-        // initialize masked view
+        // --- Initial setup ---
+        let actualAcct = accountNumberInput.value || '';
+        let masked = true;
         acctMasked.textContent = maskAccount(actualAcct);
 
-        // Toggle to edit mode
+        // --- Edit mode toggle ---
         btnEdit.addEventListener('click', () => {
             bankView.classList.add('hidden');
             bankEdit.classList.remove('hidden');
-            // ensure inputs contain actual values
             bankNameInput.value = bankNameText.textContent.trim();
-            accountNumberInput.value = actualAcct; // actual unmasked for editing
+            accountNumberInput.value = actualAcct;
             accountHolderInput.value = acctNameText.textContent.trim();
             masked = false;
-            btnToggleMask.textContent = 'Ẩn';
+            toggleEye.classList.remove('fa-eye');
+            toggleEye.classList.add('fa-eye-slash');
         });
 
-        // Cancel edit
+        // --- Cancel edit ---
         btnCancel.addEventListener('click', () => {
             bankEdit.classList.add('hidden');
             bankView.classList.remove('hidden');
             bankMsg.textContent = '';
-            // reset input values to actual (so subsequent edit shows unchanged)
             accountNumberInput.value = actualAcct;
+            toggleEye.classList.remove('fa-eye-slash');
+            toggleEye.classList.add('fa-eye');
         });
 
-        // Toggle mask/show in edit
-        btnToggleMask.addEventListener('click', () => {
+        // --- Toggle show/hide account number ---
+        toggleEye.addEventListener('click', () => {
             masked = !masked;
             if(masked){
-                // show masked in input by replacing value with masked string and disable editing
                 accountNumberInput.type = 'text';
                 accountNumberInput.value = maskAccount(actualAcct);
+                toggleEye.classList.remove('fa-eye-slash');
+                toggleEye.classList.add('fa-eye');
                 accountNumberInput.setAttribute('data-masked','1');
-                btnToggleMask.textContent = 'Hiện';
             } else {
-                // show raw, editable
                 accountNumberInput.type = 'text';
                 accountNumberInput.value = actualAcct;
+                toggleEye.classList.remove('fa-eye');
+                toggleEye.classList.add('fa-eye-slash');
                 accountNumberInput.removeAttribute('data-masked');
-                btnToggleMask.textContent = 'Ẩn';
-                // focus for convenience
                 accountNumberInput.focus();
             }
         });
 
-        // When user edits account field while masked, unmask to allow editing
-        accountNumberInput.addEventListener('input', (e) => {
-            // if it was masked placeholder, and user starts typing, unmask the field
-            if (accountNumberInput.getAttribute('data-masked')) {
-                accountNumberInput.removeAttribute('data-masked');
-            }
-        });
-
-        // Submit form (AJAX)
-        bankForm.addEventListener('submit', async (e) => {
+        // --- Cập nhật hiển thị (giả lập lưu local, không gửi server) ---
+        bankForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            bankMsg.textContent = 'Đang lưu...';
-
-            // get values; if field currently masked (data-masked), show error asking to unmask to verify
-            let bankName = bankNameInput.value.trim();
-            let acctNum = accountNumberInput.value.trim();
+            const bankName = bankNameInput.value.trim();
+            const acctNum = accountNumberInput.value.trim();
             const holder = accountHolderInput.value.trim();
 
-            if(!bankName || !acctNum || !holder){
-                bankMsg.textContent = 'Vui lòng điền đầy đủ thông tin.';
-                return;
-            }
+            actualAcct = acctNum;
+            bankNameText.textContent = bankName;
+            acctNameText.textContent = holder;
+            acctMasked.textContent = maskAccount(actualAcct);
 
-            // If acct input currently contains masked characters, block and ask to unmask
-            if(/[*]/.test(acctNum)){
-                bankMsg.textContent = 'Vui lòng bấm "Hiện" để xem và chỉnh sửa số tài khoản trước khi lưu.';
-                return;
-            }
-
-            // Optional: basic validation (digits only, length check)
-            const cleaned = acctNum.replace(/\s+/g,'').replace(/[^0-9]/g,'');
-            if(cleaned.length < 6){
-                bankMsg.textContent = 'Số tài khoản có vẻ không hợp lệ.';
-                return;
-            }
-
-            try {
-                // send to backend (adjust URL & payload as needed)
-                const res = await fetch('/api/admin/update-bank', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'same-origin',
-                    body: JSON.stringify({
-                        bankName, accountNumber: cleaned, accountHolder: holder
-                    })
-                });
-
-                if (!res.ok) {
-                    const err = await res.json().catch(()=>({message:'Lỗi server'}));
-                    bankMsg.textContent = err.message || 'Lưu thất bại';
-                    return;
-                }
-
-                const data = await res.json();
-                // assume backend returns success and maybe maskedAcct to display
-                actualAcct = cleaned;
-                bankNameText.textContent = bankName;
-                acctNameText.textContent = holder;
-                acctMasked.textContent = maskAccount(actualAcct);
-
-                bankMsg.textContent = 'Lưu thành công.';
-                // switch back to view
-                setTimeout(() => {
-                    bankEdit.classList.add('hidden');
-                    bankView.classList.remove('hidden');
-                    bankMsg.textContent = '';
-                }, 900);
-
-            } catch (err) {
-                bankMsg.textContent = 'Có lỗi xảy ra. Vui lòng thử lại.';
-                console.error(err);
-            }
+            bankEdit.classList.add('hidden');
+            bankView.classList.remove('hidden');
+            bankMsg.textContent = '';
         });
-
     })();
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const wrapper = document.querySelector(".avatar-wrapper");
+        const upload = document.querySelector("#avatar-upload");
+        const img = document.querySelector("#avatar-img");
+
+        // Khi click vào avatar => mở hộp chọn ảnh
+        wrapper.addEventListener("click", () => upload.click());
+
+        // Khi người dùng chọn ảnh mới => hiển thị preview
+        upload.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => (img.src = reader.result);
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
 
 </body>
 </html>
