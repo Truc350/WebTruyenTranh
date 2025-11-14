@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/publicCss/login.css">
+    <link rel="stylesheet" href="../css/publicCss/Authentic.css">
     <link rel="stylesheet" href="../css/publicCss/Register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../../js/Login.js" defer></script>
@@ -70,13 +71,12 @@
                         <input type="checkbox">
                         Remember Me
                     </label>
-                    <a href="#" class="forgot-password">Forgot Password</a>
+                    <a href="#" class="forgot-password" id="show-forgot-pw">Forgot Password</a>
                 </div>
-                
-                
 
-
-                <button class="btn btn_guiOTP" id="loginBtn">Login</button>
+                <a href="homePage.html">
+                    <button class="btn btn_guiOTP">Login</button>
+                </a>
 
                 <div class="dktk">
                     <span><a href="#" id="show-register">Đăng ký tài khoản</a></span>
@@ -95,8 +95,8 @@
                     </a>
                 </div>
 
-                
-              
+
+
 
             </div>
         </div>
@@ -159,7 +159,9 @@
                 <div class="form-footer">
 
                     <div class="btn-sign-up">
-                        <button>Sign Up</button>
+                        <a href="homePage.html">
+                            <button>Sign Up</button>
+                        </a>
                     </div>
 
                     <div class="form-footer">
@@ -176,6 +178,30 @@
 
         </div>
 
+
+        <!-- phần này quên xác thuật quên mật khẩu -->
+        <div class="forgot-pd-container">
+            <h2>Xác thực mail người dùng</h2>
+            <div id="forgot-password-form">
+                <div class="email-class">
+                    <label for="email" class="label-with-icon">Email</label>
+                    <input class="in" type="email" id="email" placeholder="Nhập Email để lấy mã xác thực">
+                </div>
+                <div class="verify">
+                    <div class="verify-title">
+                        <label for="verify-code" class="label-with-icon">Mã xác thực</label>
+                        <input class="in" type="text" id="verify-code" name="verify-code"
+                            placeholder="Nhập mã xác thực đã gửi">
+                    </div>
+                </div>
+                <div id="remind" hidden="hidden">Chúng tôi đang gửi mã</div>
+                <button class="get-verify-code">Lấy mã xác thực</button>
+                
+                <a href="homePage.html">
+                    <button class="submit">Đồng ý</button>
+                </a>
+            </div>
+        </div>
 
     </div>
 </body>
