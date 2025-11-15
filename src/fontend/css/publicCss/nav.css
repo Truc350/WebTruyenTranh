@@ -6,12 +6,13 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     background-color: #f9f9f9;
 }
 
 /* Thanh điều hướng chính */
 .navbar {
+    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -62,7 +63,6 @@ body {
     gap: 20px;
     background-color: #fff;
     padding: 10px 20px;
-    font-family: Arial, sans-serif;
 }
 
 .menu a {
@@ -110,14 +110,13 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
 .actions {
     display: flex;
     gap: 30px;
     align-items: center;
     font-size: 22px;
     position: relative;
-    left: 1px;
+    left: -10px;
 }
 
 .search-bar {
@@ -156,8 +155,10 @@ body {
     color: #666;
 }
 
-.actions .publish-btn {
-    display: none;
+.contain-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .actions {
@@ -176,6 +177,8 @@ body {
 }
 
 .login-btn {
+    position: relative;
+    left: -8px;
     background-color: #ff4c4c;
     color: white !important;
     padding: 6px 14px;
@@ -187,22 +190,42 @@ body {
 
 .login-btn:hover {
     transform: translateY(-3px);
-    cursor: pointer;          
+    cursor: pointer;
 }
+
 
 /* phần này thông báo */
 .notification-panel {
-  position: absolute;
-  top: 40px;
-  right: 0px;
-  display: none; 
-  padding: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background-color: white;
+    position: absolute;
+    top: 35px;
+    right: 0px;
+    display: none;
+    padding: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+#span-bell {
+    position: relative;
+    top: -14px;
+    left: -15px;
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    min-width: 16px;
+    text-align: center;
+}
+.bell-icon{
+    position: relative;
+    left: 10px;
+}
 /* Khi hover vào nút chuông thì hiện panel */
 .notify-wrapper:hover .notification-panel {
-  display: block;
+    display: block;
 }
 
 .notification-panel {
@@ -240,4 +263,8 @@ body {
     padding: 12px 14px;
     font-size: 14px;
     border-top: 1px solid #eee;
+}
+.notification-content:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
 }
