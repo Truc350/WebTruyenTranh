@@ -5,12 +5,7 @@
     margin: 20px 100px;
 }
 
-.rating-right {
-    margin-right: 400px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 .rating-left {
     margin-left: 100px;
@@ -76,37 +71,16 @@
 }
 
 
-.write-btn {
-    border: 2px solid #d00;
-    padding: 10px 25px;
-    border-radius: 10px;
-    background: white;
-    color: #d00;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.write-btn:hover {
-    background: #d00;
-    color: white;
-}
-
-
-
 /* phần này lời comment */
 .comment {
     background-color: white;
+    margin: 0 100px 0 100px;
 }
 
 /* Tabs */
 .review-tabs {
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
-
-
+    margin: 15px 10px;
     background-color: white;
-    margin: 10px 100px 10px 100px;
 }
 
 .review-tabs .tab {
@@ -115,8 +89,7 @@
     padding: 12px 20px;
     font-size: 16px;
     cursor: pointer;
-    color: #555;
-    border-bottom: 2px solid transparent;
+    color: #555;    
 }
 
 .review-tabs .tab.active {
@@ -130,10 +103,8 @@
     gap: 20px;
     padding: 15px 0;
     border-bottom: 1px solid #eee;
-
-
     background-color: white;
-    margin: 10px 100px 10px 100px;
+    margin: 10px 0px 10px 0px;
 }
 
 /* Left section */

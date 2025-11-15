@@ -20,3 +20,19 @@ document.getElementById("show-forgot-pw").addEventListener("click", function (ev
   document.querySelector(".container-signup").style.display = "none";
   document.querySelector(".forgot-pd-container").style.display = "block";
 });
+
+
+
+//check xem phải là admin thì qua admin, còn không thì là user
+function login() {
+    const username = document.getElementById("nhapstk").value.trim();
+    const password = document.getElementById("nhapmk").value.trim();
+
+    // Giả định: tài khoản đúng là "ad" và mật khẩu cũng là "ad"
+    if (username === "adminlinhnguyen123@gmail.com" && password === "1234") {
+      console.log(username, password)
+      window.location.href ="../admin/dashboard.html";
+    } else {
+      window.location.href = "homePage.html";
+    }
+  }

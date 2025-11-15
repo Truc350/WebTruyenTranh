@@ -222,9 +222,10 @@
 }
 
 /* chỗ này là container3 */
+
+
 .related-products {
   padding: 20px;
-  font-family: sans-serif;
   background-color: white;
   position: relative;
   top: 10px;
@@ -281,7 +282,6 @@
 /* cái này container 4 */
 .container4 {
   padding: 20px;
-  font-family: Arial, sans-serif;
   background-color: white;
 }
 
@@ -317,4 +317,27 @@
 .value {
   color: #333;
   font-size: 16px;
+}
+
+/* 
+mô tả sản phẩm */
+.des-tiem{
+  background-color: white;
+  margin: 30px 20px;
+}
+
+.des-tiem h2{
+  font-size: 20px;
+}
+
+.des-review{
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 25px;
+}
+a{
+  text-decoration: none;
+}
+.slider{
+  margin-left: 100px;
 }
