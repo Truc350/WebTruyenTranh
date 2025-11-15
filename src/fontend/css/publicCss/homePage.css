@@ -4,189 +4,17 @@
   padding: 0;
   box-sizing: border-box;
   
-font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
   background-color: #f9f9f9;
-}
-
-/* Thanh điều hướng chính */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #ffffff;
-  padding: 12px 24px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  top: 0;
-  z-index: 1000;
-}
-
-/* Logo MangaToon */
-.logo {
-  display: flex;
-  align-items: center;
-  font-size: 22px;
-  font-weight: bold;
-  color: #e53935;
-}
-
-.logo #logo {
-  height: 100px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 
-/*mới sửa chỗ này với cái ở dưới action */
-/* Menu chính */
-.menu {
-  display: flex;
-  gap: 16px;
-    position: relative;
-    font-size: 20px;
-}
-
-.menu a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.menu a:hover {
-  color: #e53935;
-}
-.menu {
-  display: flex;
-  gap: 20px;
-  background-color: #fff;
-  padding: 10px 20px;
-  font-family: Arial, sans-serif;
-}
-
-.menu a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-  padding: 8px 12px;
-  position: relative;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 10px 0;
-  min-width: 150px;
-  z-index: 100;
-}
-
-.dropdown-content a {
-  display: block;
-  padding: 8px 16px;
-  color: #333;
-  white-space: nowrap;
-}
-
-.dropdown-content a:hover {
-  background-color: #f2f2f2;
-}
-/* chỗ này cái thể loại bị lệch xuống dưới do có thêm cái div */
-.dropdown {
-  position: relative;
-  top: 9px;
-}
-/* Hiện submenu khi hover vào .dropdown */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.actions{
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    font-size: 22px;
-    position: relative;
-    left: 1px;
-}
-.search-bar {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 4px;
-    max-width: 400px;
-    background-color: #fff;
-    width: 450px;
-    margin: 0 35px 0;
-}
-
-.search-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px 0 0 4px;
-    font-size: 16px;
-    outline: none;
-    background-color: transparent;
-    color: #333;
-}
-
-.search-button {
-    padding: 8px 12px;
-    border: none;
-    background-color: transparent;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-}
-
-.search-button i {
-    font-size: 16px;
-    color: #666;
-}
-.actions .publish-btn{
-  display: none;
-}
-
-.actions{
-  position: relative;
-  right: 90px;
-}
-
-.actions .search{
-  padding: 5px;
-}
-.actions a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-
-.publish-btn ,.login-btn {
-  background-color: #e53935;
-  color: white !important;
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.publish-btn:hover {
-  background-color: #d32f2f;
-}
 
 .product-section {
   padding: 20px;
-  font-family: Arial, sans-serif;
 }
 /* cái bìa chứa banner des + slider */
 .container-content{
@@ -195,19 +23,11 @@ body {
 .bannder-des{
   display: flex;
 }
-/* dòng này nhớ bỏ */
-  .container-content .describe{
-  margin-left: 100px;
-}
-
-
 
 /* banner */
-#banner {
-  /* width: 600px;
-  height: 300px; */
+.banner {
   width: 100%;
-  height: 400px;
+  height: 450px;
   overflow: hidden;
   position: relative;
 }
@@ -215,15 +35,13 @@ body {
 
 .list-images {
   display: flex;
-  width: fit-content; /* hoặc width: 1200px nếu có 4 ảnh 300px */
+  width: fit-content;
   transition: transform 0.5s ease-in-out;
 }
 
 .list-images .img {
-  /* width: 600px;
-  height: 300px; */
    width: 100%;
-  height: 400px;
+  height: 450px;
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -288,6 +106,10 @@ body {
 
 
 /* phần này là danh mục */
+
+a{
+  text-decoration: none;
+}
 .danh-muc-icon {
   margin-top: 10px;
   padding: 10px;
@@ -345,7 +167,6 @@ body {
 
 /* phần này là của flash sale */
 .flash-sale {
-  font-family: Arial, sans-serif;
   padding: 20px;
   background-color: #fff;
   max-width: 1200px;
@@ -431,7 +252,6 @@ padding: 6px 30px;
     flex-direction: column;
     gap: 30px;
     padding: 20px;
-    padding-bottom: 0;
     background-color: #f8f8f8;
     border-radius: 10px;
     margin-top: 40px;
@@ -453,7 +273,6 @@ padding: 6px 30px;
     width: 100%;
 }
 
-/* --- THANH TRƯỢT NGANG CHỨA CÁC SẢN PHẨM --- */
 .slider-track {
     display: flex;
     gap: 10px; 
@@ -490,7 +309,7 @@ padding: 6px 30px;
 }
 
 /* --- NÚT MŨI TÊN SLIDER --- */
-.arrow {
+.arrow {  
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -505,7 +324,6 @@ padding: 6px 30px;
     cursor: pointer;
     z-index: 2;
     user-select: none;
-    /* ↓ Thêm hiệu ứng hover nhẹ */
     transition: background 0.3s ease;
 }
 
@@ -522,6 +340,11 @@ padding: 6px 30px;
     right: 5px;
 }
 
+.product-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.1s ease;
+}
+
 
 /* phần này là top bán chạy */
 .top-truyen {
@@ -530,7 +353,6 @@ padding: 6px 30px;
   border-radius: 10px;
   padding: 30px 60px;
   background-color: #fff;
-  font-family: Arial, sans-serif;
 }
 .content-top{
   display: flex;
@@ -578,6 +400,11 @@ padding: 6px 30px;
   font-size: 14px;
   color: #666;
   margin: 4px 0 0;
+}
+.sach-item:hover {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* Chi tiết sách bên phải */

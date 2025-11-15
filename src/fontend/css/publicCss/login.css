@@ -1,5 +1,3 @@
-
-/* /* Reset mặc định */
 * {
   margin: 0;
   padding: 0;
@@ -7,12 +5,13 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+font-family: Arial, Helvetica, sans-serif;
   background-color: #f9f9f9;
 }
 
 /* Thanh điều hướng chính */
 .navbar {
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -59,7 +58,6 @@ body {
   gap: 20px;
   background-color: #fff;
   padding: 10px 20px;
-  font-family: Arial, sans-serif;
 }
 
 .menu a {
@@ -135,38 +133,38 @@ body {
 }
 
 
-
- 
 /* bên dưới là css login  */
+.container{
+  margin-top: 20px;
+}
+
 .img-Login .imglogin img {
   background-size: cover;
   width: 100vw;
-  height: 86vh;
+  height: 90vh;
 }
 .img-Login{
     width: 100vw;
   height: 60vh;
 }
 
-.register-container{
+.container-signup{
   position: relative;
   background-color:white ;
   display: flex;
-  top: -600px;
-  left: 800px;
+  top: -700px;
+  left: 900px;
   width: 400px;
   height: 500px;
   flex-direction: column;
 
 }
-/* .register-container{
-  background-image: url('https://studiovietnam.com/wp-content/uploads/2024/02/anh-raw-02.jpg');
-} */
+
 .social-buttons {
   display: flex;
   gap: 20px;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 5px;
 }
 
 .btn {
@@ -184,13 +182,6 @@ body {
   transform: scale(1.05);
 }
 
-/* .facebook {
-  background-color: #3b5998;
-} */
-
-/* .twitter {
-  background-color: #1da1f2;
-} */
 a.facebook, 
 a.twitter {
   display: inline-block;
@@ -235,16 +226,9 @@ a.twitter:active {
 }
 
 
-
-
-
-
 .is-user{
   display: flex;
   justify-content: center;
-}
-.social-buttons{
-  margin-top: 20px;
 }
 
 .title {
@@ -253,11 +237,11 @@ a.twitter:active {
 }
 
 .title h3 {
-  font-size: 32px;
-  color: black;
+  font-size: 22px;
+  color: #ff4c4c;
   font-weight: bold;
   letter-spacing: 1px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 60px;
 }
 
 .login-options {
@@ -283,9 +267,7 @@ a.twitter:active {
   text-decoration: underline;
 }
 
-
-
-.register-container{
+.container-signup{
     align-items: center;
   justify-content: center;
 }
@@ -297,30 +279,20 @@ a.twitter:active {
   justify-content: center;
 }
 
-.btn_guiOTP{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-}
 
-.register-container p a{
+.container-signup p a{
   text-decoration: none;
 }
-.register-container  .title{
+.container-signup  .title{
   position: relative;
   top: -50px;
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.register-container .title h3{
+.container-signup .title h3{
   font-weight: 400 bold;
-  font-size: medium;
 }
 
-.register-container .title h3{
-  font-size: larger;
-}
 .title a{
   color: #007bff;
 }
@@ -328,34 +300,30 @@ a.twitter:active {
 
 .sdt_maOTP input {
     position: relative;
-    top: -80px;
+    top: -40px;
     width: 350px;         
     height: 50px;       
     font-size: 18px;     
     padding: 10px;       
     box-sizing: border-box; 
-  
 }
+
 .sdt_maOTP{
   gap: 10px;
-  position: relative;
-  top: 50px;
 }
-
-
-
 
 .btn_guiOTP{
   width: 100%;         
     height: 50px;   
     background-color: #007bff;
     border: none;
+    border-radius: 10px;
     
 }
-.quenmk{
+.dktk{
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin: 20px 0 10px 0;
 }
 
 
@@ -381,6 +349,7 @@ a.twitter:active {
 /* code dưới là footer  */
 .footer{
   margin-top: 200px;
+    width: 100vw;
 }
 
 
@@ -388,7 +357,7 @@ a.twitter:active {
     background: #1b1b1b;
     color: #f1f1f1;
     padding: 50px 20px;
-    font-family: Arial, Helvetica, sans-serif;
+font-family: Arial, Helvetica, sans-serif;
     line-height: 1.7;
 }
 
