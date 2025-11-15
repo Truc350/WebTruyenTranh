@@ -181,7 +181,7 @@ body {
     left: -8px;
     background-color: #ff4c4c;
     color: white !important;
-    padding: 6px 14px;
+    padding: 10px 14px;
     border-radius: 4px;
     font-weight: bold;
     text-decoration: none;
@@ -198,8 +198,8 @@ body {
 .notification-panel {
     background-color: white;
     position: absolute;
-    top: 35px;
-    right: 0px;
+    top: 30px;
+    right: 10px;
     display: none;
     padding: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

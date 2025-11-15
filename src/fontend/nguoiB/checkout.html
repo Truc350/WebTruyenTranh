@@ -15,37 +15,85 @@
 </head>
 <body>
 
-<header class="navbar">
-    <div class="logo">
-        <img id="logo" src="../../img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
-    <nav class="menu">
-        <a href="#">Trang chủ</a>
-        <div class="dropdown">
-            <a href="#">Thể loại &#9662;</a>
-            <div class="dropdown-content">
-                <a href="#">Hành động</a>
-                <a href="#">Trinh thám</a>
-                <a href="#">Hài hước</a>
-            </div>
+ <header class="navbar">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
         </div>
-        <a href="#">Liên hệ</a>
-    </nav>
-    <div class="actions">
+        <nav class="menu">
+            <a href="#">Trang chủ</a>
+
+            <div class="dropdown">
+                <a href="#">Thể loại &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="CatagoryPage.html">Hành động</a>
+                    <a href="#">Trinh thám</a>
+                    <a href="#">Hài hước</a>
+                </div>
+            </div>
+
+            <a href="AbouUS.html">Liên hệ</a>
+        </nav>
         <div class="search-bar">
             <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
             <button class="search-button">
                 <i class="fas fa-magnifying-glass"></i>
             </button>
         </div>
-        <i class="fa-solid fa-bell"></i>
-        <a href="#" class="publish-btn">Publish</a>
-        <i class="fa-solid fa-user"></i>
-        <a href="#" class="login-btn">Log in</a>
-        <i class="fa-solid fa-comment"></i>
-    </div>
-</header>
+        <div class="contain-left">
+            <div class="actions">
+                <div class="notify-wrapper">
+                    <a href="#" class="bell-icon">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="span-bell">2</span>
+                    </a>
+                    <!-- Khung thông báo -->
+                    <div class="notification-panel">
+                        <div class="notification-header">
+                            <div class="inform-num">
+                                <i class="fa-solid fa-bell"></i>
+                                <span>Thông báo</span>
+                                <span class="notification-badge">(1)</span>
+                            </div>
+                            <div class="inform-all">
+                                <a href="#">Xem tất cả</a>
+                            </div>
+                        </div>
+                        <div class="notification-content inform1">
+                            <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                            hấp
+                            dẫn.
+                        </div>
+                        <div class="notification-content inform2">
+                            <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                            dẫn.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="actions">
+                <a href="../nguoiB/profile.html">
+                <i class="fa-solid fa-user" id ="user"></i>
+                </a>
+            </div>
+
+            <div class="login-btn">
+                <a href="login.html" class="login-btn">Log out</a>
+            </div>
+
+            <div class="actions">
+                <a href="../nguoiB/chat.html">
+                <i class="fa-solid fa-comment"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </header>
 <!-- Main Content -->
 <div class="titleCheckout">
     <h1>THANH TOÁN</h1>
