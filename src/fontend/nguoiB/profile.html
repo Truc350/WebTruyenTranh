@@ -214,7 +214,9 @@
                     <span>Tổng tiền: <strong>95.000đ</strong></span>
                 </div>
                 <div class="order-actions">
+                    <a href="cart.html">
                     <button class="action-btn buy-again">Mua lại</button>
+                    </a>
                     <button class="action-btn contact-seller">Đánh giá</button>
                 </div>
             </div>
@@ -242,7 +244,9 @@
                     <span>Tổng tiền: <strong>55.000đ</strong></span>
                 </div>
                 <div class="order-actions">
+                    <a href="chat.html">
                     <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                     <button class="action-btn cancel-order">Hủy đơn hàng</button>
                 </div>
             </div>
@@ -270,7 +274,9 @@
                     <span>Tổng tiền: <strong>80.000đ</strong></span>
                 </div>
                 <div class="order-actions">
+                    <a href="chat.html">
                     <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                 </div>
             </div>
             <div class="order-item" data-status="delivery">
@@ -300,7 +306,9 @@
                 </div>
 
                 <div class="order-actions">
+                    <a href="chat.html">
                     <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                     <button class="action-btn receive-order">Đã nhận hàng</button>
                 </div>
             </div>
@@ -331,8 +339,12 @@
                 </div>
 
                 <div class="order-actions">
+                    <a href="cart.html">
                     <button class="action-btn buy-again">Mua lại</button>
+                    </a>
+                    <a href="chat.html">
                     <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                 </div>
             </div>
 
@@ -363,8 +375,12 @@
                 </div>
 
                 <div class="order-actions">
+                    <a href="cart.html">
                     <button class="action-btn buy-again">Mua lại</button>
+                    </a>
+                    <a href="chat.html">
                     <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                     <button class="action-btn view-refund">Xem chi tiết hoàn tiền</button>
                 </div>
             </div>
@@ -587,6 +603,42 @@
 
     </div>
 
+<!--    popup đánh giá-->
+    <div class="container-write-review" style="display: none">
+        <div class="header-review">
+            <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
+            <div class="rating-stars" id="rating-stars">
+                <span data-value="1">★</span>
+                <span data-value="2">★</span>
+                <span data-value="3">★</span>
+                <span data-value="4">★</span>
+                <span data-value="5">★</span>
+            </div>
+            <p class="rating-label" id="rating-label">Chọn số sao</p>
+        </div>
+
+        <div class="field">
+            <label for="display-name">Tên hiển thị khi đánh giá</label>
+            <input id="display-name" name="displayName" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá" />
+        </div>
+
+        <div class="field">
+            <label for="comment">Nhận xét về sản phẩm</label>
+            <textarea id="comment" name="comment" placeholder="Nhập nhận xét của bạn về sản phẩm"></textarea>
+        </div>
+
+        <div class="field-img">
+            <label for="image-upload">Tải lên hình ảnh minh họa</label>
+            <input type="file" id="image-upload" accept="image/*" />
+            <div id="image-preview" class="image-preview"></div>
+        </div>
+
+        <div class="actions-write-review">
+            <button type="reset-review" class="btn-reivew">Hủy</button>
+            <button type="submit-review" class="btn-reivew primary">Gửi nhận xét</button>
+        </div>
+    </div>
+
 
 </main>
 
@@ -614,11 +666,10 @@
         <div class="footer-column">
             <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
             <ul>
-                <li><a href="#">Trang chủ</a></li>
-                <li><a href="#">Thể loại truyện</a></li>
-                <li><a href="#">Khuyến mãi</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">Liên hệ</a></li>
+                <li><a href="../public/homePage.html">Trang chủ</a></li>
+                <li><a href="../public/FlashSale.html">Khuyến mãi</a></li>
+                <li><a href="cart.html">Giỏ hàng</a></li>
+                <li><a href="chat.html">Liên hệ</a></li>
             </ul>
         </div>
 
@@ -626,10 +677,8 @@
         <div class="footer-column">
             <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
             <ul>
-                <li><a href="#">Hướng dẫn mua hàng</a></li>
-                <li><a href="#">Chính sách đổi trả</a></li>
-                <li><a href="#">Chính sách vận chuyển</a></li>
-                <li><a href="#">Câu hỏi thường gặp (FAQ)</a></li>
+                <li><a href="RefundPolicy.html">Chính sách đổi trả</a></li>
+                <li><a href="shippingPolicy.html">Chính sách vận chuyển</a></li>
             </ul>
         </div>
 
@@ -641,9 +690,9 @@
             <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
 
             <div class="social-links">
-                <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/comic.store/" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
 
@@ -865,6 +914,66 @@
                     item.style.display = 'none';
                 }
             }
+        });
+    });
+</script>
+
+<!--popup đánh giá-->
+<script>
+    document.getElementById("show-login").addEventListener("click", function (event) {
+        event.preventDefault();
+        document.querySelector(".container-write-review").style.display = "block";
+
+    });
+    const stars = document.querySelectorAll('#rating-stars span');
+    const label = document.getElementById('rating-label');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            const value = parseInt(star.getAttribute('data-value'));
+            highlightStars(value);
+            label.textContent = `Bạn chọn ${value} sao`;
+        });
+
+        star.addEventListener('mouseout', () => {
+            highlightStars(selectedRating);
+            label.textContent = selectedRating ? `Bạn đã chọn ${selectedRating} sao` : 'Chọn số sao';
+        });
+
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.getAttribute('data-value'));
+            highlightStars(selectedRating);
+            label.textContent = `Bạn đã chọn ${selectedRating} sao`;
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute('data-value'));
+            star.classList.toggle('hovered', value <= rating);
+            star.classList.toggle('selected', value <= rating);
+        });
+    }
+
+    //tải hình ảnh
+    const imageUpload = document.getElementById('image-upload');
+    const imagePreview = document.getElementById('image-preview');
+
+    imageUpload.addEventListener('change', function () {
+        imagePreview.innerHTML = ''; // Xóa ảnh cũ nếu có
+        const files = Array.from(this.files);
+
+        files.forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                imagePreview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
         });
     });
 </script>
