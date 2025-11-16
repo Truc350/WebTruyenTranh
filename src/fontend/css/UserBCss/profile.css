@@ -706,6 +706,7 @@ main {
 .order-actions .buy-again{
     background: #28a745;
     color: #fff;
+    font-size: 16px;
 }
 
 .buy-again:hover {
@@ -988,6 +989,17 @@ main {
 .copy-code-btn:disabled {
     background: #ccc;
     cursor: not-allowed;
+}
+/*rag popup voucher*/
+.voucher-header-drag {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    padding: 12px 20px;
+    background: #f6f6f6;
+    border-bottom: 1px solid #ddd;
+    border-radius: 12px 12px 0 0;
 }
 
 
@@ -1340,6 +1352,65 @@ main {
     color: #dc3545;
 }
 
+.container-write-review .field .nameDisplay {
+    font-weight: 500;
+}
+
+/*css cho popup chi tiet ma giam gia*/
+.voucher-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.voucher-popup-content {
+    background: #fff;
+    width: 380px;
+    padding: 20px;
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease;
+    position: relative;
+}
+
+.close-popup {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.voucher-detail-row {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.voucher-detail-row .label {
+    font-weight: bold;
+    color: #555;
+}
+
+.use-voucher-btn {
+    width: 100%;
+    padding: 10px;
+    background: #ff3d00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive cho xu-container */
 @media (max-width: 600px) {
     .xu-header {
@@ -1363,127 +1434,131 @@ main {
     }
 }
 
-/*popup đánh giá*/
+/* NỀN MỜ SAU POPUP */
+.popup-backdrop-review {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 100;
+}
+
+/* POPUP CHÍNH GIỮA MÀN HÌNH */
+/* NỀN MỜ */
+.popup-backdrop-review {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    z-index: 100;
+}
+
+/* POPUP TO HƠN – GIỮA MÀN HÌNH */
 .container-write-review {
-    max-width: 680px;
-    margin: 40px auto;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 550px;              /* TĂNG KÍCH THƯỚC POPUP */
+    max-width: 95%;
+    background: #fff;
+    padding: 30px;             /* TĂNG KHOẢNG CÁCH VIỀN */
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    padding: 24px;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #0f172a;
+
+    display: none;
+    z-index: 101;
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    font-size: 18px;           /* CHỮ TO HƠN */
 }
 
-.header-review {
+/* TIÊU ĐỀ */
+.header-review p#title {
+    font-size: 22px;           /* TIÊU ĐỀ TO */
+    font-weight: bold;
+    text-align: center;
     margin-bottom: 20px;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 12px;
 }
 
-.header-review #title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 12px;
+/* SAO ĐÁNH GIÁ */
+.rating-stars span {
+    font-size: 32px;           /* SAO TO HƠN */
+    cursor: pointer;
+    color: #ccc;
+}
+
+.rating-stars span.active {
+    color: gold;
 }
 
 .rating-stars {
-    font-size: 32px;
-    color: #e2e8f0;
-    cursor: pointer;
-    letter-spacing: 6px;
-}
-
-.rating-stars span {
-    transition: color 0.2s ease;
-}
-
-.rating-stars span.hovered,
-.rating-stars span.selected {
-    color: #f59e0b;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
 }
 
 .rating-label {
-    margin-top: 8px;
-    font-size: 15px;
-    color: #475569;
+    text-align: center;
+    margin-top: 12px;
+    font-size: 18px;
 }
 
-.field {
-    margin-bottom: 20px;
+/* INPUT, TEXTAREA */
+.field,
+.field-img {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.field label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-}
-
-.field input[type="text"],
+.field input,
 .field textarea {
     width: 100%;
-    padding: 12px 14px;
-    font-size: 1rem;
-    border: 1px solid #e2e8f0;
+    padding: 12px;             /* INPUT CAO HƠN */
+    border: 1px solid #ccc;
     border-radius: 8px;
-    background: #fff;
-    color: #0f172a;
+    font-size: 17px;           /* CHỮ INPUT TO */
 }
 
-.field textarea {
-    min-height: 120px;
-    resize: vertical;
+#image-upload {
+    font-size: 16px;
 }
 
+#image-preview img {
+    width: 90px;               /* ẢNH PREVIEW TO */
+    margin-right: 6px;
+    margin-top: 6px;
+    border-radius: 6px;
+}
+
+/* BUTTON */
 .actions-write-review {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 15px;
 }
 
 .btn-reivew {
-    padding: 10px 18px;
-    font-weight: 600;
+    padding: 10px 20px;        /* NÚT TO HƠN */
     border-radius: 8px;
+    background: #ddd;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 17px;           /* CHỮ NÚT TO */
 }
 
 .btn-reivew.primary {
-    background-color: #ef4444;
-    color: #fff;
-}
-
-.btn-reivew.primary:hover {
-    background-color: #dc2626;
-}
-
-.btn-reivew:not(.primary) {
-    background-color: #94a3b8;
-    color: #fff;
-}
-
-.btn-reivew:not(.primary):hover {
-    background-color: #64748b;
-}
-
-.image-preview {
-    margin-top: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.image-preview img {
-    max-width: 160px;
-    max-height: 160px;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border: 1px solid #e2e8f0;
+    background: #ff4d4d;
+    color: white;
 }
 
 
