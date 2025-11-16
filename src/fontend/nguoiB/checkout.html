@@ -168,102 +168,114 @@
 <!-- Popup -->
 <!-- Popup -->
 
-<div class="popup" id="qrPopup" style="display: none">
-    <img src="qr_code.png" alt="QR Code Ngân Hàng">
-    <button class="close-btn" onclick="closePopup()">Đóng</button>
-</div>
+<!-- Nút mở popup -->
+<a href="#" class="voucher-select">
+    <i class="fa-solid fa-chevron-right"></i>
+</a>
 
+<!-- BACKDROP LÀM MỜ -->
+<div class="voucher-backdrop"></div>
 
-<!--<!-popop up voucher&ndash;&gt;-->
-<div class="voucher-container" style="display: none;">
+<!-- POPUP VOUCHER -->
+<div class="voucher-container">
+    <div class="voucher-header-drag">
     <button class="close-popup-btn">&times;</button>
-    <h2>Ví voucher</h2>
-    <!-- Danh sách voucher (chỉ giữ chưa sử dụng, xóa hoặc ẩn .used) -->
+    <h2 class="voucher-title-popup">Ví Voucher</h2>
+     </div>
+    <!-- Danh sách voucher -->
     <div class="vouchers-grid" id="vouchers-grid">
-        <!-- Voucher 1: Mã giảm 10K - Toàn sàn -->
+
+        <!-- Voucher 1 -->
         <div class="voucher-card">
             <div class="voucher-header">
                 <span class="voucher-type">Voucher chưa sử dụng</span>
                 <span class="voucher-status unused">Chưa sử dụng</span>
             </div>
+
             <div class="voucher-body">
                 <div class="voucher-title">Mã Giảm 10K - Toàn Sàn</div>
-                <div class="voucher-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại
-                    văn...
+                <div class="voucher-desc">
+                    Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
                 </div>
                 <div class="voucher-code">FHS10KT11</div>
                 <button class="voucher-detail-btn">Chi tiết</button>
             </div>
+
             <div class="voucher-footer">
                 <span class="voucher-expiry">HSD: 30/11/2025</span>
                 <button class="copy-code-btn">Copy mã</button>
             </div>
         </div>
 
-        <!-- Voucher 2: Mã giảm 20K - Toàn sàn -->
+        <!-- Voucher 2 -->
         <div class="voucher-card">
             <div class="voucher-header">
                 <span class="voucher-type">Voucher chưa sử dụng</span>
                 <span class="voucher-status unused">Chưa sử dụng</span>
             </div>
+
             <div class="voucher-body">
                 <div class="voucher-title">Mã Giảm 20K - Toàn Sàn</div>
-                <div class="voucher-desc">Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại
-                    văn...
+                <div class="voucher-desc">
+                    Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
                 </div>
                 <div class="voucher-code">FHS20KT11</div>
                 <button class="voucher-detail-btn">Chi tiết</button>
             </div>
+
             <div class="voucher-footer">
                 <span class="voucher-expiry">HSD: 30/11/2025</span>
                 <button class="copy-code-btn">Copy mã</button>
             </div>
         </div>
 
-        <!-- Voucher 3: Mã giảm 40K - Toàn sàn -->
+        <!-- Voucher 3 -->
         <div class="voucher-card">
             <div class="voucher-header">
                 <span class="voucher-type">Voucher chưa sử dụng</span>
                 <span class="voucher-status unused">Chưa sử dụng</span>
             </div>
+
             <div class="voucher-body">
                 <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
-                <div class="voucher-desc">Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại
-                    văn...
+                <div class="voucher-desc">
+                    Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
                 </div>
                 <div class="voucher-code">FHS40KT11</div>
                 <button class="voucher-detail-btn">Chi tiết</button>
             </div>
+
             <div class="voucher-footer">
                 <span class="voucher-expiry">HSD: 30/11/2025</span>
                 <button class="copy-code-btn">Copy mã</button>
             </div>
         </div>
 
-        <!-- Voucher 4: Mã giảm 80K - Toàn sàn -->
+        <!-- Voucher 4 -->
         <div class="voucher-card">
             <div class="voucher-header">
                 <span class="voucher-type">Voucher chưa sử dụng</span>
                 <span class="voucher-status unused">Chưa sử dụng</span>
             </div>
+
             <div class="voucher-body">
                 <div class="voucher-title">Mã Giảm 80K - Toàn Sàn</div>
-                <div class="voucher-desc">Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau Manga, Ngoại
-                    văn...
+                <div class="voucher-desc">
+                    Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
                 </div>
                 <div class="voucher-code">FHS80KT11</div>
                 <button class="voucher-detail-btn">Chi tiết</button>
             </div>
+
             <div class="voucher-footer">
                 <span class="voucher-expiry">HSD: 30/11/2025</span>
                 <button class="copy-code-btn">Copy mã</button>
             </div>
         </div>
 
-        <!-- Xóa hoặc ẩn các voucher .used -->
-        <!-- Ví dụ: <div class="voucher-card used" style="display: none;">... </div> -->
     </div>
 </div>
+
 
 
 <footer class="footer">
@@ -424,15 +436,74 @@
         });
 
         // Xử lý nút Chi tiết
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('voucher-detail-btn')) {
-                const title = e.target.closest('.voucher-card')?.querySelector('.voucher-title')?.textContent;
-                if (title) {
-                    alert('Chi tiết voucher: ' + title + '\n(Ở đây có thể mở modal hoặc trang mới)');
-                }
-            }
+        // Nút mở popup
+        const voucherSelectBtn = document.querySelector('.voucher-select');
+
+// Popup + backdrop
+        const voucherPopup = document.querySelector('.voucher-container');
+        const voucherBackdrop = document.querySelector('.voucher-backdrop');
+
+// Nút đóng
+        const closeVoucherBtn = document.querySelector('.close-popup-btn');
+
+// 👉 Mở popup voucher
+        voucherSelectBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            voucherPopup.style.display = 'block';
+            voucherBackdrop.classList.add('active');
+
+            setTimeout(() => {
+                voucherPopup.classList.add('popup-active');
+            }, 10);
         });
+
+// 👉 Đóng popup
+        function closeVoucherPopup() {
+            voucherPopup.classList.remove('popup-active');
+            voucherBackdrop.classList.remove('active');
+
+            setTimeout(() => {
+                voucherPopup.style.display = 'none';
+            }, 250);
+        }
+
+        closeVoucherBtn.addEventListener('click', closeVoucherPopup);
+
+// 👉 Click nền mờ để đóng
+        voucherBackdrop.addEventListener('click', closeVoucherPopup);
+
     });
+    const popup = document.querySelector('.voucher-container');
+    const dragHeader = document.querySelector('.voucher-header-drag');
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    dragHeader.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        // Tính khoảng cách từ chuột đến góc popup
+        offsetX = e.clientX - popup.offsetLeft;
+        offsetY = e.clientY - popup.offsetTop;
+
+        popup.style.transition = "none"; // tắt animation để kéo mượt hơn
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            popup.style.left = (e.clientX - offsetX) + "px";
+            popup.style.top = (e.clientY - offsetY) + "px";
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+
+
 </script>
 </body>
 

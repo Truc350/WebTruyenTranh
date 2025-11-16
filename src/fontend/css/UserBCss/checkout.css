@@ -399,8 +399,9 @@ main {
 
 /* Định dạng thẻ voucher */
 .voucher-card {
-    background: #f9f9f9;
-    border: 1px solid #e0e0e0;
+    background: #f0f8f0; /* Nền xanh nhạt */
+    border: 1px solid #28a745;
+
     border-radius: 8px;
     padding: 15px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
