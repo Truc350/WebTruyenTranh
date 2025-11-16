@@ -209,17 +209,37 @@
         const topProductsChart = new Chart(topCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Conan tập 91','Doraemon 45','Blue Lock 14'],
+                labels: ['Conan tập 91', 'Doraemon 45', 'Blue Lock 14'],
                 datasets: [{
                     data: [128, 103, 95],
-                    backgroundColor: ['#FF6384','#36A2EB','#FFCE56']
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverBorderWidth: 0
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
+                cutout: '50%', // Tạo lỗ tròn đẹp
                 plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: { enabled: true }
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 13 },
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: { enabled: false }, // Tắt tooltip
+                    datalabels: { display: false }
+                },
+                events: [], // Tắt mọi sự kiện click/hover
+                hover: { mode: null }, // Tắt hover
+                animation: {
+                    duration: 1200,
+                    easing: 'easeOutQuart'
                 }
             }
         });
