@@ -93,7 +93,47 @@ document.querySelectorAll('.product-slider').forEach(slider => {
 
 
 //cái này click qua trang hành động
-document.getElementById("actionLink").addEventListener("click", function (event) {
-    event.preventDefault(); 
-    window.location.href = "CatagoryPage.html";
+// document.getElementById("actionLink").addEventListener("click", function (event) {
+//     event.preventDefault(); 
+//     window.location.href = "CatagoryPage.html";
+// });
+
+//cái này cho top truyện 
+document.getElementById("item-pop-1").addEventListener("mouseover", function () {
+    document.querySelector(".pop-detail-home1").style.display = "flex";
+    document.querySelector(".pop-detail-home2").style.display = "none";
+    document.querySelector(".pop-detail-home3").style.display = "none";
+    document.querySelector(".pop-detail-home4").style.display = "none";
+    document.querySelector(".pop-detail-home5").style.display = "none";
+});
+
+document.getElementById("item-pop-2").addEventListener("mouseover", function () {
+    document.querySelector(".pop-detail-home2").style.display = "flex";
+    document.querySelector(".pop-detail-home1").style.display = "none";
+    document.querySelector(".pop-detail-home3").style.display = "none";
+    document.querySelector(".pop-detail-home4").style.display = "none";
+    document.querySelector(".pop-detail-home5").style.display = "none";
+});
+
+document.getElementById("item-pop-3").addEventListener("mouseover", function () {
+    document.querySelector(".pop-detail-home3").style.display = "flex";
+    document.querySelector(".pop-detail-home1").style.display = "none";
+    document.querySelector(".pop-detail-home2").style.display = "none";
+    document.querySelector(".pop-detail-home4").style.display = "none";
+    document.querySelector(".pop-detail-home5").style.display = "none";
+});
+
+document.getElementById("item-pop-4").addEventListener("mouseover", function () {
+    document.querySelector(".pop-detail-home4").style.display = "flex";
+    document.querySelector(".pop-detail-home1").style.display = "none";
+    document.querySelector(".pop-detail-home2").style.display = "none";
+    document.querySelector(".pop-detail-home3").style.display = "none";
+    document.querySelector(".pop-detail-home5").style.display = "none";
+});
+document.getElementById("item-pop-5").addEventListener("mouseover", function () {
+    document.querySelector(".pop-detail-home5").style.display = "flex";
+    document.querySelector(".pop-detail-home1").style.display = "none";
+    document.querySelector(".pop-detail-home2").style.display = "none";
+    document.querySelector(".pop-detail-home3").style.display = "none";
+    document.querySelector(".pop-detail-home4").style.display = "none";
 });

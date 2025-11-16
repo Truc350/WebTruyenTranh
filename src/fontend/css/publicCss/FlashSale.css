@@ -22,6 +22,7 @@ body{
   margin-left: 10%;
   text-align: center;
   color: white;
+  padding-bottom: 30px;
 }
 
 .flash-title .badge {
@@ -109,21 +110,30 @@ body{
 /* dưới này onntainer item */
 .container-item{
     width: 80vw;
-    margin-left: 11.5%;
+    margin-left: 10%;
    display: flex;
+   justify-content: space-evenly;
    flex-wrap: wrap; /*cho xuống dòng khi tràn */
-    gap: 20px; 
+    gap: 10px; 
     transition: transform 0.5s ease;
-    padding: 5px 0;
+    border-radius: 10px;
+    padding-top: 20px;
+    background-color: white;
+    box-shadow: inset;
+    
 }
 .container-item2{
-    width: 80vw;
-    margin-left: 11.5%;
-   display: none;
+       width: 80vw;
+    margin-left: 10%;
+   display: flex;
+   justify-content: space-evenly;
    flex-wrap: wrap; /*cho xuống dòng khi tràn */
-    gap: 20px; 
+    gap: 10px; 
     transition: transform 0.5s ease;
-    padding: 5px 0;
+    border-radius: 10px;
+    padding-top: 20px;
+    background-color: white;
+    box-shadow: inset;
 }
 .product-card {
   width: 220px;
