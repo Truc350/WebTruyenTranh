@@ -11,7 +11,7 @@
   background-color: white;
   padding: 70px;
   border-radius: 10px;
-  height: 900px;
+  height: 950px;
 }
 
 /* Ảnh lớn */
@@ -50,7 +50,7 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 25px;
 }
 
 .btn {
@@ -83,7 +83,29 @@
   transform: translateY(-2px);
 }
 
+/* chỗ này css trái tim */
+.heart-toggle {
+  cursor: pointer;
+  position: relative;
+  margin-left: 20px;
+}
+.heart-toggle .fa-solid {
+  display: none;
+  color: red;
+}
+.heart-toggle input:checked ~ .fa-regular {
+  display: none;
+}
+.heart-toggle input:checked ~ .fa-solid {
+  display: inline;
+}
 
+.actions-btn .heart-toggle p{
+  font-weight: 100px;
+  position: relative;
+  left: -5px;
+
+}
 
 
 /*chỗ dưới này là cái container body*/
@@ -95,6 +117,9 @@
 
 .content {
   padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .container2 {
@@ -203,6 +228,13 @@
   justify-content: flex-start;
   margin-left: 20px;
   gap: 10px;
+}
+
+.voucherbutton span{
+  margin-top: 5px;
+}
+.voucherbutton p{
+  margin-top: 5px;
 }
 
 .voucherbutton .quantity-control {
@@ -338,6 +370,6 @@ mô tả sản phẩm */
 a{
   text-decoration: none;
 }
-.slider{
-  margin-left: 100px;
+.container-slider{
+  margin: 50px 100px;
 }

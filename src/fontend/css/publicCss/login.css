@@ -162,9 +162,9 @@ font-family: Arial, Helvetica, sans-serif;
 
 .social-buttons {
   display: flex;
-  gap: 20px;
+  gap: 10px;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 .btn {
@@ -183,23 +183,26 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 a.facebook, 
-a.twitter {
+a.google {
   display: inline-block;
   width: 50px;
   height: 50px;
   line-height: 50px;
   text-align: center;
-  border-radius: 50%; /* bo tròn */
-  color: white;
+  border-radius: 50%;
   font-size: 24px;
-  margin: 5px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   text-decoration: none;
 }
 
 /* Facebook */
 a.facebook {
-  background-color: #1877f2; /* màu Facebook */
+  font-weight: bold;
+  font-size: 24px;
+  background: linear-gradient(to right, #1877f2, #4267B2, #385898, #23345A);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 a.facebook:hover {
   background-color: #145dbf;
@@ -211,16 +214,19 @@ a.facebook:active {
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
-/* Twitter */
-a.twitter {
-  background-color: #1da1f2; /* màu Twitter */
+/* google */
+a.google {
+  background: linear-gradient(to right, #4285F4, #EA4335, #FBBC05, #34A853);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-a.twitter:hover {
+a.google:hover {
   background-color: #0d8ddb;
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
-a.twitter:active {
+a.google:active {
   transform: scale(0.95);
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
@@ -501,4 +507,7 @@ font-family: Arial, Helvetica, sans-serif;
         display: flex;
         justify-content: center; /* Center social icons */
     }
+}
+.img-Login{
+  margin-bottom: 250px;
 }

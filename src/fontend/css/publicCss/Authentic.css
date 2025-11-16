@@ -44,6 +44,34 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
+/* new pass */
+.new-pass {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.new-pass label {
+  font-weight: bold;
+  color: #333;
+}
+
+.new-pass input.in {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.new-pass input.in:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+
 
 /* Thông báo gửi mã */
 #remind {

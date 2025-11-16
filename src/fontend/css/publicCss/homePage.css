@@ -18,7 +18,7 @@ body {
 }
 /* cái bìa chứa banner des + slider */
 .container-content{
-  margin: 20px 100px 0 100px;
+  margin: 20px 150px 0 150px;
 }
 .bannder-des{
   display: flex;
@@ -42,10 +42,10 @@ body {
 .list-images .img {
    width: 100%;
   height: 450px;
-  object-fit: cover;
+  object-fit: cover; 
   flex-shrink: 0;
 }
-/* cho riêng từng ảnh */
+
 
 
 
@@ -118,6 +118,9 @@ a{
   border-radius: 10px;
   width: 100%;
 }
+.danh-muc-icon a{
+  color: black;
+}
 
 .danh-muc-icon h2{
   display: flex;
@@ -146,6 +149,7 @@ a{
   width: 100px;
   text-align: center;
   cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .icon-item img {
@@ -280,7 +284,7 @@ padding: 6px 30px;
     padding: 5px 0;
 }
 
-/* --- MỖI SẢN PHẨM --- */
+
 .product-item {
     background: #fff;
     border-radius: 10px;
