@@ -156,7 +156,7 @@
                 <h2>Phương thức Thanh toán: </h2>
                 <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
                 <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br>
-<!--                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>-->
+                <!--                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>-->
             </section>
             <section class="promotion">
                 <h2>Mã giảm giá:</h2>
@@ -216,10 +216,114 @@
 <!-- Popup -->
 <!-- Popup -->
 
-<div class="popup" id="qrPopup" style="display: none">
-    <img src="qr_code.png" alt="QR Code Ngân Hàng">
-    <button class="close-btn" onclick="closePopup()">Đóng</button>
+<!-- Nút mở popup -->
+<a href="#" class="voucher-select">
+    <i class="fa-solid fa-chevron-right"></i>
+</a>
+
+<!-- BACKDROP LÀM MỜ -->
+<div class="voucher-backdrop"></div>
+
+<!-- POPUP VOUCHER -->
+<div class="voucher-container">
+    <div class="voucher-header-drag">
+    <button class="close-popup-btn">&times;</button>
+    <h2 class="voucher-title-popup">Ví Voucher</h2>
+     </div>
+    <!-- Danh sách voucher -->
+    <div class="vouchers-grid" id="vouchers-grid">
+
+        <!-- Voucher 1 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 10K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS10KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Copy mã</button>
+            </div>
+        </div>
+
+        <!-- Voucher 2 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 20K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS20KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Copy mã</button>
+            </div>
+        </div>
+
+        <!-- Voucher 3 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS40KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Copy mã</button>
+            </div>
+        </div>
+
+        <!-- Voucher 4 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 80K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS80KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Copy mã</button>
+            </div>
+        </div>
+
+    </div>
 </div>
+
 
 
 <footer class="footer">
@@ -231,10 +335,12 @@
                     <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
-            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
+            <p>MêTruyện là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện
+                giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str><br>
+                <str>10.000+</str>
+                <br>
                 truyện hấp dẫn cho bạn
             </p>
 
@@ -298,28 +404,156 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const bankRadio = document.querySelector('input[name="payment"][value="bank"]');
-        const qrPopup = document.getElementById('qrPopup');
-        const overlay = document.getElementById('overlay');
+        // Chọn các phần tử cần thiết
+        const voucherContainer = document.querySelector('.voucher-container');
+        const popupBackdrop = document.querySelector('.popup-backdrop');
+        const voucherSelect = document.querySelector('.voucher-select');
+        const closePopupBtn = document.querySelector('.close-popup-btn');
 
-        bankRadio.addEventListener('change', function () {
-            if (this.checked) {
-                qrPopup.style.display = 'block';
-                overlay.style.display = 'block';
+        // Hàm đóng popup
+        function closePopup() {
+            if (voucherContainer) {
+                voucherContainer.classList.remove('popup-active');
+                voucherContainer.style.display = 'none';
+            }
+            if (popupBackdrop) {
+                popupBackdrop.classList.remove('active');
+            }
+        }
+
+        // Xử lý sự kiện nhấn vào voucher-select để hiển thị/ẩn popup
+        if (voucherSelect) {
+            voucherSelect.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn hành vi mặc định của thẻ a
+                if (voucherContainer && popupBackdrop) {
+                    if (voucherContainer.classList.contains('popup-active')) {
+                        // Nếu popup đang hiển thị, ẩn nó
+                        closePopup();
+                    } else {
+                        // Hiển thị popup
+                        voucherContainer.style.display = 'block';
+                        voucherContainer.classList.add('popup-active');
+                        popupBackdrop.classList.add('active');
+                        // Ẩn các voucher đã sử dụng
+                        const allVouchers = voucherContainer.querySelectorAll('.voucher-card');
+                        allVouchers.forEach(v => {
+                            v.style.display = v.classList.contains('used') ? 'none' : 'block';
+                        });
+                    }
+                }
+            });
+        }
+
+        // Đóng popup khi nhấn vào nền mờ
+        if (popupBackdrop) {
+            popupBackdrop.addEventListener('click', function (e) {
+                // Chỉ đóng nếu nhấn trực tiếp vào backdrop
+                if (e.target === popupBackdrop) {
+                    closePopup();
+                }
+            });
+        }
+
+        // Đóng popup khi nhấn nút đóng
+        if (closePopupBtn) {
+            closePopupBtn.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn hành vi mặc định
+                closePopup();
+            });
+        }
+
+        // Ngăn sự kiện click bên trong voucher-container lan ra ngoài
+        if (voucherContainer) {
+            voucherContainer.addEventListener('click', function (e) {
+                e.stopPropagation(); // Ngăn sự kiện click lan ra backdrop
+            });
+        }
+
+        // Xử lý nút Copy mã
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
+                const code = e.target.closest('.voucher-card')?.querySelector('.voucher-code')?.textContent;
+                if (code) {
+                    navigator.clipboard.writeText(code).then(() => {
+                        alert('Đã copy mã: ' + code);
+                    }).catch(() => {
+                        alert('Không thể copy mã. Vui lòng copy thủ công.');
+                    });
+                }
             }
         });
 
-        function closePopup() {
-            qrPopup.style.display = 'none';
-            overlay.style.display = 'none';
+        // Xử lý nút Chi tiết
+        // Nút mở popup
+        const voucherSelectBtn = document.querySelector('.voucher-select');
+
+// Popup + backdrop
+        const voucherPopup = document.querySelector('.voucher-container');
+        const voucherBackdrop = document.querySelector('.voucher-backdrop');
+
+// Nút đóng
+        const closeVoucherBtn = document.querySelector('.close-popup-btn');
+
+// 👉 Mở popup voucher
+        voucherSelectBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            voucherPopup.style.display = 'block';
+            voucherBackdrop.classList.add('active');
+
+            setTimeout(() => {
+                voucherPopup.classList.add('popup-active');
+            }, 10);
+        });
+
+// 👉 Đóng popup
+        function closeVoucherPopup() {
+            voucherPopup.classList.remove('popup-active');
+            voucherBackdrop.classList.remove('active');
+
+            setTimeout(() => {
+                voucherPopup.style.display = 'none';
+            }, 250);
         }
 
-        overlay.addEventListener('click', closePopup);
+        closeVoucherBtn.addEventListener('click', closeVoucherPopup);
+
+// 👉 Click nền mờ để đóng
+        voucherBackdrop.addEventListener('click', closeVoucherPopup);
+
     });
+    const popup = document.querySelector('.voucher-container');
+    const dragHeader = document.querySelector('.voucher-header-drag');
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    dragHeader.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        // Tính khoảng cách từ chuột đến góc popup
+        offsetX = e.clientX - popup.offsetLeft;
+        offsetY = e.clientY - popup.offsetTop;
+
+        popup.style.transition = "none"; // tắt animation để kéo mượt hơn
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            popup.style.left = (e.clientX - offsetX) + "px";
+            popup.style.top = (e.clientY - offsetY) + "px";
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+
+
 </script>
 </body>
-
-
 
 
 </html>

@@ -214,6 +214,11 @@ body {
     color: #333;
 }
 
+.popup-box label{
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
 /* Ô nhập */
 .popup-box input {
     width: 100%;
