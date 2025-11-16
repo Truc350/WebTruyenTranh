@@ -116,6 +116,15 @@ body{
     transition: transform 0.5s ease;
     padding: 5px 0;
 }
+.container-item2{
+    width: 80vw;
+    margin-left: 11.5%;
+   display: none;
+   flex-wrap: wrap; /*cho xuống dòng khi tràn */
+    gap: 20px; 
+    transition: transform 0.5s ease;
+    padding: 5px 0;
+}
 .product-card {
   width: 220px;
   background: #fff;
