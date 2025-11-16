@@ -706,6 +706,7 @@ main {
 .order-actions .buy-again{
     background: #28a745;
     color: #fff;
+    font-size: 16px;
 }
 
 .buy-again:hover {
@@ -1338,6 +1339,60 @@ main {
 
 .history .value.minus {
     color: #dc3545;
+}
+/*css cho popup chi tiet ma giam gia*/
+.voucher-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.voucher-popup-content {
+    background: #fff;
+    width: 380px;
+    padding: 20px;
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease;
+    position: relative;
+}
+
+.close-popup {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.voucher-detail-row {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.voucher-detail-row .label {
+    font-weight: bold;
+    color: #555;
+}
+
+.use-voucher-btn {
+    width: 100%;
+    padding: 10px;
+    background: #ff3d00;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive cho xu-container */
