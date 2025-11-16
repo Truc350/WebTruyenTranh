@@ -215,7 +215,8 @@
                 </div>
                 <div class="order-actions">
                     <a href="cart.html">
-                    <button class="action-btn buy-again">Mua lại</button>
+                        <button class="action-btn buy-again">Mua lại</button>
+                    </a>
                     <button id="Evaluate" class="action-btn contact-seller">Đánh giá</button>
                 </div>
             </div>
@@ -244,7 +245,7 @@
                 </div>
                 <div class="order-actions">
                     <a href="chat.html">
-                    <button class="action-btn contact-seller">Liên hệ</button>
+                        <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                     <button class="action-btn cancel-order">Hủy đơn hàng</button>
                 </div>
@@ -274,7 +275,7 @@
                 </div>
                 <div class="order-actions">
                     <a href="chat.html">
-                    <button class="action-btn contact-seller">Liên hệ</button>
+                        <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                 </div>
             </div>
@@ -337,10 +338,10 @@
 
                 <div class="order-actions">
                     <a href="cart.html">
-                    <button class="action-btn buy-again">Mua lại</button>
+                        <button class="action-btn buy-again">Mua lại</button>
                     </a>
                     <a href="chat.html">
-                    <button class="action-btn contact-seller">Liên hệ</button>
+                        <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                 </div>
             </div>
@@ -373,11 +374,11 @@
 
                 <div class="order-actions">
                     <a href="cart.html">
-                    <button class="action-btn buy-again">Mua lại</button>
+                        <button class="action-btn buy-again">Mua lại</button>
                     </a>
                     <a href="chat.html">
-                    <button class="action-btn contact-seller">Liên hệ</button>
-
+                        <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
                 </div>
             </div>
 
@@ -622,8 +623,12 @@
 
     </div>
 
-<!--    popup đánh giá-->
-    <div class="container-write-review" style="display: none">
+    <!--    popup đánh giá-->
+    <!-- BACKDROP NỀN MỜ -->
+    <div class="popup-backdrop-review" style="display: none;"></div>
+
+    <!-- POPUP ĐÁNH GIÁ -->
+    <div class="container-write-review" style="display: none;">
         <div class="header-review">
             <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
             <div class="rating-stars" id="rating-stars">
@@ -633,30 +638,31 @@
                 <span data-value="4">★</span>
                 <span data-value="5">★</span>
             </div>
-            <p class="rating-label" id="rating-label">Chọn số sao</p>
+<!--            <p class="rating-label" id="rating-label">Chọn số sao</p>-->
         </div>
 
         <div class="field">
-            <label for="display-name">Tên hiển thị khi đánh giá</label>
-            <input id="display-name" name="displayName" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá" />
+            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>
+            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>
         </div>
 
         <div class="field">
-            <label for="comment">Nhận xét về sản phẩm</label>
-            <textarea id="comment" name="comment" placeholder="Nhập nhận xét của bạn về sản phẩm"></textarea>
+            <label for="comment" class="nameDisplay">Nhận xét</label>
+            <textarea id="comment" placeholder="Nhập nhận xét của bạn"></textarea>
         </div>
 
         <div class="field-img">
-            <label for="image-upload">Tải lên hình ảnh minh họa</label>
-            <input type="file" id="image-upload" accept="image/*" />
-            <div id="image-preview" class="image-preview"></div>
+            <label for="image-upload" class="nameDisplay">Tải ảnh</label>
+            <input type="file" id="image-upload" accept="image/*"/>
+            <div id="image-preview"></div>
         </div>
 
         <div class="actions-write-review">
-            <button type="reset-review" class="btn-reivew">Hủy</button>
-            <button type="submit-review" class="btn-reivew primary">Gửi nhận xét</button>
+            <button class="cancel-review btn-reivew">Hủy</button>
+            <button class="submit-review btn-reivew primary">Gửi nhận xét</button>
         </div>
     </div>
+
 
 
 </main>
@@ -699,40 +705,6 @@
         </div>
 
         <button class="use-voucher-btn">Sử dụng ngay</button>
-    </div>
-</div>
-
-<!--Popup danh gia-->
-<div id="review-popup" class="review-popup" style="display: none;">
-    <div class="container-write-review">
-        <div class="header-review">
-            <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
-            <div class="rating-stars" id="rating-stars">
-                <span data-value="1">★</span>
-                <span data-value="2">★</span>
-                <span data-value="3">★</span>
-                <span data-value="4">★</span>
-                <span data-value="5">★</span>
-            </div>
-            <p class="rating-label" id="rating-label">Chọn số sao</p>
-        </div>
-        <div class="field">
-            <label for="display-name">Tên hiển thị khi đánh giá</label>
-            <input id="display-name" name="displayName" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>
-        </div>
-        <div class="field">
-            <label for="comment">Nhận xét về sản phẩm</label>
-            <textarea id="comment" name="comment" placeholder="Nhập nhận xét của bạn về sản phẩm"></textarea>
-        </div>
-        <div class="field-img">
-            <label for="image-upload">Tải lên hình ảnh minh họa</label>
-            <input type="file" id="image-upload" accept="image/*"/>
-            <div id="image-preview" class="image-preview"></div>
-        </div>
-        <div class="actions-write-review">
-            <button type="reset" class="btn-reivew" onclick="closeReviewPopup()">Hủy</button>
-            <button type="submit" class="btn-reivew primary">Gửi nhận xét</button>
-        </div>
     </div>
 </div>
 
@@ -937,106 +909,67 @@
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
         const evaluateBtn = document.querySelector('#Evaluate');
         const cancelReviewBtn = document.querySelector('.cancel-review');
-
-        // Hàm đóng popup đánh giá
-        function closeReviewPopup() {
-            if (reviewContainer) {
-                reviewContainer.classList.remove('popup-active');
-                reviewContainer.style.display = 'none';
-            }
-            if (popupBackdropReview) {
-                popupBackdropReview.classList.remove('active');
-            }
-        }
-
-        // Xử lý nhấn nút Đánh giá
-        if (evaluateBtn) {
-            evaluateBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                if (reviewContainer && popupBackdropReview) {
-                    // Đóng popup voucher nếu đang mở
-                    closeVoucherPopup();
-                    // Hiển thị popup đánh giá
-                    reviewContainer.style.display = 'block';
-                    reviewContainer.classList.add('popup-active');
-                    popupBackdropReview.classList.add('active');
-                }
-            });
-        }
-
-        // Đóng popup đánh giá khi nhấn nền mờ
-        if (popupBackdropReview) {
-            popupBackdropReview.addEventListener('click', function (e) {
-                if (e.target === popupBackdropReview) {
-                    closeReviewPopup();
-                }
-            });
-        }
-
-        // Đóng popup đánh giá khi nhấn nút Hủy
-        if (cancelReviewBtn) {
-            cancelReviewBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                closeReviewPopup();
-            });
-        }
-
-        // Ngăn click trong review-container lan ra ngoài
-        if (reviewContainer) {
-            reviewContainer.addEventListener('click', function (e) {
-                e.stopPropagation();
-            });
-        }
-
-        // Xử lý chọn sao đánh giá
-        const ratingStars = document.querySelectorAll('#rating-stars span');
-        const ratingLabel = document.querySelector('#rating-label');
-        if (ratingStars && ratingLabel) {
-            ratingStars.forEach(star => {
-                star.addEventListener('click', function () {
-                    const value = this.getAttribute('data-value');
-                    ratingStars.forEach(s => s.classList.remove('active'));
-                    for (let i = 0; i < value; i++) {
-                        ratingStars[i].classList.add('active');
-                    }
-                    ratingLabel.textContent = `${value} sao`;
-                });
-            });
-        }
-
-        // Xử lý tải ảnh
-        const imageUpload = document.querySelector('#image-upload');
-        const imagePreview = document.querySelector('#image-preview');
-        if (imageUpload && imagePreview) {
-            imageUpload.addEventListener('change', function () {
-                imagePreview.innerHTML = '';
-                const files = this.files;
-                for (let file of files) {
-                    if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = URL.createObjectURL(file);
-                        imagePreview.appendChild(img);
-                    }
-                }
-            });
-        }
-
-        // Xử lý nút Gửi nhận xét (chỉ là ví dụ, cần backend để lưu)
         const submitReviewBtn = document.querySelector('.submit-review');
-        if (submitReviewBtn) {
-            submitReviewBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                const displayName = document.querySelector('#display-name').value;
-                const comment = document.querySelector('#comment').value;
-                const rating = document.querySelectorAll('#rating-stars span.active').length;
-                if (!displayName || !comment || !rating) {
-                    alert('Vui lòng nhập đầy đủ thông tin: tên, nhận xét và số sao.');
-                    return;
-                }
-                alert('Cảm ơn bạn đã gửi nhận xét!');
-                closeReviewPopup();
-            });
+
+// Mở popup
+        evaluateBtn.addEventListener('click', () => {
+            reviewContainer.style.display = 'block';
+            popupBackdropReview.style.display = 'block';
+        });
+
+// Đóng popup
+        function closeReviewPopup() {
+            reviewContainer.style.display = 'none';
+            popupBackdropReview.style.display = 'none';
         }
+
+        cancelReviewBtn.addEventListener('click', closeReviewPopup);
+        popupBackdropReview.addEventListener('click', closeReviewPopup);
+
+// Chọn sao
+        const ratingStars = document.querySelectorAll('#rating-stars span');
+        // const ratingLabel = document.querySelector('#rating-label');
+
+        ratingStars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingStars.forEach(s => s.classList.remove('active'));
+                for (let i = 0; i < value; i++) {
+                    ratingStars[i].classList.add('active');
+                }
+                // ratingLabel.textContent = `${value} sao`;
+            });
+        });
+
+// Preview ảnh
+        document.querySelector('#image-upload').addEventListener('change', function () {
+            const preview = document.querySelector('#image-preview');
+            preview.innerHTML = '';
+            for (let file of this.files) {
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.style.width = "80px";
+                    img.style.marginRight = "5px";
+                    preview.appendChild(img);
+                }
+            }
+        });
+
+// Gửi đánh giá
+        submitReviewBtn.addEventListener('click', () => {
+            const name = document.querySelector('#display-name').value.trim();
+            const comment = document.querySelector('#comment').value.trim();
+            const rating = document.querySelectorAll('#rating-stars .active').length;
+
+            if (!name || !comment || rating === 0) {
+                alert("Vui lòng nhập đầy đủ thông tin!");
+                return;
+            }
+
+            alert("Gửi đánh giá thành công!");
+            closeReviewPopup();
+        });
     });
 </script>
 <script>
