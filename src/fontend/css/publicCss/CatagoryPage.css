@@ -179,6 +179,22 @@ nav[aria-label="Phân trang"] ul li a.active {
 }
 
 
+.detail-book{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+.detail-book p{
+    color: #333;
+}
+
+.sold {
+  margin-top: 3px;
+  font-weight: 200;
+  font-size: 14px;
+}
 
 
 /* phần dưới này của slider */
@@ -240,10 +256,6 @@ nav[aria-label="Phân trang"] ul li a.active {
   margin: 10px 0 5px;
 }
 
-.product-price {
-  color: #ff5722;
-  font-weight: bold;
-}
 
 /* --- NÚT MŨI TÊN SLIDER --- */
 .arrow {
@@ -276,4 +288,32 @@ nav[aria-label="Phân trang"] ul li a.active {
 
 .arrow.next {
   right: 5px;
+}
+
+.detail-book .product-price {
+  color: red;
+  font-weight: bold;  
+  font-size: 14px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.product-name {
+  font-size: 16px;
+  color: #333;
+  margin: 10px 0 5px;
+}
+
+.product-price {
+  color: #ff5722;
+  font-weight: bold;
+}
+
+.sold {
+  margin-top: 3px;
+  font-weight: 200;
+  font-size: 14px;
+  color: #333;
 }
