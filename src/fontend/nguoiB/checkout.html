@@ -152,8 +152,9 @@
             </section>
             <section class="payment">
                 <h2>Phương thức Thanh toán: *</h2>
-                <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
-                <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br>
+                <label><input type="radio" name="payment" checked value="cod"> Thanh toán khi nhận hàng
+                    (COD)</label><br>
+                <label><input type="radio" name="payment" value="bank"> Chuyển khoản ngân hàng (QR Code)</label><br>
                 <!--                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label>-->
             </section>
             <section class="promotion">
@@ -210,21 +211,27 @@
         </section>
     </div>
 </div>
+<div class="popupQR" style="display: none">
+    <img src="https://vaynhanhonline.com.vn/wp-content/uploads/2024/01/cach-tao-ma-qr-ngan-hang-bidv-5-e1704968301891.jpg"
+         alt="QR BIDV"
+         style="width: 100%; max-width: 400px; border-radius: 8px;">
+</div>
+
 
 <!-- Popup -->
 <!-- Popup -->
 
 <!-- Nút mở popup -->
-<a href="#" class="voucher-select">
-    <i class="fa-solid fa-chevron-right"></i>
-</a>
+<!--<a href="#" class="voucher-select">-->
+<!--    <i class="fa-solid fa-chevron-right"></i>-->
+<!--</a>-->
 
 <!-- BACKDROP LÀM MỜ -->
 <div class="voucher-backdrop"></div>
 
 <!-- POPUP VOUCHER -->
-<div class="voucher-container">
-    <div class="voucher-header-drag">
+<div class="voucher-container" id="voucherPopup" style="display: none;">
+    <div class="voucher-header-drag" id="voucherDrag">
         <button class="close-popup-btn">&times;</button>
         <h2 class="voucher-title-popup">Ví Voucher</h2>
     </div>
@@ -322,23 +329,7 @@
     </div>
 </div>
 
-
-<!--popup qr code-->
-<!-- Popup QR -->
-<!-- Radio -->
-<label>
-    <input type="radio" name="payment" id="radio-bank">
-    Chuyển khoản ngân hàng (QR Code)
-</label>
-
-<!-- Popup QR -->
-<div class="qr-popup" id="qrPopup">
-    <div class="qr-content">
-        <span class="close-btn" id="closeQR">&times;</span>
-        <h3>Mã QR Thanh Toán</h3>
-        <img src="https://img.vietqr.io/image/BIDV-15110001358386-compact2.png" alt="QR Code">
-    </div>
-</div>
+<!--Popup mã QR-->
 
 
 <footer class="footer">
@@ -414,7 +405,6 @@
 
 
 <script>
-
 
     document.addEventListener('DOMContentLoaded', function () {
         // Chọn các phần tử cần thiết
@@ -564,7 +554,32 @@
     });
 
 
+    // Lấy các phần tử
+    const openVoucherBtn = document.querySelector('.voucher-select');
+    const voucherPopup = document.querySelector('.voucher-container');
+    const closeVoucherBtn = document.querySelector('.close-popup-btn');
+
+    // Khi nhấn nút chọn voucher → mở popup
+    openVoucherBtn.addEventListener('click', function (e) {
+        e.preventDefault(); // chặn nhảy trang
+        voucherPopup.style.display = 'block';
+    });
+
+    // Khi nhấn nút X → đóng popup
+    closeVoucherBtn.addEventListener('click', function () {
+        voucherPopup.style.display = 'none';
+    });
+
+    // Nếu muốn click ra ngoài để đóng (tùy chọn)
+    voucherPopup.addEventListener('click', function (e) {
+        if (e.target === voucherPopup) {
+            voucherPopup.style.display = 'none';
+        }
+    });
+
 </script>
+
+
 </body>
 
 
