@@ -437,7 +437,7 @@
                 </p>
 
                 <div class="review-actions">
-                    <i class="fa-regular fa-heart"></i>
+                    <i id="heart" class="fa-regular fa-heart"></i>
                     <span class="action">Thích (9)</span>
                     <i class="fa-solid fa-reply"></i>
                     <span class="action"> Trả lời</span>
@@ -462,7 +462,7 @@
                 </p>
 
                 <div class="review-actions">
-                    <i class="fa-regular fa-heart"></i>
+                    <i id="heart" class="fa-regular fa-heart"></i>
                     <span class="action">Thích (9)</span>
                     <i class="fa-solid fa-reply"></i>
                     <span class="action"> Trả lời</span>
@@ -742,14 +742,65 @@
 
     <script>
 
-        // cái này cho trái tim đổi màu
+        // slider
+        document.querySelectorAll('.product-slider').forEach(slider => {
+            const track = slider.querySelector('.slider-track');
+            const prevBtn = slider.querySelector('.arrow.prev');
+            const nextBtn = slider.querySelector('.arrow.next');
+            const items = slider.querySelectorAll('.product-item');
+
+            let currentPosition = 0;
+
+            // Kích thước 1 item + khoảng cách giữa các item
+            const itemWidth = items[0].offsetWidth + 10; // 10 = gap
+            const totalItems = items.length;
+
+            // Tổng chiều rộng của toàn bộ track
+            const trackWidth = totalItems * itemWidth;
+
+            // Chiều rộng của vùng hiển thị slider
+            const containerWidth = slider.offsetWidth;
+
+            // Vị trí trượt tối đa (âm)
+            const maxPosition = containerWidth - trackWidth;
+
+            // Xử lý nút next
+            nextBtn.addEventListener('click', () => {
+
+                if (currentPosition > maxPosition) {
+                    currentPosition -= itemWidth;
+
+                    // Giới hạn không vượt quá maxPosition
+                    if (currentPosition < maxPosition) {
+                        currentPosition = maxPosition;
+                    }
+
+                    track.style.transform = `translateX(${currentPosition}px)`;
+                }
+            });
+
+            // Xử lý nút prev
+            prevBtn.addEventListener('click', () => {
+                if (currentPosition < 0) {
+                    currentPosition += itemWidth;
+
+                    // Giới hạn không vượt quá 0
+                    if (currentPosition > 0) {
+                        currentPosition = 0;
+                    }
+
+                    track.style.transform = `translateX(${currentPosition}px)`;
+                }
+            })
+        });
+
+
+          // cái này cho trái tim đổi màu
         const heart = document.getElementById("heart");
-        heart.addEventListener("click", () => {
+        heart.addEventListener('click', () => {
             heart.classList.toggle("fa-regular");
             heart.classList.toggle("fa-solid");
         });
-
-        
     </script>
 
 </body>
