@@ -112,29 +112,33 @@
                 <tr>
                     <td>CT01</td>
                     <td>Hành động</td>
-                    <td>
-                        <button class="delete-btn">Xóa</button>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="CT01"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn" data-id="CT01"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
                 <tr>
                     <td>CT02</td>
                     <td>Trinh thám</td>
-                    <td>
-                        <button class="delete-btn">Xóa</button>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="CT02"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn" data-id="CT02"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
                 <tr>
                     <td>CT03</td>
                     <td>Học đường</td>
-                    <td>
-                        <button class="delete-btn">Xóa</button>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="CT03"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn" data-id="CT03"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
                 <tr>
                     <td>CT04</td>
                     <td>Kinh dị</td>
-                    <td>
-                        <button class="delete-btn">Xóa</button>
+                    <td class="action-buttons">
+                        <button class="edit-btn" data-id="CT04"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="delete-btn" data-id="CT04"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -160,10 +164,39 @@
                 <input type="text" id="newCategoryId">
                 <label>Tên thể loại:</label>
                 <input type="text" id="newCategoryName">
+                <label>Mô tả:</label>
+                <textarea id="newCategoryDesc" rows="4"></textarea>
+                <label>Ngày tạo:</label>
+                <input type="date" id="newCategoryCreatedDate">
 
                 <div class="popup-actions">
                     <button class="save-btn">Lưu</button>
                     <button class="cancel-btn" onclick="closeAddPopup()">Hủy</button>
+                </div>
+            </div>
+        </div>
+
+<!--        Sửa-->
+        <!-- Popup SỬA thể loại -->
+        <div class="popup-overlay" id="editPopup">
+            <div class="popup-box">
+                <h3>Chỉnh sửa thể loại</h3>
+
+                <label>Mã thể loại:</label>
+                <input type="text" id="editCategoryId" readonly>
+
+                <label>Tên thể loại:</label>
+                <input type="text" id="editCategoryName">
+
+                <label>Mô tả:</label>
+                <textarea id="editCategoryDesc" rows="4"></textarea>
+
+                <label>Ngày tạo:</label>
+                <input type="date" id="editCategoryCreatedDate">
+
+                <div class="popup-actions">
+                    <button class="save-btn">Cập nhật</button>
+                    <button class="cancel-btn" onclick="closeEditPopup()">Hủy</button>
                 </div>
             </div>
         </div>
@@ -255,6 +288,45 @@
     });
 </script>
 
+<!--js popup sửa-->
+<script>
+    // Dữ liệu giả để demo (sau này bạn sẽ lấy từ database)
+    const categories = {
+        "CT01": { name: "Hành động", desc: "Thể loại truyện hành động, đánh nhau, phiêu lưu...", created: "2025-01-15" },
+        "CT02": { name: "Trinh thám", desc: "Truyện suy luận, phá án, bí ẩn...", created: "2025-01-20" },
+        "CT03": { name: "Học đường", desc: "Truyện tình cảm tuổi học trò, cuộc sống sinh viên...", created: "2025-02-01" },
+        "CT04": { name: "Kinh dị", desc: "Ma quỷ, kinh dị, rùng rợn...", created: "2025-02-10" }
+    };
+
+    // Mở popup SỬA
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const cat = categories[id];
+
+            document.getElementById('editCategoryId').value = id;
+            document.getElementById('editCategoryName').value = cat.name;
+            document.getElementById('editCategoryDesc').value = cat.desc;
+            document.getElementById('editCategoryCreatedDate').value = cat.created;
+
+            document.getElementById('editPopup').style.display = 'flex';
+        });
+    });
+
+    // Đóng popup SỬA
+    function closeEditPopup() {
+        document.getElementById('editPopup').style.display = 'none';
+    }
+
+    // Đóng tất cả popup khi click ngoài (tùy chọn - rất pro)
+    document.querySelectorAll('.popup-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
