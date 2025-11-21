@@ -120,34 +120,16 @@ body {
 }
 
 /* Nút hành động */
-.edit-btn{
+.edit-btn, .delete-btn {
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
+    background: transparent;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-    color: white;
-    background: #ff7070;
-}
-.delete-btn {
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
-    color: white;
-    background: #ff4c4c;
+    font-size: 16px;
+    margin-right: 6px;
 }
 
-.edit-btn:hover {
-    background-color: #ff5e5e;
-}
-
-.delete-btn:hover {
-    background-color: #ff8c8c;
-}
+.edit-btn:hover { color: #0056b3; }
+.delete-btn:hover { color: #ff4c4c; }
 
 /* Phân trang bên trong bảng */
 .pagination-row td {
@@ -272,3 +254,51 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
+/* Áp dụng chung cho cả input và textarea */
+.popup-box input,
+.popup-box textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1.6px solid #ff8e8e;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.popup-box input:focus,
+.popup-box textarea:focus {
+    border-color: #ff5c5c;
+}
+
+/* Riêng textarea nếu muốn bo góc mềm hơn một chút */
+.popup-box textarea {
+    border: 2px solid #ffb1b1;
+    resize: vertical;              /* Chỉ cho phép kéo dọc */
+}
+
+.popup-box textarea:focus {
+    border-color: #ff5c5c;
+}
+
+/* Đảm bảo label luôn nằm trên và căn chỉnh đẹp */
+.popup-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+/* Đảm bảo các popup đều dùng flex khi hiển thị */
+#addPopup, #editPopup, #deletePopup {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-buttons {
+    text-align: center;
+    white-space: nowrap;
+}

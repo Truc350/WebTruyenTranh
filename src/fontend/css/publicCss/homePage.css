@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
+
 }
 
 body {
@@ -16,11 +16,13 @@ body {
 .product-section {
   padding: 20px;
 }
+
 /* cái bìa chứa banner des + slider */
-.container-content{
+.container-content {
   margin: 20px 150px 0 150px;
 }
-.bannder-des{
+
+.bannder-des {
   display: flex;
 }
 
@@ -40,9 +42,9 @@ body {
 }
 
 .list-images .img {
-   width: 100%;
+  width: 100%;
   height: 450px;
-  object-fit: cover; 
+  object-fit: cover;
   flex-shrink: 0;
 }
 
@@ -107,9 +109,10 @@ body {
 
 /* phần này là danh mục */
 
-a{
+a {
   text-decoration: none;
 }
+
 .danh-muc-icon {
   margin-top: 10px;
   padding: 10px;
@@ -118,11 +121,12 @@ a{
   border-radius: 10px;
   width: 100%;
 }
-.danh-muc-icon a{
+
+.danh-muc-icon a {
   color: black;
 }
 
-.danh-muc-icon h2{
+.danh-muc-icon h2 {
   display: flex;
   justify-content: center;
   font-style: inherit;
@@ -140,7 +144,7 @@ a{
   overflow-x: auto;
   gap: 20px;
   padding-bottom: 10px;
-   align-items: center;
+  align-items: center;
   justify-content: center;
 }
 
@@ -164,6 +168,7 @@ a{
   color: #333;
   margin: 0;
 }
+
 .icon-item i {
   font-size: 24px;
 }
@@ -201,7 +206,7 @@ a{
   font-size: 16px;
   margin: 0;
   color: black;
-padding: 6px 30px;
+  padding: 6px 30px;
 }
 
 /* Danh sách sản phẩm */
@@ -212,16 +217,16 @@ padding: 6px 30px;
 }
 
 /* Mỗi sản phẩm */
-.list-product-sale > div {
+.list-product-sale>div {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 15px;
   background-color: #f9f9f9;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
 }
 
-.list-product-sale > div:hover {
+.list-product-sale>div:hover {
   transform: translateY(-5px);
 }
 
@@ -252,101 +257,108 @@ padding: 6px 30px;
 
 /* phần dưới này của slider */
 #slider {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding: 20px;
-    background-color: #f8f8f8;
-    border-radius: 10px;
-    margin-top: 40px;
-    background-color: rgb(199, 225, 253);
-    padding-bottom: 20px;
-    
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  margin-top: 40px;
+  background-color: rgb(199, 225, 253);
+  padding-bottom: 20px;
+
 }
 
 
-.suggest{
+.suggest {
   display: flex;
   justify-content: center;
   color: white;
 }
 
 .product-slider {
-    position: relative; 
-    overflow: hidden;  
-    width: 100%;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
 }
 
 .slider-track {
-    display: flex;
-    gap: 10px; 
-    transition: transform 0.5s ease;
-    padding: 5px 0;
+  display: flex;
+  gap: 10px;
+  transition: transform 0.5s ease;
+  padding: 5px 0;
 }
 
 
 .product-item {
-    background: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    text-align: center;
-    flex: 0 0 200px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  flex: 0 0 200px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-item img {
-    width: 100%;
-    height: 280px;
-    object-fit: cover;
-    border-radius: 8px;
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .product-name {
-    font-size: 16px;
-    color: #333;
-    margin: 10px 0 5px;
+  font-size: 16px;
+  color: #333;
+  margin: 10px 0 5px;
 }
 
 .product-price {
-    color: #ff5722;
-    font-weight: bold;
+  color: #ff5722;
+  font-weight: bold;
+}
+
+.sold {
+  margin-top: 3px;
+  font-weight: 200;
+  font-size: 14px;
+  color: #333;
 }
 
 /* --- NÚT MŨI TÊN SLIDER --- */
-.arrow {  
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 32px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.4);
-    width: 40px;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 2;
-    user-select: none;
-    transition: background 0.3s ease;
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  width: 40px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 2;
+  user-select: none;
+  transition: background 0.3s ease;
 }
 
 .arrow:hover {
-    background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.7);
 }
 
 /* --- VỊ TRÍ MŨI TÊN --- */
 .arrow.prev {
-    left: 5px; 
+  left: 5px;
 }
 
 .arrow.next {
-    right: 5px;
+  right: 5px;
 }
 
 .product-item:hover {
-    transform: scale(1.05);
-    transition: transform 0.1s ease;
+  transform: scale(1.05);
+  transition: transform 0.1s ease;
 }
 
 
@@ -358,13 +370,14 @@ padding: 6px 30px;
   padding: 30px 60px;
   background-color: #fff;
 }
-.content-top{
+
+.content-top {
   display: flex;
   margin-top: 50px;
 }
 
 /* Danh sách bên trái */
-.list-book{
+.list-book {
   flex: 1;
 }
 
@@ -391,7 +404,7 @@ padding: 6px 30px;
   height: 90px;
   object-fit: cover;
   border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .sach-item h3 {
@@ -405,6 +418,7 @@ padding: 6px 30px;
   color: #666;
   margin: 4px 0 0;
 }
+
 .sach-item:hover {
   background-color: #f9f9f9;
   border-radius: 6px;
@@ -418,33 +432,37 @@ padding: 6px 30px;
   padding-left: 20px;
   border-left: 1px solid #ccc
 }
-.item-top-1 img{
+
+.item-top-1 img {
   width: 170px;
   height: 230px;
 }
-.detail-top-1{
+
+.detail-top-1 {
   margin-left: 40px;
 }
 
-.sale-item{
+.sale-item {
   display: flex;
   padding-right: 20px;
   align-items: center;
   gap: 10px;
 }
-.sach-chi-tiet #sale-price{
-  font-weight: 600  ;
+
+.sach-chi-tiet #sale-price {
+  font-weight: 600;
   font-size: 20px
 }
-#sale-percent{
+
+#sale-percent {
   display: inline-block;
-  background-color: #fdf1e3; 
-  color: #ff6600;            
+  background-color: #fdf1e3;
+  color: #ff6600;
   font-weight: bold;
   font-size: 18px;
   padding: 6px 12px;
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
   position: relative;
   top: -5px;

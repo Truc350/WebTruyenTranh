@@ -21,8 +21,8 @@
         <ul>
             <li>
                 <a href="dashboard.html">
-                <img src="../../img/home.png" class="icon">
-                <span>Trang chủ</span>
+                    <img src="../../img/home.png" class="icon">
+                    <span>Trang chủ</span>
                 </a>
             </li>
             <li>
@@ -73,7 +73,7 @@
 
                 <div class="admin-profile">
                     <a href="profileAdmin.html">
-                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
                     </a>
                     <span class="admin-name">Admin</span>
                 </div>
@@ -91,18 +91,27 @@
         <div class="user-management">
 
             <!-- Search bar -->
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm người mua...">
-                <i class="fas fa-magnifying-glass"></i>
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm người mua...">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
+
+                <select id="levelFilter" class="level-filter">
+                    <option value="">Tất cả cấp độ</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                </select>
             </div>
+
 
             <table id="userTable" class="user-table">
                 <thead>
                 <tr>
                     <th>Tên khách hàng</th>
                     <th>Email</th>
-                    <th>SĐT</th>
-                    <th>Ngày tạo</th>
                     <th>Cấp thành viên</th>
                     <th>Tổng chi tiêu</th>
                     <th>Điểm xu</th>
@@ -110,49 +119,49 @@
                 </tr>
                 </thead>
 
-                <tbody id="userTableBody" >
+                <tbody id="userTableBody">
                 <tr>
                     <td>Nguyễn Văn A</td>
                     <td>van.a@example.com</td>
-                    <td>090-123-4567</td>
-                    <td>21/01/2024</td>
                     <td><span class="badge level-Normal">Normal</span></td>
                     <td>1.200.000đ</td>
                     <td>300 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Nguyễn Văn B</td>
                     <td>van.b@example.com</td>
-                    <td>090-123-4568</td>
-                    <td>12/03/2024</td>
                     <td><span class="badge level-Silver">Silver</span></td>
                     <td>3.500.000đ</td>
                     <td>950 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Trần Thị C</td>
                     <td>thi.c@example.com</td>
-                    <td>090-123-4569</td>
-                    <td>05/02/2024</td>
                     <td><span class="badge level-Gold">Gold</span></td>
                     <td>7.800.000đ</td>
                     <td>1600 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Lê Thị D</td>
                     <td>thi.d@example.com</td>
-                    <td>090-123-4570</td>
-                    <td>18/04/2024</td>
                     <td><span class="badge level-Platinum">Platinum</span></td>
                     <td>11.200.000đ</td>
                     <td>2200 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <!-- Phân trang -->
@@ -176,10 +185,10 @@
                 <h3>Nâng cấp thành viên</h3>
                 <p id="popupUserName"></p>
                 <select id="upgradeSelect">
-                    <option value="Normal">Thường</option>
-                    <option value="Silver">Bạc</option>
-                    <option value="Gold">Vàng</option>
-                    <option value="Platinum">Kim cương</option>
+                    <option value="Normal">Thường (0%)</option>
+                    <option value="Silver">Bạc (5%)</option>
+                    <option value="Gold">Vàng (10%)</option>
+                    <option value="Platinum">Kim cương (15%)</option>
                 </select>
 
                 <div class="popup-actions">
@@ -190,7 +199,7 @@
         </div>
     </div>
 
-    </div>
+</div>
 
 
 <script>
@@ -200,7 +209,7 @@
     let selectedRow = null;
 
     rows.forEach(row => {
-        row.querySelector(".upgrade-btn").onclick = function(){
+        row.querySelector(".upgrade-btn").onclick = function () {
             selectedRow = row;
             document.getElementById("popupUserName").innerText =
                 "Tên: " + row.cells[0].innerText;
@@ -209,20 +218,20 @@
     });
 
 
-    document.getElementById("upgradeCancel").onclick = function(){
+    document.getElementById("upgradeCancel").onclick = function () {
         popup.style.display = "none";
     };
 
 </script>
 
 <script>
-    (function(){
+    (function () {
         const ROWS_PER_PAGE = 5;
         const tbody = document.getElementById('userTableBody');
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
         const pageButtons = document.querySelectorAll('.user-page');
 
-        function showPage(page){
+        function showPage(page) {
             const start = (page - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
 
