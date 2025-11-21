@@ -14,7 +14,7 @@ body {
     border-radius: 8px; /* Giảm từ 10px */
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1); /* Giảm bóng */
     overflow: hidden;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .profile-header {
@@ -82,7 +82,7 @@ body {
 .menu ul li a {
     text-decoration: none;
     color: #333;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -107,7 +107,7 @@ body {
     color: #fff;
     padding: 2px 6px; /* Giảm từ 3px 7px */
     border-radius: 8px; /* Giảm từ 10px */
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 14px; /* Giảm từ 14px */
 }
 
 main {
@@ -144,7 +144,7 @@ main {
     max-width: 700px; /* Giảm từ 800px */
     min-height: 400px; /* Giảm từ 500px */
     box-sizing: border-box;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .profile-form-container.hidden,
@@ -170,7 +170,7 @@ main {
 }
 
 .change-password-container .form-group label {
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     color: #555;
     font-weight: 500;
     margin-bottom: 6px; /* Giảm từ 8px */
@@ -182,7 +182,7 @@ main {
     padding: 10px; /* Giảm từ 12px */
     border: 1px solid #d0d0d0;
     border-radius: 5px; /* Giảm từ 6px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     color: #333;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -203,7 +203,7 @@ main {
 }
 
 .change-password-container .security-note {
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 14px; /* Giảm từ 14px */
     color: #777;
     margin-top: 12px; /* Giảm từ 15px */
     line-height: 1.6;
@@ -220,7 +220,7 @@ main {
     border: none;
     border-radius: 5px; /* Giảm từ 6px */
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     font-weight: 500;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: block;
@@ -243,14 +243,14 @@ main {
 .form-group label {
     display: block;
     margin-bottom: 4px; /* Giảm từ 5px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .form-group input {
     width: 100%;
     padding: 6px; /* Giảm từ 8px */
     margin-bottom: 4px; /* Giảm từ 5px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     border: 1px solid #ddd;
     border-radius: 5px;
 }
@@ -276,7 +276,7 @@ main {
     border: none;
     border-radius: 5px; /* Giảm từ 6px */
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     font-weight: 500;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: block;
@@ -306,7 +306,7 @@ main {
     display: flex;
     align-items: center;
     margin: 0;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .gender-options input[type="radio"] {
@@ -321,13 +321,13 @@ main {
 
 .birthday label {
     margin-right: 8px; /* Giảm từ 10px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .birthday input[type="number"] {
     width: 60px; /* Giảm từ 70px */
     padding: 4px; /* Giảm từ 5px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .address {
@@ -340,7 +340,7 @@ main {
     display: block;
     margin-bottom: 4px; /* Giảm từ 5px */
     color: #666;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .address input,
@@ -351,7 +351,7 @@ main {
     border-radius: 3px; /* Giảm từ 4px */
     box-sizing: border-box;
     background-color: #fff;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     appearance: none;
 }
 
@@ -387,7 +387,7 @@ main {
     color: #666;
     text-align: left;
     min-width: auto;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .address-group select {
@@ -397,7 +397,7 @@ main {
     border-radius: 3px; /* Giảm từ 4px */
     box-sizing: border-box;
     background-color: #fff;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     appearance: none;
     cursor: pointer;
     width: 100%;
@@ -423,17 +423,18 @@ main {
 }
 
 .change-password-container .security-note {
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 14px; /* Giảm từ 14px */
     color: #666;
     margin-top: 8px; /* Giảm từ 10px */
     line-height: 1.5;
 }
+
 .change-password-container .form-group input {
-    width: 250px;        /* chiều rộng nhỏ hơn */
-    height: 30px;        /* chiều cao nhỏ hơn */
-    padding: 5px 8px;    /* khoảng cách bên trong input */
-    font-size: 14px;     /* chữ nhỏ hơn */
-    border-radius: 4px;  /* bo góc nếu muốn */
+    width: 250px; /* chiều rộng nhỏ hơn */
+    height: 30px; /* chiều cao nhỏ hơn */
+    padding: 5px 8px; /* khoảng cách bên trong input */
+    font-size: 16px; /* chữ nhỏ hơn */
+    border-radius: 4px; /* bo góc nếu muốn */
     border: 1px solid #ccc; /* viền input */
 }
 
@@ -447,7 +448,7 @@ main {
     max-width: 700px; /* Giảm từ 800px */
     min-height: 600px; /* Giảm từ 800px */
     box-sizing: border-box;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 .order-history-container.hidden {
@@ -461,7 +462,7 @@ main {
 }
 
 .order-history-container h2 {
-    font-size: 22px; /* Giảm từ 26px */
+    font-size: 24px; /* Giảm từ 26px */
     color: #333;
     margin-bottom: 15px; /* Giảm từ 20px */
     font-weight: 600;
@@ -527,7 +528,7 @@ main {
     border-radius: 15px; /* Giảm từ 20px */
     background-color: #f9f9f9;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 15px; /* Giảm từ 16px */
     transition: background-color 0.3s, color 0.3s;
     white-space: nowrap;
 }
@@ -599,7 +600,7 @@ main {
 .order-status {
     padding: 3px 10px; /* Giảm từ 4px 12px */
     border-radius: 15px; /* Giảm từ 20px */
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 15px; /* Giảm từ 14px */
     font-weight: bold;
 }
 
@@ -634,9 +635,9 @@ main {
 }
 
 .product-img {
-    width: 60px; /* Giảm từ 80px */
-    height: 60px;
-    border-radius: 5px; /* Giảm từ 6px */
+    width: 70px; /* Giảm từ 80px */
+    height: 70px;
+    border-radius: 6px; /* Giảm từ 6px */
     object-fit: cover;
 }
 
@@ -647,14 +648,14 @@ main {
 
 .product-info h3 {
     margin: 0 0 4px 0; /* Giảm từ 5px */
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     color: #333;
 }
 
 .price-details {
     display: flex;
     gap: 4px; /* Giảm từ 5px */
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 14px; /* Giảm từ 14px */
 }
 
 .original-price {
@@ -904,7 +905,7 @@ main {
 }
 
 .voucher-title {
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     font-weight: bold;
     color: #333;
     margin-bottom: 3px; /* Giảm từ 4px */
@@ -1371,9 +1372,70 @@ main {
     cursor: pointer;
 }
 
+.notification-container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 20px;
+    background: #fff;
+    min-height: 400px;
+}
+
+.notification-container .tabs {
+    display: flex;
+    gap: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #666666;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+.notification-container .tab {
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: 500;
+}
+/*tab dang chon*/
+.notification-container.tab.active {
+    color: #ee4d2d;
+    border-bottom: 2px solid #ee4d2d;
+}
+/*hover*/
+.tab:hover {
+    color: #dc3545;
+}
+.notification-container.line {
+    height: 1px;
+    background-color:#eee;
+    margin: 20px 0;
+    border-radius: 2px;
+}
+/*noi dung con empty*/
+.notification-container.empty-message {
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 16px;
+    color: #999;
+    padding: 60px 20px;
+}
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); } /* Giảm từ -10px */
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    /* Giảm từ -10px */
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @media (max-width: 600px) {
@@ -1408,6 +1470,7 @@ main {
         gap: 6px; /* Giảm từ 8px */
     }
 }
+
 
 @media (max-width: 600px) {
     .order-filters {
