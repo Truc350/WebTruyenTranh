@@ -26,11 +26,30 @@ body {
     margin-bottom: 25px;
 }
 
+
+.search-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* khoảng cách giữa search và dropdown */
+    min-width: 500px;
+    margin-bottom: 40px;
+}
+
+/* Dropdown filter */
+.level-filter {
+    padding: 10px 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #fff;
+    color: #333;
+    transition: 0.3s;
+}
+
 /* Search bar */
 .search-box {
     position: relative;
     width: 500px;
-    margin-bottom: 30px;
 }
 
 .search-box input {
