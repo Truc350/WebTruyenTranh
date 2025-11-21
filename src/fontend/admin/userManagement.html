@@ -21,8 +21,8 @@
         <ul>
             <li>
                 <a href="dashboard.html">
-                <img src="../../img/home.png" class="icon">
-                <span>Trang chủ</span>
+                    <img src="../../img/home.png" class="icon">
+                    <span>Trang chủ</span>
                 </a>
             </li>
             <li>
@@ -73,7 +73,7 @@
 
                 <div class="admin-profile">
                     <a href="profileAdmin.html">
-                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
                     </a>
                     <span class="admin-name">Admin</span>
                 </div>
@@ -91,10 +91,21 @@
         <div class="user-management">
 
             <!-- Search bar -->
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm người mua...">
-                <i class="fas fa-magnifying-glass"></i>
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Tìm kiếm người mua...">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
+
+                <select id="levelFilter" class="level-filter">
+                    <option value="">Tất cả cấp độ</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                </select>
             </div>
+
 
             <table id="userTable" class="user-table">
                 <thead>
@@ -110,7 +121,7 @@
                 </tr>
                 </thead>
 
-                <tbody id="userTableBody" >
+                <tbody id="userTableBody">
                 <tr>
                     <td>Nguyễn Văn A</td>
                     <td>van.a@example.com</td>
@@ -119,7 +130,9 @@
                     <td><span class="badge level-Normal">Normal</span></td>
                     <td>1.200.000đ</td>
                     <td>300 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
@@ -130,7 +143,9 @@
                     <td><span class="badge level-Silver">Silver</span></td>
                     <td>3.500.000đ</td>
                     <td>950 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
@@ -141,7 +156,9 @@
                     <td><span class="badge level-Gold">Gold</span></td>
                     <td>7.800.000đ</td>
                     <td>1600 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <tr>
@@ -152,7 +169,9 @@
                     <td><span class="badge level-Platinum">Platinum</span></td>
                     <td>11.200.000đ</td>
                     <td>2200 xu</td>
-                    <td><button class="upgrade-btn">Nâng cấp</button></td>
+                    <td>
+                        <button class="upgrade-btn">Nâng cấp</button>
+                    </td>
                 </tr>
 
                 <!-- Phân trang -->
@@ -190,7 +209,7 @@
         </div>
     </div>
 
-    </div>
+</div>
 
 
 <script>
@@ -200,7 +219,7 @@
     let selectedRow = null;
 
     rows.forEach(row => {
-        row.querySelector(".upgrade-btn").onclick = function(){
+        row.querySelector(".upgrade-btn").onclick = function () {
             selectedRow = row;
             document.getElementById("popupUserName").innerText =
                 "Tên: " + row.cells[0].innerText;
@@ -209,20 +228,20 @@
     });
 
 
-    document.getElementById("upgradeCancel").onclick = function(){
+    document.getElementById("upgradeCancel").onclick = function () {
         popup.style.display = "none";
     };
 
 </script>
 
 <script>
-    (function(){
+    (function () {
         const ROWS_PER_PAGE = 5;
         const tbody = document.getElementById('userTableBody');
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
         const pageButtons = document.querySelectorAll('.user-page');
 
-        function showPage(page){
+        function showPage(page) {
             const start = (page - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
 

@@ -196,8 +196,8 @@ body {
     margin-right: 6px;
 }
 
-.edit-btn:hover { color: #1d4ed8; }
-.delete-btn:hover { color: #dc2626; }
+.edit-btn:hover { color: #0056b3; }
+.delete-btn:hover { color: #ff4c4c; }
 
 /* ==== PAGINATION ==== */
 .pagination-row td {
