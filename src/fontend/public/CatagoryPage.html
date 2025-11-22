@@ -14,89 +14,100 @@
 
 <body>
   <header class="navbar">
-    <div class="logo">
-      <img id="logo" src="../../img/logo.png" alt="Comic Store">
-      <span>Comic Store</span>
-    </div>
-    <nav class="menu">
-      <a href="#">Trang chủ</a>
-
-      <div class="dropdown">
-        <a href="#">Thể loại &#9662;</a>
-        <div class="dropdown-content">
-          <a href="CatagoryPage.html">Hành động</a>
-          <a href="#">Trinh thám</a>
-          <a href="#">Hài hước</a>
+        <a href="homePage.html">
+            <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
         </div>
-      </div>
+        </a>
+        <nav class="menu">
+            <a href="homePage.html">Trang chủ</a>
 
-      <a href="AbouUS.html">Liên hệ</a>
-    </nav>
-    <div class="search-bar">
-      <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
-      <button class="search-button">
-        <i class="fas fa-magnifying-glass"></i>
-      </button>
-    </div>
-    <div class="contain-left">
-      <div class="actions">
-        <div class="notify-wrapper">
-          <a href="#" class="bell-icon">
-            <i class="fa-solid fa-bell"></i>
-            <span id="span-bell">2</span>
-          </a>
-          <!-- Khung thông báo -->
-          <div class="notification-panel">
-            <div class="notification-header">
-              <div class="inform-num">
-                <i class="fa-solid fa-bell"></i>
-                <span>Thông báo</span>
-                <span class="notification-badge">(1)</span>
-              </div>
-              <div class="inform-all">
-                <a href="#">Xem tất cả</a>
-              </div>
+            <div class="dropdown">
+                <a href="#">Thể loại &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="CatagoryPage.html">Hành động</a>
+                    <a href="#">Phiêu lưu</a>
+                    <a href="#">Lãng mạn </a>
+                    <a href="#">Học đường</a>
+                    <a href="#">Kinh dị</a>
+                    <a href="#">Hài hước</a>
+                    <a href="#">Giả tưởng</a>
+                    <a href="#">Trinh thám</a>
+                    <!-- <a href="#">Cổ đại</a>
+                    <a href="#">Đời thường</a> -->
+                </div>
             </div>
-            <div class="notification-content inform1">
-              <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
-              Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
-              hấp
-              dẫn.
-            </div>
-            <div class="notification-content inform2">
-              <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
-              Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
-              dẫn.
-            </div>
-          </div>
+
+            <a href="AbouUS.html">Liên hệ</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+            <button class="search-button">
+                <i class="fas fa-magnifying-glass"></i>
+            </button>
         </div>
-      </div>
+        <div class="contain-left">
+            
+            <div class="actions">
+                <div class="notify-wrapper">
+                    <a href="#" class="bell-icon">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="span-bell">2</span>
+                    </a>
+                    <!-- Khung thông báo -->
+                    <div class="notification-panel">
+                        <div class="notification-header">
+                            <div class="inform-num">
+                                <i class="fa-solid fa-bell"></i>
+                                <span>Thông báo</span>
+                                <span class="notification-badge">(1)</span>
+                            </div>
+                            <div class="inform-all">
+                                <a href="#">Xem tất cả</a>
+                            </div>
+                        </div>
+                        <div class="notification-content inform1">
+                            <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                            hấp
+                            dẫn.
+                        </div>
+                        <div class="notification-content inform2">
+                            <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                            Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                            dẫn.
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="actions">
+                <a href="../nguoiB/chat.html">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+            </div>
 
-      <div class="actions">
-        <a href="../nguoiB/profile.html">
-          <i class="fa-solid fa-user" id="user"></i>
-        </a>
-      </div>
+            <div class="actions">
+                <a href="../nguoiB/cart.html">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            </div>
 
-      <div class="login-btn">
-        <a href="login.html" class="login-btn">Log out</a>
-      </div>
+            <div class="actions user-nav">
+                <i class="fa-solid fa-user" id="user"></i>
+                <div class="dropdown-user">
+                    <a href="../nguoiB/profile.html">Trang chủ</a>
+                    <a href="login.html">Đăng xuất</a>
+                </div>
+            </div>
 
-      <div class="actions">
-        <a href="../nguoiB/chat.html">
-          <i class="fa-solid fa-comment"></i>
-        </a>
-      </div>
+            <!-- <div class="login-btn">
+                 <a href="login.html" class="login-btn">Log out</a>
+            </div> -->
+        </div>
 
-    </div>
-
-
-
-
-
-
-  </header>
+    </header>
 
   <div class="container-content">
 
@@ -189,15 +200,17 @@
 
             <!-- Sản phẩm 1 -->
             <article>
-              <div>
+              <a href="detail.html">
+                <div>
                 <img
-                  src="https://images2.thanhnien.vn/528068263637045248/2023/2/17/ant-man-3-4x5-16766045112201851823482.jpeg"
+                  src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
                   alt="">
                 <div class="detail-book">
-                  <p>Thế giới Lượng Từ</p>
-                  <p class="product-price">27.500₫</p>
+                  <p>Thám tử lừng danh Conan Tập 100</p>
+                  <p class="product-price">18.000₫</p>
                   <p class="sold">Đã bán: <strong>196</strong></p>
                 </div>
+              </a>
             </article>
 
             <!-- Sản phẩm 2 -->

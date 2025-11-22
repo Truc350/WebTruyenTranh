@@ -1,13 +1,14 @@
 .container-register {
   display: none;
-    background-color: white;
-    position: relative;
-    top: -700px;
-    left: 900px;
-    width: 400px;
-    height: 500px;
-    padding: 30px 35px;
+  background-color: white;
+  position: absolute;
+  top: 200px;
+  left: 800px;
+  width: 400px;
+  height: 500px;
+  padding: 30px 35px;
 }
+
 .glass-card {
   width: 100%;
 }
@@ -36,6 +37,7 @@
   flex-direction: column;
   gap: 17px;
 }
+
 .name-register {
   display: flex;
   align-items: center;
@@ -98,6 +100,7 @@
   flex: 1;
   font-size: 14px;
 }
+
 /* xnmk */
 .cf-pw-container {
   display: flex;
@@ -118,10 +121,12 @@
   flex: 1;
   font-size: 14px;
 }
+
 /* check box */
-.input-container{
-    margin-top: 10px;
+.input-container {
+  margin-top: 10px;
 }
+
 /* Nút đăng ký */
 .btn-sign-up button {
   width: 100%;
@@ -176,6 +181,7 @@
 .btn-form-footer .fa-facebook {
   background-color: #1877f2;
 }
+
 .btn-form-footer .fa-facebook:hover {
   background-color: #145dbf;
   transform: scale(1.1);
@@ -186,6 +192,7 @@
 .btn-form-footer .fa-twitter {
   background-color: #1da1f2;
 }
+
 .btn-form-footer .fa-twitter:hover {
   background-color: #0d8ddb;
   transform: scale(1.1);
