@@ -127,12 +127,12 @@
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>
                 <input type="tel" id="phone" name="phone" value="" placeholder="Nhập số điện thoại" required>
-                <button type="button" class="edit-btn">Chỉnh sửa</button>
+<!--                <button type="button" class="edit-btn">Chỉnh sửa</button>-->
             </div>
             <div class="form-group">
                 <label for="email">Email: </label>
                 <input type="email" id="email" name="email" value="" placeholder="Nhập email" required>
-                <button type="button" class="edit-btn">Chỉnh sửa</button>
+<!--                <button type="button" class="edit-btn">Chỉnh sửa</button>-->
             </div>
             <div class="form-group">
                 <div class="genders">
@@ -1045,6 +1045,7 @@
         const notificationContainer = document.querySelector('.notification-container');
 
 
+
         // Fallback tĩnh cho huyện
         const fallbackDistricts = {
             '1': [{code: '001', name: 'Ba Đình'}, {code: '002', name: 'Hoàn Kiếm'}, {code: '003', name: 'Cầu Giấy'}],
@@ -1157,54 +1158,7 @@
             });
         });
 
-        // XỬ LÝ CHUÔNG THÔNG BÁO TRÊN HEADER
-        const bellIcon = document.querySelector('.bell-icon');
-        const notificationPanel = document.querySelector('.notification-panel');
-        // click chuong -> mo dong panel
-        bellIcon.addEventListener('click', function (e) {
-            e.preventDefault();
-            const isVisible = notification.style.display === 'block';
-            notificationPanel.style.display = isVisible ? 'none' : 'block';
-        });
-        // click ra ngoai --> dong panel
-        document.addEventListener('click', function (e) {
-            if (!bellIcon.contains(e.target) && !notificationPanel.contains(e.target)) {
-                notificationPanel.style.display = 'none';
-            }
-        });
-        // XỬ LÝ TAB TRONG TRANG THÔNG BÁO
-        const tabs = document.querySelectorAll('.notification-container .tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function () {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                // Ở đây bạn có thể filter thông báo theo loại (Tất cả, Đơn hàng, Sự kiện...)
-                // hiện tại chỉ đổi class active thôi
-            });
-        });
-        // Hàm tải thông báo (giả lập, sau này thay bằng fetch API)
-        function loadNotifications() {
-            // Nếu không có thông báo nào thì hiện message
-            const hasNotifications = document.querySelectorAll('.notification-container .notification-item').length > 0;
-            const emptyMsg = document.querySelector('.notification-container .empty-message');
-            if (emptyMsg) {
-                emptyMsg.style.display = hasNotifications ? 'none' : 'block';
-            }
-        }
-        // Khi mở trang Thông Báo lần đầu → đánh dấu đã đọc (tuỳ chọn)
-        // fetch('/api/notifications/mark-as-read', {method: 'POST'})
-        // Cập nhật badge số thông báo chưa đọc trên chuông (nếu cần realtime thì dùng setInterval hoặc websocket)
-        function updateNotificationBadge(count) {
-            const badge = document.getElementById('span-bell');
-            const headerBadge = document.querySelector('.notification-badge');
-            if (badge) badge.textContent = count > 99 ? '99+' : count;
-            if (headerBadge) headerBadge.textContent = `(${count})`;
-            if (count === 0) {
-                if (badge) badge.style.display = 'none';
-            } else {
-                if (badge) badge.style.display = 'block';
-            }
-        }
+
 
 
         // Đặt active mặc định cho "Thông tin tài khoản"
@@ -1294,5 +1248,31 @@
     });
 </script>
 
+
+<script>
+    // CHUÔNG THÔNG BÁO TRÊN HEADER - HOẠT ĐỘNG NHƯ CŨ, SIÊU MƯỢT
+    const bellIcon = document.querySelector('.bell-icon');
+    const notificationPanel = document.querySelector('.notification-panel');
+
+    if (bellIcon && notificationPanel) {
+        bellIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            notificationPanel.style.display = (notificationPanel.style.display === 'block') ? 'none' : 'block';
+        });
+
+        // Click ngoài thì đóng
+        document.addEventListener('click', function (e) {
+            if (!bellIcon.contains(e.target) && !notificationPanel.contains(e.target)) {
+                notificationPanel.style.display = 'none';
+            }
+        });
+
+        // Click vào panel không bị đóng
+        notificationPanel.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    }
+</script>
 </body>
 </html>

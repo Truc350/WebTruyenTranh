@@ -1373,19 +1373,19 @@ main {
 }
 
 .notification-container {
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
-    background: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    padding: 20px;
-    background: #fff;
-    min-height: 400px;
+    padding: 20px !important;
+    background: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
+    width: 100% !important;
+    max-width: 700px !important;
+    min-height: 520px !important;   /* giống y hệt mấy cái kia */
+    box-sizing: border-box !important;
+}
+/* Nếu em vẫn muốn nó cao hơn một chút thì để 550px cũng được */
+.notification-container {
+    min-height: 550px !important;
 }
 
 .notification-container .tabs {
@@ -1418,12 +1418,22 @@ main {
     border-radius: 2px;
 }
 /*noi dung con empty*/
-.notification-container.empty-message {
-    text-align: center;
-    margin-bottom: 50px;
-    font-size: 16px;
+/* =========== CĂN GIỮA CHỮ "KHÔNG CÓ THÔNG BÁO" =========== */
+.notification-container .empty-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
     color: #999;
-    padding: 60px 20px;
+    text-align: center;
+    width: 100%;
+    pointer-events: none; /* để không chắn click nếu sau này thêm nút */
+}
+
+/* Đảm bảo container cha có position relative để absolute con hoạt động */
+.notification-container {
+    position: relative !important;
 }
 
 @keyframes fadeIn {
