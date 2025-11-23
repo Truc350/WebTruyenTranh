@@ -783,6 +783,12 @@ body {
     color: #28a745;
 }
 
+/*.status.red{*/
+/*    background: #ff6a6a;*/
+/*    color: #ff4c4c ;*/
+
+/*}*/
+
 /* Nút */
 .btn-detail, .btn-refund {
     padding: 6px 10px;
@@ -957,6 +963,164 @@ body {
     /*box-shadow: 0 0 4px rgba(255, 94, 94, 0.4); !* hiệu ứng sáng nhẹ (tùy chọn) *!*/
 }
 
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-refund {
+    background: #16a34a;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-reject {
+    background: #ff4c4c;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.status.red { color: #ff4c4c; }
+.rejected-note { color: #ff4c4c; font-size: 14px; }
+
+/* Ẩn nút khi không phải "Đang xem xét" */
+tr:not([data-status="pending"]) .btn-refund,
+tr:not([data-status="pending"]) .btn-reject {
+    display: none;
+}
+
+/* ==================== POPUP TỪ CHỐI HOÀN TIỀN==================== */
+.popup-desk-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.25s ease;
+}
+
+.popup-desk-box {
+    background: white;
+    width: 90%;
+    max-width: 480px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+    animation: popUp 0.35s ease;
+}
+
+/* Header đỏ nổi bật */
+.popup-desk-box h3 {
+    margin: 0;
+    padding: 20px 24px 16px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 16px 16px 0 0;
+}
+
+/* Nội dung */
+.popup-desk-content {
+    padding: 20px 24px 24px;
+}
+
+.popup-desk-content p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.popup-desk-content p strong {
+    color: #1f2937;
+}
+
+/* Textarea siêu đẹp */
+.popup-desk-content label {
+    display: block;
+    margin: 16px 0 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+}
+
+.popup-desk-content label span {
+    color: #ff4c4c;
+}
+
+#rejectReason {
+    width: 100%;
+    height: 110px;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14.5px;
+    resize: vertical;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+#rejectReason:focus {
+    outline: none;
+    border-color: black;
+}
+
+/* Nút hành động */
+.popup-desk-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.popup-desk-actions button {
+    flex: 1;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.popup-desk-actions .btn-cancel {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.popup-desk-actions .btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.popup-desk-actions .btn-save {
+    background: #ff6a6a;
+    color: white;
+}
+
+.popup-desk-actions .btn-save:hover {
+    background: #ff4c4c;
+}
+
+/* Animation mượt mà */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popUp {
+    from { transform: scale(0.9) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
 
 
 
