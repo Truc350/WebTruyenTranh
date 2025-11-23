@@ -195,7 +195,9 @@ nav[aria-label="Phân trang"] ul li a.active {
   font-weight: 200;
   font-size: 14px;
 }
-
+#items-listing p{
+  text-align: center;
+}
 
 /* phần dưới này của slider */
 #slider {

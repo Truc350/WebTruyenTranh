@@ -15,6 +15,9 @@
 }
 
 /* Ảnh lớn */
+/* #img-container{
+  display: none;
+} */
 .img-container img#img {
   width: 400px;
   height: auto;
@@ -22,6 +25,16 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 16px;
 }
+.img-container img.img-small-popup{
+  width: 400px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 68px;
+}
+
+
+
 
 /* Nhóm ảnh nhỏ */
 .warehouse-img {
@@ -47,6 +60,8 @@
 
 /* Nút hành động */
 .actions-btn {
+  position: relative;
+  bottom: 5px;
   display: flex;
   justify-content: center;
   gap: 12px;

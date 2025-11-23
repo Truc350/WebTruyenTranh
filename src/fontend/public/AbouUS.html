@@ -14,20 +14,29 @@
 <body>
 
 
-  <header class="navbar">
-        <div class="logo">
+ <header class="navbar">
+        <a href="homePage.html">
+            <div class="logo">
             <img id="logo" src="../../img/logo.png" alt="Comic Store">
             <span>Comic Store</span>
         </div>
+        </a>
         <nav class="menu">
-            <a href="#">Trang chủ</a>
+            <a href="homePage.html">Trang chủ</a>
 
             <div class="dropdown">
                 <a href="#">Thể loại &#9662;</a>
                 <div class="dropdown-content">
                     <a href="CatagoryPage.html">Hành động</a>
-                    <a href="#">Trinh thám</a>
+                    <a href="#">Phiêu lưu</a>
+                    <a href="#">Lãng mạn </a>
+                    <a href="#">Học đường</a>
+                    <a href="#">Kinh dị</a>
                     <a href="#">Hài hước</a>
+                    <a href="#">Giả tưởng</a>
+                    <a href="#">Trinh thám</a>
+                    <!-- <a href="#">Cổ đại</a>
+                    <a href="#">Đời thường</a> -->
                 </div>
             </div>
 
@@ -40,6 +49,7 @@
             </button>
         </div>
         <div class="contain-left">
+            
             <div class="actions">
                 <div class="notify-wrapper">
                     <a href="#" class="bell-icon">
@@ -73,29 +83,30 @@
                 </div>
             </div>
 
-
-            <div class="actions">
-                <a href="../nguoiB/profile.html">
-                <i class="fa-solid fa-user" id ="user"></i>
-                </a>
-            </div>
-
-            <div class="login-btn">
-                <a href="login.html" class="login-btn">Log out</a>
-            </div>
-
             <div class="actions">
                 <a href="../nguoiB/chat.html">
-                <i class="fa-solid fa-comment"></i>
+                    <i class="fa-solid fa-comment"></i>
                 </a>
             </div>
 
+            <div class="actions">
+                <a href="../nguoiB/cart.html">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+            </div>
+
+            <div class="actions user-nav">
+                <i class="fa-solid fa-user" id="user"></i>
+                <div class="dropdown-user">
+                    <a href="../nguoiB/profile.html">Trang chủ</a>
+                    <a href="login.html">Đăng xuất</a>
+                </div>
+            </div>
+
+            <!-- <div class="login-btn">
+                 <a href="login.html" class="login-btn">Log out</a>
+            </div> -->
         </div>
-
-
-
-
-
 
     </header>
 
