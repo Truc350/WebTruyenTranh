@@ -598,11 +598,12 @@ th, td {
 }
 
 .delete-confirm-btn {
-    background-color: #e74c3c;
+    background-color: #ff4c4c;
     color: #fff;
     border: none;
     padding: 8px 14px;
     border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
 }
 
@@ -785,8 +786,7 @@ th, td {
 
 .form-buttons .cancel-btn {
     padding: 8px 20px;
-    background: #ff4c4c ;
-    color: #fff;
+    background: #e0e0e0;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -795,7 +795,7 @@ th, td {
 }
 
 .form-buttons .cancel-btn:hover {
-    background: #ff6a6a;
+    background: #c7c7c7;
 }
 
 .view-review-btn {
