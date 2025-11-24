@@ -115,7 +115,7 @@
                     <th>Cấp thành viên</th>
                     <th>Tổng chi tiêu</th>
                     <th>Điểm xu</th>
-                    <th></th>
+                    <th>Thao tác</th>
                 </tr>
                 </thead>
 
@@ -126,8 +126,20 @@
                     <td><span class="badge level-Normal">Normal</span></td>
                     <td>1.200.000đ</td>
                     <td>300 xu</td>
-                    <td>
-                        <button class="upgrade-btn">Nâng cấp</button>
+                    <td class="action-cell">
+                        <div class="kebab-menu">
+                            <button class="kebab-btn">⋮</button>
+                            <div class="menu-dropdown">
+                                <a href="#" class="menu-item view-detail"
+                                   data-name="Nguyễn Văn A"
+                                   data-email="van.a@example.com"
+                                   data-level="Normal"
+                                   data-spent="1.200.000đ"
+                                   data-points="300 xu">Xem chi tiết</a>
+                                <a href="#" class="menu-item upgrade-user" data-name="Nguyễn Văn A">Nâng cấp</a>
+                                <a href="#" class="menu-item permanent-lock" data-name="Nguyễn Văn A">Khóa vĩnh viễn</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -137,8 +149,20 @@
                     <td><span class="badge level-Silver">Silver</span></td>
                     <td>3.500.000đ</td>
                     <td>950 xu</td>
-                    <td>
-                        <button class="upgrade-btn">Nâng cấp</button>
+                    <td class="action-cell">
+                        <div class="kebab-menu">
+                            <button class="kebab-btn">⋮</button>
+                            <div class="menu-dropdown">
+                                <a href="#" class="menu-item view-detail"
+                                   data-name="Nguyễn Văn B"
+                                   data-email="van.b@example.com"
+                                   data-level="Silver"
+                                   data-spent="3.500.000đ"
+                                   data-points="950 xu">Xem chi tiết</a>
+                                <a href="#" class="menu-item upgrade-user" data-name="Nguyễn Văn B">Nâng cấp</a>
+                                <a href="#" class="menu-item permanent-lock" data-name="Nguyễn Văn B">Khóa vĩnh viễn</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -148,8 +172,20 @@
                     <td><span class="badge level-Gold">Gold</span></td>
                     <td>7.800.000đ</td>
                     <td>1600 xu</td>
-                    <td>
-                        <button class="upgrade-btn">Nâng cấp</button>
+                    <td class="action-cell">
+                        <div class="kebab-menu">
+                            <button class="kebab-btn">⋮</button>
+                            <div class="menu-dropdown">
+                                <a href="#" class="menu-item view-detail"
+                                   data-name="Trần Thị C"
+                                   data-email="thi.c@example.com"
+                                   data-level="Gold"
+                                   data-spent="7.800.000đ"
+                                   data-points="1600 xu">Xem chi tiết</a>
+                                <a href="#" class="menu-item upgrade-user" data-name="Trần Thị C">Nâng cấp</a>
+                                <a href="#" class="menu-item permanent-lock" data-name="Trần Thị C">Khóa vĩnh viễn</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -159,8 +195,20 @@
                     <td><span class="badge level-Platinum">Platinum</span></td>
                     <td>11.200.000đ</td>
                     <td>2200 xu</td>
-                    <td>
-                        <button class="upgrade-btn">Nâng cấp</button>
+                    <td class="action-cell">
+                        <div class="kebab-menu">
+                            <button class="kebab-btn">⋮</button>
+                            <div class="menu-dropdown">
+                                <a href="#" class="menu-item view-detail"
+                                   data-name="Lê Thị D"
+                                   data-email="thi.d@example.com"
+                                   data-level="Platinum"
+                                   data-spent="11.200.000đ"
+                                   data-points="2200 xu">Xem chi tiết</a>
+                                <a href="#" class="menu-item upgrade-user" data-name="Lê Thị D">Nâng cấp</a>
+                                <a href="#" class="menu-item permanent-lock" data-name="Lê Thị D">Khóa vĩnh viễn</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
 
@@ -197,6 +245,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- Popup Xem chi tiết -->
+        <div id="detailPopup" class="popup-overlay">
+            <div class="popup-box" style="width: 500px; text-align:left;">
+                <h3>Thông tin khách hàng</h3>
+                <div style="margin:20px 0; line-height:1.9; font-size:15px;">
+                    <p><strong>Họ tên:</strong> <span id="detailName"></span></p>
+                    <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+                    <p><strong>Cấp bậc:</strong> <span id="detailLevel"></span></p>
+                    <p><strong>Tổng chi tiêu:</strong> <span id="detailSpent"></span></p>
+                    <p><strong>Điểm xu:</strong> <span id="detailPoints"></span></p>
+                    <hr style="margin:15px 0">
+                    <p><small>Ngày đăng ký: 15/03/2024 • Lần hoạt động cuối: 2 giờ trước</small></p>
+                </div>
+                <div class="popup-actions">
+                    <button class="btn-secondary" onclick="document.getElementById('detailPopup').style.display='none'">Đóng</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="lockPopup" class="popup-overlay">
+            <div class="popup-box">
+                <h3>Xác nhận khóa tài khoản</h3>
+                <div class="popup-message" id="lockMessage">
+                    KHÓA VĨNH VIỄN tài khoản "Nguyễn Văn A"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!
+                </div>
+                <div class="popup-actions">
+                    <button class="btn-cancel" onclick="document.getElementById('lockPopup').style.display='none'">Hủy</button>
+                    <button class="btn-danger" id="confirmLock">Khóa vĩnh viễn</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -222,6 +303,50 @@
         popup.style.display = "none";
     };
 
+</script>
+
+<script>
+    // Xem chi tiết
+    document.querySelectorAll('.view-detail').forEach(item => {
+        item.addEventListener('click', e => {
+            e.preventDefault();
+            document.getElementById('detailName').textContent = item.dataset.name;
+            document.getElementById('detailEmail').textContent = item.dataset.email;
+            document.getElementById('detailLevel').textContent = item.dataset.level;
+            document.getElementById('detailSpent').textContent = item.dataset.spent;
+            document.getElementById('detailPoints').textContent = item.dataset.points;
+            document.getElementById('detailPopup').style.display = 'flex';
+        });
+    });
+
+    // Nâng cấp
+    document.querySelectorAll('.upgrade-user').forEach(item => {
+        item.addEventListener('click', e => {
+            e.preventDefault();
+            selectedRow = item.closest('tr');
+            document.getElementById("popupUserName").innerText = "Tên: " + item.dataset.name;
+            document.getElementById("upgradePopup").style.display = "flex";
+        });
+    });
+
+    // Khóa vĩnh viễn - hiện popup
+    let lockTargetName = '';
+    document.querySelectorAll('.permanent-lock').forEach(item => {
+        item.addEventListener('click', e => {
+            e.preventDefault();
+            lockTargetName = item.dataset.name;
+            document.getElementById('lockMessage').textContent =
+                `KHÓA VĨNH VIỄN tài khoản "${lockTargetName}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`;
+            document.getElementById('lockPopup').style.display = 'flex';
+        });
+    });
+
+    // Xác nhận khóa
+    document.getElementById('confirmLock').addEventListener('click', () => {
+        alert(`ĐÃ KHÓA VĨNH VIỄN tài khoản "${lockTargetName}"`);
+        document.getElementById('lockPopup').style.display = 'none';
+        // Sau này thay alert bằng gọi API thật: fetch('/api/lock-user', {method:'POST', body: JSON.stringify({name: lockTargetName})})
+    });
 </script>
 
 <script>
