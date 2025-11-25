@@ -105,7 +105,11 @@ body {
 .btn.next {
   right: 10px;
 }
-
+#img-banner3 {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
 
 /* phần này là danh mục */
 
@@ -253,7 +257,6 @@ a {
   font-weight: bold;
 }
 .more-btn{
-  margin-top: 20px;
   text-align: center;
 }
 .more-btn button{
@@ -303,7 +306,9 @@ a button:active {
   overflow: hidden;
   width: 100%;
 }
-
+#product-slider-popup{
+  display: none;
+}
 .slider-track {
   display: flex;
   gap: 10px;
@@ -507,3 +512,4 @@ a button:active {
   font-style: italic;
   color: #555;
 }
+
