@@ -1390,32 +1390,50 @@ main {
 
 .notification-container .tabs {
     display: flex;
-    gap: 25px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #666666;
-    border-bottom: 1px solid #eee;
+    gap: 10px;
+    padding: 8px 20px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
     margin-bottom: 20px;
 }
+.notification-container .tabs::-webkit-scrollbar{
+    display: none;
+}
 .notification-container .tab {
-    padding: 12px 20px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #666;
     cursor: pointer;
-    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: fit-content;
 }
 /*tab dang chon*/
-.notification-container.tab.active {
-    color: #ee4d2d;
-    border-bottom: 2px solid #ee4d2d;
+/* KHI TAB ĐƯỢC CLICK → CHỮ CHUYỂN THÀNH MÀU ĐỎ NGAY LẬP TỨC */
+.notification-container .tab.active {
+    color: #ee4d2d !important;
+}
+.notification-container .tab:hover:not(.active) {
+    background: #f5f5f5;
+    color: #ff4c4c;
+
 }
 /*hover*/
 .tab:hover {
     color: #dc3545;
 }
 .notification-container.line {
-    height: 1px;
-    background-color:#eee;
-    margin: 20px 0;
-    border-radius: 2px;
+    /*height: 2px;*/
+    /*background: #ee4d2d;*/
+    /*width: 0;*/
+    /*transition: all 0.4s ease;*/
+    /*margin-top: -2px;*/
+    /*position: relative;*/
+    display: none;
 }
 /*noi dung con empty*/
 /* =========== CĂN GIỮA CHỮ "KHÔNG CÓ THÔNG BÁO" =========== */
