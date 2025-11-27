@@ -257,6 +257,7 @@ a {
   font-weight: bold;
 }
 .more-btn{
+  margin-top: 10px;
   text-align: center;
 }
 .more-btn button{

@@ -633,12 +633,12 @@
         voucherPopup.style.display = 'none';
     });
 
-    // Nếu muốn click ra ngoài để đóng (tùy chọn)
-    voucherPopup.addEventListener('click', function (e) {
-        if (e.target === voucherPopup) {
-            voucherPopup.style.display = 'none';
-        }
-    });
+    // // Nếu muốn click ra ngoài để đóng (tùy chọn)
+    // voucherPopup.addEventListener('click', function (e) {
+    //     if (e.target === voucherPopup) {
+    //         voucherPopup.style.display = 'none';
+    //     }
+    // });
 
     //popup qr
     const btnCheckout = document.getElementById('checkout-qr');
@@ -666,7 +666,7 @@
     //voucher-select
 
 
-    const btnCheckout = document.getElementById('checkout-qr');           // Nút "ĐẶT HÀNG"
+    const btnCheckoutqr = document.getElementById('checkout-qr');           // Nút "ĐẶT HÀNG"
     const momoPopup   = document.querySelector('.container-qr-popup');   // Popup QR
     const closeBtn    = document.getElementById('momoClose');             // Nút X
 
@@ -679,7 +679,7 @@
     }
 
     // Khi nhấn nút "ĐẶT HÀNG"
-    btnCheckout.addEventListener('click', function (e) {
+    btnCheckoutqr.addEventListener('click', function (e) {
         if (isMomoSelected()) {
             e.preventDefault();           // Ngăn submit form (nếu có)
             momoPopup.style.display = 'block';  // Hiện popup QR
