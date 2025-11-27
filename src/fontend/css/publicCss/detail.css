@@ -9,7 +9,7 @@
   position: sticky;
   top: 0;
   background-color: white;
-  padding: 70px;
+  padding: 40px 60px;
   border-radius: 10px;
   height: 950px;
 }
@@ -30,18 +30,15 @@
   height: auto;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 68px;
+  margin-bottom: 17px;
 }
-
-
-
 
 /* Nhóm ảnh nhỏ */
 .warehouse-img {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 16px;
+  /* margin-top: 16px; */
   flex-wrap: wrap;
 }
 
@@ -60,8 +57,9 @@
 
 /* Nút hành động */
 .actions-btn {
-  position: relative;
-  bottom: 5px;
+  position: absolute;
+  bottom: 105px;
+  left: 110px;
   display: flex;
   justify-content: center;
   gap: 12px;
@@ -126,6 +124,7 @@
 /*chỗ dưới này là cái container body*/
 .all-content {
   padding-top: 20px;
+  margin-right: 100px;
   background-color: white;
   border-radius: 10px;
 }
@@ -395,4 +394,30 @@ a{
   font-weight: 200;
   font-size: 14px;
   color: #333;
+}
+
+
+/* nút của slider */
+.more-btn{
+  /* margin-top: 10px; */
+  text-align: center;
+}
+.more-btn button{
+  background-color: #ff4d4d;
+  color: white;
+  border: none;         
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer; 
+  transition: all 0.3s ease;
+}
+
+.container-slider button:hover {
+  background-color: #e60000;
+  transform: scale(1.05);
+}
+.container-slider button:active {
+  transform: scale(0.95);
 }

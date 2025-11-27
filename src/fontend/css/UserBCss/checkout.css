@@ -366,138 +366,95 @@ main {
 }
 
 /* Định dạng voucher-container như một popup */
-.voucher-container {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    border-radius: 12px;
-    font-family: Arial, sans-serif;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+/* ===== BACKDROP (nền mờ) ===== */
+.voucher-backdrop {
+display: none;
+position: fixed;
+inset: 0; /* top:0; right:0; bottom:0; left:0; */
+background: rgba(0, 0, 0, 0.5);
+z-index: 999;
 }
 
-.voucher-container.popup-active {
-    display: block;
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+/* ===== POPUP VOUCHER ===== */
+.voucher-popup {
+display: none;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: #ffffff;
+width: 90%;
+max-width: 600px;
+max-height: 80vh;
+padding: 20px;
+overflow-y: auto;
+border-radius: 12px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+z-index: 1000;
+font-family: Arial, sans-serif;
 }
 
-/* Định dạng tiêu đề */
-.voucher-container h2 {
-    font-size: 22px; /* Giảm từ 24px */
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 20px;
-    text-align: center;
+/* ===== HEADER ===== */
+.voucher-header-drag {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 15px;
 }
 
-/* Định dạng lưới voucher */
+.voucher-popup h2 {
+font-size: 22px;
+font-weight: 600;
+color: #333;
+margin: 0;
+text-align: center;
+flex: 1;
+}
+
+.close-popup-btn {
+background: none;
+border: none;
+font-size: 26px;
+cursor: pointer;
+color: #555;
+}
+
+.close-popup-btn:hover {
+color: #000;
+}
+
+/* ===== VOUCHERS GRID ===== */
 .vouchers-grid {
-    display: grid;
-    gap: 15px;
+display: grid;
+gap: 15px;
 }
 
-/* Định dạng thẻ voucher */
+/* ===== VOUCHER CARD ===== */
 .voucher-card {
-    background: #f0f8f0; /* Nền xanh nhạt */
-    border: 1px solid #28a745;
-    border-radius: 8px;
-    padding: 15px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+background: #f0f8f0;
+border: 1px solid #28a745;
+border-radius: 8px;
+padding: 15px;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .voucher-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+transform: translateY(-2px);
+box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Định dạng header của voucher */
-.voucher-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.voucher-type {
-    font-size: 13px; /* Giảm từ 14px */
-    font-weight: 500;
-    color: #555;
-}
-
-.voucher-status.unused {
-    font-size: 11px; /* Giảm từ 12px */
-    font-weight: 600;
-    color: #28a745;
-    background: #e6f4ea;
-    padding: 4px 8px;
-    border-radius: 4px;
-}
-
-/* Định dạng body của voucher */
-.voucher-body {
-    margin-bottom: 10px;
-}
-
-.voucher-title {
-    font-size: 16px; /* Giảm từ 18px */
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.voucher-desc {
-    font-size: 13px; /* Giảm từ 14px */
-    color: #666;
-    line-height: 1.5;
-    margin-bottom: 10px;
-}
-
-.voucher-code {
-    font-size: 14px; /* Giảm từ 16px */
-    font-weight: 700;
-    color: #007bff;
-    background: #e7f3ff;
-    padding: 5px 10px;
-    border-radius: 4px;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-
-.voucher-detail-btn {
-    background: none;
-    border: none;
-    color: #007bff;
-    font-size: 13px; /* Giảm từ 14px */
-    font-weight: 500;
-    cursor: pointer;
-    padding: 0;
-    transition: color 0.2s ease;
-}
-
-.voucher-detail-btn:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-/* Định dạng footer của voucher */
+/* Footer voucher - chỉ còn ngày hết hạn và nút copy */
 .voucher-footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;   /* Giữ khoảng cách đều */
     align-items: center;
+    padding: 10px 15px 12px;
+    background: #f8f9fa;
+    border-top: 1px dashed #ddd;
 }
 
 .voucher-expiry {
-    font-size: 13px; /* Giảm từ 14px */
+    font-size: 13px;
     color: #888;
 }
 
@@ -505,76 +462,22 @@ main {
     background: #007bff;
     color: #fff;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 13px; /* Giảm từ 14px */
+    padding: 8px 16px;         /* Tăng padding ngang cho dễ bấm */
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .copy-code-btn:hover {
     background: #0056b3;
+    transform: translateY(-1px);
 }
 
-.copy-code-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+.copy-code-btn:active {
+    transform: translateY(0);
 }
-
-/* Nút đóng popup */
-.voucher-container .close-popup-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 22px; /* Giảm từ 24px */
-    color: #666;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.voucher-container .close-popup-btn:hover {
-    color: #333;
-}
-/* Popup nền mờ */
-.qr-popup {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* Khung popup */
-.qr-content {
-    background: #fff;
-    padding: 20px;
-    width: 320px;
-    border-radius: 12px;
-    text-align: center;
-    position: relative;
-}
-
-.qr-content img {
-    width: 100%;
-    border-radius: 8px;
-}
-
-/* Nút đóng */
-.close-btn {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-
-
 /*popup qr code*/
 /* Popup nền mờ */
 .qr-popup {
@@ -711,4 +614,115 @@ main {
         width: 100%;
         border-radius: 5px;
     }
+}
+
+/* popup qr thanh toán */
+/* .popup-qr {
+    width: 100%;
+    height: 142vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.popup-qr {
+    display: none;
+}
+.popup-qr h3 {
+    margin-top: 300px;
+    color: rgb(216, 159, 159);
+    font-size: 16px;
+}
+
+.popup-qr img {
+    margin-top: 10px;
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+} */
+
+
+.container-qr-popup{
+    --momo-primary: #a50064;
+    --momo-bg: #fff;
+}
+
+.momo-modal {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(2px);
+}
+
+/* Hộp thoại */
+.momo-dialog {
+    position: fixed;
+    inset: 0;
+    top: 200px;
+    left: 600px;
+    width: 400px;
+    height: 450px;
+    background: var(--momo-bg);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+}
+
+/* Nút đóng */
+.momo-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.momo-close:hover { color: var(--momo-primary); }
+
+/* Tiêu đề */
+.momo-title {
+    margin: 0 0 16px;
+    font-size: 18px;
+    text-align: center;
+    color: var(--momo-primary);
+}
+
+/* Nội dung */
+.momo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+/* QR */
+.momo-qr {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+    border: 1px solid var(--momo-border);
+    border-radius: 12px;
+    background: #fff;
+    padding: 6px;
+}
+
+/* Thông tin */
+.momo-info {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--momo-text);
+    background: #fafafa;
+    border: 1px solid var(--momo-border);
+    border-radius: 10px;
+    padding: 12px;
+    width: 100%;
 }

@@ -166,9 +166,10 @@ nav[aria-label="Phân trang"] ul li a {
 }
 
 nav[aria-label="Phân trang"] ul li a:hover {
-  background: #0077ff;
-  border-color: #0077ff;
-  color: #fff;
+  /* background: #0077ff; */
+  /* border-color: #0077ff; */
+  /* color: #fff; */
+    transform: scale(0.95);
 }
 
 /* Trang hiện tại */
@@ -318,4 +319,28 @@ a{
   font-weight: 200;
   font-size: 14px;
   color: #333;
+}
+/* nút của slider */
+.more-btn{
+  /* margin-top: 10px; */
+  text-align: center;
+}
+.more-btn button{
+  background-color: #ff4d4d;
+  color: white;
+  border: none;         
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer; 
+  transition: all 0.3s ease;
+}
+
+.container-slider button:hover {
+  background-color: #e60000;
+  transform: scale(1.05);
+}
+.container-slider button:active {
+  transform: scale(0.95);
 }
