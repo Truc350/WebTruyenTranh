@@ -278,7 +278,7 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Tìm kiếm mã đơn hoặc tên khách hàng...">
+                    <input type="text" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -383,7 +383,7 @@
             <div class="order-controls delivering-controls">
                 <div class="search-box">
                     <input type="text" id="deliverSearch" class="search-input"
-                           placeholder="Tìm kiếm mã đơn hoặc tên khách hàng...">
+                           placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -443,7 +443,7 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls delivered-controls">
                 <div class="search-box">
-                    <input type="text" id="deliveredSearch" class="search-input" placeholder="Tìm kiếm mã đơn / tên khách / tháng...">
+                    <input type="text" id="deliveredSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -532,7 +532,7 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls return-controls">
                 <div class="search-box">
-                    <input type="text" id="returnSearch" class="search-input" placeholder="Tìm mã đơn / tên khách...">
+                    <input type="text" id="returnSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -547,14 +547,14 @@
                         <th>Lý do hoàn trả</th>
                         <th>Tình trạng xử lý</th>
                         <th>Chi tiết</th>
-                        <th>Xác nhận hoàn tiền</th>
+                        <th></th>
                     </tr>
                     </thead>
 
                     <tbody id="returnTableBody">
 
                     <!-- Ví dụ đơn đang xem xét -->
-                    <tr>
+                    <tr data-status="pending">
                         <td>DH00210</td>
                         <td>Phạm Ngọc Mai</td>
                         <td>Bìa truyện bị rách</td>
@@ -570,8 +570,9 @@
                         </td>
 
                         <!-- Nút Xác nhận hoàn tiền -->
-                        <td>
-                            <button class="btn-refund">Xác nhận hoàn tiền</button>
+                        <td class="action-buttons">
+                            <button class="btn-refund" onclick="confirmRefund(this)">Xác nhận hoàn tiền</button>
+                            <button class="btn-reject" onclick="openRejectPopup(this)">Từ chối</button>
                         </td>
                     </tr>
 
@@ -583,6 +584,25 @@
 
                         <td>
                             <span class="status green">Đã hoàn tiền</span>
+                        </td>
+
+                        <td>
+                            <button class="btn-detail">Xem</button>
+                        </td>
+
+                        <td>
+                            <!-- Nút không xuất hiện -->
+                        </td>
+                    </tr>
+
+                    <!-- Ví dụ đơn từ chối -->
+                    <tr>
+                        <td>DH00212</td>
+                        <td>Nguyễn Văn Lý</td>
+                        <td>Không thích nữa</td>
+
+                        <td>
+                            <span class="status red">Đã từ chối: Không đủ điều kiện</span>
                         </td>
 
                         <td>
@@ -607,6 +627,27 @@
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- POPUP TỪ CHỐI HOÀN TIỀN -->
+        <!-- POPUP TỪ CHỐI HOÀN TIỀN -->
+        <div class="popup-desk-overlay" id="rejectPopup">
+            <div class="popup-desk-box">
+                <h3>Từ chối yêu cầu hoàn tiền</h3>
+
+                <div class="popup-desk-content">
+                    <p><strong>Mã đơn:</strong> <span id="rejectOrderId"></span></p>
+                    <p><strong>Khách hàng:</strong> <span id="rejectCustomer"></span></p>
+
+                    <label>Lý do từ chối <span>*</span></label>
+                    <textarea id="rejectReason" placeholder="Nhập lý do chi tiết để gửi thông báo cho khách hàng..."></textarea>
+                </div>
+
+                <div class="popup-desk-actions">
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('rejectPopup').style.display='none'">Hủy</button>
+                    <button type="button" class="btn-save" onclick="confirmReject()">Xác nhận từ chối</button>
+                </div>
             </div>
         </div>
 
@@ -636,6 +677,16 @@
                     <span class="label">Minh chứng:</span>
                     <span class="value"><a href="#" class="proof-link">Xem ảnh / video</a></span>
                 </div>
+
+                <div class="popup-row">
+                    <span class="label">Số tiền hoàn:</span>
+                    <span class="value">24.500đ</span>
+                </div>
+
+                <div class="popup-row">
+                    <span class="label">Ngày yêu cầu hoàn trả:</span>
+                    <span class="value">7/11/2025</span>
+                </div>
             </div>
 
             <div class="popup-footer">
@@ -649,7 +700,7 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls cancelled-controls">
                 <div class="search-box">
-                    <input type="text" id="cancelledSearch" class="search-input" placeholder="Tìm kiếm mã đơn / tên khách / lý do...">
+                    <input type="text" id="cancelledSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -992,6 +1043,47 @@
             }
         }
     });
+
+    let currentRejectRow = null;
+
+    window.openRejectPopup = function(btn) {
+        currentRejectRow = btn.closest('tr');
+        const orderId = currentRejectRow.cells[0].textContent;
+        const customer = currentRejectRow.cells[1].textContent;
+
+        document.getElementById('rejectOrderId').textContent = orderId;
+        document.getElementById('rejectCustomer').textContent = customer;
+        document.getElementById('rejectReason').value = '';
+
+        document.getElementById('rejectPopup').style.display = 'flex';
+    };
+
+    window.confirmReject = function() {
+        const reason = document.getElementById('rejectReason').value.trim();
+        if (!reason) {
+            alert('Vui lòng nhập lý do từ chối!');
+            return;
+        }
+
+        if (currentRejectRow) {
+            currentRejectRow.dataset.status = 'rejected';
+            currentRejectRow.cells[3].innerHTML = '<span class="status red">Đã từ chối</span>';
+            currentRejectRow.cells[5].innerHTML = `<span class="rejected-note">Đã từ chối: ${reason}</span>`;
+        }
+
+        document.getElementById('rejectPopup').style.display = 'none';
+        alert('Đã từ chối yêu cầu hoàn tiền!');
+    };
+
+    window.confirmRefund = function(btn) {
+        if (!confirm('Xác nhận hoàn tiền cho đơn hàng này?')) return;
+
+        const row = btn.closest('tr');
+        row.dataset.status = 'refunded';
+        row.cells[3].innerHTML = '<span class="status green">Đã hoàn tiền</span>';
+        row.cells[5].innerHTML = '-';
+        alert('Đã hoàn tiền thành công!');
+    };
 
 
     /* --- PHÂN TRANG --- */

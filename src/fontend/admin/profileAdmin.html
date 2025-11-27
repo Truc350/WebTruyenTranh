@@ -88,41 +88,11 @@
 
         <!-- profile page (simple) -->
         <div class="profile-page">
-            <!-- LEFT SIDE -->
-            <div class="profile-left">
-                <div class="avatar-box">
-                    <div class="avatar-wrapper">
-                        <img id="avatar-img" src="../../img/admin.png" alt="Avatar">
-                        <div class="avatar-overlay">
-                            <i class="fa-solid fa-camera"></i>
-                        </div>
-                        <input type="file" id="avatar-upload" accept="image/*" hidden>
-                    </div>
-                    <h3>Nguyễn Ngọc Linh</h3>
-                </div>
-            </div>
 
             <!-- RIGHT SIDE -->
             <div class="profile-right">
-                <!-- Thông tin cơ bản -->
-                <h4>Thông tin cơ bản</h4>
-                <form id="profileForm">
-                    <label>Họ tên
-                        <input name="fullname" value="Nguyễn Ngọc Linh">
-                    </label>
-                    <label>Email
-                        <input type="email" name="email" value="linhnguyen123@gmail.com">
-                    </label>
-                    <label>Số điện thoại
-                        <input name="phone" value="0123456789">
-                    </label>
-                    <label>Tên cửa hàng
-                        <input name="storeName" value="Comic Store">
-                    </label>
-                    <div class="actions">
-                        <button type="submit" class="btn">Lưu thay đổi</button>
-                    </div>
-                </form>
+                <h4>Thông tin đăng nhập</h4>
+                <p><strong>Email đăng nhập:</strong> admin@comicstore.com</p>
 
                 <hr>
 
@@ -195,38 +165,7 @@
                     </form>
                 </div>
                 </div>
-
                 <hr>
-
-                <!-- Lịch sử hoạt động -->
-                <h4>Lịch sử hoạt động gần đây</h4>
-                <div class="activity-log">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Thời gian</th>
-                            <th>Hoạt động</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>12/11/2025 10:32</td>
-                            <td>Đăng nhập vào hệ thống</td>
-                        </tr>
-                        <tr>
-                            <td>11/11/2025 15:20</td>
-                            <td>Chỉnh sửa khuyến mãi “Sale 11.11”</td>
-                        </tr>
-                        <tr>
-                            <td>10/11/2025 09:10</td>
-                            <td>Duyệt đơn hàng #DH0052</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <hr>
-
                 <!-- Đổi mật khẩu -->
                 <h4>Đổi mật khẩu</h4>
                 <form id="changePassForm">
@@ -255,7 +194,6 @@
 </div>
 
 <script>
-    // === TOÀN BỘ JS NGÂN HÀNG: POPUP + TOGGLE EYE + QR (KHÔNG LƯU) ===
     document.addEventListener("DOMContentLoaded", function () {
         // === ELEMENTS ===
         const bankView = document.getElementById('bankView');
@@ -348,27 +286,6 @@
             const input = document.getElementById('qrUpload');
             if (input) input.click();
         }
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const wrapper = document.querySelector(".avatar-wrapper");
-        const upload = document.querySelector("#avatar-upload");
-        const img = document.querySelector("#avatar-img");
-
-        // Khi click vào avatar => mở hộp chọn ảnh
-        wrapper.addEventListener("click", () => upload.click());
-
-        // Khi người dùng chọn ảnh mới => hiển thị preview
-        upload.addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = () => (img.src = reader.result);
-                reader.readAsDataURL(file);
-            }
-        });
     });
 </script>
 

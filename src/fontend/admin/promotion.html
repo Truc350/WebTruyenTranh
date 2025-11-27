@@ -113,7 +113,9 @@
                 <tr>
                     <th>Mã giảm giá</th>
                     <th>Giá trị</th>
-                    <th>Số lượng còn lại</th>
+                    <th>Loại</th>
+                    <th>Đã dùng/Tổng</th>
+                    <th>Đơn tối thiểu</th>
                     <th>Hạn sử dụng</th>
                     <th>Trạng thái</th>
                     <th></th>
@@ -124,11 +126,13 @@
                 <tr>
                     <td>NEWUSER10</td>
                     <td>10%</td>
+                    <td>Phần trăm</td>
                     <td>54/100</td>
+                    <td>0đ</td>
                     <td>01/02/2026</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
-                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></i></button>
+                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
@@ -136,7 +140,9 @@
                 <tr>
                     <td>SIEUSALE15</td>
                     <td>15%</td>
+                    <td>Phần trăm</td>
                     <td>0/50</td>
+                    <td>50.000đ</td>
                     <td>08/10/2025</td>
                     <td><span class="status-out">Hết lượt</span></td>
                     <td>
@@ -148,7 +154,9 @@
                 <tr>
                     <td>FREESHIP20</td>
                     <td>-20.000đ</td>
+                    <td>Cố định</td>
                     <td>120/200</td>
+                    <td>199.000đ</td>
                     <td>31/12/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
@@ -160,7 +168,9 @@
                 <tr>
                     <td>BLACKFRIDAY50</td>
                     <td>50%</td>
-                    <td>5/300</td>
+                    <td>Phần trăm</td>
+                    <td>80/300</td>
+                    <td>500.000đ</td>
                     <td>27/11/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
@@ -171,8 +181,10 @@
 
                 <tr>
                     <td>WELCOME5</td>
-                    <td>5%</td>
-                    <td>0/150</td>
+                    <td>15.000đ</td>
+                    <td>Cố định</td>
+                    <td>70/150</td>
+                    <td>80.000đ</td>
                     <td>14/06/2025</td>
                     <td><span class="status-out">Hết lượt</span></td>
                     <td>
@@ -184,7 +196,9 @@
                 <tr>
                     <td>VIPMEMBER30</td>
                     <td>30%</td>
+                    <td>Phần trăm</td>
                     <td>40/80</td>
+                    <td>100.000đ</td>
                     <td>19/09/2025</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
@@ -196,7 +210,9 @@
                 <tr>
                     <td>TET2026</td>
                     <td>-50.000đ</td>
+                    <td>Cố định</td>
                     <td>200/500</td>
+                    <td>199.000đ</td>
                     <td>10/02/2026</td>
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
@@ -222,67 +238,143 @@
         </div>
     </div>
 </div>
-
+<!-- POPUP THÊM MÃ  -->
 <div class="popup-overlay" id="addPopup">
     <div class="popup-box">
-        <h3>Thêm mã giảm giá</h3>
+        <h3>Thêm mã khuyến mãi</h3>
 
-        <label>Tên mã:</label>
-        <input type="text" id="addName">
+        <div class="popup-grid">
+            <!-- Dòng 1: Mã + Loại -->
+            <div>
+                <label>Tên mã</label>
+                <input type="text" id="addCode" placeholder="NEWUSER10" maxlength="20">
+            </div>
+            <div>
+                <label>Loại</label>
+                <select id="addType" required>
+                    <option value="">Chọn loại</option>
+                    <option value="percent">Phần trăm (%)</option>
+                    <option value="fixed">Số tiền (₫)</option>
+                </select>
+            </div>
 
-        <label>Giá trị giảm (% hoặc số tiền):</label>
-        <input type="text" id="addValue">
+            <!-- Dòng 2: Giá trị + Đơn tối thiểu -->
+            <div>
+                <label>Giá trị giảm</label>
+                <input type="number" id="addValue" min="0" placeholder="10 hoặc 20000">
+            </div>
+            <div>
+                <label>Đơn tối thiểu</label>
+                <input type="number" id="addMinOrder" min="0" placeholder="0" value="0">
+            </div>
 
-        <label>Áp dụng cho:</label>
-        <select id="addApply">
-            <option>Toàn sản phẩm</option>
-            <option>Thể loại</option>
-        </select>
+            <!-- Dòng 3: Số lượng + Áp dụng cho -->
+            <div>
+                <label>Số lượng tối đa</label>
+                <input type="number" id="addMaxUsage" min="1" value="100">
+            </div>
+            <div>
+                <label>Áp dụng</label>
+                <select id="addApply">
+                    <option value="all">Toàn bộ sản phẩm</option>
+                    <option value="category">Một thể loại</option>
+                </select>
+            </div>
 
-        <div id="addCategoryBox" class="hide">
-            <label>Chọn thể loại:</label>
-            <select>
-                <option>Trinh thám</option>
-                <option>Hành động</option>
-                <option>Kinh dị</option>
-                <option>Giả tưởng</option>
-            </select>
+            <!-- Checkbox 1 lần/khách -->
+            <div class="checkbox-row">
+                <input type="checkbox" id="addSingleUse">
+                <label for="addSingleUse">Mỗi khách chỉ dùng 1 lần</label>
+            </div>
+
+            <!-- Chọn thể loại (ẩn mặc định) -->
+            <div id="addCategoryBox" style="grid-column: 1 / -1;">
+                <label>Thể loại</label>
+                <select id="addCategory" disabled>
+                    <option value="">-- Chọn thể loại --</option>
+                    <option>Trinh thám</option>
+                    <option>Hài hước</option>
+                    <option>Ngôn tình</option>
+                    <option>Hành động</option>
+                    <option>Kinh dị</option>
+                    <option>Phiêu lưu</option>
+                    <option>Học đường</option>
+                    <option>Giả tưởng</option>
+                </select>
+            </div>
+
+            <!-- Ngày bắt đầu + kết thúc -->
+            <div class="date-row">
+                <div>
+                    <label>Từ ngày</label>
+                    <input type="date" id="addStart">
+                </div>
+                <div>
+                    <label>Đến ngày</label>
+                    <input type="date" id="addEnd">
+                </div>
+            </div>
         </div>
-
-        <label>Số lượng:</label>
-        <input type="number" id="addQuantity">
-
-        <label>Ngày bắt đầu:</label>
-        <input type="date" id="addStart">
-
-        <label>Ngày kết thúc:</label>
-        <input type="date" id="addEnd">
 
         <div class="btn-row">
             <button class="btn-cancel" id="closeAddPopup">Hủy</button>
-            <button class="btn-save">Lưu</button>
+            <button class="btn-save" id="saveAddBtn">Tạo mã</button>
         </div>
     </div>
 </div>
-
+<!-- ====================== POPUP SỬA MÃ====================== -->
 <div class="popup-overlay" id="editPopup">
     <div class="popup-box">
-        <h3>Sửa mã giảm giá</h3>
+        <h3>Sửa mã khuyến mãi</h3>
+        <div class="popup-grid">
+            <!-- Dòng 1: Mã + Loại -->
+            <div>
+                <label>Tên mã</label>
+                <p id="editCode" class="readonly"></p>
+            </div>
+            <div>
+                <label>Loại giảm giá</label>
+                <p id="editTypeDisplay" class="readonly"></p>
+            </div>
 
-        <label>Tên mã:</label>
-        <p id="editName" class="readonly"></p>
+            <!-- Dòng 2: Giá trị + Áp dụng cho (không chỉnh được) -->
+            <div>
+                <label>Giá trị giảm</label>
+                <p id="editValueDisplay" class="readonly"></p>
+            </div>
+            <div>
+                <label>Áp dụng cho</label>
+                <p id="editApplyDisplay" class="readonly">Toàn bộ sản phẩm</p>
+            </div>
 
-        <label>Giá trị giảm:</label>
-        <p id="editValue" class="readonly"></p>
+            <!-- Dòng 3: Đơn tối thiểu + Số lượng tối đa -->
+            <div>
+                <label>Đơn tối thiểu</label>
+                <input type="number" id="editMinOrder" min="0" placeholder="0">
+            </div>
+            <div>
+                <label>Số lượng tối đa</label>
+                <input type="number" id="editMaxUsage" min="1">
+            </div>
 
-        <label>Số lượng:</label>
-        <input type="number" id="editQuantity">
+            <!-- Checkbox giới hạn 1 lần/khách -->
+            <div class="checkbox-row">
+                <input type="checkbox" id="editSingleUse">
+                <label for="editSingleUse">Mỗi khách chỉ dùng được 1 lần</label>
+            </div>
 
-        <label>Ngày bắt đầu:</label>
-        <input type="date" id="editStart">
-
-        <label>Ngày kết thúc:</label>
-        <input type="date" id="editEnd">
+            <!-- Ngày bắt đầu & kết thúc -->
+            <div class="date-row">
+                <div>
+                    <label>Từ ngày</label>
+                    <input type="date" id="editStart">
+                </div>
+                <div>
+                    <label>Đến ngày</label>
+                    <input type="date" id="editEnd">
+                </div>
+            </div>
+        </div>
 
         <div class="btn-row">
             <button class="btn-cancel" id="closeEditPopup">Hủy</button>
@@ -305,147 +397,148 @@
 </div>
 
 
-
 <script>
-    (function(){
-        // ---------- Helpers ----------
-        function ddmmyyyyFromInput(val){ // yyyy-mm-dd -> dd/mm/yyyy
-            if(!val) return "";
-            const parts = val.split("-");
-            return parts.length===3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : val;
-        }
-        function inputFromDDMM(val){ // dd/mm/yyyy -> yyyy-mm-dd
-            if(!val) return "";
-            const p = val.split("/");
-            return p.length===3 ? `${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}` : "";
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        const addPopup       = document.getElementById('addPopup');
+        const addApply       = document.getElementById('addApply');
+        const addCategoryBox = document.getElementById('addCategoryBox');
+        const tbody          = document.getElementById('promoTableBody');
+        const editPopup      = document.getElementById('editPopup');
+        const deletePopup    = document.getElementById('deleteConfirmPopup');
 
-        // ---------- Elements ----------
-        const tbody = document.getElementById('promoTableBody');
-        const addPopup = document.getElementById('addPopup');
-        const editPopup = document.getElementById('editPopup');
-        const deletePopup = document.getElementById('deleteConfirmPopup');
-
-        const openAddBtn = document.getElementById('openAddPopup');
-        const closeAddBtn = document.getElementById('closeAddPopup');
-
-        const editName = document.getElementById('editName');
-        const editValue = document.getElementById('editValue');
-        const editQuantity = document.getElementById('editQuantity');
-        const editStart = document.getElementById('editStart');
-        const editEnd = document.getElementById('editEnd');
-        const closeEditBtn = document.getElementById('closeEditPopup');
-        const saveEditBtn = document.getElementById('saveEditBtn');
-
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-
-        // ---------- Popup Thêm ----------
-        openAddBtn.onclick = function(){
-            addPopup.style.display = 'flex';
-            document.getElementById("addName").value = "";
-            document.getElementById("addValue").value = "";
-            document.getElementById("addQuantity").value = "";
-            document.getElementById("addStart").value = "";
-            document.getElementById("addEnd").value = "";
-            const addApply = document.getElementById('addApply');
-            addApply.value = "";
-            const addCategoryBox = document.getElementById('addCategoryBox');
-            addCategoryBox.classList.add('hide');
-            const addCategorySelect = addCategoryBox.querySelector('select');
-            addCategorySelect.disabled = true;
-            addCategorySelect.value = "";
+        // Hàm ẩn/hiện thể loại
+        const toggleCategory = () => {
+            addCategoryBox.classList.toggle('hide', addApply.value !== 'category');
         };
-        closeAddBtn.onclick = function(){
+
+        // Gắn event change
+        addApply.addEventListener('change', () => {
+            const categorySelect = document.getElementById('addCategory');
+            if (addApply.value === 'category') {
+                categorySelect.disabled = false;
+                categorySelect.style.opacity = '1';
+                categorySelect.style.pointerEvents = 'auto';
+            } else {
+                categorySelect.disabled = true;
+                categorySelect.style.opacity = '0.5';
+                categorySelect.style.pointerEvents = 'none';
+                categorySelect.value = ''; // xóa lựa chọn cũ
+            }
+        });
+
+        // Mở popup Thêm
+        document.getElementById('openAddPopup').onclick = () => {
+            addPopup.style.display = 'flex';
+
+            // Reset form
+            document.getElementById('addCode').value = '';
+            document.getElementById('addType').value = '';
+            document.getElementById('addValue').value = '';
+            document.getElementById('addMinOrder').value = '0';
+            document.getElementById('addMaxUsage').value = '100';
+            document.getElementById('addSingleUse').checked = false;
+            document.getElementById('addStart').value = '';
+            document.getElementById('addEnd').value = '';
+            addApply.value = 'all';
+
+            document.getElementById('addCategory').disabled = true;
+            document.getElementById('addCategory').style.opacity = '0.5';
+            document.getElementById('addCategory').value = '';
+        };
+
+        document.getElementById('closeAddPopup').onclick = () => addPopup.style.display = 'none';
+
+        // Tạo mã
+        document.getElementById('saveAddBtn').onclick = () => {
+            const code = document.getElementById('addCode').value.trim();
+            const type = document.getElementById('addType').value;
+            const value = document.getElementById('addValue').value;
+
+            if (!code || !type || !value) {
+                alert('Vui lòng nhập đầy đủ thông tin bắt buộc!');
+                return;
+            }
+            if (addApply.value === 'category' && !document.getElementById('addCategory').value) {
+                alert('Vui lòng chọn thể loại!');
+                return;
+            }
+
+            alert('Tạo mã thành công!');
             addPopup.style.display = 'none';
         };
 
-        document.getElementById('addApply').onchange = function(){
-            const box = document.getElementById('addCategoryBox');
-            const sel = box.querySelector('select');
-            if(this.value === "Thể loại"){
-                box.classList.remove('hide');
-                sel.disabled = false;
-            } else {
-                box.classList.add('hide');
-                sel.disabled = true;
-                sel.value = "";
-            }
-        };
-
-        // ---------- Popup Sửa ----------
-        let currentRow = null;
-
-        window.openEdit = function(code){
+        // Popup Sửa
+        window.openEdit = function(code) {
             const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-            const row = rows.find(r => r.children[0].innerText.trim() === code);
-            if(!row) return alert('Không tìm thấy mã');
+            const row = rows.find(r => r.cells[0].textContent.trim() === code);
+            if (!row) return alert('Không tìm thấy mã!');
 
-            currentRow = row;
-            editName.textContent = row.children[0].innerText.trim();
-            editValue.textContent = row.children[1].innerText.trim();
+            document.getElementById('editCode').textContent = row.cells[0].textContent.trim();
+            document.getElementById('editValueDisplay').textContent = row.cells[1].textContent.trim();
+            document.getElementById('editTypeDisplay').textContent = row.cells[2].textContent.trim();
+            document.getElementById('editApplyDisplay').textContent = 'Toàn bộ sản phẩm';
 
-            const qtyParts = row.children[2].innerText.trim().split('/');
-            const total = qtyParts.length>1 ? qtyParts[1].replace(/\D/g,'') : qtyParts[0].replace(/\D/g,'');
-            editQuantity.value = total || 0;
+            const minOrder = row.cells[4].textContent.replace(/[^\d]/g, '');
+            document.getElementById('editMinOrder').value = minOrder || 0;
 
-            const displayedDate = row.children[3].innerText.trim();
-            editEnd.value = inputFromDDMM(displayedDate);
-            editStart.value = "";
+            const usage = row.cells[3].textContent.trim();
+            const maxUsage = usage.split('/')[1]?.trim() || '100';
+            document.getElementById('editMaxUsage').value = maxUsage.replace(/\D/g, '');
 
-            saveEditBtn.disabled = true;
-            saveEditBtn.title = "Chưa kích hoạt backend - nút tạm thời bị vô hiệu";
+            const [d, m, y] = row.cells[5].textContent.trim().split('/');
+            document.getElementById('editEnd').value = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+
+            document.getElementById('editSingleUse').checked = false;
+            document.getElementById('editStart').value = '';
 
             editPopup.style.display = 'flex';
         };
 
-        closeEditBtn.onclick = function(){
+        document.getElementById('closeEditPopup').onclick = () => editPopup.style.display = 'none';
+        document.getElementById('saveEditBtn').onclick = () => {
+            alert('Cập nhật thành công!');
             editPopup.style.display = 'none';
         };
 
-        saveEditBtn.onclick = function(e){
-            e.preventDefault(); // không làm gì cả
+        // Xóa
+        tbody.addEventListener('click', e => {
+            if (e.target.closest('.delete-btn')) deletePopup.style.display = 'flex';
+        });
+        document.getElementById('cancelDeleteBtn').onclick = () => deletePopup.style.display = 'none';
+        document.getElementById('confirmDeleteBtn').onclick = () => {
+            alert('Đã xóa mã!');
+            deletePopup.style.display = 'none';
         };
 
-        // ---------- Popup Xóa ----------
-        tbody.addEventListener('click', function(e){
-            const delBtn = e.target.closest('.delete-btn');
-            if(delBtn){
-                deletePopup.style.display = 'flex';
-            }
+        // Click ngoài đóng popup
+        [addPopup, editPopup, deletePopup].forEach(p => {
+            p.addEventListener('click', e => e.target === p && (p.style.display = 'none'));
         });
 
-        cancelDeleteBtn.onclick = function(){
-            deletePopup.style.display = 'none';
-        };
-        confirmDeleteBtn.onclick = function(){
-            deletePopup.style.display = 'none';
-        };
-
-        // ---------- Phân trang ----------
+        // PHÂN TRANG
         const ROWS_PER_PAGE = 5;
-        const pageButtons = Array.from(document.querySelectorAll('.pro-page'));
-        let currentPage = 1;
+        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
 
-        function refreshPagedRows(){
-            return Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-        }
-        function showPage(page){
-            const rows = refreshPagedRows();
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-            rows.forEach((r, idx) => r.style.display = (idx >= start && idx < end) ? "" : "none");
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.pro-page[data-page="${page}"]`)?.classList.add('active');
-            currentPage = page;
-        }
-        pageButtons.forEach(btn => btn.addEventListener('click', () => showPage(Number(btn.dataset.page))));
-        showPage(1);
+        document.querySelectorAll('.pro-page').forEach(btn => {
+            btn.onclick = () => {
+                const page = +btn.dataset.page;
+                rows.forEach((row, i) => {
+                    row.style.display = (i >= (page-1)*ROWS_PER_PAGE && i < page*ROWS_PER_PAGE) ? '' : 'none';
+                });
+                document.querySelectorAll('.pro-page').forEach(b => b.classList.toggle('active', +b.dataset.page === page));
+            };
+        });
+        document.querySelector('.pro-page[data-page="1"]')?.click();
 
-    })();
+        // Active sidebar
+        const currentPage = window.location.pathname.split("/").pop();
+        document.querySelectorAll(".sidebar a").forEach(link => {
+            if (link.getAttribute("href") === currentPage) {
+                link.classList.add("active");
+            }
+        });
+    });
 </script>
-
-
 <script>
     (function(){
         let currentPage = 1;

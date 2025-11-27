@@ -4,8 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    font-size: 14px;
-    /* Giảm từ ngầm định ~16px */
+    font-size: 16px; /* Giảm từ ngầm định ~16px */
 }
 
 /* Wrapper styling */
@@ -55,8 +54,7 @@ body {
 }
 
 .titleCheckout h1 {
-    font-size: 20px;
-    /* Giảm từ 22px */
+    font-size: 20px; /* Giảm từ 22px */
     font-weight: 600;
     margin: 0;
     line-height: 1.2;
@@ -77,6 +75,7 @@ main {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     font-family: "Segoe UI", Arial, sans-serif;
     color: #333;
+
 }
 
 .form-group {
@@ -85,10 +84,9 @@ main {
 
 .form-group label {
     display: block;
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 4px;
-    font-size: 16px;
-    /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     color: #444;
 }
 
@@ -96,8 +94,7 @@ main {
 .form-group select {
     width: 100%;
     padding: 8px 10px;
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 13px; /* Giảm từ 14px */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
@@ -117,9 +114,7 @@ main {
 }
 
 /* Shipping, Payment, Promotion */
-.shipping,
-.payment,
-.promotion {
+.shipping, .payment, .promotion {
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 5px;
@@ -128,22 +123,16 @@ main {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.shipping h2,
-.payment h2,
-.promotion h2 {
+.shipping h2, .payment h2, .promotion h2 {
     color: #007bff;
-    font-size: 16px;
-    /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
     margin-bottom: 8px;
 }
 
-.shipping label,
-.payment label,
-.promotion label {
+.shipping label, .payment label, .promotion label {
     display: block;
     margin: 4px 0;
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 16px; /* Giảm từ 16px */
 }
 
 
@@ -166,8 +155,7 @@ main {
 .promos input[type="text"] {
     flex: 1;
     padding: 8px 10px;
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 13px; /* Giảm từ 14px */
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
     box-sizing: border-box;
@@ -187,8 +175,7 @@ main {
 
 .promos .apply-btn {
     padding: 8px 16px;
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 13px; /* Giảm từ 14px */
     font-weight: 600;
     color: #fff;
     background-color: #007bff;
@@ -217,21 +204,18 @@ main {
 }
 
 .voucher-icon {
-    font-size: 16px;
-    /* Giảm từ 18px */
+    font-size: 16px; /* Giảm từ 18px */
     color: #c94d32;
 }
 
 .voucher-title {
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 14px; /* Giảm từ 16px */
     color: #333;
     font-weight: 500;
 }
 
 .voucher-select {
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 13px; /* Giảm từ 14px */
     color: #2f6ec8;
     text-decoration: none;
 }
@@ -244,19 +228,16 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 13px;
-    /* Giảm từ 14px */
+    font-size: 13px; /* Giảm từ 14px */
     margin: 8px 0;
 }
 
 .promotion .usePoint p {
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 14px; /* Giảm từ 16px */
 }
 
 .usePoint input[type="checkbox"] {
-    width: 16px;
-    /* Giảm từ 18px */
+    width: 16px; /* Giảm từ 18px */
     height: 16px;
     cursor: pointer;
 }
@@ -278,8 +259,7 @@ main {
 
 .order-summary h2 {
     color: #007bff;
-    font-size: 18px;
-    /* Giảm từ 20px */
+    font-size: 18px; /* Giảm từ 20px */
     font-weight: 600;
     margin-bottom: 10px;
     border-bottom: 1px solid #e0e0e0;
@@ -290,8 +270,7 @@ main {
     display: flex;
     justify-content: space-between;
     margin: 6px 0;
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 14px; /* Giảm từ 16px */
     color: #333;
 }
 
@@ -310,8 +289,7 @@ main {
 }
 
 .order-summary p.total {
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 14px; /* Giảm từ 16px */
     font-weight: 700;
     color: #d32f2f;
     margin-top: 8px;
@@ -330,8 +308,7 @@ main {
     height: 40px;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
-    /* Giảm từ 16px */
+    font-size: 14px; /* Giảm từ 16px */
     font-weight: 600;
     align-self: flex-end;
     margin-top: 10px;
@@ -507,7 +484,7 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0,0,0,0.6);
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -560,29 +537,24 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .voucher-container h2 {
-        font-size: 18px;
-        /* Giảm từ 20px */
+        font-size: 18px; /* Giảm từ 20px */
     }
 
     .voucher-title {
-        font-size: 14px;
-        /* Giảm từ 16px */
+        font-size: 14px; /* Giảm từ 16px */
     }
 
     .voucher-desc {
-        font-size: 12px;
-        /* Giảm từ 13px */
+        font-size: 12px; /* Giảm từ 13px */
     }
 
     .voucher-code {
-        font-size: 13px;
-        /* Giảm từ 14px */
+        font-size: 13px; /* Giảm từ 14px */
     }
 
     .copy-code-btn {
         padding: 6px 10px;
-        font-size: 12px;
-        /* Giảm từ 13px */
+        font-size: 12px; /* Giảm từ 13px */
     }
 }
 
@@ -604,13 +576,12 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         padding: 10px;
     }
 
-    .address,
-    .shipping,
-    .payment,
-    .promotion {
+    .address, .shipping, .payment, .promotion {
         max-width: 100%;
         margin: 5px 0;
         padding: 8px 15px;
+
+
     }
 
     .order-summary {
@@ -626,8 +597,7 @@ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .titleCheckout h1 {
-        font-size: 16px;
-        /* Giảm từ 18px */
+        font-size: 16px; /* Giảm từ 18px */
     }
 
     .promos {

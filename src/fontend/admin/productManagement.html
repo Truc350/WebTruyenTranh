@@ -98,7 +98,7 @@
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
-                    <button class="delete-btn">Xóa</button>
+                    <button class="delete-btn">Xóa truyện</button>
                 </div>
             </div>
         </div>
@@ -126,10 +126,10 @@
                 <td>22,500₫</td>
                 <td>550 quyển</td>
                 <td class="review-cell">
-                    <button class="view-review-btn"  data-comic="TT001" title="Xem review"><i class="fas fa-eye"></i></button>
+                    <button class="view-review-btn"  data-comic="TT001" title="Xem review">Xem</i></button>
                 </td>
                 <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
+                    <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
                     <div class="menu-container">
                         <button class="more-btn">⋮</button>
                         <div class="dropdown-menu">
@@ -148,11 +148,10 @@
                 <td>18,000₫</td>
                 <td>320 quyển</td>
                 <td class="review-cell">
-                    <button class="view-review-btn" title="Xem review">
-                        <i class="fas fa-eye"></i></button>
+                    <button class="view-review-btn" title="Xem review">Xem</button>
                 </td>
                 <td class="action-cell">
-                    <button class="edit-btn">Sửa</button>
+                    <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
                     <div class="menu-container">
                         <button class="more-btn">⋮</button> <!--menu-btn-->
                         <div class="dropdown-menu"> <!--menu-options-->
@@ -185,20 +184,14 @@
                     <div class="form-left">
 
                         <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
-                        <div class="form-group two-columns">
-                            <div>
-                                <label>Mã truyện:</label>
-                                <input type="text" placeholder="Nhập mã truyện">
-                            </div>
-                            <div>
-                                <label>Số lượng:</label>
-                                <input type="number" min="1">
-                            </div>
+                        <div class="form-group">
+                            <label>Tên truyện:</label>
+                            <input type="text">
                         </div>
 
                         <div class="form-group">
-                            <label>Tên truyện:</label>
-                            <input type="text" placeholder="Nhập tên truyện">
+                            <label>Số lượng:</label>
+                            <input type="number" min="1">
                         </div>
 
                         <div class="form-group">
@@ -206,15 +199,28 @@
                             <select>
                                 <option>Trinh thám</option>
                                 <option>Hài hước</option>
-                                <option>Tình cảm</option>
+                                <option>Ngôn tình</option>
                                 <option>Hành động</option>
                                 <option>Kinh dị</option>
+                                <option>Phiêu lưu</option>
+                                <option>Học đường</option>
+                                <option>Giả tưởng</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>Tác giả:</label>
-                            <input type="text" placeholder="Nhập tên tác giả">
+                            <input type="text">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nhà xuất bản :</label>
+                            <input type="text">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giá:</label>
+                            <input type="text">
                         </div>
 
                         <div class="form-group">
@@ -234,14 +240,14 @@
 
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
-                            <textarea rows="4" placeholder="Nhập mô tả ngắn..."></textarea>
+                            <textarea rows="6" placeholder="Nhập mô tả ngắn..."></textarea>
                         </div>
                     </div>
                 </form>
 
                 <div class="form-buttons">
-                    <button type="button" class="cancel-btn">Hủy</button>
                     <button type="submit" class="save-btn">Lưu</button>
+                    <button type="button" class="cancel-btn">Hủy</button>
                 </div>
             </div>
         </div>
@@ -276,15 +282,28 @@
                             <select>
                                 <option selected>Trinh thám</option>
                                 <option>Hài hước</option>
-                                <option>Tình cảm</option>
+                                <option>Ngôn tình</option>
                                 <option>Hành động</option>
                                 <option>Kinh dị</option>
+                                <option>Phiêu lưu</option>
+                                <option>Học đường</option>
+                                <option>Giả tưởng</option>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" value="Gosho Aoyama">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nhà xuất bản:</label>
+                            <input type="text" value="Kim Đồng">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giá:</label>
+                            <input type="text" value="22,500₫">
                         </div>
 
                         <div class="form-group">
@@ -309,14 +328,14 @@
 
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
-                            <textarea rows="4">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
+                            <textarea rows="6">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
                         </div>
                     </div>
                 </form>
 
                 <div class="form-buttons">
                     <button type="button" class="cancel-btn">Hủy</button>
-                    <button type="submit" class="save-btn">Thay đổi</button>
+                    <button type="submit" class="save-btn">Cập nhật</button>
                 </div>
             </div>
         </div>
@@ -371,7 +390,6 @@
         <!-- POPUP REVIEW -->
         <div class="modal-overlay review-popup" id="review-TT001">
             <div class="modal-rectangle">
-<!--                <h3>Review: Thám tử lừng danh Conan</h3>-->
 
                 <div class="review-list">
                     <div class="review-item">
@@ -382,6 +400,9 @@
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                         </p>
+
+                        <p class="review-date">08/11/2024</p>
+
                         <p>Shop đóng gói cẩn thận, bọc nilon và seal đều rất chu đáo, còn bọc thêm chống sốc và bìa cứng để truyện không bị hư hại gì. Nhất định sẽ mua lại ạ :3</p>
                         <div>
                             <img src="../../img/review1.png" alt="review">
@@ -397,6 +418,9 @@
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i></p>
+
+                        <p class="review-date">08/11/2024</p>
+
                         <p>Shop giao hàng nhanh chóng gói hàng cũng kỹ lưỡng nha chu đáo nhắn tin với khách.</p>
                         <div>
                             <img src="../../img/review4.png" alt="review">
@@ -410,6 +434,9 @@
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i></p>
+
+                        <p class="review-date">08/11/2024</p>
+
                         <p>Shop giao hàng nhanh chóng gói hàng cũng kỹ lưỡng nha chu đáo nhắn tin với khách.</p>
                         <div>
                             <img src="../../img/review4.png" alt="review">
