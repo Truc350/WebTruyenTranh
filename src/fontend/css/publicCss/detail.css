@@ -421,3 +421,7 @@ a{
 .container-slider button:active {
   transform: scale(0.95);
 }
+.rating-left h3{
+  margin-top: 10px;
+  margin-bottom: 0;
+}

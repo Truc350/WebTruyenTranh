@@ -1014,7 +1014,6 @@ main {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.4px; /* Giảm từ 0.5px */
-    border-bottom: 1.5px solid #007bff; /* Giảm từ 2px */
     display: inline-block;
     padding-bottom: 2px; /* Giảm từ 3px */
 }
