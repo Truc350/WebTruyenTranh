@@ -81,19 +81,28 @@
 </head>
 <body>
 <header class="navbar">
-    <div class="logo">
-        <img id="logo" src="../../img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
+    <a href="../public/homePage.html">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+    </a>
     <nav class="menu">
         <a href="../public/homePage.html">Trang chủ</a>
 
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
-                <a href="CatagoryPage.html">Hành động</a>
-                <a href="#">Trinh thám</a>
+                <a href="../public/CatagoryPage.html">Hành động</a>
+                <a href="#">Phiêu lưu</a>
+                <a href="#">Lãng mạn </a>
+                <a href="#">Học đường</a>
+                <a href="#">Kinh dị</a>
                 <a href="#">Hài hước</a>
+                <a href="#">Giả tưởng</a>
+                <a href="#">Trinh thám</a>
+                <!-- <a href="#">Cổ đại</a>
+                <a href="#">Đời thường</a> -->
             </div>
         </div>
 
@@ -106,9 +115,10 @@
         </button>
     </div>
     <div class="contain-left">
+
         <div class="actions">
             <div class="notify-wrapper">
-                <a href="#" class="bell-icon">
+                <a href="profile.html" class="bell-icon">
                     <i class="fa-solid fa-bell"></i>
                     <span id="span-bell">2</span>
                 </a>
@@ -121,7 +131,7 @@
                             <span class="notification-badge">(1)</span>
                         </div>
                         <div class="inform-all">
-                            <a href="#">Xem tất cả</a>
+                            <a href="profile.html">Xem tất cả</a>
                         </div>
                     </div>
                     <div class="notification-content inform1">
@@ -139,21 +149,24 @@
             </div>
         </div>
 
-
-        <div class="actions">
-            <a href="profile.html">
-                <i class="fa-solid fa-user" id ="user"></i>
-            </a>
-        </div>
-
-        <div class="login-btn">
-            <a href="../public/login.html" class="login-btn">Log out</a>
-        </div>
-
         <div class="actions">
             <a href="chat.html">
                 <i class="fa-solid fa-comment"></i>
             </a>
+        </div>
+
+        <div class="actions">
+            <a href="cart.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
+
+        <div class="actions user-nav">
+            <i class="fa-solid fa-user" id="user"></i>
+            <div class="dropdown-user">
+                <a href="../public/homePage.html">Trang chủ</a>
+                <a href="../public/login.html">Đăng xuất</a>
+            </div>
         </div>
     </div>
 </header>
@@ -366,14 +379,15 @@
         <div class="footer-column">
             <div class="logo">
                 <a href="#">
-                    <img src="../../img/logo.png" alt="logo">
+                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
             <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
-                truyện giấy,<br>
+                truyện
+                giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lập năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <strong>10.000+</strong>
+            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
+                <str>10.000+</str>
                 <br>
                 truyện hấp dẫn cho bạn
             </p>
@@ -381,10 +395,9 @@
 
         <!-- Cột 2: Liên kết nhanh -->
         <div class="footer-column">
-            <h4>Liên kết nhanh</h4>
+            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
             <ul>
                 <li><a href="../public/homePage.html">Trang chủ</a></li>
-                <li><a href="#">Thể loại truyện</a></li>
                 <li><a href="../public/FlashSale.html">Khuyến mãi</a></li>
                 <li><a href="cart.html">Giỏ hàng</a></li>
                 <li><a href="../public/AbouUS.html">Liên hệ</a></li>
@@ -393,30 +406,33 @@
 
         <!-- Cột 3: Hỗ trợ khách hàng -->
         <div class="footer-column">
-            <h4>Hỗ trợ khách hàng</h4>
+            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
             <ul>
-                <li><a href="RefundPolicy.html">Chính sách đổi trả</a></li>
-                <li><a href="shippingPolicy.html">Chính sách vận chuyển</a></li>
+                <li><a href="../nguoiB/RefundPolicy.html">Chính sách đổi trả</a></li>
+                <li><a href="../nguoiB/shippingPolicy.html">Chính sách vận chuyển</a></li>
             </ul>
         </div>
 
         <!-- Cột 4: Liên hệ & Mạng xã hội -->
         <div class="footer-column">
-            <h4>Liên hệ</h4>
-            <p>support@metruyen.vn</p>
-            <p>0123 456 789</p>
-            <p>123 Nguyễn Huệ, Q.1, TP.HCM</p>
+            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
+            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
+            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
 
             <div class="social-links">
-                <a href="https://www.facebook.com" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/comic.store/" title="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i
+                        class="fab fa-tiktok"></i></a>
             </div>
         </div>
 
         <!-- Cột 5: Thanh toán -->
         <div class="footer-column">
-            <h4>Thanh toán & Bảo mật</h4>
+            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>
             <div class="payment-icons">
                 <img src="../../img/momo.png" alt="Momo">
