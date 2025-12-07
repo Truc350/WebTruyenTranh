@@ -158,7 +158,7 @@
 
                 <div class="actions-btn">
                     <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
-                    <button class="btn buy-now">Mua ngay</button>
+                    <button class="btn buy-now" style="display: none;">Mua ngay</button>
 
                     <label class="heart-toggle">
                         <input type="checkbox" hidden>
@@ -327,7 +327,7 @@
             </div>
 
             <div class="container4">
-                <section class="product-details">
+                <section class="product-details" style="display: none;">
                     <h2>Thông tin chi tiết</h2>
                     <div class="detail-table">
                         <div class="detail-left">
@@ -445,7 +445,7 @@
 
         <div class="review-tabs">
             <label id="tab1" class="tab active">Tất cả đánh giá</label>
-            <label id="tab2" class="tab">Mới nhất</label>
+            <!-- <label id="tab2" class="tab">Mới nhất</label> -->
         </div>
 
         <div id="reviewed-person" class="reviewed-person">
