@@ -6,10 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/publicCss/nav.css">
-    <link rel="stylesheet" href="../css/publicCss/Authentic.css">
-    <link rel="stylesheet" href="../css/publicCss/Register.css">
-    <link rel="stylesheet" href="../css/publicCss/login.css">
+<%--    <link rel="stylesheet" href="../css/publicCss/nav.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/Authentic.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/Register.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/login.css">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Authentic.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Register.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- <script src="../../js/Login.js" defer></script> -->
 </head>
@@ -17,7 +21,7 @@
 <body>
     <header class="navbar">
         <div class="logo">
-            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
             <span>Comic Store</span>
         </div>
         <nav class="menu">
@@ -51,20 +55,25 @@
         </div>
     </header>
 
-    <!-- Form đăng ký -->
-    <div class="img-Login">
 
-        <!-- phần này login -->
-        <div class="container-signup">
+    <div class="img-Login">
+        <%
+            String error = (String) request.getAttribute("message");
+            if (error == null)error="";
+            String Username = request.getParameter("username");
+            if (Username==null)Username="";
+        %>
+        <!-- phần này dang nhap -->
+        <form class="container-signup" action="${pageContext.request.contextPath}/login" method="post">
             <div class="title">
                 <h3>Đăng nhập Comic Store</h3>
+                <span id="span-message" style="color:red; position:relative; top:15px;"><%=error%></span>
+
             </div>
             <div class="container">
-
                 <div class="sdt_maOTP">
-                    <input id="nhapstk" type="text" placeholder="Số điện thoại hoặc Email">
-                    <input id="nhapmk" type="text" placeholder="Nhập mật khẩu">
-
+                    <input id="nhapstk" type="text" placeholder="Số điện thoại hoặc Email" name="username" value="<%=Username%>" >
+                    <input id="nhapmk" type="password" placeholder="Nhập mật khẩu" name="password"  autocomplete="new-password">
                 </div>
 
                 <div class="login-options">
@@ -75,7 +84,7 @@
                     <a href="#" class="forgot-password" id="show-forgot-pw">Quên mật khẩu</a>
                 </div>
 
-                <button class="btn btn_guiOTP" onclick="login()">Đăng nhập</button>
+                <button class="btn btn_guiOTP">Đăng nhập</button>
                 <!-- <a href="homePage.jsp">
                 </a> -->
 
@@ -96,9 +105,9 @@
                     </a>
                 </div>
             </div>
-        </div>
+        </form>
 
-        <!-- phần này login up -->
+        <!-- phần này dang ki -->
         <div class="container-register">
             <div class="glass-card">
                 <!-- Header -->
@@ -211,7 +220,7 @@
             <div class="footer-column">
                 <div class="logo">
                     <a href="#">
-                        <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                        <img src="${pageContext.request.contextPath}/img/logo.png" alt="logo"><!--420-780-->
                     </a>
                 </div>
                 <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
@@ -267,8 +276,8 @@
                 <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
                 <p>Hỗ trợ thanh toán qua:</p>
                 <div class="payment-icons">
-                    <img src="../../img/momo.png" alt="Momo">
-                    <img src="../../img/zalopay.png" alt="ZaloPay">
+                    <img src="${pageContext.request.contextPath}/img/momo.png" alt="Momo">
+                    <img src="${pageContext.request.contextPath}/img/zaloPay.png" alt="ZaloPay">
                 </div>
                 <p>Website đã đăng ký với Bộ Công Thương.</p>
             </div>
@@ -303,22 +312,6 @@
         document.querySelector(".container-signup").style.display = "none";
         document.querySelector(".forgot-pd-container").style.display = "block";
     });
-
-
-
-    //check xem phải là admin thì qua admin, còn không thì là user
-    function login() {
-        const username = document.getElementById("nhapstk").value.trim();
-        const password = document.getElementById("nhapmk").value.trim();
-
-        // Giả định: tài khoản đúng là "ad" và mật khẩu cũng là "ad"
-        if (username === "adminlinhnguyen123@gmail.com" && password === "1234") {
-            console.log(username, password)
-            window.location.href = "../admin/dashboard.jsp";
-        } else {
-            window.location.href = "homePage.html";
-        }
-    }
 
     //cái này new-pass khi quên
     const verifyInput = document.getElementById('verify-code');
