@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comic Store - Giỏ hàng</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
+    <link rel="stylesheet" href="../css/UserBCss/cartCss.css">
+    <link rel="stylesheet" href="../css/publicCss/nav.css ">
+
+    <!-- Thêm CSS để quản lý popup và message box -->
+    <style>
+        /* Ẩn các promoItem ban đầu */
+
+    </style>
+</head>
+<body>
+<header class="navbar">
+    <a href="../public/homePage.jsp">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+    </a>
+    <nav class="menu">
+        <a href="../public/homePage.jsp">Trang chủ</a>
+
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="../public/CatagoryPage.jsp">Hành động</a>
+                <a href="#">Phiêu lưu</a>
+                <a href="#">Lãng mạn </a>
+                <a href="#">Học đường</a>
+                <a href="#">Kinh dị</a>
+                <a href="#">Hài hước</a>
+                <a href="#">Giả tưởng</a>
+                <a href="#">Trinh thám</a>
+                <!-- <a href="#">Cổ đại</a>
+                <a href="#">Đời thường</a> -->
+            </div>
+        </div>
+
+        <a href="../public/AbouUS.jsp">Liên hệ</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+        <button class="search-button">
+            <i class="fas fa-magnifying-glass"></i>
+        </button>
+    </div>
+    <div class="contain-left">
+
+        <div class="actions">
+            <div class="notify-wrapper">
+                <a href="profile.jsp" class="bell-icon">
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="span-bell">2</span>
+                </a>
+                <!-- Khung thông báo -->
+                <div class="notification-panel">
+                    <div class="notification-header">
+                        <div class="inform-num">
+                            <i class="fa-solid fa-bell"></i>
+                            <span>Thông báo</span>
+                            <span class="notification-badge">(1)</span>
+                        </div>
+                        <div class="inform-all">
+                            <a href="profile.jsp">Xem tất cả</a>
+                        </div>
+                    </div>
+                    <div class="notification-content inform1">
+                        <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                        hấp
+                        dẫn.
+                    </div>
+                    <div class="notification-content inform2">
+                        <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                        dẫn.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="chat.jsp">
+                <i class="fa-solid fa-comment"></i>
+            </a>
+        </div>
+
+        <div class="actions">
+            <a href="cart.html">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
+
+        <div class="actions user-nav">
+            <i class="fa-solid fa-user" id="user"></i>
+            <div class="dropdown-user">
+                <a href="../public/homePage.jsp">Trang chủ</a>
+                <a href="../public/login.jsp">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ===================== MAIN CONTENT ===================== -->
+<main class="wrapper">
+    <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM (CÓ SCROLL) -->
+    <div class="cart-items-container">
+        <!-- Header -->
+        <div class="cart-header">GIỎ HÀNG</div>
+
+        <!-- Chọn tất cả -->
+        <div class="select-all">
+            <input type="checkbox" class="item-checkbox" id="select-all"/>
+            <label for="select-all">Chọn tất cả (2 sản phẩm)</label>
+            <div class="quantity-header">Số lượng</div>
+            <div class="price-header">Thành tiền</div>
+        </div>
+
+        <!-- Scrollable Area -->
+        <div class="cart-items-scrollable">
+            <div class="cart-items">
+                <!-- Sản phẩm 1 -->
+                <div class="cart-item">
+                    <input type="checkbox" class="item-checkbox"/>
+                    <img src="https://cdn.hstatic.net/products/1000376556/thien_quan_tu_phuc_2_-_bia_1_1__8dd3bc9af4784d79a7451f64899ef0d9_1024x1024.jpg"
+                         alt="Thiên quan từ phúc" class="item-image"/>
+                    <div class="item-info">
+                        <div class="item-title">Thiên quan từ phúc</div>
+                        <div class="item-subtitle">Thiên quan từ phúc</div>
+                        <div class="item-price">86.000 đ
+                            <del>115.000 đ</del>
+                        </div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="text" value="1" class="quantity-input" readonly/>
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+
+
+                    <div class="item-footer">
+                        <div class="item-total">86.000 đ</div>
+                        <button class="delete-btn">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sản phẩm 2 -->
+                <div class="cart-item">
+                    <input type="checkbox" class="item-checkbox"/>
+                    <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
+                         alt="Nhật Ký Tarot" class="item-image"/>
+                    <div class="item-info">
+                        <div class="item-title">Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)</div>
+                        <div class="item-subtitle">
+                            1 x Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)<br>
+                            1 x Bộ Bìa Góc Bảo Quản
+                        </div>
+                        <div class="item-price">164.002 đ
+                            <del>205.000 đ</del>
+                        </div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="quantity-btn minus">-</button>
+                        <input type="text" value="1" class="quantity-input" readonly/>
+                        <button class="quantity-btn plus">+</button>
+                    </div>
+                    <div class="item-footer">
+                        <div class="item-total">164.002 đ</div>
+                        <button class="delete-btn">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CỘT PHẢI: TỔNG KẾT & THANH TOÁN (STICKY) -->
+    <div class="cart-summary">
+        <!-- Khuyến mãi -->
+        <div class="promo-section">
+            <div class="promo-header">
+                <i class="fa-solid fa-tag"></i>
+                <span>KHUYẾN MÃI</span>
+                <a href="#" class="view-more">Xem thêm ></a>
+            </div>
+            <div class="promo-item">
+                <div class="promo-info">
+                    <div class="promo-title">Mã Giảm 10K - Toàn Sàn</div>
+                    <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga,
+                        Ngoại...
+                    </div>
+                    <div class="promo-expiry">HSD: 31/10/2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 40%;"></div>
+                    </div>
+                    <div class="progress-label">Mua thêm 130.000 đ</div>
+                </div>
+                <button class="btn-buy-more">Mua thêm</button>
+            </div>
+            <div class="promo-note">
+                <i class="fa-solid fa-circle-info"></i>
+                Có thể áp dụng đồng thời nhiều...
+            </div>
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="total-section">
+            <div class="total-row">
+                <span>Thành tiền</span>
+                <span class="total-price">0 đ</span>
+            </div>
+            <div class="total-row final">
+                <span>Tổng Tiền:</span>
+                <span class="total-final">0 đ</span>
+            </div>
+        </div>
+
+        <!-- Thanh toán -->
+        <div class="checkout-section">
+            <a href="checkout.jsp">
+                <button class="btn-checkout">THANH TOÁN</button>
+            </a>
+            <!--            <div class="checkout-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</div>-->
+        </div>
+    </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Cột 1: Giới thiệu -->
+        <div class="footer-column">
+            <div class="logo">
+                <a href="#">
+                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                </a>
+            </div>
+            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
+                truyện
+                giấy,<br>
+                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
+            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
+                <str>10.000+</str>
+                <br>
+                truyện hấp dẫn cho bạn
+            </p>
+        </div>
+
+        <!-- Cột 2: Liên kết nhanh -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
+            <ul>
+                <li><a href="../public/homePage.jsp">Trang chủ</a></li>
+                <li><a href="../public/FlashSale.jsp">Khuyến mãi</a></li>
+                <li><a href="cart.html">Giỏ hàng</a></li>
+                <li><a href="../public/AbouUS.jsp">Liên hệ</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 3: Hỗ trợ khách hàng -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
+            <ul>
+                <li><a href="RefundPolicy.jsp">Chính sách đổi trả</a></li>
+                <li><a href="shippingPolicy.jsp">Chính sách vận chuyển</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 4: Liên hệ & Mạng xã hội -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
+            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
+            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/comic.store/" title="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i
+                        class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <!-- Cột 5: Thanh toán -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
+            <p>Hỗ trợ thanh toán qua:</p>
+            <div class="payment-icons">
+                <img src="../../img/momo.png" alt="Momo">
+                <img src="../../img/zalopay.png" alt="ZaloPay">
+            </div>
+            <p>Website đã đăng ký với Bộ Công Thương.</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
+    </div>
+</footer>
+
+<div class="promoPopup" id="modal">
+    <div class="modalContent">
+        <span class="closeBtn">&times;</span>
+        <h2>CHỌN MÃ KHUYẾN MÃI</h2>
+        <p>Hướng dẫn sử dụng Gift Card ⓘ</p>
+        <div class="promoInput">
+            <input type="text" id="promoCodeInput" placeholder="Nhập mã khuyến mãi..." class="promoInputField">
+            <button id="applyManualCode" class="btnApply">Áp dụng</button>
+        </div>
+        <div class="promo-list" id="promoList">
+            <div class="promoItem">
+                <input type="radio" id="promo10k" name="promo" value="10k">
+                <label for="promo10k">Mã giảm giá 10K - Toàn sàn <br><small>Đơn hàng từ 130k - Không bao gồm giá trị
+                    <br>của các sản phẩm sau Manga, Ngoại...</small><br><small>HSD: 31/11/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <div class="promoItem">
+                <input type="radio" id="promo25k" name="promo" value="25k">
+                <label for="promo25k">Mã giảm giá 25K - Truyện Manga <br><small>Đơn hàng từ 210k</small><br><small>HSD:
+                    31/11/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <!-- Thêm các promoItem ẩn để minh họa chức năng "Xem thêm" -->
+            <div class="promoItem hidden">
+                <input type="radio" id="promo50k" name="promo" value="50k">
+                <label for="promo50k">Mã giảm giá 50K - Sách Học Đường <br><small>Đơn hàng từ 300k</small><br><small>HSD:
+                    31/12/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+            <div class="promoItem hidden">
+                <input type="radio" id="promo100k" name="promo" value="100k">
+                <label for="promo100k">Mã giảm giá 100K - Toàn Sàn <br><small>Đơn hàng từ 500k</small><br><small>HSD:
+                    31/12/2025</small></label>
+                <button class="btnApply">Áp dụng</button>
+            </div>
+        </div>
+        <button id="viewMoreBtn" class="btnViewMore">Xem thêm</button>
+    </div>
+</div>
+
+<!-- Thêm Message Box -->
+<div class="message-box" id="messageBox">
+    <span class="close-msg">&times;</span>
+    <p id="messageText"></p>
+</div>
+
+<!-- JavaScript -->
+<script>
+    // Get elements
+    var modal = document.getElementById("modal");
+    var viewMoreLink = document.querySelector(".promo-section .view-more");
+    var span = document.getElementsByClassName("closeBtn")[0];
+    var viewMoreBtn = document.getElementById("viewMoreBtn");
+    var messageBox = document.getElementById("messageBox");
+    var messageText = document.getElementById("messageText");
+    var closeMsg = document.querySelector(".close-msg");
+    var selectAllLabel = document.querySelector(".select-all label[for='select-all']");
+    var totalFinalElement = document.querySelector(".total-final");
+    var totalPriceElement = document.querySelector(".total-price");
+    var checkoutButton = document.querySelector(".btn-checkout");
+
+    // Hàm tính tiền dựa trên sản phẩm được tick
+    function calculateTotal() {
+        var cartItems = document.querySelectorAll(".cart-item");
+        let total = 0;
+
+        cartItems.forEach(item => {
+            var checkbox = item.querySelector(".item-checkbox");
+            if (checkbox && checkbox.checked) {
+                var priceText = item.querySelector(".item-price").textContent.match(/[\d,.]+/)[0].replace(/\./g, '');
+                var quantity = parseInt(item.querySelector(".quantity-input").value);
+                var price = parseInt(priceText);
+                total += price * quantity;
+            }
+        });
+
+        // Định dạng tiền tệ
+        totalPriceElement.textContent = `${total.toLocaleString('vi-VN')} đ`;
+        let finalTotal = total * 1.1; // VAT 10%
+        totalFinalElement.textContent = `${finalTotal.toLocaleString('vi-VN')} đ`;
+    }
+
+    // Cập nhật tiêu đề "Chọn tất cả (X sản phẩm)"
+    function updateCartItemCount() {
+        var itemCount = document.querySelectorAll(".cart-item").length;
+        selectAllLabel.textContent = `Chọn tất cả (${itemCount} sản phẩm)`;
+    }
+
+    // Gọi hàm cập nhật khi trang tải
+    window.onload = function () {
+        console.log("Page loaded, calculating total...");
+        updateCartItemCount();
+        calculateTotal();
+        // Thêm class 'active' để kích hoạt nút thanh toán mặc định
+        if (checkoutButton && !checkoutButton.classList.contains("active")) {
+            checkoutButton.classList.add("active");
+            console.log("Added 'active' class to checkout button");
+        }
+    };
+
+    // Sự kiện "Chọn tất cả"
+    document.getElementById("select-all").addEventListener("change", function () {
+        var allCheckedboxes = document.querySelectorAll(".cart-item .item-checkbox");
+        allCheckedboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        console.log("Select all changed, recalculating...");
+        calculateTotal();
+    });
+
+    // Sự kiện thay đổi checkbox riêng lẻ
+    document.querySelectorAll(".cart-item .item-checkbox").forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            console.log("Checkbox changed, recalculating...");
+            if (!this.checked) {
+                document.getElementById("select-all").checked = false;
+            } else if (document.querySelectorAll(".cart-item .item-checkbox:checked").length === document.querySelectorAll(".cart-item .item-checkbox").length) {
+                document.getElementById("select-all").checked = true;
+            }
+            calculateTotal();
+        });
+    });
+
+    // Sự kiện tăng giảm số lượng sách
+    document.querySelectorAll(".quantity-control .quantity-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            var quantityInput = this.parentElement.querySelector(".quantity-input");
+            var currentValue = parseInt(quantityInput.value);
+            if (this.classList.contains("plus")) {
+                quantityInput.value = currentValue + 1;
+            } else if (this.classList.contains("minus") && currentValue > 1) {
+                quantityInput.value = currentValue - 1;
+            }
+            console.log("Quantity changed, recalculating...");
+            calculateTotal();
+        });
+    });
+
+    // Sự kiện cho nút xóa sản phẩm
+    document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", function () {
+            this.closest(".cart-item").remove();
+            updateCartItemCount();
+            console.log("Item deleted, recalculating...");
+            calculateTotal();
+        });
+    });
+
+    // Open modal and disable scroll
+    viewMoreLink.onclick = function (event) {
+        event.preventDefault();
+        modal.style.display = "block";
+        document.body.classList.add("no-scroll");
+        document.documentElement.classList.add("no-scroll");
+    }
+
+    // Close modal and enable scroll
+    span.onclick = function () {
+        modal.style.display = "none";
+        document.body.classList.remove("no-scroll");
+        document.documentElement.classList.remove("no-scroll");
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            document.body.classList.remove("no-scroll");
+            document.documentElement.classList.remove("no-scroll");
+        }
+    }
+
+    // Apply promo code from list with message box and auto-close
+    var applyBtns = document.querySelectorAll(".promoItem .btnApply");
+    applyBtns.forEach(button => {
+        button.onclick = function () {
+            var promo = this.parentElement.querySelector("input[type='radio']:checked");
+            if (promo) {
+                messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promo.value + '</b> thành công!';
+                messageBox.style.display = "block";
+                document.body.classList.add("no-scroll");
+                document.documentElement.classList.add("no-scroll");
+                setTimeout(() => {
+                    messageBox.style.display = "none";
+                    document.body.classList.remove("no-scroll");
+                    document.documentElement.classList.remove("no-scroll");
+                }, 3000);
+            } else {
+                messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng chọn một mã khuyến mãi!';
+                messageBox.style.display = "block";
+                document.body.classList.add("no-scroll");
+                document.documentElement.classList.add("no-scroll");
+            }
+        }
+    });
+
+    // Apply manually entered promo code with message box and auto-close
+    document.getElementById("applyManualCode").onclick = function () {
+        var promoCode = document.getElementById("promoCodeInput").value.trim();
+        if (promoCode) {
+            messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promoCode + '</b> thành công!';
+            messageBox.style.display = "block";
+            document.body.classList.add("no-scroll");
+            document.documentElement.classList.add("no-scroll");
+            setTimeout(() => {
+                messageBox.style.display = "none";
+                document.body.classList.remove("no-scroll");
+                document.documentElement.classList.remove("no-scroll");
+            }, 3000);
+        } else {
+            messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng nhập mã khuyến mãi!';
+            messageBox.style.display = "block";
+            document.body.classList.add("no-scroll");
+            document.documentElement.classList.add("no-scroll");
+        }
+    };
+
+    // Close message box and enable scroll
+    closeMsg.onclick = function () {
+        messageBox.style.display = "none";
+        document.body.classList.remove("no-scroll");
+        document.documentElement.classList.remove("no-scroll");
+    }
+
+    // View more functionality
+    viewMoreBtn.onclick = function () {
+        var hiddenItems = document.querySelectorAll(".promoItem.hidden");
+        hiddenItems.forEach(item => {
+            item.classList.remove("hidden");
+        });
+        if (document.querySelectorAll(".promoItem.hidden").length === 0) {
+            viewMoreBtn.style.display = "none";
+        }
+    }
+</script>
+</body>
+</html>
