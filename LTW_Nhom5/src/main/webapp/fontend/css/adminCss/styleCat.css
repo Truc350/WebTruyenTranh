@@ -1,0 +1,304 @@
+/* Tổng thể layout */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+body {
+    color: #333;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.page-title {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* Thanh tìm kiếm và nút thêm */
+.search-add-container {
+    display: flex;
+    margin-bottom: 40px;
+    gap: 30px;
+    align-items: center;
+    /*white-space: nowrap;       !* Không cho xuống hàng *!*/
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-box input {
+    width: 100%;
+    padding:8px 38px 8px 14px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    outline: none;
+    height: 50px;
+    transition: 0.2s;
+}
+
+.search-box input::placeholder {
+    font-size: 16px;
+    color: #A49F9F;
+}
+
+.search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 15px;             /* icon sát hơn về phía phải */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+    pointer-events: none;
+}
+
+
+.search-add-container .add-btn {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.add-btn:hover {
+    background-color: #ff6a6a;
+}
+
+/* Bảng dữ liệu */
+.table-container {
+    max-width: 700px;        /* Thu nhỏ khung bảng */
+    width: 100%;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.table-container thead th{
+    background-color: #ffeaea;
+}
+
+.table-container th,
+.table-container td {
+    text-align: left;
+    padding: 14px 20px;
+}
+
+.table-container th {
+    background-color: #ffeaea;
+    color: #333;
+    font-weight: 600;
+}
+
+.table-container tr:hover {
+    background-color:  #fff1f1;
+}
+
+/* Nút hành động */
+.edit-btn, .delete-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 6px;
+}
+
+.edit-btn:hover { color: #0056b3; }
+.delete-btn:hover { color: #ff4c4c; }
+
+/* Phân trang bên trong bảng */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+}
+
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #FF7A7A;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button.active {
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
+}
+/* POPUP THÊM THỂ LOẠI*/
+/* Overlay mờ toàn màn */
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;                    /* Khi mở popup → JS đổi thành flex */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;                     /* Đè lên mọi thành phần */
+}
+
+/* Hộp popup */
+.popup-box {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 350px;
+    animation: fadeIn 0.25s ease;     /* Hiệu ứng xuất hiện */
+}
+
+/* Tiêu đề */
+.popup-box h3 {
+    margin-bottom: 18px;
+    font-size: 20px;
+    color: #333;
+}
+
+.popup-box label{
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+/* Ô nhập */
+.popup-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1.6px solid #ff8e8e;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    outline: none;
+}
+
+.popup-box input:focus {
+    border-color: #ff5c5c;
+}
+
+/* Khu vực nút */
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Nút */
+.save-btn, .cancel-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.save-btn {
+    background: #ff4c4c;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #ff6b6b;
+}
+
+.cancel-btn {
+    background: #e0e0e0;
+}
+
+.cancel-btn:hover {
+    background: #c7c7c7;
+}
+
+/* Hiệu ứng fade */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Áp dụng chung cho cả input và textarea */
+.popup-box input,
+.popup-box textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1.6px solid #ff8e8e;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.popup-box input:focus,
+.popup-box textarea:focus {
+    border-color: #ff5c5c;
+}
+
+/* Riêng textarea nếu muốn bo góc mềm hơn một chút */
+.popup-box textarea {
+    border: 2px solid #ffb1b1;
+    resize: vertical;              /* Chỉ cho phép kéo dọc */
+}
+
+.popup-box textarea:focus {
+    border-color: #ff5c5c;
+}
+
+/* Đảm bảo label luôn nằm trên và căn chỉnh đẹp */
+.popup-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+/* Đảm bảo các popup đều dùng flex khi hiển thị */
+#addPopup, #editPopup, #deletePopup {
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-buttons {
+    text-align: center;
+    white-space: nowrap;
+}
