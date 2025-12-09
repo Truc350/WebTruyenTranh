@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/publicCss/nav.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/UserBCss/checkout.css">
+    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+    <a href="../public/homePage.jsp">
+        <div class="logo">
+            <img id="logo" src="../../img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
+    </a>
+    <nav class="menu">
+        <a href="../public/homePage.jsp">Trang chủ</a>
+
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="../public/CatagoryPage.jsp">Hành động</a>
+                <a href="#">Phiêu lưu</a>
+                <a href="#">Lãng mạn </a>
+                <a href="#">Học đường</a>
+                <a href="#">Kinh dị</a>
+                <a href="#">Hài hước</a>
+                <a href="#">Giả tưởng</a>
+                <a href="#">Trinh thám</a>
+            </div>
+        </div>
+
+        <a href="../public/AbouUS.jsp">Liên hệ</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+        <button class="search-button">
+            <i class="fas fa-magnifying-glass"></i>
+        </button>
+    </div>
+    <div class="contain-left">
+
+        <div class="actions">
+            <div class="notify-wrapper">
+                <a href="profile.jsp" class="bell-icon">
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="span-bell">2</span>
+                </a>
+                <!-- Khung thông báo -->
+                <div class="notification-panel">
+                    <div class="notification-header">
+                        <div class="inform-num">
+                            <i class="fa-solid fa-bell"></i>
+                            <span>Thông báo</span>
+                            <span class="notification-badge">(1)</span>
+                        </div>
+                        <div class="inform-all">
+                            <a href="profile.jsp">Xem tất cả</a>
+                        </div>
+                    </div>
+                    <div class="notification-content inform1">
+                        <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                        hấp
+                        dẫn.
+                    </div>
+                    <div class="notification-content inform2">
+                        <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                        dẫn.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="chat.jsp">
+                <i class="fa-solid fa-comment"></i>
+            </a>
+        </div>
+
+        <div class="actions">
+            <a href="cart.jsp">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+        </div>
+
+        <div class="actions user-nav">
+            <i class="fa-solid fa-user" id="user"></i>
+            <div class="dropdown-user">
+                <a href="../public/homePage.jsp">Trang chủ</a>
+                <a href="../public/login.jsp">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="titleCheckout">
+    <h1>THANH TOÁN</h1>
+</div>
+
+
+<div class="mainContainer" style="display: flex">
+    <div class="container">
+        <main>
+            <section class="address">
+                <div class="form-group">
+                    <label>Họ và tên người nhận: *</label>
+                    <input type="text" value="" placeholder="Nhập họ tên">
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại: *</label>
+                    <input type="text" value="" placeholder="Nhập số điện thoại">
+                </div>
+
+                <div class="form-group">
+                    <label>Quốc gia: *</label>
+                    <select>
+                        <option selected>Việt Nam</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tỉnh/Thành Phố: *</label>
+                    <select>
+                        <option selected>Hồ Chí Minh</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ nhận hàng: *</label>
+                    <input type="text" value="" placeholder="Nhập địa chỉ cụ thể">
+                </div>
+            </section>
+
+
+
+            <section class="shipping">
+                <h2>Phương thức Vận chuyển: *</h2>
+                <label><input type="radio" name="shipping" checked> Giao hàng Tiêu Chuẩn - 25.000đ</label><br>
+                <label><input type="radio" name="shipping"> Giao hàng Hỏa Tốc - 50.000đ</label>
+            </section>
+            <section class="payment">
+                <h2>Phương thức Thanh toán: *</h2>
+                <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
+                <!-- <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br> -->
+                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label><br>
+            </section>
+            <section class="promotion">
+                <h2>Mã giảm giá:</h2>
+                <div class="promos">
+                    <input type="text" id="promo" placeholder="Nhập mã giảm giá">
+                    <button class="apply-btn">Áp dụng</button>
+                </div>
+                <div class="voucher-row">
+                    <div class="voucher-left">
+                        <span class="voucher-icon">🎫</span>
+                        <span class="voucher-title">Chọn voucher</span>
+                    </div>
+                    <a href="#" class="voucher-select" id="voucher-select"> <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+                <div class="usePoint">
+                    <p>Sử dụng 200 xu:</p>
+                    <input type="checkbox">
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+    <div class="totalCost">
+        <section class="order-summary">
+            <h2>Tổng đơn đặt hàng</h2>
+            <div class="items">
+                <div class="itemSummary">
+                    <div class="item">
+                        <img src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/thien_quan_tu_phuc___tap_1_tai_ban_2024___tang_kem_bookmark/2024_12_12_11_48_28_1-390x510.jpg"
+                             alt="">
+                        <p>Thiên quan từ phúc </p>
+                    </div>
+                    <span>162.000đ</span>
+                </div>
+
+
+                <div class="itemSummary">
+                    <div class="item">
+                        <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
+                             alt="">
+                        <p>Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn</p>
+                    </div>
+                    <span>205.000đ</span>
+                </div>
+            </div>
+
+            <p>Phí vận chuyển: <span>25.000đ</span></p>
+            <p>Mã giảm giá: <span>-50.000đ</span></p>
+            <p><strong>TỔNG THANH TOÁN:</strong><span>403.000đ</span></p>
+            <button id="checkout-qr">ĐẶT HÀNG</button>
+        </section>
+    </div>
+</div>
+
+</div>
+<!--Popup mã QR-->
+<div class="container-qr-popup" style="display: none;">
+    <div class="momo-modal" id="momoModal" aria-hidden="true">
+        <div class="momo-dialog" role="dialog" aria-modal="true" aria-labelledby="momoTitle">
+            <button class="momo-close" id="momoClose" aria-label="Đóng popup">✕</button>
+
+            <h2 class="momo-title" id="momoTitle">Quét QR MoMo để thanh toán</h2>
+
+            <div class="momo-content">
+                <!-- Ảnh QR: thay bằng QR của bạn -->
+                <img src="https://tse3.mm.bing.net/th/id/OIP.IHv3sMp_4T18cEr7RTAdgQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+                     alt="Mã QR MoMo" class="momo-qr" />
+
+                <!-- Thông tin người nhận: thay bằng của bạn -->
+                <div class="momo-info">
+                    <p><strong>Người nhận:</strong> Nguyễn Văn A</p>
+                    <p><strong>SĐT MoMo:</strong> 0901234567</p>
+                    <p><strong>Nội dung chuyển khoản:</strong>Thanh toán đơn hàng Thiên quan từ phúc và bộ bài nhật ký Tarot</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- BACKDROP LÀM MỜ -->
+<div class="qr-backdrop"></div>
+
+<!-- POPUP MÃ QR -->
+<div class="qr-popup" id="qrPopup">
+    <div class="qr-content">
+        <button class="qr-close-btn">×</button>
+        <h3>Quét mã QR để thanh toán</h3>
+        <img src="https://vaynhanhonline.com.vn/wp-content/uploads/2024/01/cach-tao-ma-qr-ngan-hang-bidv-5-e1704968301891.jpg" alt="QR Code Thanh toán">
+        <div class="qr-info">
+            <p><strong>Ngân hàng:</strong> BIDV</p>
+            <p><strong>Số tài khoản:</strong> 1234567890</p>
+            <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
+            <p><strong>Nội dung chuyển khoản:</strong> <span id="orderCode">DH20251227001</span></p>
+        </div>
+        <button class="qr-copy-btn">Copy nội dung chuyển khoản</button>
+    </div>
+</div>
+
+<!-- BACKDROP -->
+<div class="voucher-backdrop" id="voucherBackdrop" style="display:none;"></div>
+
+<!-- POPUP VOUCHER -->
+<div class="voucher-popup" id="voucherPopup" style="display:none;">
+    <div class="voucher-header-drag">
+
+        <h2 class="voucher-title-popup">Ví Voucher</h2>
+        <button class="close-popup-btn">&times;</button>
+    </div>
+
+    <!-- Danh sách voucher -->
+    <div class="vouchers-grid">
+        <!-- Voucher 1 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 10K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS10KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+<!--                <button class="copy-code-btn">Copy mã</button>-->
+                <button class="copy-code-btn">Sử dụng</button>
+            </div>
+        </div>
+
+        <!-- Voucher 2 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 20K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS20KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Sử dụng</button>
+            </div>
+        </div>
+
+        <!-- Voucher 3 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS40KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Sử dụng</button>
+            </div>
+        </div>
+
+        <!-- Voucher 4 -->
+        <div class="voucher-card">
+            <div class="voucher-header">
+                <span class="voucher-type">Voucher chưa sử dụng</span>
+                <span class="voucher-status unused">Chưa sử dụng</span>
+            </div>
+            <div class="voucher-body">
+                <div class="voucher-title">Mã Giảm 80K - Toàn Sàn</div>
+                <div class="voucher-desc">
+                    Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
+                </div>
+                <div class="voucher-code">FHS80KT11</div>
+                <button class="voucher-detail-btn">Chi tiết</button>
+            </div>
+            <div class="voucher-footer">
+                <span class="voucher-expiry">HSD: 30/11/2025</span>
+                <button class="copy-code-btn">Sử dụng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Cột 1: Giới thiệu -->
+        <div class="footer-column">
+            <div class="logo">
+                <a href="#">
+                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                </a>
+            </div>
+            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
+                truyện
+                giấy,<br>
+                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
+            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
+                <str>10.000+</str>
+                <br>
+                truyện hấp dẫn cho bạn
+            </p>
+        </div>
+
+        <!-- Cột 2: Liên kết nhanh -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
+            <ul>
+                <li><a href="../public/homePage.jsp">Trang chủ</a></li>
+                <li><a href="../public/FlashSale.jsp">Khuyến mãi</a></li>
+                <li><a href="cart.jsp">Giỏ hàng</a></li>
+                <li><a href="../public/AbouUS.jsp">Liên hệ</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 3: Hỗ trợ khách hàng -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
+            <ul>
+                <li><a href="RefundPolicy.jsp">Chính sách đổi trả</a></li>
+                <li><a href="shippingPolicy.jsp">Chính sách vận chuyển</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 4: Liên hệ & Mạng xã hội -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
+            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
+            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
+            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i
+                        class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/comic.store/" title="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i
+                        class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <!-- Cột 5: Thanh toán -->
+        <div class="footer-column">
+            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
+            <p>Hỗ trợ thanh toán qua:</p>
+            <div class="payment-icons">
+                <img src="../../img/momo.png" alt="Momo">
+                <img src="../../img/zalopay.png" alt="ZaloPay">
+            </div>
+            <p>Website đã đăng ký với Bộ Công Thương.</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
+    </div>
+</footer>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Chọn các phần tử cần thiết
+        const voucherContainer = document.querySelector('.voucher-container');
+        const popupBackdrop = document.querySelector('.popup-backdrop');
+        const voucherSelect = document.querySelector('.voucher-select');
+        const closePopupBtn = document.querySelector('.close-popup-btn');
+
+
+        // Hàm đóng popup
+        function closePopup() {
+            if (voucherContainer) {
+                voucherContainer.classList.remove('popup-active');
+                voucherContainer.style.display = 'none';
+            }
+            if (popupBackdrop) {
+                popupBackdrop.classList.remove('active');
+            }
+        }
+
+        // Xử lý sự kiện nhấn vào voucher-select để hiển thị/ẩn popup
+        if (voucherSelect) {
+            voucherSelect.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn hành vi mặc định của thẻ a
+                if (voucherContainer && popupBackdrop) {
+                    if (voucherContainer.classList.contains('popup-active')) {
+                        // Nếu popup đang hiển thị, ẩn nó
+                        closePopup();
+                    } else {
+                        // Hiển thị popup
+                        voucherContainer.style.display = 'block';
+                        voucherContainer.classList.add('popup-active');
+                        popupBackdrop.classList.add('active');
+                        // Ẩn các voucher đã sử dụng
+                        const allVouchers = voucherContainer.querySelectorAll('.voucher-card');
+                        allVouchers.forEach(v => {
+                            v.style.display = v.classList.contains('used') ? 'none' : 'block';
+                        });
+                    }
+                }
+            });
+        }
+
+        // Đóng popup khi nhấn vào nền mờ
+        if (popupBackdrop) {
+            popupBackdrop.addEventListener('click', function (e) {
+                // Chỉ đóng nếu nhấn trực tiếp vào backdrop
+                if (e.target === popupBackdrop) {
+                    closePopup();
+                }
+            });
+        }
+
+        // Đóng popup khi nhấn nút đóng
+        if (closePopupBtn) {
+            closePopupBtn.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn hành vi mặc định
+                closePopup();
+            });
+        }
+
+        // Ngăn sự kiện click bên trong voucher-container lan ra ngoài
+        if (voucherContainer) {
+            voucherContainer.addEventListener('click', function (e) {
+                e.stopPropagation(); // Ngăn sự kiện click lan ra backdrop
+            });
+        }
+
+        // Xử lý nút Copy mã
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
+                const code = e.target.closest('.voucher-card')?.querySelector('.voucher-code')?.textContent;
+                if (code) {
+                    navigator.clipboard.writeText(code).then(() => {
+                        alert('Đã copy mã: ' + code);
+                    }).catch(() => {
+                        alert('Không thể copy mã. Vui lòng copy thủ công.');
+                    });
+                }
+            }
+        });
+
+        // Xử lý nút Chi tiết
+        // Nút mở popup
+        const voucherSelectBtn = document.querySelector('.voucher-select');
+
+        // Popup + backdrop
+        const voucherPopup = document.querySelector('.voucher-container');
+        const voucherBackdrop = document.querySelector('.voucher-backdrop');
+
+        // Nút đóng
+        const closeVoucherBtn = document.querySelector('.close-popup-btn');
+
+        // 👉 Mở popup voucher
+        voucherSelectBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            voucherPopup.style.display = 'block';
+            voucherBackdrop.classList.add('active');
+
+            setTimeout(() => {
+                voucherPopup.classList.add('popup-active');
+            }, 10);
+        });
+
+        // 👉 Đóng popup
+        function closeVoucherPopup() {
+            voucherPopup.classList.remove('popup-active');
+            voucherBackdrop.classList.remove('active');
+
+            setTimeout(() => {
+                voucherPopup.style.display = 'none';
+            }, 250);
+        }
+
+        closeVoucherBtn.addEventListener('click', closeVoucherPopup);
+
+        // 👉 Click nền mờ để đóng
+        voucherBackdrop.addEventListener('click', closeVoucherPopup);
+
+
+
+
+
+
+        document.getElementById("voucher-select").addEventListener("click", function(e) {
+            e.preventDefault();
+            document.getElementById("voucherPopup").style.display = "block";
+            document.getElementById("voucherBackdrop").style.display = "block";
+        });
+
+// Nút đóng popup
+        document.querySelector(".close-popup-btn").addEventListener("click", function() {
+            document.getElementById("voucherPopup").style.display = "none";
+            document.getElementById("voucherBackdrop").style.display = "none";
+        });
+
+// Click ra ngoài popup để tắt
+        document.getElementById("voucherBackdrop").addEventListener("click", function() {
+            document.getElementById("voucherPopup").style.display = "none";
+            document.getElementById("voucherBackdrop").style.display = "none";
+        });
+
+
+
+
+
+
+    });
+    const popup = document.querySelector('.voucher-container');
+    const dragHeader = document.querySelector('.voucher-header-drag');
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    dragHeader.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        // Tính khoảng cách từ chuột đến góc popup
+        offsetX = e.clientX - popup.offsetLeft;
+        offsetY = e.clientY - popup.offsetTop;
+
+        popup.style.transition = "none"; // tắt animation để kéo mượt hơn
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            popup.style.left = (e.clientX - offsetX) + "px";
+            popup.style.top = (e.clientY - offsetY) + "px";
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+
+    //chỗ này xử lí check out
+    document.getElementById("checkout-qr").addEventListener("click", function (event) {
+        event.preventDefault();
+        document.querySelector(".popup-qr").style.display = "flex";
+    });
+
+    // Lấy các phần tử
+    const openVoucherBtn = document.querySelector('.voucher-select');
+    const voucherPopup = document.querySelector('.voucher-container');
+    const closeVoucherBtn = document.querySelector('.close-popup-btn');
+
+    // Khi nhấn nút chọn voucher → mở popup
+    openVoucherBtn.addEventListener('click', function (e) {
+        e.preventDefault(); // chặn nhảy trang
+        voucherPopup.style.display = 'block';
+    });
+
+    // Khi nhấn nút X → đóng popup
+    closeVoucherBtn.addEventListener('click', function () {
+        voucherPopup.style.display = 'none';
+    });
+
+    // // Nếu muốn click ra ngoài để đóng (tùy chọn)
+    // voucherPopup.addEventListener('click', function (e) {
+    //     if (e.target === voucherPopup) {
+    //         voucherPopup.style.display = 'none';
+    //     }
+    // });
+
+    //popup qr
+    const btnCheckout = document.getElementById('checkout-qr');
+    const popupqr = document.querySelector('.container-qr-popup');
+    const btnClose = document.getElementById('momoClose');
+
+    // Mở popup khi bấm "ĐẶT HÀNG"
+    btnCheckout.addEventListener('click', () => {
+        popupqr.style.display = 'block';
+    });
+
+    // Đóng popup khi bấm nút ✕
+    btnClose.addEventListener('click', () => {
+        popupqr.style.display = 'none';
+    });
+
+    // Đóng popup khi bấm ra ngoài (nếu muốn)
+    popupqr.addEventListener('click', (e) => {
+        if (e.target.classList.contains('momo-modal')) {
+            popupqr.style.display = 'none';
+        }
+    });
+
+
+    //voucher-select
+
+
+    const btnCheckoutqr = document.getElementById('checkout-qr');           // Nút "ĐẶT HÀNG"
+    const momoPopup   = document.querySelector('.container-qr-popup');   // Popup QR
+    const closeBtn    = document.getElementById('momoClose');             // Nút X
+
+    // Kiểm tra xem người dùng có chọn "Ví điện tử" không
+    function isMomoSelected() {
+        const selectedPayment = document.querySelector('input[name="payment"]:checked');
+        if (!selectedPayment) return false;
+        const labelText = selectedPayment.parentElement.textContent || '';
+        return labelText.includes('Ví điện tử') || labelText.includes('MoMo') || labelText.includes('ZaloPay');
+    }
+
+    // Khi nhấn nút "ĐẶT HÀNG"
+    btnCheckoutqr.addEventListener('click', function (e) {
+        if (isMomoSelected()) {
+            e.preventDefault();           // Ngăn submit form (nếu có)
+            momoPopup.style.display = 'block';  // Hiện popup QR
+        }
+        // Nếu chọn COD thì để form submit bình thường (hoặc xử lý sau)
+    });
+
+    // Đóng popup khi nhấn nút X
+    closeBtn.addEventListener('click', function () {
+        momoPopup.style.display = 'none';
+    });
+
+    // Đóng popup khi click ra ngoài vùng nội dung
+    momoPopup.addEventListener('click', function (e) {
+        if (e.target === momoPopup || e.target.classList.contains('momo-modal')) {
+            momoPopup.style.display = 'none';
+        }
+    });
+
+
+</script>
+
+</body>
+
+
+</html>

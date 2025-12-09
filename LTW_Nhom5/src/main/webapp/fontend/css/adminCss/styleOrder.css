@@ -1,0 +1,1129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    color: #333;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ==== MAIN CONTENT ==== */
+.main-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.page-title {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* ==== ORDER STATUS TABS ==== */
+.order-tabs {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin: 10px 0 25px 0;
+    border-bottom: 1px solid #e9e9e9;
+    padding-bottom: 10px;
+}
+
+.tab-item {
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    padding-bottom: 6px;
+    transition: color 0.25s ease; /* hiệu ứng đổi màu êm */
+}
+
+.tab-item:hover {
+    color: #ff5e5e;
+}
+
+.tab-item.active {
+    color: #ff4c4c;
+    font-weight: 600;
+    position: relative;
+}
+
+.tab-item.active::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #ff4c4c;
+    border-radius: 10px;
+    transition: width 0.25s ease; /* hiệu ứng underline mượt */
+}
+
+/*Thanh tìm kiếm + chọn đơn vị vận chuyển */
+.order-controls {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+#tab-pending .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-pending .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#tab-pending .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-pending .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.shipping-select select {
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    height: 40px;
+    font-size: 14px;
+}
+
+.shipping-select select option {
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.apply-btn,
+.confirm-all-btn,
+.confirm-btn,
+.cancel-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.apply-btn {
+    background: #ff5e5e;
+    color: white;
+    font-size: 14px;
+}
+
+.confirm-all-btn {
+    background: #007bff;
+    color: white;
+    font-size: 14px;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: white;
+    font-size: 14px;
+}
+
+.cancel-btn {
+    background: #CCCCCC;
+}
+
+.apply-btn:hover {
+    background: #ff7070;
+}
+
+.confirm-all-btn:hover {
+    background: #0056b3;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+.cancel-btn:hover {
+    background: #b8b8b8;
+}
+
+/*BANG*/
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0 5px; /* tạo khoảng cách giữa các dòng */
+}
+
+.order-table thead th {
+    text-align: left;
+    font-weight: 600;
+    padding: 8px 8px;
+    background-color: #f9f9f9;
+    white-space: nowrap;
+}
+
+.order-table tbody tr {
+    background: #fff;
+    border-radius: 8px;
+}
+
+.order-table tbody td {
+    padding: 10px 8px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f4d6d6;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap; /* không bị dồn xuống dòng */
+}
+
+.order-table td.product-cell,
+.order-table td:nth-child(8) {
+    white-space: normal;
+    max-width: 220px;
+    word-wrap: break-word;
+}
+
+.order-table td:last-child {
+    align-items: center;
+    gap: 8px;
+}
+
+.confirm-btn, .cancel-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+#tab-pending .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+/*!* Giảm dài cột sản phẩm *!*/
+/*.product-cell {*/
+/*    max-width: 220px;*/
+/*    white-space: nowrap;*/
+/*    overflow: hidden;*/
+/*    text-overflow: ellipsis;*/
+/*}*/
+
+/* ==== PAGINATION ==== */
+.pagination-row td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+}
+
+.pagination {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #FF7A7A;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pagination button.active {
+    background-color: #FF7A7A;
+    color: #fff;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .active {
+    background-color: #FF7A7A;
+    color: #fff;
+    border-color: #FF7A7A;
+}
+
+
+/* ===== Popup hủy đơn - overlay & box ===== */
+.cancel-popup {
+    position: fixed;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    display: none; /* show bằng JS */
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1200;
+    padding: 20px;
+}
+
+.cancel-popup .popup-box {
+    width: 420px;
+    max-width: 95%;
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: popupIn 180ms ease;
+}
+
+/* Header */
+.cancel-popup .popup-box h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Textarea */
+.cancel-popup .popup-box textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    resize: vertical;
+    min-height: 90px;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+/* Actions row */
+.cancel-popup .popup-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Buttons in popup */
+.cancel-popup .close-popup,
+.cancel-popup .confirm-cancel {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancel-popup .close-popup {
+    background: #f3f3f3;
+    color: #333;
+}
+
+.cancel-popup .close-popup:hover {
+    background: #e8e8e8;
+}
+
+.cancel-popup .confirm-cancel {
+    background: #ff5a5a;
+    color: white;
+}
+
+.cancel-popup .confirm-cancel:hover {
+    background: #ff3b3b;
+}
+
+/* Small animation */
+@keyframes popupIn {
+    from {
+        transform: translateY(8px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ====== TAB: CHỜ LẤY HÀNG ====== */
+
+/* Thanh tìm kiếm */
+#tab-pickup .order-controls {
+    display: flex;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+#tab-pickup .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-pickup .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-pickup .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-pickup .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Bảng */
+#tab-pickup .order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tab-pickup .order-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f4d6d6;
+    text-align: left;
+}
+
+#tab-pickup .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-pickup .order-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Nút xác nhận giao */
+.ship-confirm-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.ship-confirm-btn:hover {
+    background-color: #218838;
+}
+
+#tab-pickup .pagination-row-pickup td {
+    text-align: right;
+    background-color: #fff;
+    /*padding-right: 20px;*/
+}
+
+/* ====== TAB: ĐANG GIAO ====== */
+/* Search box có icon */
+#tab-delivering .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-delivering .search-box .search-input {
+    width: 100%;
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-delivering .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-delivering .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#tab-delivering .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+/* Cột chứa nút */
+#tab-delivering .action-cell {
+    display: flex;
+    gap: 6px;
+}
+
+/* Style nút */
+#tab-delivering .btn-de-detail {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#tab-delivering .btn-de-detail {
+    background: #CCCCCC;
+    font-size: 14px;
+}
+
+
+#tab-delivering .pagination-row-delivering td {
+    text-align: right;
+    background-color: #fff;
+    /*padding-right: 20px;*/
+}
+
+/* POPUP XEM CHI TIẾT - ĐÃ CHỈNH SỬA */
+.order-detail-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* HEADER: Không nền, chữ giữa */
+.order-detail-popup .popup-header {
+    padding: 16px 20px;
+    background: none; /* Xóa màu nền */
+    color: #2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    font-size: 18px;
+    border-bottom: 1px solid #eee; /* Dòng phân cách nhẹ */
+}
+
+.order-detail-popup .popup-header h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* Nút X ở góc phải trên */
+.order-detail-popup .close-popup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 24px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.order-detail-popup .close-popup:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* BODY */
+.order-detail-popup .popup-body {
+    padding: 20px;
+}
+
+.order-detail-popup .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.order-detail-popup .info-row .label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.order-detail-popup .info-row .value {
+    color: #34495e;
+}
+
+.order-detail-popup .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.order-detail-popup .status-text {
+    color: #e67e22;
+}
+
+.order-detail-popup .status-icon::before {
+    content: "●";
+    color: #e67e22;
+    font-size: 12px;
+}
+
+/* Timeline */
+.order-detail-popup .timeline {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+}
+
+.order-detail-popup .timeline::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 30px;
+    right: 30px;
+    height: 2px;
+    background: #ddd;
+    z-index: 0;
+}
+
+.order-detail-popup .step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.order-detail-popup .step .circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    background: #ddd;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.order-detail-popup .step p {
+    margin: 0;
+    font-size: 13px;
+    color: #777;
+}
+
+.order-detail-popup .step.done .circle {
+    background: #28a745 ;
+    color: #fff;
+}
+
+.order-detail-popup .step.active .circle {
+    background:#007bff;
+    color: #fff;
+}
+
+.order-detail-popup .step.active p {
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* FOOTER: Nút Đóng ở giữa, màu xanh dương */
+.order-detail-popup .popup-footer {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center; /* Căn giữa */
+    gap: 10px;
+}
+
+.order-detail-popup .btn-close {
+    background: #007bff; /* Màu xanh dương */
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.order-detail-popup .btn-close:hover {
+    background: #0056b3; /* Xanh đậm hơn khi hover */
+}
+
+
+
+/* ====== TAB: ĐÃ GIAO ====== */
+/* ==== ICON TÌM KIẾM TRONG INPUT ===== */
+#tab-delivered .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-delivered .search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-delivered .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-delivered .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+#tab-delivered .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-delivered .pagination-row-delivered td {
+    text-align: right;
+    background-color: #fff;
+}
+
+
+/* ==== STARS ==== */
+.stars i {
+    color: #FFD43B; /* vàng đẹp */
+    font-size: 18px;
+}
+
+/* ====== TAB: TRA TIEN/ HOAN TIEN ====== */
+#tab-return .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-return .search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-return .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-return .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+/* Trạng thái */
+.status {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status.yellow {
+    background: #ffe6b3;
+    color: #b36b00;
+}
+
+.status.green {
+    background: #d4edda;
+    color: #28a745;
+}
+
+/*.status.red{*/
+/*    background: #ff6a6a;*/
+/*    color: #ff4c4c ;*/
+
+/*}*/
+
+/* Nút */
+.btn-detail, .btn-refund {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-detail {
+    background: #e8e8e8;
+}
+
+.btn-refund {
+    background: #ffb84d;
+}
+
+/* Popup xem chi tiết */
+.return-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.25);
+    display: none;
+    z-index: 9999;
+    animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Header */
+.popup-header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.popup-close-btn {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+
+.popup-close-btn:hover {
+    color: #000;
+}
+
+/* Nội dung */
+.popup-content {
+    padding: 16px 20px;
+}
+
+.popup-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.popup-row .label {
+    width: 130px;
+    font-weight: 600;
+    color: #444;
+}
+
+.popup-row .value {
+    flex: 1;
+    color: #222;
+}
+
+.proof-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.proof-link:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+    border-top: 1px solid #eee;
+}
+
+.popup-close {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#tab-return .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-return .pagination-row-return td {
+    text-align: right;
+    background-color: #fff;
+}
+
+/* ====== TAB: DON BI HUY ====== */
+#tab-cancelled .search-box {
+    position: relative;
+    display: flex;
+    width: 500px;
+    height: 40px;
+}
+
+#tab-cancelled .search-box .search-input {
+    width: 100%;
+    padding: 8px 34px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tab-cancelled .search-box .search-input::placeholder {
+    font-size: 14px;
+}
+
+#tab-cancelled .search-box .fa-magnifying-glass {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+#tab-cancelled .order-table tbody tr:hover {
+    background: #fff5f5;
+    transition: 0.25s;
+}
+
+#tab-cancelled .pagination-row-cancelled td {
+    text-align: right;
+    background: #fff;
+}
+
+.search-input:focus {
+    outline: none; /* bỏ viền mặc định màu đen */
+    border-color: #ff8282; /* đổi sang màu bạn muốn */
+    /*box-shadow: 0 0 4px rgba(255, 94, 94, 0.4); !* hiệu ứng sáng nhẹ (tùy chọn) *!*/
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.btn-refund {
+    background: #16a34a;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-reject {
+    background: #ff4c4c;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.status.red { color: #ff4c4c; }
+.rejected-note { color: #ff4c4c; font-size: 14px; }
+
+/* Ẩn nút khi không phải "Đang xem xét" */
+tr:not([data-status="pending"]) .btn-refund,
+tr:not([data-status="pending"]) .btn-reject {
+    display: none;
+}
+
+/* ==================== POPUP TỪ CHỐI HOÀN TIỀN==================== */
+.popup-desk-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.25s ease;
+}
+
+.popup-desk-box {
+    background: white;
+    width: 90%;
+    max-width: 480px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+    animation: popUp 0.35s ease;
+}
+
+/* Header đỏ nổi bật */
+.popup-desk-box h3 {
+    margin: 0;
+    padding: 20px 24px 16px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 16px 16px 0 0;
+}
+
+/* Nội dung */
+.popup-desk-content {
+    padding: 20px 24px 24px;
+}
+
+.popup-desk-content p {
+    margin: 0 0 12px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.popup-desk-content p strong {
+    color: #1f2937;
+}
+
+/* Textarea siêu đẹp */
+.popup-desk-content label {
+    display: block;
+    margin: 16px 0 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+}
+
+.popup-desk-content label span {
+    color: #ff4c4c;
+}
+
+#rejectReason {
+    width: 100%;
+    height: 110px;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14.5px;
+    resize: vertical;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+#rejectReason:focus {
+    outline: none;
+    border-color: black;
+}
+
+/* Nút hành động */
+.popup-desk-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.popup-desk-actions button {
+    flex: 1;
+    padding: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.popup-desk-actions .btn-cancel {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.popup-desk-actions .btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.popup-desk-actions .btn-save {
+    background: #ff6a6a;
+    color: white;
+}
+
+.popup-desk-actions .btn-save:hover {
+    background: #ff4c4c;
+}
+
+/* Animation mượt mà */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popUp {
+    from { transform: scale(0.9) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+
+
+
+
+
