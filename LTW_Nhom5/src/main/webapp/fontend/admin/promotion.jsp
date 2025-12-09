@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,7 +224,7 @@
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
                         <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 

@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,7 +133,7 @@
                     <td>22,500₫</td>
                     <td>550 quyển</td>
                     <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT001" title="Xem review">Xem</i></button>
+                        <button class="view-review-btn" data-comic="TT001" title="Xem review">Xem</button>
                     </td>
                     <td class="action-cell">
                         <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
