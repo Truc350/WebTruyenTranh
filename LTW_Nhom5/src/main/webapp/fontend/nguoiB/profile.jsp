@@ -121,7 +121,7 @@
                 <li><a href="#">Đổi mật khẩu</a></li>
                 <li><a href="#">Ưu đãi C-Point</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
-                <li><a href="#">Ví voucher </a></li>
+<%--                <li><a href="#">Ví voucher </a></li>--%>
                 <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Sản phẩm yêu thích</a></li>
             </ul>
@@ -715,10 +715,10 @@
             <!--            <p class="rating-label" id="rating-label">Chọn số sao</p>-->
         </div>
 
-        <div class="field">
-            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>
-            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>
-        </div>
+<%--        <div class="field">--%>
+<%--            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>--%>
+<%--            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>--%>
+<%--        </div>--%>
 
         <div class="field">
             <label for="comment" class="nameDisplay">Nhận xét</label>
@@ -727,7 +727,7 @@
 
         <div class="field-img">
             <label for="image-upload" class="nameDisplay">Tải ảnh</label>
-            <input type="file" id="image-upload" accept="image/*"/>
+            <input type="file" id="image-upload" accept="image/*" multiple />
             <div id="image-preview"></div>
         </div>
 
@@ -1016,22 +1016,35 @@
                 // ratingLabel.textContent = `${value} sao`;
             });
         });
-
-// Preview ảnh
+// Preview ảnh - TỐI ĐA 3 ẢNH
         document.querySelector('#image-upload').addEventListener('change', function () {
             const preview = document.querySelector('#image-preview');
+            const files = Array.from(this.files).slice(0, 3); // Chỉ lấy 3 ảnh đầu
             preview.innerHTML = '';
-            for (let file of this.files) {
+
+            if (this.files.length > 3) {
+                alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+            }
+
+            files.forEach(file => {
                 if (file.type.startsWith('image/')) {
                     const img = document.createElement('img');
                     img.src = URL.createObjectURL(file);
                     img.style.width = "80px";
-                    img.style.marginRight = "5px";
+                    img.style.height = "80px";
+                    img.style.objectFit = "cover";
+                    img.style.marginRight = "8px";
+                    img.style.borderRadius = "4px";
+                    img.style.border = "1px solid #ddd";
                     preview.appendChild(img);
                 }
-            }
-        });
+            });
 
+            // Cập nhật lại input để chỉ giữ 3 ảnh
+            const dataTransfer = new DataTransfer();
+            files.forEach(file => dataTransfer.items.add(file));
+            this.files = dataTransfer.files;
+        });
 // Gửi đánh giá
         submitReviewBtn.addEventListener('click', () => {
             const name = document.querySelector('#display-name').value.trim();
