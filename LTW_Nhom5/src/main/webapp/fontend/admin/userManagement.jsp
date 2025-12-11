@@ -56,12 +56,12 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <li>
-                <a href="promotion.jsp">
-                    <img src="../../img/promo.png" class="icon">
-                    <span>Quản lý khuyến mãi</span>
-                </a>
-            </li>
+<%--            <li>--%>
+<%--                <a href="promotion.jsp">--%>
+<%--                    <img src="../../img/promo.png" class="icon">--%>
+<%--                    <span>Quản lý khuyến mãi</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
             <li>
                 <a href="report.jsp">
                     <img src="../../img/report.png" class="icon">

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
-    <link rel="stylesheet" href="../css/adminCss/stylePro.css">
+    <link rel="stylesheet" href="../css/adminCss/stylePro.css?v=<%= System.currentTimeMillis() %>">
     <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
@@ -27,7 +27,7 @@
                 </a>
             </li>
             <li>
-                <a href="productManagement.html">
+                <a href="productManagement.jsp">
                     <img src="../../img/product.png" class="icon">
                     <span>Quản lý sản phẩm</span>
                 </a>
@@ -56,12 +56,12 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <li>
-                <a href="promotion.jsp">
-                    <img src="../../img/promo.png" class="icon">
-                    <span>Quản lý khuyến mãi</span>
-                </a>
-            </li>
+<%--            <li>--%>
+<%--                <a href="promotion.jsp">--%>
+<%--                    <img src="../../img/promo.png" class="icon">--%>
+<%--                    <span>Quản lý khuyến mãi</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
             <li>
                 <a href="report.jsp">
                     <img src="../../img/report.png" class="icon">
@@ -116,6 +116,7 @@
                 <tr>
                     <th>Mã truyện</th>
                     <th>Tên truyện</th>
+                    <th>Bộ truyện</th>
                     <th>Thể loại</th>
                     <th>Tác giả</th>
                     <th>Giá</th>
@@ -128,12 +129,15 @@
                 <tr>
                     <td>TT001</td>
                     <td>Thám tử lừng danh Conan</td>
+                    <td>-</td>
                     <td>Trinh thám</td>
                     <td>Gosho Aoyama</td>
                     <td>22,500₫</td>
                     <td>550 quyển</td>
                     <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT001" title="Xem review">Xem</button>
+                        <button class="view-review-btn" data-comic="TT001" title="Xem review">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </td>
                     <td class="action-cell">
                         <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -150,12 +154,35 @@
                 <tr>
                     <td>TT002</td>
                     <td>Doraemon</td>
-                    <td>Hài hước</td>
+                    <td>-</td>
+                    <td>Phiêu lưuy</td>
                     <td>Fujiko F. Fujio</td>
                     <td>18,000₫</td>
                     <td>320 quyển</td>
                     <td class="review-cell">
-                        <button class="view-review-btn" title="Xem review">Xem</button>
+                        <button class="view-review-btn" data-comic="TT002" title="Xem review"><i class="fa-solid fa-eye"></i></button>
+                    </td>
+                    <td class="action-cell">
+                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <div class="menu-container">
+                            <button class="more-btn">⋮</button> <!--menu-btn-->
+                            <div class="dropdown-menu"> <!--menu-options-->
+                                <label><input type="radio" name="display" checked> Hiển thị</label>
+                                <label><input type="radio" name="display"> Ẩn sản phẩm</label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>TT003</td>
+                    <td>One Piece - Tập 3</td>
+                    <td>East Blue Saga</td>
+                    <td>Phiêu lưu</td>
+                    <td>Fujiko F. Fujio</td>
+                    <td>18,000₫</td>
+                    <td>320 quyển</td>
+                    <td class="review-cell">
+                        <button class="view-review-btn" data-comic="TT003" title="Xem review"><i class="fa-solid fa-eye"></i></button>
                     </td>
                     <td class="action-cell">
                         <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -197,8 +224,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Số lượng:</label>
-                            <input type="number" min="1">
+                            <label>Bộ truyện:</label>
+                            <select>
+                                <option selected disabled>-- Chọn bộ truyện --</option>
+                                <option>One Piece</option>
+                                <option>Conan</option>
+                                <option>Naruto</option>
+                                <option>Attack on Titan</option>
+                                <option>Doraemon</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -215,6 +249,18 @@
                             </select>
                         </div>
 
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1">
+                            </div>
+
+                            <div>
+                                <label>Giá:</label>
+                                <input type="text">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text">
@@ -222,11 +268,6 @@
 
                         <div class="form-group">
                             <label>Nhà xuất bản :</label>
-                            <input type="text">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Giá:</label>
                             <input type="text">
                         </div>
 
@@ -306,21 +347,19 @@
                 <form id="editForm" class="form-horizontal">
                     <div class="form-left">
 
-                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
-                        <div class="form-group two-columns">
-                            <div>
-                                <label>Mã truyện:</label>
-                                <input type="text" value="TT001" readonly>
-                            </div>
-                            <div>
-                                <label>Số lượng:</label>
-                                <input type="number" min="1" value="550">
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label>Tên truyện:</label>
                             <input type="text" value="Thám tử lừng danh Conan">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Bộ truyện:</label>
+                            <select>
+                                <option>Conan</option>
+                                <option>Doraemon</option>
+                                <option>One Piece</option>
+                                <option selected>Conan</option> <!-- Ví dụ truyện thuộc bộ Conan -->
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -337,6 +376,18 @@
                             </select>
                         </div>
 
+                        <!-- HÀNG GIÁ + SỐ LƯỢNG -->
+                        <div class="form-group two-columns">
+                            <div>
+                                <label>Số lượng:</label>
+                                <input type="number" min="1" value="550">
+                            </div>
+                            <div class="form-group">
+                                <label>Giá:</label>
+                                <input type="text" value="22,500₫">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label>Tác giả:</label>
                             <input type="text" value="Gosho Aoyama">
@@ -345,11 +396,6 @@
                         <div class="form-group">
                             <label>Nhà xuất bản:</label>
                             <input type="text" value="Kim Đồng">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Giá:</label>
-                            <input type="text" value="22,500₫">
                         </div>
 
                         <div class="form-group">
@@ -716,29 +762,67 @@
     });
 </script>
 
+<%--<script>--%>
+<%--    document.querySelectorAll('.view-review-btn').forEach(btn => {--%>
+<%--        btn.addEventListener('click', () => {--%>
+<%--            const comicId = btn.dataset.comic;--%>
+<%--            const popup = document.getElementById(`review-${comicId}`);--%>
+<%--            if (popup) popup.style.display = 'flex';--%>
+<%--        });--%>
+<%--    });--%>
+
+<%--    // Đóng popup--%>
+<%--    document.querySelectorAll('.close-review-btn').forEach(btn => {--%>
+<%--        btn.addEventListener('click', () => {--%>
+<%--            btn.closest('.review-popup').style.display = 'none';--%>
+<%--        });--%>
+<%--    });--%>
+
+<%--    // Click ngoài popup cũng đóng--%>
+<%--    document.querySelectorAll('.review-popup').forEach(popup => {--%>
+<%--        popup.addEventListener('click', (e) => {--%>
+<%--            if (e.target === popup) popup.style.display = 'none';--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+
 <script>
-    document.querySelectorAll('.view-review-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const comicId = btn.dataset.comic;
-            const popup = document.getElementById(`review-${comicId}`);
-            if (popup) popup.style.display = 'flex';
-        });
-    });
+    document.addEventListener("DOMContentLoaded", () => {
 
-    // Đóng popup
-    document.querySelectorAll('.close-review-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            btn.closest('.review-popup').style.display = 'none';
-        });
-    });
+        // CLICK NÚT XEM REVIEW
+        const buttons = document.querySelectorAll(".view-review-btn");
+        console.log("[DEBUG] Số nút tìm được:", buttons.length);
 
-    // Click ngoài popup cũng đóng
-    document.querySelectorAll('.review-popup').forEach(popup => {
-        popup.addEventListener('click', (e) => {
-            if (e.target === popup) popup.style.display = 'none';
+        buttons.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                event.preventDefault();
+                console.log("[DEBUG] Click detected on:", btn);
+
+                const comicId = btn.getAttribute("data-comic");
+                console.log("[DEBUG] comicId =", comicId);
+
+                const popup = document.getElementById("review-" + comicId);
+                console.log("[DEBUG] popup =", popup);
+
+                if (popup) {
+                    popup.style.display = "flex";
+                } else {
+                    alert("Không tìm thấy popup review-" + comicId);
+                }
+            });
         });
+
+        // NÚT ĐÓNG POPUP
+        document.querySelectorAll(".close-review-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                btn.closest(".review-popup").style.display = "none";
+            });
+        });
+
     });
 </script>
+
+
 
 <!--Upload 4 anh cho truyen-->
 <script>
