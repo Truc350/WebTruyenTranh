@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
-    <link rel="stylesheet" href="../css/adminCss/stylePro.css?v=<%= System.currentTimeMillis() %>">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/stylePro.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
 </head>
 <body>
 <div class="container">
@@ -24,6 +24,12 @@
                 <a href="dashboard.jsp">
                     <img src="../../img/home.png" class="icon">
                     <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="seriesManagement.jsp">
+                    <img src="../../img/series.png" class="icon">
+                    <span>Quản lý series</span>
                 </a>
             </li>
             <li>
@@ -762,67 +768,29 @@
     });
 </script>
 
-<%--<script>--%>
-<%--    document.querySelectorAll('.view-review-btn').forEach(btn => {--%>
-<%--        btn.addEventListener('click', () => {--%>
-<%--            const comicId = btn.dataset.comic;--%>
-<%--            const popup = document.getElementById(`review-${comicId}`);--%>
-<%--            if (popup) popup.style.display = 'flex';--%>
-<%--        });--%>
-<%--    });--%>
-
-<%--    // Đóng popup--%>
-<%--    document.querySelectorAll('.close-review-btn').forEach(btn => {--%>
-<%--        btn.addEventListener('click', () => {--%>
-<%--            btn.closest('.review-popup').style.display = 'none';--%>
-<%--        });--%>
-<%--    });--%>
-
-<%--    // Click ngoài popup cũng đóng--%>
-<%--    document.querySelectorAll('.review-popup').forEach(popup => {--%>
-<%--        popup.addEventListener('click', (e) => {--%>
-<%--            if (e.target === popup) popup.style.display = 'none';--%>
-<%--        });--%>
-<%--    });--%>
-<%--</script>--%>
-
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        // CLICK NÚT XEM REVIEW
-        const buttons = document.querySelectorAll(".view-review-btn");
-        console.log("[DEBUG] Số nút tìm được:", buttons.length);
-
-        buttons.forEach(btn => {
-            btn.addEventListener("click", (event) => {
-                event.preventDefault();
-                console.log("[DEBUG] Click detected on:", btn);
-
-                const comicId = btn.getAttribute("data-comic");
-                console.log("[DEBUG] comicId =", comicId);
-
-                const popup = document.getElementById("review-" + comicId);
-                console.log("[DEBUG] popup =", popup);
-
-                if (popup) {
-                    popup.style.display = "flex";
-                } else {
-                    alert("Không tìm thấy popup review-" + comicId);
-                }
-            });
+    document.querySelectorAll('.view-review-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const comicId = btn.dataset.comic;
+            const popup = document.getElementById(`review-${comicId}`);
+            if (popup) popup.style.display = 'flex';
         });
+    });
 
-        // NÚT ĐÓNG POPUP
-        document.querySelectorAll(".close-review-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                btn.closest(".review-popup").style.display = "none";
-            });
+    // Đóng popup
+    document.querySelectorAll('.close-review-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.review-popup').style.display = 'none';
         });
+    });
 
+    // Click ngoài popup cũng đóng
+    document.querySelectorAll('.review-popup').forEach(popup => {
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) popup.style.display = 'none';
+        });
     });
 </script>
-
-
 
 <!--Upload 4 anh cho truyen-->
 <script>
@@ -881,5 +849,9 @@
     });
 
 </script>
+
+<script src="${pageContext.request.contextPath}/js/productManagement.js?v=${System.currentTimeMillis()}"></script>
+
+
 </body>
 </html>

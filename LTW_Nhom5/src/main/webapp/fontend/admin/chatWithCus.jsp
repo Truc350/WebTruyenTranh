@@ -8,9 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Chat Người Bán - Người Mua</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/adminCss/chatWithCus.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/chatWithCus.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
 </head>
 <body>
 <div class="container">
@@ -27,6 +27,12 @@
                 <a href="dashboard.jsp">
                     <img src="../../img/home.png" class="icon">
                     <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="seriesManagement.jsp">
+                    <img src="../../img/series.png" class="icon">
+                    <span>Quản lý series</span>
                 </a>
             </li>
             <li>

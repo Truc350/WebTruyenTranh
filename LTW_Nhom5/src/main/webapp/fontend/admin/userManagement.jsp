@@ -4,96 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý người dùng</title>
-    <link rel="stylesheet" href="../css/adminCss/styleUserMan.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleUserMan.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
 <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-
-        <ul>
-            <li>
-                <a href="dashboard.jsp">
-                    <img src="../../img/home.png" class="icon">
-                    <span>Trang chủ</span>
-                </a>
-            </li>
-            <li>
-                <a href="productManagement.jsp">
-                    <img src="../../img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="category.jsp">
-                    <img src="../../img/category.png" class="icon">
-                    <span>Quản lý thể loại</span>
-                </a>
-            </li>
-            <li>
-                <a href="order.jsp">
-                    <img src="../../img/order.png" class="icon">
-                    <span>Quản lý đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="userManagement.html">
-                    <img src="../../img/user.png" class="icon">
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="flashSaleMan.jsp">
-                    <img src="../../img/flashSale.png" class="icon">
-                    <span>Quản lý Flash Sale</span>
-                </a>
-            </li>
-<%--            <li>--%>
-<%--                <a href="promotion.jsp">--%>
-<%--                    <img src="../../img/promo.png" class="icon">--%>
-<%--                    <span>Quản lý khuyến mãi</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-            <li>
-                <a href="report.jsp">
-                    <img src="../../img/report.png" class="icon">
-                    <span>Thống kê</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
-
-    <div class="main-content">
-        <header class="admin-header">
-            <div class="header-right">
-                <a href="chatWithCus.jsp">
-                    <i class="fa-solid fa-comment"></i>
-                </a>
-
-                <div class="admin-profile">
-                    <a href="profileAdmin.jsp">
-                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
-                    </a>
-                    <span class="admin-name">Admin</span>
-                </div>
-
-                <!-- Nút đăng xuất -->
-                <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login.jsp">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                </button>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../img/logo.png" alt="Logo" class="logo">
+                <h2>Comic Store</h2>
             </div>
-        </header>
-        <h2 class="page-title">Quản lý người dùng</h2>
+
+            <ul>
+                <li>
+                    <a href="dashboard.jsp">
+                        <img src="../../img/home.png" class="icon">
+                        <span>Trang chủ</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="seriesManagement.jsp">
+                        <img src="../../img/series.png" class="icon">
+                        <span>Quản lý series</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="productManagement.jsp">
+                        <img src="../../img/product.png" class="icon">
+                        <span>Quản lý sản phẩm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="category.jsp">
+                        <img src="../../img/category.png" class="icon">
+                        <span>Quản lý thể loại</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="order.jsp">
+                        <img src="../../img/order.png" class="icon">
+                        <span>Quản lý đơn hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="userManagement.html">
+                        <img src="../../img/user.png" class="icon">
+                        <span>Quản lý người dùng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="flashSaleMan.jsp">
+                        <img src="../../img/flashSale.png" class="icon">
+                        <span>Quản lý Flash Sale</span>
+                    </a>
+                </li>
+                <%--            <li>--%>
+                <%--                <a href="promotion.jsp">--%>
+                <%--                    <img src="../../img/promo.png" class="icon">--%>
+                <%--                    <span>Quản lý khuyến mãi</span>--%>
+                <%--                </a>--%>
+                <%--            </li>--%>
+                <li>
+                    <a href="report.jsp">
+                        <img src="../../img/report.png" class="icon">
+                        <span>Thống kê</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <header class="admin-header">
+                <div class="header-right">
+                    <a href="chatWithCus.jsp">
+                        <i class="fa-solid fa-comment"></i>
+                    </a>
+
+                    <div class="admin-profile">
+                        <a href="profileAdmin.jsp">
+                            <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                        </a>
+                        <span class="admin-name">Admin</span>
+                    </div>
+
+                    <!-- Nút đăng xuất -->
+                    <button class="btn-logout" title="Đăng xuất">
+                        <a href="../public/login.jsp">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </a>
+                    </button>
+                </div>
+            </header>
+            <h2 class="page-title">Quản lý người dùng</h2>
 
         <div class="user-management">
 
@@ -263,8 +269,6 @@
                     <p><strong>Cấp bậc:</strong> <span id="detailLevel"></span></p>
                     <p><strong>Tổng chi tiêu:</strong> <span id="detailSpent"></span></p>
                     <p><strong>Điểm xu:</strong> <span id="detailPoints"></span></p>
-                    <hr style="margin:15px 0">
-                    <p><small>Ngày đăng ký: 15/03/2024 • Lần hoạt động cuối: 2 giờ trước</small></p>
                 </div>
                 <div class="popup-actions">
                     <button class="btn-secondary" onclick="document.getElementById('detailPopup').style.display='none'">Đóng</button>
