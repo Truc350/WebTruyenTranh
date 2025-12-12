@@ -9,10 +9,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
-    <link rel="stylesheet" href="../css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/publicCss/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/UserBCss/checkout.css">
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/UserBCss/checkout.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/publicCss/FooterStyle.css">
 
 </head>
 

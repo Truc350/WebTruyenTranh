@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
-    <link rel="stylesheet" href="../css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/UserBCss/profile.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/profile.css">
 </head>
 <body>
 
@@ -689,8 +689,8 @@
             <div class="tab active">Tất cả</div>
             <div class="tab">Đơn Hàng</div>
             <div class="tab">Sự kiện</div>
-            <div class="tab">Mã giảm giá</div>
-            <div class="tab">Xác nhận</div>
+<%--            <div class="tab">Mã giảm giá</div>--%>
+<%--            <div class="tab">Xác nhận</div>--%>
         </div>
         <div class="line"></div>
         <div class="empty-message">Không có thông báo.</div>
@@ -1044,7 +1044,7 @@
             const dataTransfer = new DataTransfer();
             files.forEach(file => dataTransfer.items.add(file));
             this.files = dataTransfer.files;
-        });
+        });4
 // Gửi đánh giá
         submitReviewBtn.addEventListener('click', () => {
             const name = document.querySelector('#display-name').value.trim();
