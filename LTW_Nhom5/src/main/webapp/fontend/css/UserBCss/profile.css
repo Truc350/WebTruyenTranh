@@ -1379,13 +1379,14 @@ main {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
     width: 100% !important;
     max-width: 700px !important;
-    min-height: 520px !important;   /* giống y hệt mấy cái kia */
+    /*min-height: 520px !important;   !* giống y hệt mấy cái kia *!*/
     box-sizing: border-box !important;
+    min-height: 550px;
+
 }
+
 /* Nếu em vẫn muốn nó cao hơn một chút thì để 550px cũng được */
-.notification-container {
-    min-height: 550px !important;
-}
+
 
 .notification-container .tabs {
     display: flex;
@@ -1393,14 +1394,19 @@ main {
     padding: 8px 20px;
     background: #f8f8f8;
     border-radius: 10px;
-    overflow-x: auto;
+    /* overflow-x: auto;  XÓA DÒNG NÀY */
     white-space: nowrap;
     scrollbar-width: none;
     margin-bottom: 20px;
+
+    justify-content: center; /* căn giữa các tab theo chiều ngang */
+    align-items: center; /* căn giữa theo chiều dọc */
 }
-.notification-container .tabs::-webkit-scrollbar{
+
+.notification-container .tabs::-webkit-scrollbar {
     display: none;
 }
+
 .notification-container .tab {
     padding: 10px 20px;
     font-size: 15px;
@@ -1411,20 +1417,24 @@ main {
     transition: all 0.3s ease;
     min-width: fit-content;
 }
+
 /*tab dang chon*/
 /* KHI TAB ĐƯỢC CLICK → CHỮ CHUYỂN THÀNH MÀU ĐỎ NGAY LẬP TỨC */
 .notification-container .tab.active {
     color: #ee4d2d !important;
 }
+
 .notification-container .tab:hover:not(.active) {
     background: #f5f5f5;
     color: #ff4c4c;
 
 }
+
 /*hover*/
 .tab:hover {
     color: #dc3545;
 }
+
 .notification-container.line {
     /*height: 2px;*/
     /*background: #ee4d2d;*/
@@ -1434,6 +1444,7 @@ main {
     /*position: relative;*/
     display: none;
 }
+
 /*noi dung con empty*/
 /* =========== CĂN GIỮA CHỮ "KHÔNG CÓ THÔNG BÁO" =========== */
 .notification-container .empty-message {
@@ -1663,4 +1674,42 @@ main {
 .btn-reivew.primary {
     background: #ff4d4d;
     color: white;
+}
+
+/* Nút X đỏ */
+.remove-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+.remove-image-btn:hover {
+    background: #cc0000;
+}
+
+/* Container ảnh */
+.image-item {
+    position: relative;
+    display: inline-block;
+}
+
+.image-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
 }

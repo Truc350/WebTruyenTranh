@@ -183,9 +183,9 @@
                     <div>
                         <a href="detail.jsp">
                             <h3>Thám Tử Lừng Danh Conan Tập 100</h3>
-                            <p>Giá khuyến mãi: 36.750₫</p>
-                            <p>Giá gốc: <s>43,300₫</s></p>
-                            <p>Giảm giá: 30%</p>
+                            <p>Giá khuyến mãi: 18.000₫</p>
+                            <p>Giá gốc: <s>30,000₫</s></p>
+                            <p>Giảm giá: 40%</p>
                         </a>
                     </div>
 

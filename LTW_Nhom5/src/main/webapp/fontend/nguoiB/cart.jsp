@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
-    <link rel="stylesheet" href="../css/UserBCss/cartCss.css">
-    <link rel="stylesheet" href="../css/publicCss/nav.css ">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/UserBCss/cartCss.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/publicCss/nav.css">
 
     <!-- Thêm CSS để quản lý popup và message box -->
     <style>

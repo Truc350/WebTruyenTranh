@@ -11,90 +11,86 @@
 </head>
 
 <body>
-   <header class="navbar">
-        <div class="logo">
-            <img id="logo" src="../../img/logo.png" alt="Comic Store">
-            <span>Comic Store</span>
-        </div>
-        <nav class="menu">
-            <a href="#">Trang chủ</a>
+<header class="navbar">
+    <div class="logo">
+        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <span>Comic Store</span>
+    </div>
+    <nav class="menu">
+        <a href="#">Trang chủ</a>
 
-            <div class="dropdown">
-                <a href="#">Thể loại &#9662;</a>
-                <div class="dropdown-content">
-                    <a href="CatagoryPage.jsp">Hành động</a>
-                    <a href="#">Trinh thám</a>
-                    <a href="#">Hài hước</a>
-                </div>
+        <div class="dropdown">
+            <a href="#">Thể loại &#9662;</a>
+            <div class="dropdown-content">
+                <a href="CatagoryPage.jsp">Hành động</a>
+                <a href="#">Trinh thám</a>
+                <a href="#">Hài hước</a>
             </div>
-
-            <a href="AbouUS.jsp">Liên hệ</a>
-        </nav>
-        <div class="search-bar">
-            <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
-            <button class="search-button">
-                <i class="fas fa-magnifying-glass"></i>
-            </button>
         </div>
-        <div class="contain-left">
-            <div class="actions">
-                <div class="notify-wrapper">
-                    <a href="#" class="bell-icon">
-                        <i class="fa-solid fa-bell"></i>
-                        <span id="span-bell">2</span>
-                    </a>
-                    <!-- Khung thông báo -->
-                    <div class="notification-panel">
-                        <div class="notification-header">
-                            <div class="inform-num">
-                                <i class="fa-solid fa-bell"></i>
-                                <span>Thông báo</span>
-                                <span class="notification-badge">(1)</span>
-                            </div>
-                            <div class="inform-all">
-                                <a href="#">Xem tất cả</a>
-                            </div>
+
+        <a href="AbouUS.jsp">Liên hệ</a>
+    </nav>
+    <div class="search-bar">
+        <input type="text" placeholder="Voucher Xịn đến 100 nghìn" class="search-input">
+        <button class="search-button">
+            <i class="fas fa-magnifying-glass"></i>
+        </button>
+    </div>
+    <div class="contain-left">
+        <div class="actions">
+            <div class="notify-wrapper">
+                <a href="#" class="bell-icon">
+                    <i class="fa-solid fa-bell"></i>
+                    <span id="span-bell">2</span>
+                </a>
+                <!-- Khung thông báo -->
+                <div class="notification-panel">
+                    <div class="notification-header">
+                        <div class="inform-num">
+                            <i class="fa-solid fa-bell"></i>
+                            <span>Thông báo</span>
+                            <span class="notification-badge">(1)</span>
                         </div>
-                        <div class="notification-content inform1">
-                            <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
-                            Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
-                            hấp
-                            dẫn.
+                        <div class="inform-all">
+                            <a href="#">Xem tất cả</a>
                         </div>
-                        <div class="notification-content inform2">
-                            <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
-                            Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
-                            dẫn.
-                        </div>
+                    </div>
+                    <div class="notification-content inform1">
+                        <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
+                        hấp
+                        dẫn.
+                    </div>
+                    <div class="notification-content inform2">
+                        <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
+                        Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
+                        dẫn.
                     </div>
                 </div>
             </div>
-
-
-            <div class="actions">
-                <a href="../nguoiB/profile.jsp">
-                <i class="fa-solid fa-user" id ="user"></i>
-                </a>
-            </div>
-
-            <div class="login-btn">
-                <a href="login.jsp" class="login-btn">Log out</a>
-            </div>
-
-            <div class="actions">
-                <a href="../nguoiB/chat.jsp">
-                <i class="fa-solid fa-comment"></i>
-                </a>
-            </div>
-
         </div>
 
 
+        <div class="actions">
+            <a href="../nguoiB/profile.jsp">
+                <i class="fa-solid fa-user" id="user"></i>
+            </a>
+        </div>
+
+        <div class="login-btn">
+            <a href="login.jsp" class="login-btn">Log out</a>
+        </div>
+
+        <div class="actions">
+            <a href="../nguoiB/chat.jsp">
+                <i class="fa-solid fa-comment"></i>
+            </a>
+        </div>
+
+    </div>
 
 
-
-
-    </header>
+</header>
 </body>
 
 </html>

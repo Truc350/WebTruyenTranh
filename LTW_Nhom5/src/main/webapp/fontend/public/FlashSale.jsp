@@ -130,7 +130,7 @@
             <div class="countdown-wrap">
                 <span class="countdown-label">Kết thúc trong</span>
                 <div class="countdown" id="countdown">
-                    <div class="time-box" id="hh">00</div>
+                    <div class="time-box" id="hh">02</div>
                     <span class="sep">:</span>
                     <div class="time-box" id="mm">00</div>
                     <span class="sep">:</span>

@@ -142,7 +142,7 @@
                         </div>
                         <div class="voucher-footer">
                             <span class="voucher-expiry">HSD: 30/11/2025</span>
-                            <button class="copy-code-btn">Copy mã</button>
+                            <button class="copy-code-btn">Lưu mã</button>
                         </div>
                     </div>
 
@@ -171,7 +171,7 @@
                         </div>
                         <div class="voucher-footer">
                             <span class="voucher-expiry">HSD: 30/11/2025</span>
-                            <button class="copy-code-btn">Copy mã</button>
+                            <button class="copy-code-btn">Lưu mã</button>
                         </div>
                     </div>
 
@@ -189,7 +189,7 @@
                             <span class="voucher-status unused">Chưa sử dụng</span>
                         </div>
                         <div class="voucher-body">
-                            <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
+                            <div class="voucher-title">Mã Giảm 40% - Toàn Sàn</div>
                             <div class="voucher-desc">Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau
                                 Manga,
                                 Ngoại
@@ -200,7 +200,7 @@
                         </div>
                         <div class="voucher-footer">
                             <span class="voucher-expiry">HSD: 30/11/2025</span>
-                            <button class="copy-code-btn">Copy mã</button>
+                            <button class="copy-code-btn">Lưu mã</button>
                         </div>
                     </div>
 
@@ -229,7 +229,7 @@
                         </div>
                         <div class="voucher-footer">
                             <span class="voucher-expiry">HSD: 30/11/2025</span>
-                            <button class="copy-code-btn">Copy mã</button>
+                            <button class="copy-code-btn">Lưu mã</button>
                         </div>
                     </div>
 
@@ -259,7 +259,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 30/11/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -277,14 +277,14 @@
                         <span class="voucher-status unused">Chưa sử dụng</span>
                     </div>
                     <div class="voucher-body">
-                        <div class="voucher-title">Mã Giảm 20K - Vận chuyển</div>
+                        <div class="voucher-title">Mã Giảm 20% - Vận chuyển</div>
                         <div class="voucher-desc">Đơn hàng từ 200k - Ap dụng cho tất cả</div>
                         <div class="voucher-code">SHIP20K2025</div>
                         <button class="voucher-detail-btn" onclick="showVoucherDetails(this)">Chi tiết</button>
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 15/12/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -309,7 +309,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 31/12/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -334,7 +334,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 01/01/2026</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -359,7 +359,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 10/12/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
             </div>
@@ -387,7 +387,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 30/11/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -413,7 +413,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 15/12/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -438,7 +438,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 31/12/2025</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
 
@@ -463,7 +463,7 @@
                     </div>
                     <div class="voucher-footer">
                         <span class="voucher-expiry">HSD: 01/01/2026</span>
-                        <button class="copy-code-btn">Copy mã</button>
+                        <button class="copy-code-btn">Lưu mã</button>
                     </div>
                 </div>
             </div>
