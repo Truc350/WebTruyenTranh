@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Thống kê</title>
-    <link rel="stylesheet" href="../css/adminCss/styleReport.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleReport.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -23,6 +23,12 @@
                 <a href="dashboard.jsp">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="seriesManagement.jsp">
+                    <img src="../../img/series.png" class="icon">
+                    <span>Quản lý series</span>
                 </a>
             </li>
             <li>
@@ -55,12 +61,12 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <li>
-                <a href="promotion.jsp">
-                    <img src="../../img/promo.png" class="icon">
-                    <span>Quản lý khuyến mãi</span>
-                </a>
-            </li>
+<%--            <li>--%>
+<%--                <a href="promotion.jsp">--%>
+<%--                    <img src="../../img/promo.png" class="icon">--%>
+<%--                    <span>Quản lý khuyến mãi</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
             <li>
                 <a href="report.html">
                     <img src="../../img/report.png" class="icon">

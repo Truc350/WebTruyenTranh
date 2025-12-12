@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng</title>
-    <link rel="stylesheet" href="../css/adminCss/styleOrder.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleOrder.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
@@ -26,6 +26,12 @@
                 <a href="dashboard.jsp">
                 <img src="../../img/home.png" class="icon">
                 <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a href="seriesManagement.jsp">
+                    <img src="../../img/series.png" class="icon">
+                    <span>Quản lý series</span>
                 </a>
             </li>
             <li>
@@ -58,12 +64,12 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <li>
-                <a href="promotion.jsp">
-                    <img src="../../img/promo.png" class="icon">
-                    <span>Quản lý khuyến mãi</span>
-                </a>
-            </li>
+<%--            <li>--%>
+<%--                <a href="promotion.jsp">--%>
+<%--                    <img src="../../img/promo.png" class="icon">--%>
+<%--                    <span>Quản lý khuyến mãi</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
             <li>
                 <a href="report.jsp">
                     <img src="../../img/report.png" class="icon">
@@ -464,7 +470,8 @@
                         <th>Khách hàng</th>
                         <th>Ngày giao thành công</th>
                         <th>Tổng tiền</th>
-                        <th>Thanh toán</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Mã giao dịch</th>
                         <th>Đánh giá</th>
                     </tr>
                     </thead>
@@ -476,6 +483,7 @@
                         <td>05/11/2025</td>
                         <td>310,000đ</td>
                         <td>Online</td>
+                        <td>ORDER77BC9</td>
                         <td class="stars">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
@@ -491,6 +499,7 @@
                         <td>04/11/2025</td>
                         <td>420,000đ</td>
                         <td>COD</td>
+                        <td>-</td>
                         <td class="stars">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>
@@ -506,6 +515,7 @@
                         <td>02/11/2025</td>
                         <td>150,000đ</td>
                         <td>Online</td>
+                        <td>ORDER78BC9</td>
                         <td class="stars">
                             <i class="fa-solid fa-star"></i>
                             <i class="fa-solid fa-star"></i>

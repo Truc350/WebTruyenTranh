@@ -799,15 +799,13 @@ th, td {
 }
 
 .view-review-btn {
-    padding: 6px 10px;
+    background: none;
     border: none;
-    border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
 }
-
-.view-review-btn {
-    background: #e8e8e8;
+.view-review-btn i {
+    pointer-events: none !important;
 }
 
 .review-item .fa-star{
