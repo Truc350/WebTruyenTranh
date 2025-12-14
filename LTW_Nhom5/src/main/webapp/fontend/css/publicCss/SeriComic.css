@@ -1,0 +1,49 @@
+.series-card {
+    display: flex;
+    gap: 16px;
+    font-family: 'Segoe UI', sans-serif;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.series-card .cover img {
+    width: 120px;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.series-card .info {
+    flex: 1;
+}
+
+.series-card .info h2 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.series-card .info p {
+    margin: 4px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.series-card .info .tag {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-right: 8px;
+}
+
+.series-card .info .followers {
+    color: #555;
+    font-size: 13px;
+}

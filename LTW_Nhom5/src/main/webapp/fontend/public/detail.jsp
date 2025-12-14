@@ -6,11 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/publicCss/nav.css">
-    <link rel="stylesheet" href="../css/publicCss/ReivewOfCus.css">
-    <link rel="stylesheet" href="../css/publicCss/SuggesstItem.css">
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
-    <link rel="stylesheet" href="../css/publicCss/detail.css">
+<%--    <link rel="stylesheet" href="../css/publicCss/nav.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/ReivewOfCus.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/SuggesstItem.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/detail.css">--%>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/detail.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/ReivewOfCus.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/SuggesstItem.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -174,8 +180,7 @@
 
         <div class="all-content">
             <div class="content">
-                <h2>Truyện tranh Connan: Bản giới hạn kỉ niệm hành trình </h2>
-
+                <h2>Thám tử lừng danh <span>Tập 100</span></h2>
                 <div class="information">
                     <div class="line1">
                         <!-- <p>Người dịch:<strong> Hương Giang</strong></p> -->
@@ -210,24 +215,6 @@
                 </div>
             </div>
             <div class="container2">
-                <div class="uudai">
-                    <h3>Ưu đãi liên quan</h3>
-                    <a href="../nguoiB/profile.jsp"><p id="xemthem">Xem thêm &#9662; </p></a>
-                </div>
-                <div class="voucher">
-                    <div class="voucher1 vc">
-                        <i class="fa-solid fa-ticket"></i>
-                        <p>Mã giảm giá 10k</p>
-                    </div>
-                    <div class="voucher2 vc">
-                        <i class="fa-solid fa-ticket-simple"></i>
-                        <p>Mã giảm giá 14k</p>
-                    </div>
-                    <div class="voucher3 vc">
-                        <i class="fa-solid fa-ticket-simple"></i>
-                        <p>Mã giảm giá 14k</p>
-                    </div>
-                </div>
                 <div class="voucherbutton">
                     <p>Số lượng: </p>
                     <div class="quantity-control">
@@ -236,7 +223,18 @@
                         <button><i class="fas fa-plus" id="btn-vol"></i></button>
                     </div>
                 </div>
+
+                <div style="display: flex; align-items: center; gap: 8px; font-family: sans-serif;">
+                    <div style="background-color: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                        Bộ
+                    </div>
+                    <div style="font-size: 18px; font-weight: bold;">
+                        Thám tử lừng danh Connan
+                    </div>
+                </div>
+
             </div>
+
 
             <div class="container3">
                 <section class="related-products">
@@ -244,22 +242,13 @@
                     <div class="product-grid">
 
                         <div class="product-card">
-                            <img src="https://tse2.mm.bing.net/th/id/OIP.dPiJah7QpBrIKueTDiI6PAAAAA?w=413&h=650&rs=1&pid=ImgDetMain&o=7&rm=3"
-                                alt="How Men Think">
-                            <h3>Connan tập 106</h3>
+                            <img src="https://tse2.mm.bing.net/th/id/OIP.Q_HBIf5co74JHpujqEEbowHaL3?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+                                alt="">
+                            <h3>Connan tập 101</h3>
                             <p class="price">₫36.760</p>
                             <p class="sold">Đã bán: <strong>142</strong></p>
                             <!-- <div class="stars">★★★★★</div> -->
                         </div>
-
-                        <!-- <div class="product-card">
-                            <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
-                                alt="Những Quy Luật Bản Chất Con Người">
-                            <h3>Conan tập 36</h3>
-                            <p class="price">₫38.900</p>
-                            <p class="sold">Đã bán: <strong>128</strong></p>
-                        </div> -->
-
                         <div class="product-card">
                             <img src="https://tse3.mm.bing.net/th/id/OIP.eoE_6ogm0Md54J7nZyB0VQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
                                 alt="Sách Tay Không Bóc Hành">
@@ -268,7 +257,6 @@
                             <p class="sold">Đã bán: <strong>72</strong></p>
                             <!-- <div class="stars">★★★★☆</div> -->
                         </div>
-
                         <div class="product-card">
                             <img src="https://www.detectiveconanworld.com/wiki/images/thumb/a/ab/Volume_30.jpg/275px-Volume_30.jpg"
                                 alt="Những Quy Luật Bản Chất Con Người">
@@ -324,32 +312,31 @@
 
                     </div>
                 </section>
-
             </div>
 
             <div class="container4">
-                <section class="product-details">
-                    <h2>Thông tin chi tiết</h2>
-                    <div class="detail-table">
-                        <div class="detail-left">
-                            <span class="label">Công ty phát hành:</span>
-                            <span class="label">Ngày xuất bản:</span>
-                            <span class="label">Kích thước:</span>
-                            <span class="label">Loại bìa:</span>
-                            <span class="label">Số trang:</span>
-                            <span class="label">Nhà xuất bản:</span>
-                        </div>
+<%--                <section class="product-details">--%>
+<%--                    <h2>Thông tin chi tiết</h2>--%>
+<%--                    <div class="detail-table">--%>
+<%--                        <div class="detail-left">--%>
+<%--                            <span class="label">Công ty phát hành:</span>--%>
+<%--                            <span class="label">Ngày xuất bản:</span>--%>
+<%--                            <span class="label">Kích thước:</span>--%>
+<%--                            <span class="label">Loại bìa:</span>--%>
+<%--                            <span class="label">Số trang:</span>--%>
+<%--                            <span class="label">Nhà xuất bản:</span>--%>
+<%--                        </div>--%>
 
-                        <div class="detail-right">
-                            <span class="value">NXB Trẻ</span>
-                            <span class="value">2020-05-22 11:17:19</span>
-                            <span class="value">15.5×23cm</span>
-                            <span class="value">Bìa cứng</span>
-                            <span class="value">184</span>
-                            <span class="value">NXB Trẻ</span>
-                        </div>
-                    </div>
-                </section>
+<%--                        <div class="detail-right">--%>
+<%--                            <span class="value">NXB Trẻ</span>--%>
+<%--                            <span class="value">2020-05-22 11:17:19</span>--%>
+<%--                            <span class="value">15.5×23cm</span>--%>
+<%--                            <span class="value">Bìa cứng</span>--%>
+<%--                            <span class="value">184</span>--%>
+<%--                            <span class="value">NXB Trẻ</span>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </section>--%>
 
                 <section class="des-tiem">
                     <h2>Mô tả sản phẩm</h2>
@@ -690,7 +677,7 @@
                         <p class="sold">Đã bán: <strong>120</strong></p>
                     </div>
                     <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/a/aa/Volume28v.jpg" alt="">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
                         <p class="product-name">Thám tử lừng danh Conan tập 28</p>
                         <p class="product-price">₫18,000</p>
                         <p class="sold">Đã bán: <strong>130</strong></p>
@@ -704,20 +691,20 @@
                     </div>
 
                     <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/thumb/7/7d/Volume75v.jpg/225px-Volume75v.jpg"
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
                             alt="">
                         <p class="product-name">Thám tử lừng danh Conan tập 75</p>
                         <p class="product-price">₫19,000</p>
                         <p class="sold">Đã bán: <strong>82</strong></p>
                     </div>
                     <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/d/d8/Volume72v.jpg" alt="">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
                         <p class="product-name">Thám tử lừng danh Conan tập 72</p>
                         <p class="product-price">₫21,000</p>
                         <p class="sold">Đã bán: <strong>36</strong></p>
                     </div>
                     <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/3/30/Volume76v.jpg" alt="">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
                         <p class="product-name">Thám tử lừng danh Conan tập 76</p>
                         <p class="product-price">₫17,000</p>
                         <p class="sold">Đã bán: <strong>83</strong></p>
@@ -924,7 +911,7 @@
                 <p>Hỗ trợ thanh toán qua:</p>
                 <div class="payment-icons">
                     <img src="../../img/momo.png" alt="Momo">
-                    <img src="../../img/zalopay.png" alt="ZaloPay">
+                    <img src="../../img/zaloPay.png" alt="ZaloPay">
                 </div>
                 <p>Website đã đăng ký với Bộ Công Thương.</p>
             </div>
