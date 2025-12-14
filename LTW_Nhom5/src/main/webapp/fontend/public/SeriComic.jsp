@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/SeriComic.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -109,24 +110,99 @@
 
 </header>
 
+<div class="contain-main">
+    <div class="seri">
+        <a href="#" class="image">
+            <img src="https://tse4.mm.bing.net/th/id/OIP.FznzlFc591l-OschGXnpHgHaEK?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
+                 alt="Detective Conan Volume 107 cover" class="manga-cover">
+        </a>
 
-<div class="series-card" style="display: flex; gap: 16px; font-family: sans-serif; border: 1px solid #ddd; padding: 16px; max-width: 600px;">
-    <!-- Bìa truyện -->
-    <div class="cover" style="flex-shrink: 0;">
-        <img src="https://tse4.mm.bing.net/th/id/OIP.yOzPQX3GRPsasgd7NQFy7wHaLp?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Detective Conan 107" style="width: 120px; height: auto; border-radius: 4px;">
-    </div>
+        <div class="contain1">
+            <div class="contain-header">
+                <h2 class="manga-title">Detective Conan</h2>
+                <p class="manga-author"><strong>Tác giả:</strong> Goshi aoyama</p>
+                <p class="manga-publisher"><strong>Nhà xuất bản:</strong> 小学館</p>
+            </div>
 
-    <!-- Thông tin truyện -->
-    <div class="info" style="flex: 1;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="background-color: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Bộ</span>
-            <h2 style="margin: 0; font-size: 18px;">名探偵コナン - Detective Conan</h2>
+            <div class="action-panel">
+                <div class="notify-section">
+                    <button  id="notifyBtn" class="notify-btn">🔔 Nhận thông báo</button>
+                </div>
+            </div>
+
         </div>
-        <p style="margin: 4px 0;">Tác giả: 青山 剛昌</p>
-        <p style="margin: 4px 0;">Nhà xuất bản: 小学館</p>
+
     </div>
 </div>
 
+<div class="item">
+    <div class="slider-track">
+        <div class="product-item">
+            <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
+            <p class="product-name">Onepiece Tâp 8</p>
+            <p class="product-price">₫35,000</p>
+            <p class="sold">Đã bán: <strong>103</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
+                 alt="">
+            <p class="product-name">Onepiece Tâp 7</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>138</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+                 alt="">
+            <p class="product-name">Onepiece Tâp 75</p>
+            <p class="product-price">₫39,000</p>
+            <p class="sold">Đã bán: <strong>109</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+                 alt="">
+            <p class="product-name">Onepiece Tâp 22</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>72</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
+            <p class="product-name">Opiece Tâp 21</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>58</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
+            <p class="product-name">Opiece Tâp 21</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>58</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
+            <p class="product-name">Opiece Tâp 21</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>58</strong></p>
+        </div>
+
+        <div class="product-item">
+            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
+            <p class="product-name">Onepiece Tâp 52</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>17</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
+            <p class="product-name">Onepiece Tâp 52</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>17</strong></p>
+        </div>
+        <div class="product-item">
+            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
+            <p class="product-name">Onepiece Tâp 52</p>
+            <p class="product-price">₫40,000</p>
+            <p class="sold">Đã bán: <strong>17</strong></p>
+        </div>
+    </div>
+</div>
 
 <footer class="footer">
     <div class="footer-container">
@@ -202,8 +278,16 @@
     </div>
 </footer>
 
-
-
 </body>
+<script>
+    const notifyBtn = document.getElementById("notifyBtn");
 
+    notifyBtn.addEventListener("click", () => {
+        if (notifyBtn.textContent.trim() === "🔔 Nhận thông báo") {
+            notifyBtn.textContent = "🔔 Hủy thông báo";
+        } else {
+            notifyBtn.textContent = "🔔 Nhận thông báo";
+        }
+    });
+</script>
 </html>
