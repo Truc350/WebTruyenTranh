@@ -344,3 +344,33 @@ a{
 .container-slider button:active {
   transform: scale(0.95);
 }
+
+
+.title-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.btn-loc {
+    background-color: #1e6dcb;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    top: -10px;
+}
+
+
+.btn-loc:hover {
+    background-color: #45a049;
+    font-size: larger;
+}
+
+.btn-loc:active {
+    transform: scale(0.975);
+    box-shadow: 0 2px #666 inset;
+}
