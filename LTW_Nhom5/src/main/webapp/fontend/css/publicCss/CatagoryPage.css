@@ -367,7 +367,7 @@ a{
 
 .btn-loc:hover {
     background-color: #45a049;
-    font-size: 14px;
+    font-size: larger;
 }
 
 .btn-loc:active {
