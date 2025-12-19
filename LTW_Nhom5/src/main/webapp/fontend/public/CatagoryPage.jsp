@@ -117,7 +117,10 @@
         <!-- Bộ lọc giá bên trái -->
         <div id="filter-menu">
 
-            <h2>Bộ lọc sản phẩm</h2>
+            <div class="title-filter">
+                <h2>Bộ lọc sản phẩm</h2>
+                <button class="btn-loc">Lọc</button>
+            </div>
             <section>
                 <h3>GIÁ:</h3>
                 <ul>
