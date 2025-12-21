@@ -12,5 +12,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: jakarta.servlet:jakarta.servlet-api:6.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.41.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.9" level="project" />
   </component>
 </module>
