@@ -59,11 +59,11 @@
         <!--            <version>3.45.0</version>-->
         <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3 -->
-        <dependency>
-            <groupId>org.jdbi</groupId>
-            <artifactId>jdbi3</artifactId>
-            <version>3.0.0-beta2</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.jdbi</groupId>-->
+        <!--            <artifactId>jdbi3</artifactId>-->
+        <!--            <version>3.0.0-beta2</version>-->
+        <!--        </dependency>-->
         <!-- Nếu dùng DAO annotation thì thêm -->
         <!--        <dependency>-->
         <!--            <groupId>org.jdbi</groupId>-->
@@ -105,6 +105,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

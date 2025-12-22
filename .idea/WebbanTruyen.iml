@@ -15,5 +15,7 @@
     <orderEntry type="library" name="Maven: org.jdbi:jdbi3-core:3.41.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:2.0.9" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />
+    <orderEntry type="library" name="Maven: com.mysql:mysql-connector-j:8.0.33" level="project" />
   </component>
 </module>
