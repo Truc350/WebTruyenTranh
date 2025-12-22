@@ -1,4 +1,4 @@
-package db;
+package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import java.time.LocalDateTime;
 
