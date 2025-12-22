@@ -1,22 +1,12 @@
 package db;
 
-//import dao.ProductDAO;
-//import model.Product;
-//import model.User;
-
-import model.User;
 import org.jdbi.v3.core.Jdbi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class JdbiConnector {
-    //    private static final Logger log = LoggerFactory.getLogger(JdbiConnector.class);
+
     private static Jdbi jdbi;
 
 
@@ -26,31 +16,28 @@ public class JdbiConnector {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         if (jdbi == null) {
-            jdbi = Jdbi.create("jdbc:mysql://" + DBProperties.host() + ":" + DBProperties.port() + "/" + DBProperties.database(), DBProperties.username(), DBProperties.password());
+            jdbi = Jdbi.create(
+                    "jdbc:mysql://" + DBProperties.host() + ":" + DBProperties.port() + "/" + DBProperties.database(),
+                    DBProperties.username(),
+                    DBProperties.password()
+            );
         }
         return jdbi;
     }
 
     static class DBProperties {
-        static Properties prop = new Properties();
+        private static final Properties prop = new Properties();
 
         static {
-            try {
-                File f = new File("db.properties");
-                InputStream is = null;
-                if (f.exists()) {
-                    is = new FileInputStream(f);
-                } else {
-                    is = DBProperties.class.getClassLoader().getResourceAsStream("db.properties");
+            try (InputStream is = DBProperties.class.getClassLoader().getResourceAsStream("db.properties")) {
+                if (is == null) {
+                    throw new RuntimeException("File 'db.properties' not found in classpath!");
                 }
-                if (is != null) {
-                    prop.load(is);
-                } else {
-                    throw new FileNotFoundException("property file 'db.properties' not found in the classpath");
-                }
+                prop.load(is);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Failed to load db.properties", e);
             }
         }
 
@@ -73,40 +60,16 @@ public class JdbiConnector {
         public static String database() {
             return prop.getProperty("db.databaseName");
         }
-
     }
 
-    //    public static void main(String[] args) {
-//        List<Product> product = new ProductDAO().getProducts();
-//        System.out.println();
-//        System.out.println(product);
-//    }
     public static void main(String[] args) {
-//        Jdbi jdbi = get();
-//        jdbi.useHandle(handle -> {
-//            handle.createQuery("select * from Users").mapTo(Category.class).forEach(System.out::println);
-//        });
-        System.out.println("Connected to database...");
+//        System.out.println(">>> RUNNING JdbiConnector MAIN <<<");
         System.out.println("Host: " + DBProperties.host());
         System.out.println("Port: " + DBProperties.port());
         System.out.println("Database: " + DBProperties.database());
         System.out.println("Username: " + DBProperties.username());
         System.out.println("Password: " + DBProperties.password());
         Jdbi jdbi = get();
-//        System.out.println("Kết nối DB OK: " + jdbi);
-
-        jdbi.useHandle(handle -> {
-            handle.createQuery("SELECT * FROM Users")
-                    .mapToBean(User.class)  // ĐỔI THÀNH mapToBean
-                    .forEach(System.out::println);
-        });
-
-//        List<User> users = JdbiConnector.get().withHandle(handle -> {
-//            return handle.createQuery("SELECT * FROM USERS").mapToBean(User.class).list();
-//        });
-
+        System.out.println("Kết nối DB OK: " + jdbi);
     }
-
-
-
 }
