@@ -9,6 +9,7 @@ public class JdbiConnector {
 
     private static Jdbi jdbi;
 
+
     public static Jdbi get() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
