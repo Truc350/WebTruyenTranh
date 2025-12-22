@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
 import java.io.*;
 

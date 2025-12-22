@@ -1,21 +1,20 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = {"/exception"})
-public class HandleException extends HttpServlet {
+@WebServlet(name = "ListProductController", value = "/ListProductController")
+public class ListProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        throw  new IOException();
+        request.getRequestDispatcher("/fontend/public/homePage.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+
     }
 }

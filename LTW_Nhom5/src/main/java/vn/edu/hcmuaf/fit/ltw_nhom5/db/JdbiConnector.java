@@ -1,4 +1,4 @@
-package db;
+package vn.edu.hcmuaf.fit.ltw_nhom5.db;
 
 import org.jdbi.v3.core.Jdbi;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5.loginGG;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
