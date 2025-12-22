@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="social-buttons">
-                    <a class="google" href="https://google.com" target="_blank">
+                    <a class="google" href="${pageContext.request.contextPath}/login-google">
                         <i class="fa-brands fa-google"></i>
                     </a>
                     <a class="facebook" href="https://facebook.com" target="_blank">
