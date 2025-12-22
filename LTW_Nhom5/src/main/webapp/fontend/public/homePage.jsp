@@ -6,10 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="../css/publicCss/nav.css ">
-    <link rel="stylesheet" href="../css/publicCss/homePage.css ">
+<%--    <link rel="stylesheet" href="../css/publicCss/nav.css ">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/homePage.css ">--%>
+<%--    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">--%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css ">
+
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/homePage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
 </head>
 
 <body>
@@ -116,14 +121,9 @@
         <div class="bannder-des">
             <div class="banner">
                 <div class="list-images">
-                    <!-- <img class="img" id="img-banner" src="../../img/imgBanner2.png" alt="">
-                    <img class="img" id="img-banner" src="../../img/imgBanner1.png" alt="">
-                    <img class="img" id="img-banner" src="../../img/imgBanner3.png" alt="">
-                    <img class="img" id="img-banner" src="../../img/imgBanner4.png" alt=""> -->
-
                     <img class="img" src="../../img/banner1.jpg" alt="">
                     <img class="img" src="../../img/banner2.jpg" alt="">
-                    <img d="img-banner3" class="img" src="../../img/banner3.jpg" alt="">
+                    <img id="img-banner3" class="img" src="../../img/banner3.jpg" alt="">
                     <img class="img" src="../../img/banner4.jpg" alt="">
                 </div>
 
@@ -520,7 +520,7 @@
                             <li id="item-pop-2">
                                 <div class="sach-item">
                                     <img
-                                        src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3">
+                                        src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3" alt="">
                                     <a href="detail.jsp">
                                         <h3>Thám tử lừng danh Conan</h3>
                                     </a>
@@ -533,6 +533,7 @@
                                         alt="">
                                     <h3>Dragon ball</h3>
                                     <p>Tập 12</p>
+                                </div>
                             </li>
                             <li id="item-pop-4">
                                 <div class="sach-item">
@@ -540,6 +541,7 @@
                                         alt="">
                                     <h3>Trạng Quỳnh</h3>
                                     <p>Ăn sáng xứ Thanh</p>
+                                </div>
                             </li>
                             <li id="item-pop-5">
                                 <div class="sach-item">
@@ -547,6 +549,7 @@
                                         alt="">
                                     <h3>Onepiece</h3>
                                     <p>Đảo người cá</p>
+                                </div>
                             </li>
                         </ol>
                     </div>
@@ -759,7 +762,7 @@
                 <p>Hỗ trợ thanh toán qua:</p>
                 <div class="payment-icons">
                     <img src="../../img/momo.png" alt="Momo">
-                    <img src="../../img/zalopay.png" alt="ZaloPay">
+                    <img src="../../img/zaloPay.png" alt="ZaloPay">
                 </div>
                 <p>Website đã đăng ký với Bộ Công Thương.</p>
             </div>

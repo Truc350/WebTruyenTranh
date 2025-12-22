@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class JdbiConnector {
-//    private static final Logger log = LoggerFactory.getLogger(JdbiConnector.class);
+    //    private static final Logger log = LoggerFactory.getLogger(JdbiConnector.class);
     private static Jdbi jdbi;
 
     public static Jdbi get() {
@@ -80,9 +80,9 @@ public class JdbiConnector {
 //    }
     public static void main(String[] args) {
         Jdbi jdbi = get();
-        jdbi.useHandle(handle -> {
-            handle.createQuery("select * from categories").mapTo(Category.class).forEach(System.out::println);
-        });
+//        jdbi.useHandle(handle -> {
+//            handle.createQuery("select * from categories").mapTo(Category.class).forEach(System.out::println);
+//        });
     }
 
 }

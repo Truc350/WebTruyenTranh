@@ -53,11 +53,11 @@
         </dependency>
 
         <!-- Jdbi core (đúng artifact để import org.jdbi.v3.core.Jdbi) -->
-<!--        <dependency>-->
-<!--            <groupId>org.jdbi</groupId>-->
-<!--            <artifactId>jdbi3-core</artifactId>-->
-<!--            <version>3.45.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jdbi</groupId>-->
+        <!--            <artifactId>jdbi3-core</artifactId>-->
+        <!--            <version>3.45.0</version>-->
+        <!--        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.jdbi/jdbi3 -->
         <dependency>
             <groupId>org.jdbi</groupId>
@@ -65,11 +65,11 @@
             <version>3.0.0-beta2</version>
         </dependency>
         <!-- Nếu dùng DAO annotation thì thêm -->
-<!--        <dependency>-->
-<!--            <groupId>org.jdbi</groupId>-->
-<!--            <artifactId>jdbi3-sqlobject</artifactId>-->
-<!--            <version>3.45.0</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jdbi</groupId>-->
+        <!--            <artifactId>jdbi3-sqlobject</artifactId>-->
+        <!--            <version>3.45.0</version>-->
+        <!--        </dependency>-->
 
         <!-- MySQL JDBC driver -->
         <dependency>
@@ -95,6 +95,11 @@
             <groupId>org.jdbi</groupId>
             <artifactId>jdbi3-core</artifactId>
             <version>3.41.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
         </dependency>
 
     </dependencies>
