@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,114 +14,8 @@
 </head>
 
 <body>
-<header class="navbar">
-    <a href="homePage.jsp">
-        <div class="logo">
-            <img id="logo" src="../../img/logo.png" alt="Comic Store">
-            <span>Comic Store</span>
-        </div>
-    </a>
-    <nav class="menu">
-        <a href="homePage.jsp">Trang chủ</a>
 
-        <div class="dropdown">
-            <a href="#">Thể loại &#9662;</a>
-            <div class="dropdown-content">
-                <a href="CatagoryPage.jsp">Hành động</a>
-                <a href="#">Phiêu lưu</a>
-                <a href="#">Lãng mạn </a>
-                <a href="#">Học đường</a>
-                <a href="#">Kinh dị</a>
-                <a href="#">Hài hước</a>
-                <a href="#">Giả tưởng</a>
-                <a href="#">Trinh thám</a>
-                <!-- <a href="#">Cổ đại</a>
-                <a href="#">Đời thường</a> -->
-            </div>
-        </div>
-
-        <a href="AbouUS.jsp">Liên hệ</a>
-    </nav>
-    <div class="search-bar">
-        <form action="${pageContext.request.contextPath}/search" method="get">
-            <input type="text"
-                   id="searchInput"
-                   name="keyword"
-                   placeholder="Tìm truyện..."
-                   class="search-input"
-                   autocomplete="off">
-            <button type="submit" class="search-button">
-                <i class="fas fa-magnifying-glass"></i>
-            </button>
-        </form>
-
-        <div id="searchDropdown" class="search-history-dropdown">
-            <div class="history-header"><span>Lịch sử tìm kiếm</span>
-                <span class="clear-all" id="clearAll">Xóa tất cả</span></div>
-        </div>
-    </div>
-    <div class="contain-left">
-
-        <div class="actions">
-            <div class="notify-wrapper">
-                <a href="#" class="bell-icon">
-                    <i class="fa-solid fa-bell"></i>
-                    <span id="span-bell">2</span>
-                </a>
-                <!-- Khung thông báo -->
-                <div class="notification-panel">
-                    <div class="notification-header">
-                        <div class="inform-num">
-                            <i class="fa-solid fa-bell"></i>
-                            <span>Thông báo</span>
-                            <span class="notification-badge">(1)</span>
-                        </div>
-                        <div class="inform-all">
-                            <a href="#">Xem tất cả</a>
-                        </div>
-                    </div>
-                    <div class="notification-content inform1">
-                        <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
-                        Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
-                        hấp
-                        dẫn.
-                    </div>
-                    <div class="notification-content inform2">
-                        <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
-                        Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
-                        dẫn.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="actions">
-            <a href="../nguoiB/chat.jsp">
-                <i class="fa-solid fa-comment"></i>
-            </a>
-        </div>
-
-        <div class="actions">
-            <a href="../nguoiB/cart.jsp">
-                <i class="fa-solid fa-cart-shopping"></i>
-            </a>
-        </div>
-
-        <div class="actions user-nav">
-            <i class="fa-solid fa-user" id="user"></i>
-            <div class="dropdown-user">
-                <a href="../nguoiB/profile.jsp">Trang chủ</a>
-                <a href="login.jsp">Đăng xuất</a>
-            </div>
-        </div>
-
-        <!-- <div class="login-btn">
-             <a href="login.jsp" class="login-btn">Log out</a>
-        </div> -->
-    </div>
-
-</header>
-
+<jsp:include page="/fontend/public/header.jsp" />
 
 <div class="container-content">
     <!-- chỗ này banner -->
@@ -187,7 +82,17 @@
         <div class="flash-sale">
             <div class="titile-flash-sale">
                 <h2>FLASH SALE</h2>
-                <p>Thời gian còn lại: 2 giờ</p>
+
+                <c:if test="${not empty flashSale}">
+                    <p id="flash-sale-countdown"
+                       data-end-time="${flashSale.endTime}">
+                        Đang tải thời gian...
+                    </p>
+                </c:if>
+
+                <c:if test="${empty flashSale}">
+                    <p>Hiện không có Flash Sale</p>
+                </c:if>
             </div>
 
             <div class="list-product-sale">
@@ -518,44 +423,15 @@
             <div class="content-top">
                 <div class="list-book">
                     <ol>
-                        <li id="item-pop-1">
-                            <div class="sach-item">
-                                <img src="https://tse2.mm.bing.net/th/id/OIP.o5BlN5mfxXoD8u_Xm6S9igHaLH?rs=1&pid=ImgDetMain&o=7&rm=3"
-                                     alt="">
-                                <h3>One piece: Vùng Wano Quốc</h3>
-                            </div>
-                        </li>
-                        <li id="item-pop-2">
-                            <div class="sach-item">
-                                <img
-                                        src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3">
-                                <a href="detail.jsp">
-                                    <h3>Thám tử lừng danh Conan</h3>
-                                </a>
-                                <p>Tập 100</p>
-                            </div>
-                        </li>
-                        <li id="item-pop-3">
-                            <div class="sach-item">
-                                <img src="https://tse3.mm.bing.net/th/id/OIP.sZz1xnJWZY9rIqEsyGuMfAHaKX?rs=1&pid=ImgDetMain&o=7&rm=3"
-                                     alt="">
-                                <h3>Dragon ball</h3>
-                                <p>Tập 12</p>
-                        </li>
-                        <li id="item-pop-4">
-                            <div class="sach-item">
-                                <img src="https://cdn0.fahasa.com/media/catalog/product/t/r/truyen_tranh_trang_quynh___tap_1_sao_sang_xu_thanh_in_mau_1_2021_05_08_08_11_15.jpg"
-                                     alt="">
-                                <h3>Trạng Quỳnh</h3>
-                                <p>Ăn sáng xứ Thanh</p>
-                        </li>
-                        <li id="item-pop-5">
-                            <div class="sach-item">
-                                <img src="https://tse1.mm.bing.net/th/id/OIP.9kpsaXsuR1X9igWmZ0jRfgHaL4?rs=1&pid=ImgDetMain&o=7&rm=3"
-                                     alt="">
-                                <h3>Onepiece</h3>
-                                <p>Đảo người cá</p>
-                        </li>
+                        <c:forEach var="comic" items="${topComics}" varStatus="status">
+                            <li id="item-pop-${status.index + 1}">
+                                <div class="sach-item">
+                                    <img src="${comic.thumbnailUrl}" alt="${comic.nameComics}">
+                                    <h3>${comic.nameComics}</h3>
+                                    <p>Đã bán: <strong>${comic.totalSold}</strong></p>
+                                </div>
+                            </li>
+                        </c:forEach>
                     </ol>
                 </div>
 
@@ -858,149 +734,78 @@
         });
     }
 
+
     // Khi popup mở thì gọi lại initSlider
     document.querySelectorAll('.product-slider').forEach(initSlider);
 
 
-    //cái này cho top truyện
-    document.getElementById("item-pop-1").addEventListener("mouseover", function () {
-        document.querySelector(".pop-detail-home1").style.display = "flex";
-        document.querySelector(".pop-detail-home2").style.display = "none";
-        document.querySelector(".pop-detail-home3").style.display = "none";
-        document.querySelector(".pop-detail-home4").style.display = "none";
-        document.querySelector(".pop-detail-home5").style.display = "none";
-    });
+    function bindHover(itemId, popupClass) {
+        const el = document.getElementById(itemId);
+        if (!el) return;
 
-    document.getElementById("item-pop-2").addEventListener("mouseover", function () {
-        document.querySelector(".pop-detail-home2").style.display = "flex";
-        document.querySelector(".pop-detail-home1").style.display = "none";
-        document.querySelector(".pop-detail-home3").style.display = "none";
-        document.querySelector(".pop-detail-home4").style.display = "none";
-        document.querySelector(".pop-detail-home5").style.display = "none";
-    });
+        el.addEventListener("mouseover", function () {
+            document.querySelectorAll(".sach-chi-tiet").forEach(p => p.style.display = "none");
+            const popup = document.querySelector(popupClass);
+            if (popup) popup.style.display = "flex";
+        });
+    }
 
-    document.getElementById("item-pop-3").addEventListener("mouseover", function () {
-        document.querySelector(".pop-detail-home3").style.display = "flex";
-        document.querySelector(".pop-detail-home1").style.display = "none";
-        document.querySelector(".pop-detail-home2").style.display = "none";
-        document.querySelector(".pop-detail-home4").style.display = "none";
-        document.querySelector(".pop-detail-home5").style.display = "none";
-    });
-
-    document.getElementById("item-pop-4").addEventListener("mouseover", function () {
-        document.querySelector(".pop-detail-home4").style.display = "flex";
-        document.querySelector(".pop-detail-home1").style.display = "none";
-        document.querySelector(".pop-detail-home2").style.display = "none";
-        document.querySelector(".pop-detail-home3").style.display = "none";
-        document.querySelector(".pop-detail-home5").style.display = "none";
-    });
-    document.getElementById("item-pop-5").addEventListener("mouseover", function () {
-        document.querySelector(".pop-detail-home5").style.display = "flex";
-        document.querySelector(".pop-detail-home1").style.display = "none";
-        document.querySelector(".pop-detail-home2").style.display = "none";
-        document.querySelector(".pop-detail-home3").style.display = "none";
-        document.querySelector(".pop-detail-home4").style.display = "none";
-    });
-
+    bindHover("item-pop-1", ".pop-detail-home1");
+    bindHover("item-pop-2", ".pop-detail-home2");
+    bindHover("item-pop-3", ".pop-detail-home3");
+    bindHover("item-pop-4", ".pop-detail-home4");
+    bindHover("item-pop-5", ".pop-detail-home5");
 
     document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
         document.querySelector("#product-slider-popup").style.display = "block";
 
     });
 
-
 </script>
+
+<div id="searchDropdown" class="search-history-dropdown">
+    <div class="history-header">
+        <span>Lịch sử tìm kiếm</span>
+        <span class="clear-all" id="clearAll">Xóa tất cả</span>
+    </div>
+
+    <div class="history-list">
+        <span>Conan tập 88</span>
+        <span class="remove">×</span>
+    </div>
+</div>
+
 
 <script>
-    const searchInput = document.getElementById('searchInput');
-    const dropdown = document.getElementById('searchDropdown');
-    const clearAllBtn = document.getElementById('clearAll');
-    // Key để lưu trong localStorage
-    const STORAGE_KEY = 'comicstore_search_history';
-    // Lấy lịch sử từ localStorage (nếu có), nếu không thì mảng rỗng
-    let searchHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const countdownEl = document.getElementById("flash-sale-countdown");
 
-    function saveHistory() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory));
-    }
+    if (countdownEl) {
+        const endTimeStr = countdownEl.dataset.endTime.replace(" ", "T");
+        const endTime = new Date(endTimeStr).getTime();
 
-    function renderHistory() {
-        // Giữ lại header
-        const header = dropdown.querySelector('.history-header');
-        dropdown.innerHTML = '';
-        if (header) dropdown.appendChild(header);
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = endTime - now;
 
-        if (searchHistory.length === 0) {
-            const emptyItem = document.createElement('div');
-            emptyItem.className = 'history-item';
-            emptyItem.textContent = 'Không có lịch sử tìm kiếm';
-            emptyItem.style.color = '#999';
-            emptyItem.style.fontStyle = 'italic';
-            dropdown.appendChild(emptyItem);
-            return;
-        }
-        // Hiển thị tối đa 6 mục gần nhất (mới nhất ở trên)
-        searchHistory.slice(0, 6).forEach(term => {
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.textContent = term;
-            // Khi click vào mục lịch sử → điền vào ô tìm kiếm và ẩn dropdown
-            item.addEventListener('click', () => {
-                searchInput.value = term;
-                dropdown.classList.remove('show');
-                searchInput.focus();
-                // Nếu muốn tự động tìm luôn thì bỏ comment dòng dưới
-                searchInput.form.submit();
-            });
-            dropdown.appendChild(item);
-        });
-    }
-
-    // Hiện dropdown khi focus vào ô tìm kiếm
-    searchInput.addEventListener('focus', () => {
-        renderHistory();
-        dropdown.classList.add('show');
-    });
-    // Khi đang gõ cũng giữ dropdown mở (chuẩn bị cho gợi ý tìm kiếm sau này)
-    searchInput.addEventListener('input', () => {
-        if (searchInput.value.trim() !== '') {
-            renderHistory();
-            dropdown.classList.add('show');
-        } else {
-            dropdown.classList.remove('show');
-        }
-    });
-    // Ẩn dropdown khi click ra ngoài
-    document.addEventListener('click', (e) => {
-        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.remove('show');
-        }
-    });
-    // Xóa toàn bộ lịch sử
-    clearAllBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // tránh trigger click ngoài
-        if (confirm('Bạn có chắc muốn xóa toàn bộ lịch sử tìm kiếm?')) {
-            searchHistory = [];
-            saveHistory();
-            renderHistory();
-        }
-    });
-
-    // Khi submit form tìm kiếm → thêm từ khóa vào đầu lịch sử
-    searchInput.form.addEventListener('submit', (e) => {
-        const term = searchInput.value.trim();
-        if (term) {
-            // Xóa nếu đã tồn tại để tránh trùng và đưa lên đầu
-            searchHistory = searchHistory.filter(item => item !== term);
-            searchHistory.unshift(term); // thêm vào đầu
-            // Giới hạn tối đa 20 mục
-            if (searchHistory.length > 20) {
-                searchHistory = searchHistory.slice(0, 20);
+            if (diff <= 0) {
+                countdownEl.innerText = "Flash Sale đã kết thúc";
+                return;
             }
-            saveHistory();
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            countdownEl.innerText =
+                `Thời gian còn lại: ${hours}h ${minutes}m ${seconds}s`;
         }
-    });
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
 </script>
+
+
 </body>
 
 </html>

@@ -19,41 +19,7 @@
 </head>
 
 <body>
-<header class="navbar">
-    <div class="logo">
-        <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
-    <nav class="menu">
 
-        <a href="#">Trang chủ</a>
-
-        <div class="dropdown">
-            <a href="#">Thể loại &#9662;</a>
-            <div class="dropdown-content">
-                <a href="#">Hành động</a>
-                <a href="#">Phiêu lưu</a>
-                <a href="#">Lãng mạn </a>
-                <a href="#">Học đường</a>
-                <a href="#">Kinh dị</a>
-                <a href="#">Hài hước</a>
-                <a href="#">Giả tưởng</a>
-                <a href="#">Trinh thám</a>
-            </div>
-        </div>
-
-        <a href="#">Liên hệ</a>
-        <a href="#">Thông báo</a>
-    </nav>
-    <div class="actions">
-        <!-- <div class="search">
-            <i class="fas fa-magnifying-glass"></i>
-        </div> -->
-        <!-- <a href="#" class="publish-btn">Publish</a> -->
-        <a href="#" class="login-btn">Log in</a>
-
-    </div>
-</header>
 
 
 <div class="img-Login">
