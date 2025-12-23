@@ -216,7 +216,6 @@
             </div>
 
             <div class="container4">
-<<<<<<< HEAD
                 <section class="product-details" style="display: none;">
                     <h2>Thông tin chi tiết</h2>
                     <div class="detail-table">

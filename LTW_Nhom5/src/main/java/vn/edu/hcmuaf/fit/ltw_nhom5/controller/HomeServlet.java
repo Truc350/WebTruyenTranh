@@ -8,7 +8,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
 
 import java.io.IOException;
 
-@WebServlet({"/", "/home"})
+@WebServlet("/home")
 public class HomeServlet extends HttpServlet {
     private ComicDAO comicDAO;
     private FlashSaleDAO flashSaleDAO;
