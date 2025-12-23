@@ -1,24 +1,44 @@
-package model;
+package vn.edu.hcmuaf.fit.ltw_nhom5.model;
+
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Comic {
     private int id;
+
+    @ColumnName("name_comics")
     private String nameComics;
     private String author;
     private String publisher;
     private String description;
     private BigDecimal price;
+
+    @ColumnName("stock_quantity")
     private int stockQuantity;
     private String status;
+
+    @ColumnName("thumbnail_url")
     private String thumbnailUrl;
+
+    @ColumnName("category_id")
     private Integer categoryId;
     private Integer volume;
+
+    @ColumnName("series_id")
     private Integer seriesId;
+
+    @ColumnName("is_deleted")
     private boolean isDeleted;
+
+    @ColumnName("deleted_at")
     private LocalDateTime deletedAt;
+
+    @ColumnName("created_at")
     private LocalDateTime createdAt;
+
+    @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
     public Comic() {}

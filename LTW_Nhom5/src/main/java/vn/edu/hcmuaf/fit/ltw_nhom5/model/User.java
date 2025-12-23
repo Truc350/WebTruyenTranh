@@ -1,4 +1,4 @@
-package model;
+package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
