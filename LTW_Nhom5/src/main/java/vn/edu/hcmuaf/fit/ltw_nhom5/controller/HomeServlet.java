@@ -12,7 +12,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet( "/home")
+@WebServlet("/home")
 public class HomeServlet extends HttpServlet {
     private ComicDAO comicDAO;
     private FlashSaleDAO flashSaleDAO;
