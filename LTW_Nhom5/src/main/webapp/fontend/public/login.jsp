@@ -103,10 +103,10 @@
                     <i class="fa-brands fa-google"></i>
                 </a>
                 <a class="facebook"
-                   href="https://www.facebook.com/v19.0/dialog/oauth?client_id=<%= System.getenv("FACEBOOK_APP_ID") %>&redirect_uri=http://localhost:8080/login-facebook-callback&scope=email,public_profile"
-                   target="_blank">
+                   href="https://www.facebook.com/v19.0/dialog/oauth?client_id=<%=System.getenv("FACEBOOK_APP_ID")%>&redirect_uri=http://localhost:8080/LTW_Nhom5/login-facebook-callback&response_type=code&scope=email,public_profile">
                     <i class="fa-brands fa-facebook"></i>
                 </a>
+
 
             </div>
         </div>

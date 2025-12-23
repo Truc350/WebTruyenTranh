@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5.loginFaceBook;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -15,7 +15,7 @@ import java.net.URL;
 frontend → Facebook → Servlet → Graph API → Session
  */
 
-@WebServlet(name = "LoginFacebookCallbackServlet", value = "/LoginFacebookCallbackServlet")
+@WebServlet("/login-facebook-callback")
 public class LoginFacebookCallbackServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -29,7 +29,8 @@ public class LoginFacebookCallbackServlet extends HttpServlet {
             // Bước 1: Đổi code lấy access token
             String clientId = System.getenv("FACEBOOK_APP_ID");
             String clientSecret = System.getenv("FACEBOOK_APP_SECRET");
-            String redirectUri = "http://localhost:8080/login-facebook-callback";
+            String redirectUri = "http://localhost:8080/LTW_Nhom5/login-facebook-callback";
+
 
             String tokenUrl = "https://graph.facebook.com/v19.0/oauth/access_token"
                     + "?client_id=" + clientId
@@ -69,7 +70,7 @@ public class LoginFacebookCallbackServlet extends HttpServlet {
             request.getSession().setAttribute("email", userJson.optString("email", ""));
 
             // Redirect về trang chính
-            response.sendRedirect("/home"); // đổi thành trang chính app của bạn
+            response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
 
         } catch (Exception e) {
             e.printStackTrace();

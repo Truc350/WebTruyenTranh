@@ -1,4 +1,4 @@
-package dao;
+package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import model.Comic;
 

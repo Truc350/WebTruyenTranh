@@ -1,11 +1,10 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet(name = "login", value = "/login")
 public class LoginServlet extends HttpServlet {

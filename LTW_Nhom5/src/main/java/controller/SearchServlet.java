@@ -1,6 +1,6 @@
 package controller;
 
-import dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
