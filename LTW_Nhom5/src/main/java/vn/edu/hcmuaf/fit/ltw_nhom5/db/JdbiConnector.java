@@ -33,11 +33,11 @@ public class JdbiConnector {
         static {
             try (InputStream is = DBProperties.class.getClassLoader().getResourceAsStream("db.properties")) {
                 if (is == null) {
-                    throw new RuntimeException("File 'db.properties' not found in classpath!");
+                    throw new RuntimeException("File 'vn.edu.hcmuaf.fit.ltw_nhom5.db.properties' not found in classpath!");
                 }
                 prop.load(is);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to load db.properties", e);
+                throw new RuntimeException("Failed to load vn.edu.hcmuaf.fit.ltw_nhom5.db.properties", e);
             }
         }
 
