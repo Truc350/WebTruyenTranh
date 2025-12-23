@@ -1,0 +1,24 @@
+package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
+
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
+
+public class FlashSaleDAO extends ADao{
+    public FlashSale getActiveFlashSaleEndingSoon() {
+        String sql = """
+            SELECT *
+            FROM FlashSale
+            WHERE status = 'active'
+              AND start_time <= NOW()
+              AND end_time >= NOW()
+            ORDER BY end_time DESC
+            LIMIT 1
+        """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapToBean(FlashSale.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+}

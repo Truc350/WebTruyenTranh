@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Comic {
@@ -13,7 +12,7 @@ public class Comic {
     private String author;
     private String publisher;
     private String description;
-    private BigDecimal price;
+    private double price;
 
     @ColumnName("stock_quantity")
     private int stockQuantity;
@@ -40,6 +39,9 @@ public class Comic {
 
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
+
+    private int totalSold; // lượt bán trong tuần
+
 
     public Comic() {}
 
@@ -107,11 +109,11 @@ public class Comic {
         this.nameComics = nameComics;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -169,5 +171,13 @@ public class Comic {
 
     public void setVolume(Integer volume) {
         this.volume = volume;
+    }
+
+    public int getTotalSold() {
+        return totalSold;
+    }
+
+    public void setTotalSold(int totalSold) {
+        this.totalSold = totalSold;
     }
 }

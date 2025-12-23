@@ -14,8 +14,11 @@
     <meta charset="UTF-8">
     <title>Kết quả tìm kiếm</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/search.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
 </head>
 <body>
+<jsp:include page="/fontend/public/header.jsp" />
 <div class="container">
     <h2>
         Kết quả tìm kiếm cho:
