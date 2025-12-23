@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.db;
 
 import org.jdbi.v3.core.Jdbi;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -33,7 +34,7 @@ public class JdbiConnector {
         static {
             try (InputStream is = DBProperties.class.getClassLoader().getResourceAsStream("db.properties")) {
                 if (is == null) {
-                    throw new RuntimeException("File 'vn.edu.hcmuaf.fit.ltw_nhom5.db.properties' not found in classpath!");
+                    throw new RuntimeException("File 'vn.edu.hcmuaf.fit.ltw_nhom5.resources.db.properties' not found in classpath!");
                 }
                 prop.load(is);
             } catch (IOException e) {

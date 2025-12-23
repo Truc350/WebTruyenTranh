@@ -68,11 +68,11 @@
                     <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                     <button class="btn buy-now" style="display: none;">Mua ngay</button>
 
-                    <label class="heart-toggle">
-                        <input type="checkbox" hidden>
-                        <i class="fa-regular fa-heart"></i>
-                        <i class="fa-solid fa-heart"></i>
-                        <p>Like</p>
+                    <label class="heart-toggle" id="wishlist-toggle" data-comic-id="${comic.id}">
+                        <input type="checkbox" id="wishlist-checkbox" hidden>
+                        <i class="fa-regular fa-heart empty-heart"></i>
+                        <i class="fa-solid fa-heart filled-heart"></i>
+                        <p>Yêu thích</p>
                     </label>
 
                 </div>
