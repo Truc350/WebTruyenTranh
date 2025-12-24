@@ -21,7 +21,8 @@
                     <h3> <strong>Tạo tài khoản</strong></h3>
                     <p class="mb-4">Điền thông tin để đăng ký.</p>
 
-                    <form action="RegisterServlet" method="post">
+<%--                <form action="RegisterServlet" method="post">--%>
+                    <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
                         <!-- Username -->
                         <div class="form-group first">
                             <label for="username">Tên đăng nhập</label>
@@ -60,7 +61,7 @@
 
                         <!-- Link to login -->
                         <p class="mt-3 text-center">
-                            <a href="login.jsp">Đăng nhập tài khoản</a>
+                            <a href="login_bo.jsp">Đăng nhập tài khoản</a>
                         </p>
                     </form>
 

@@ -97,7 +97,7 @@
 
                 <!-- Nút đăng xuất -->
                 <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login.jsp">
+                    <a href="../public/login_bo.jsp">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </a>
                 </button>

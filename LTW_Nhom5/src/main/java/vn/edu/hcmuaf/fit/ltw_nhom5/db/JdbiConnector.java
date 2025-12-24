@@ -72,5 +72,8 @@ public class JdbiConnector {
         System.out.println("Password: " + DBProperties.password());
         Jdbi jdbi = get();
         System.out.println("Kết nối DB OK: " + jdbi);
+
+
+
     }
 }
