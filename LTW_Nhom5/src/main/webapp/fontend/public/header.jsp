@@ -1,21 +1,22 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%--<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <header class="navbar">
-    <a href="homePage.jsp"></a>
+    <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">
     <div class="logo">
-        <img id="logo" src="../../img/logo.png" alt="Comic Store">
+        <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
         <span>Comic Store</span>
     </div>
+    </a>
     <nav class="menu">
-        <a href="homePage.jsp">Trang chủ</a>
+        <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">Trang chủ</a>
 
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
-                <a href="CatagoryPage.jsp">Hành động</a>
+                <a href="${pageContext.request.contextPath}/fontend/public/CatagoryPage.jsp">Hành động</a>
                 <a href="#">Phiêu lưu</a>
-                <a href="#">Lãng mạn </a>
+                <a href="#">Lãng mạn</a>
                 <a href="#">Học đường</a>
                 <a href="#">Kinh dị</a>
                 <a href="#">Hài hước</a>
@@ -24,7 +25,7 @@
             </div>
         </div>
 
-        <a href="AbouUS.jsp">Liên hệ</a>
+        <a href="${pageContext.request.contextPath}/fontend/public/AbouUS.jsp">Liên hệ</a>
     </nav>
     <div class="search-bar">
         <div class="search-box">

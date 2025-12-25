@@ -1,34 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Footer</title>
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElX9bGZC+1yGkM3DUnZ6bXv4QF0Wv1j4b5l6k8Tig=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="../css/publicCss/FooterStyle.css">
-</head>
-<body>
+
+
 <footer class="footer">
     <div class="footer-container">
         <!-- Cột 1: Giới thiệu -->
         <div class="footer-column">
             <div class="logo">
-                <a href="#">
-                    <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">
+                    <img src="${pageContext.request.contextPath}/img/logo.png" alt="logo"><!--420-780-->
                 </a>
             </div>
-            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
-                truyện
-                giấy,<br>
+            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua truyện giấy,<br>
                 đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
             <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
                 <str>10.000+</str>
@@ -41,10 +23,10 @@
         <div class="footer-column">
             <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
             <ul>
-                <li><a href="homePage.jsp">Trang chủ</a></li>
-                <li><a href="FlashSale.jsp">Khuyến mãi</a></li>
-                <li><a href="cart.html">Giỏ hàng</a></li>
-                <li><a href="chat.html">Liên hệ</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">Trang chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/public/FlashSale.jsp">Khuyến mãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/cart.jsp">Giỏ hàng</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">Liên hệ</a></li>
             </ul>
         </div>
 
@@ -52,8 +34,8 @@
         <div class="footer-column">
             <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
             <ul>
-                <li><a href="RefundPolicy.html">Chính sách đổi trả</a></li>
-                <li><a href="shippingPolicy.html">Chính sách vận chuyển</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/RefundPolicy.jsp">Chính sách đổi trả</a></li>
+                <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/shippingPolicy.jsp">Chính sách vận chuyển</a></li>
             </ul>
         </div>
 
@@ -67,7 +49,7 @@
             <div class="social-links">
                 <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.instagram.com/comic.store/" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://www.tiktok.com/@comics_store.official" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
 
@@ -76,8 +58,8 @@
             <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>
             <div class="payment-icons">
-                <img src="../../img/momo.png" alt="Momo">
-                <img src="../../img/zalopay.png" alt="ZaloPay">
+                <img src="${pageContext.request.contextPath}/img/momo.png" alt="Momo">
+                <img src="${pageContext.request.contextPath}/img/zaloPay.png" alt="ZaloPay">
             </div>
             <p>Website đã đăng ký với Bộ Công Thương.</p>
         </div>
@@ -87,7 +69,3 @@
         <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
     </div>
 </footer>
-
-
-</body>
-</html>
