@@ -35,7 +35,8 @@
                        name="keyword"
                        placeholder="Tìm truyện..."
                        class="search-input"
-                       autocomplete="off">
+                       autocomplete="off"
+                       value="${param.keyword != null ? param.keyword : ''}">
                 <button type="submit" class="search-button">
                     <i class="fas fa-magnifying-glass"></i>
                 </button>
@@ -47,9 +48,7 @@
                     <span class="clear-all" id="clearAll">Xóa tất cả</span>
                 </div>
 
-                <div class="history-list">
-                    <span>Conan tập 88</span>
-                    <span class="remove">×</span>
+                <div class="history-tags-container" id="historyTagsContainer">
                 </div>
             </div>
         </div>
@@ -116,7 +115,7 @@
 <script>
     const searchInput = document.getElementById('searchInput');
     const dropdown = document.getElementById('searchDropdown');
-    const list = dropdown.querySelector('.history-list');
+    const tagsContainer = document.getElementById('historyTagsContainer');
     const clearAllBtn = document.getElementById('clearAll');
 
     const STORAGE_KEY = 'comicstore_search_history';
@@ -126,35 +125,56 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(searchHistory));
     }
 
-    function positionDropdown() {
-        const rect = searchInput.getBoundingClientRect();
-        dropdown.style.top = rect.bottom + 6 + 'px';
-        dropdown.style.left = rect.left + 'px';
-        dropdown.style.width = rect.width + 'px';
+    // function positionDropdown() {
+    //     const rect = searchInput.getBoundingClientRect();
+    //     dropdown.style.top = (rect.bottom + 6) + 'px';
+    //     dropdown.style.left = rect.left + 'px';
+    //     dropdown.style.width = rect.width + 'px';
+    // }
+
+    function removeHistoryItem(term) {
+        searchHistory = searchHistory.filter(t => t !== term);
+        saveHistory();
+        renderHistory();
     }
 
     function renderHistory() {
-        list.innerHTML = '';
+        tagsContainer.innerHTML = '';
 
         if (!searchHistory.length) {
-            list.innerHTML = '<div class="history-item" style="color:#999;font-style:italic">Không có lịch sử</div>';
+            tagsContainer.innerHTML = '<div style="padding:12px 16px;color:#999;font-style:italic;text-align:center">Không có lịch sử</div>';
             return;
         }
-        searchHistory.slice(0, 6).forEach(term => {
-            const item = document.createElement('div');
-            item.className = 'history-item';
-            item.textContent = term;
-            item.onclick = () => {
+
+        // Hiển thị tối đa 20 item
+        searchHistory.slice(0, 20).forEach(term => {
+            const tag = document.createElement('div');
+            tag.className = 'history-tag';
+
+            const text = document.createElement('span');
+            text.textContent = term;
+            text.onclick = () => {
                 searchInput.value = term;
                 hideDropdown();
                 searchInput.form.submit();
             };
-            list.appendChild(item);
+
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeHistoryItem(term);
+            };
+
+            tag.appendChild(text);
+            tag.appendChild(removeBtn);
+            tagsContainer.appendChild(tag);
         });
     }
 
     function showDropdown() {
-        positionDropdown();
+        // positionDropdown();
         renderHistory();
         dropdown.classList.add('show');
     }
@@ -172,15 +192,20 @@
         }
     });
 
-    window.addEventListener('resize', hideDropdown);
+    // window.addEventListener('resize', hideDropdown);
     window.addEventListener('scroll', hideDropdown);
 
     searchInput.form.addEventListener('submit', () => {
         const term = searchInput.value.trim();
         if (!term) return;
+
+        // Xóa term cũ nếu đã tồn tại
         searchHistory = searchHistory.filter(t => t !== term);
+        // Thêm vào đầu mảng
         searchHistory.unshift(term);
+        // Giới hạn 20 item
         if (searchHistory.length > 20) searchHistory.pop();
+
         saveHistory();
     });
 
