@@ -16,7 +16,6 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     public void init() {
-        // Khởi tạo Jdbi (ví dụ bạn có class JdbiConnector)
         userDao = new UserDao(JdbiConnector.get());
     }
 
@@ -29,24 +28,43 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
 
+        // Kiểm tra mật khẩu khớp
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu không khớp!");
-            request.getRequestDispatcher("/fontend/public/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
             return;
         }
 
-        // Hash mật khẩu
+        // Kiểm tra format mật khẩu
+        if (!PasswordUtils.isValidPasswordFormat(password)) {
+            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+
+        // Kiểm tra username/email đã tồn tại
+        if (userDao.findByUsername(username).isPresent()) {
+            request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+
+        if (userDao.findByEmail(email).isPresent()) {
+            request.setAttribute("error", "Email đã được sử dụng!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+
+        // Hash mật khẩu và lưu
         String passwordHash = PasswordUtils.hashPassword(password);
 
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
-        user.setFullName(username); // hoặc lấy từ form
+        user.setFullName(username);
 
         userDao.insert(user);
         response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
-
-        //response.sendRedirect("/fontend/public/homePage.jsp");
     }
 }

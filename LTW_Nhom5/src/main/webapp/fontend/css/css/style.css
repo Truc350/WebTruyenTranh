@@ -177,13 +177,35 @@ h2 {
 .social-btn:focus,
 .social-btn:active {
     outline: none !important;
-    box-shadow: none !important; /* bỏ hiệu ứng shadow của Bootstrap */
+    box-shadow: none !important;
 
 }
 
 .social-btn:active {
-    transform: scale(0.95);       /* thu nhỏ nhẹ khi nhấn */
-    opacity: 0.8;                 /* hơi mờ đi */
+    transform: scale(0.95);
+    opacity: 0.8;
     transition: transform 0.1s ease, opacity 0.1s ease;
 }
+#togglePassword {
+    border: none !important;
+}
 
+#togglePassword:focus,
+#togglePassword:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+#togglePassword {
+    background-color: #fff !important;   /* nền trắng */
+    border: none !important;             /* bỏ viền */
+    color: #000;                         /* màu icon đen cho dễ nhìn */
+}
+
+#togglePassword:hover,
+#togglePassword:focus,
+#togglePassword:active {
+    background-color: #fff !important;   /* giữ nền trắng khi hover/focus/active */
+    border: none !important;
+    box-shadow: none !important;
+}

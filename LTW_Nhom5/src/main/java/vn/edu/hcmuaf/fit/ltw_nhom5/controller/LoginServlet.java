@@ -27,12 +27,18 @@ public class LoginServlet extends HttpServlet {
         String usernameOrEmail = request.getParameter("username");
         String password = request.getParameter("password");
 
+        // Kiểm tra format mật khẩu trước
+        if (!PasswordUtils.isValidPasswordFormat(password)) {
+            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
+            return;
+        }
+
         Optional<User> userOpt = userDao.findByUsernameOrEmail(usernameOrEmail);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
-                // Lưu user vào session
                 request.getSession().setAttribute("currentUser", user);
                 response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
             } else {
@@ -44,4 +50,5 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
         }
     }
+
 }

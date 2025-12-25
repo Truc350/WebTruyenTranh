@@ -32,4 +32,24 @@ public class UserDao {
                         .execute()
         );
     }
+
+//   2 cái này cho đăng kí nó trùng username hay mail nó khỏi error 500
+    public Optional<User> findByUsername(String username) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Users WHERE username = :username")
+                        .bind("username", username)
+                        .mapToBean(User.class)
+                        .findOne()
+        );
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Users WHERE email = :email")
+                        .bind("email", email)
+                        .mapToBean(User.class)
+                        .findOne()
+        );
+    }
+
 }
