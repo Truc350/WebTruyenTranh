@@ -49,8 +49,7 @@
 <body>
 <div class="error-container">
     <h2>Exception!</h2>
-    <p>Xin lỗi Hưng Đoàn nha, mình sẽ làm lại cận thận ạ.</p>
-    <a href="/LTW_Nhom5_war/fontend/public/login.jsp" class="btn-home">Về trang chủ</a>
+    <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp" class="btn-home">Về trang chủ</a>
 </div>
 </body>
 </html>

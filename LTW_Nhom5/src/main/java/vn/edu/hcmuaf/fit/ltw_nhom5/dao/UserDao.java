@@ -52,4 +52,15 @@ public class UserDao {
         );
     }
 
+
+    // Update mật khẩu theo email của authen
+    public void updatePassword(String email, String newPasswordHash) {
+        jdbi.useHandle(handle ->
+                handle.createUpdate("UPDATE Users SET password_hash = :passwordHash WHERE email = :email")
+                        .bind("passwordHash", newPasswordHash)
+                        .bind("email", email)
+                        .execute()
+        );
+    }
+
 }
