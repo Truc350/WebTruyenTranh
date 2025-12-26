@@ -1,12 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HP
-  Date: 21/12/2025
-  Time: 11:22 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -16,9 +10,12 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/search.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
 <jsp:include page="/fontend/public/header.jsp" />
+
 <div class="container">
     <h2>
         Kết quả tìm kiếm cho:
@@ -47,5 +44,8 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+<!-- INCLUDE FOOTER -->
+<jsp:include page="/fontend/public/Footer.jsp" />
 </body>
 </html>
