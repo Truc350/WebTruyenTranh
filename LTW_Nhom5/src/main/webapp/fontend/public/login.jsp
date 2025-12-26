@@ -1,300 +1,137 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <%--    <link rel="stylesheet" href="../css/publicCss/nav.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/Authentic.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/Register.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/login.css">--%>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Authentic.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Register.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/login.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- <script src="../../js/Login.js" defer></script> -->
-</head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/style.css">
+
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <title>Login</title>
+</head>
 <body>
 
+<div class="d-lg-flex half">
 
+    <div class="bg order-1 order-md-2"
+         style="background-image: url(${pageContext.request.contextPath}/img/anhLogin.png);"></div>
 
-<div class="img-Login">
-    <%
-        String error = (String) request.getAttribute("message");
-        if (error == null) error = "";
-        String Username = request.getParameter("username");
-        if (Username == null) Username = "";
-    %>
-    <!-- phần này dang nhap -->
-    <form class="container-signup" action="${pageContext.request.contextPath}/login" method="post">
-        <div class="title">
-            <h3>Đăng nhập Comic Store</h3>
-            <span id="span-message" style="color:red; position:relative; top:15px;"><%=error%></span>
+    <div class="contents order-2 order-md-1">
 
-        </div>
         <div class="container">
-            <div class="sdt_maOTP">
-                <input id="nhapstk" type="text" placeholder="Số điện thoại hoặc Email" name="username"
-                       value="<%=Username%>">
-                <input id="nhapmk" type="password" placeholder="Nhập mật khẩu" name="password"
-                       autocomplete="new-password">
-            </div>
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-7">
+                    <h3><strong>Đăng nhập Comic Store</strong></h3>
+                    <p class="mb-4">Hãy nhập thông tin để bắt đầu sử dụng dịch vụ mua sắm.</p>
 
-            <div class="login-options">
-                <label class="remember-me">
-                    <input type="checkbox">
-                    Ghi nhớ tài khoản
-                </label>
-                <a href="#" class="forgot-password" id="show-forgot-pw">Quên mật khẩu</a>
-            </div>
-
-            <button class="btn btn_guiOTP">Đăng nhập</button>
-            <!-- <a href="homePage.jsp">
-            </a> -->
-
-            <div class="dktk">
-                <span><a href="#" id="show-register">Đăng ký tài khoản</a></span>
-            </div>
-
-            <div class="is-user">
-                <p>Hoặc sử dụng tài khoản</p>
-            </div>
-
-            <div class="social-buttons">
-                <a class="google" href="${pageContext.request.contextPath}/login-google">
-                    <i class="fa-brands fa-google"></i>
-                </a>
-                <a class="facebook"
-                   href="https://www.facebook.com/v19.0/dialog/oauth?client_id=<%=System.getenv("FACEBOOK_APP_ID")%>&redirect_uri=http://localhost:8080/LTW_Nhom5/login-facebook-callback&response_type=code&scope=email,public_profile">
-                    <i class="fa-brands fa-facebook"></i>
-                </a>
+                    <c:if test="${not empty error}">
+                        <p class="text-danger">${error}</p>
+                    </c:if>
 
 
-            </div>
-        </div>
-    </form>
+                    <!-- Form login -->
+                    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
+                        <div class="form-group first">
+                            <label for="username">Tên đăng nhập hoặc Email</label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Tên đăng nhập hoặc gmail" required>
+                        </div>
+                        <div class="form-group last mb-3">
+                            <label for="password">Mật khẩu</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="Mật khẩu" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- phần này dang ki -->
-    <div class="container-register">
-        <div class="glass-card">
-            <!-- Header -->
-            <div class="form-container active" id="registerForm">
-                <div class="form-header">
-                    <h2>Tạo tài khoản</h2>
-                    <p>Điền thông tin để đăng ký</p>
-                </div>
-            </div>
+                        <div class="d-flex mb-5 align-items-center">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember" checked>
+                                <label class="form-check-label" for="remember">Nhớ mật khẩu</label>
+                            </div>
+                            <span class="ml-auto"><a href="${pageContext.request.contextPath}/fontend/public/ForgotPass.jsp" class="forgot-pass">Quên mật khẩu</a></span>
+                        </div>
 
-            <div class="auth-form" id="registerFormElement">
-                <div class="input-group">
-                    <!--name-->
-                    <div class="input-child">
-                        <div class="name-register">
-                            <i class="fa-solid fa-user"></i>
-                            <input id="firstName" name="firstName" type="text" placeholder="Tên đăng nhập"/>
+                        <input type="submit" value="Đăng nhập" class="btn btn-block btn-primary">
+                    </form>
+
+                    <div>
+                        <span class="signup-tran"><a href="${pageContext.request.contextPath}/fontend/public/Register.jsp" class="forgot-pass">Đăng kí tài khoản</a></span>
+                    </div>
+
+
+                    <!-- Social Login -->
+                    <div class="text-center mt-4" id="social-login">
+                        <p>Hoặc đăng nhập bằng</p>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" class="btn btn-danger mr-2 social-btn">
+                                <i class="fab fa-google mr-1"></i> Google
+                            </a>
+                            <a href="#" class="btn btn-primary social-btn">
+                                <i class="fab fa-facebook-f mr-1"></i> Facebook
+                            </a>
                         </div>
                     </div>
 
-
-                    <!-- Email -->
-                    <div class="input-child">
-                        <div class="email-container">
-                            <i class="fa-solid fa-envelope"></i>
-                            <input id="email" name="email" type="text" placeholder="Địa chỉ Email"/>
-                        </div>
-                    </div>
-
-                    <!-- Password -->
-                    <div class="input-child">
-                        <div class="pw-container">
-                            <i class="fa-solid fa-lock"></i>
-                            <input id="pw" name="pw" type="text" placeholder="Mật khẩu"/>
-                        </div>
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div class="input-child">
-                        <div class="cf-pw-container">
-                            <i class="fa-solid fa-lock"></i>
-                            <input id="cf-pw" name="cf-pw" type="text" placeholder="Xác nhận mật khẩu"/>
-                        </div>
-                    </div>
-                </div>
-                <!-- Terms checkbox -->
-                <div class="input-group">
-                    <div class="input-container" data-doc="TheDoc">
-                        <input id="agree" name="agree" type="checkbox" placeholder="Confirm Password"/>
-                        <label for="agree">Tôi đồng ý với các chính sách và điều khoản</label>
-                    </div>
                 </div>
             </div>
-
-            <div class="form-footer">
-
-                <div class="btn-sign-up">
-                    <a href="homePage.jsp">
-                        <button>Đăng ký</button>
-                    </a>
-                </div>
-
-                <div class="form-footer">
-                    <a href="#" id="show-login">Đăng nhập tài khoản</a>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- phần này quên xác thuật quên mật khẩu -->
-    <div class="forgot-pd-container">
-        <h2>Xác thực mail người dùng</h2>
-        <div id="forgot-password-form">
-            <div class="email-class">
-                <label for="email" class="label-with-icon">Email</label>
-                <!-- <input class="in" type="email" id="email" placeholder="Nhập Email để lấy mã xác thực"> -->
-                <input class="in" type="email" placeholder="Nhập Email để lấy mã xác thực">
-            </div>
-            <div class="verify">
-                <div class="verify-title">
-                    <label for="verify-code" class="label-with-icon">Mã xác thực</label>
-                    <input class="in" type="text" id="verify-code" name="verify-code"
-                           placeholder="Nhập mã xác thực đã gửi">
-                </div>
-            </div>
-
-            <div class="new-pass">
-                <label for="new-password">Mật khẩu mới</label>
-                <input class="in" type="password" id="new-password" name="new-password"
-                       placeholder="Nhập mật khẩu mới" disabled>
-            </div>
-            <div id="remind" hidden="hidden">Chúng tôi đang gửi mã</div>
-            <button class="get-verify-code">Lấy mã xác thực</button>
-
-            <a href="homePage.jsp">
-                <button class="submit">Xác nhận</button>
-            </a>
         </div>
     </div>
-
 </div>
-</body>
 
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
-        <div class="footer-column">
-            <div class="logo">
-                <a href="#">
-                    <img src="${pageContext.request.contextPath}/img/logo.png" alt="logo"><!--420-780-->
-                </a>
-            </div>
-            <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể mua
-                truyện
-                giấy,<br>
-                đọc truyện online và<br> khám phá thế giới<br> manga – manhwa – comic đa dạng.</p>
-            <p>Thành lâp năm <strong>2025</strong>, chúng tôi mang đến hơn
-                <str>10.000+</str>
-                <br>
-                truyện hấp dẫn cho bạn
-            </p>
-        </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
-            <ul>
-                <li><a href="homePage.jsp">Trang chủ</a></li>
-                <li><a href="FlashSale.jsp">Khuyến mãi</a></li>
-                <li><a href="cart.html">Giỏ hàng</a></li>
-                <li><a href="chat.html">Liên hệ</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
-            <ul>
-                <li><a href="../nguoiB/RefundPolicy.jsp">Chính sách đổi trả</a></li>
-                <li><a href="../nguoiB/shippingPolicy.jsp">Chính sách vận chuyển</a></li>
-            </ul>
-        </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
-            <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
-            <p><i class="fa-solid fa-phone"></i> 0123 456 789</p>
-            <p><i class="fa-solid fa-location-dot"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</p>
-
-            <div class="social-links">
-                <a href="https://www.facebook.com/share/1MVc1miHnd/" title="Facebook"><i
-                        class="fab fa-facebook-f"></i></a>
-                <a href="https://www.instagram.com/comic.store/" title="Instagram"><i
-                        class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@comics_store.oficial" title="TikTok"><i
-                        class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-
-        <!-- Cột 5: Thanh toán -->
-        <div class="footer-column">
-            <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
-            <p>Hỗ trợ thanh toán qua:</p>
-            <div class="payment-icons">
-                <img src="${pageContext.request.contextPath}/img/momo.png" alt="Momo">
-                <img src="${pageContext.request.contextPath}/img/zaloPay.png" alt="ZaloPay">
-            </div>
-            <p>Website đã đăng ký với Bộ Công Thương.</p>
-        </div>
-    </div>
-
-    <div class="footer-bottom">
-        <p>© 2025 <strong>ComicStore.vn</strong> — All rights reserved.</p>
-    </div>
-</footer>
+<%--<script src="js/jquery-3.3.1.min.js"></script>--%>
+<%--<script src="js/popper.min.js"></script>--%>
+<%--<script src="js/bootstrap.min.js"></script>--%>
+<%--<script src="js/main.js"></script>--%>
 
 <script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const form = document.querySelector("form");
+    //     const passwordInput = document.getElementById("password");
+    //
+    //     form.addEventListener("submit", function (event) {
+    //         const password = passwordInput.value;
+    //
+    //         // Regex kiểm tra: ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+    //         const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    //
+    //         if (!regex.test(password)) {
+    //             event.preventDefault(); // chặn submit
+    //             alert("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+    //         }
+    //     });
+    // });
 
 
-    //cái dưới là chuyển form đăng nhập đăng ký\
-    document.getElementById("show-register").addEventListener("click", function (event) {
-        event.preventDefault();
-        document.querySelector(".container-signup").style.display = "none";
-        document.querySelector(".container-register").style.display = "block";
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        togglePassword.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+
+        // Đổi icon khi toggle
+        this.querySelector("i").classList.toggle("fa-eye");
+        this.querySelector("i").classList.toggle("fa-eye-slash");
+    });
     });
 
 
-    document.getElementById("show-login").addEventListener("click", function (event) {
-        event.preventDefault();
-        document.querySelector(".container-signup").style.display = "flex";
-        document.querySelector(".container-register").style.display = "none";
-    });
-
-
-    //cái này làm cho xác thực quên mật khẩu
-    document.getElementById("show-forgot-pw").addEventListener("click", function (event) {
-        event.preventDefault();
-        document.querySelector(".container-signup").style.display = "none";
-        document.querySelector(".forgot-pd-container").style.display = "block";
-    });
-
-    //cái này new-pass khi quên
-    const verifyInput = document.getElementById('verify-code');
-    const newPassInput = document.getElementById('new-password');
-
-    verifyInput.addEventListener('input', () => {
-        if (verifyInput.value.trim() !== '') {
-            newPassInput.disabled = false;
-        } else {
-            newPassInput.disabled = true;
-        }
-    });
 </script>
 
+</body>
 </html>

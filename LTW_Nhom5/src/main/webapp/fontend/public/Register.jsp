@@ -12,8 +12,10 @@
 </head>
 <body>
 <div class="d-lg-flex half">
-            <div class="bg order-1 order-md-2" style="background-image: url('../../img/anhLogin.png');"></div>
-        <div class="contents order-2 order-md-1">
+    <div class="bg order-1 order-md-2"
+         style="background-image: url(${pageContext.request.contextPath}/img/anhLogin.png);"></div>
+
+    <div class="contents order-2 order-md-1">
 
         <div class="container">
             <div class="row align-items-center justify-content-center">
@@ -21,7 +23,11 @@
                     <h3> <strong>Tạo tài khoản</strong></h3>
                     <p class="mb-4">Điền thông tin để đăng ký.</p>
 
-                    <form action="RegisterServlet" method="post">
+                    <c:if test="${not empty error}">
+                        <p class="text-danger">${error}</p>
+                    </c:if>
+
+                    <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
                         <!-- Username -->
                         <div class="form-group first">
                             <label for="username">Tên đăng nhập</label>
@@ -60,7 +66,7 @@
 
                         <!-- Link to login -->
                         <p class="mt-3 text-center">
-                            <a href="login.jsp">Đăng nhập tài khoản</a>
+                            <a href="login_bo.jsp">Đăng nhập tài khoản</a>
                         </p>
                     </form>
 
@@ -70,6 +76,46 @@
     </div>
 </div>
 
-<script src="js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+
+        form.addEventListener("submit", function (event) {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Regex kiểm tra: ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+            const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            // Kiểm tra format mật khẩu
+            if (!regex.test(password)) {
+                event.preventDefault(); // chặn submit
+                alert("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+
+                // Reset cả 2 ô mật khẩu
+                passwordInput.value = "";
+                confirmPasswordInput.value = "";
+                return;
+            }
+
+            // Kiểm tra xác nhận mật khẩu
+            if (password !== confirmPassword) {
+                event.preventDefault(); // chặn submit
+                alert("Mật khẩu xác nhận không khớp!");
+
+                // Reset cả 2 ô mật khẩu
+                passwordInput.value = "";
+                confirmPasswordInput.value = "";
+                return;
+            }
+        });
+    });
+</script>
+
+
+<%--<script src="js/bootstrap.min.js"></script>--%>
 </body>
 </html>

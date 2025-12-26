@@ -16,9 +16,11 @@
 <body>
 
 <div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2" style="background-image: url('../../img/anhLogin.png');"></div>
+    <div class="bg order-1 order-md-2"
+         style="background-image: url(${pageContext.request.contextPath}/img/anhLogin.png);"></div>
 
-        <div class="container">
+
+    <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-md-7">
                     <h3><strong>Xác thực email</strong></h3>
@@ -52,14 +54,37 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        const newPasswordInput = document.getElementById("newPassword");
+
+        form.addEventListener("submit", function (event) {
+            // chỉ kiểm tra khi action là resetPassword
+            const action = event.submitter ? event.submitter.value : null;
+            if (action === "resetPassword") {
+                const password = newPasswordInput.value;
+
+                // Regex kiểm tra: ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
+                const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+                if (!regex.test(password)) {
+                    event.preventDefault(); // chặn submit
+                    alert("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+                    newPasswordInput.value = ""; // reset ô nhập mật khẩu
+                }
+            }
+        });
+    });
+</script>
 
 
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
+
+<%--<script src="js/jquery-3.3.1.min.js"></script>--%>
+<%--<script src="js/popper.min.js"></script>--%>
+<%--<script src="js/bootstrap.min.js"></script>--%>
+<%--<script src="js/main.js"></script>--%>
 </body>
 </html>

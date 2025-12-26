@@ -104,7 +104,7 @@
             <i class="fa-solid fa-user" id="user"></i>
             <div class="dropdown-user">
                 <a href="../nguoiB/profile.jsp">Trang chủ</a>
-                <a href="login.jsp">Đăng xuất</a>
+                <a href="login_bo.jsp">Đăng xuất</a>
             </div>
         </div>
     </div>
