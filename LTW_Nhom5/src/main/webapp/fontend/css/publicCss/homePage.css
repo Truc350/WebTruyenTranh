@@ -322,7 +322,7 @@ a button:active {
   background: #fff;
   border-radius: 10px;
   padding: 10px;
-  text-align: center;
+  text-align: left;
   flex: 0 0 200px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -332,6 +332,11 @@ a button:active {
   height: 280px;
   object-fit: cover;
   border-radius: 8px;
+}
+
+.product-item a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .product-name {
@@ -514,3 +519,10 @@ a button:active {
   color: #555;
 }
 
+.product-item a,
+.product-item a:hover,
+.product-item a:focus,
+.product-item a:active {
+  text-decoration: none !important;
+  color: inherit;
+}

@@ -230,9 +230,9 @@
                             <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
                                  alt="">
                             <p class="product-name">Thám tử lừng danh Conan tập 100</p>
-                            <p class="product-price">₫18,000</p>
-                            <p class="sold">Đã bán: <strong>196</strong></p>
                         </a>
+                        <p class="product-price">18,000 đ</p>
+                        <p class="sold">Đã bán: <strong>196</strong></p>
                     </div>
                     <div class="product-item">
                         <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
