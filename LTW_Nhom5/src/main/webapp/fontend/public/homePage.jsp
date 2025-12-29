@@ -39,9 +39,6 @@
                     <% }
                     } else { %>
                     <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
-                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
-                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
-                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
                     <% } %>
                 </div>
 

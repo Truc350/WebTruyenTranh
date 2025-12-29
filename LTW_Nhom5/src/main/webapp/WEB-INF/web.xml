@@ -34,7 +34,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>fontend/public/homePage.jsp</welcome-file>
+        <welcome-file>home</welcome-file>
     </welcome-file-list>
 
 

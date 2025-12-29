@@ -1,29 +1,47 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Category" %>
+<%@ page import="java.util.List" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao" %>
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">
+    <a href="${pageContext.request.contextPath}/home">
     <div class="logo">
         <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
         <span>Comic Store</span>
     </div>
     </a>
     <nav class="menu">
-        <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">Trang chủ</a>
+        <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
 
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
-                <a href="${pageContext.request.contextPath}/fontend/public/CatagoryPage.jsp">Hành động</a>
-                <a href="#">Phiêu lưu</a>
-                <a href="#">Lãng mạn</a>
-                <a href="#">Học đường</a>
-                <a href="#">Kinh dị</a>
-                <a href="#">Hài hước</a>
-                <a href="#">Giả tưởng</a>
-                <a href="#">Trinh thám</a>
+                <%
+                    List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
+
+                    // Nếu chưa có trong request thì tự load luôn chỗ này
+                    if (listCategories == null || listCategories.isEmpty()) {
+                        CategoriesDao categoriesDao = new CategoriesDao();
+                        listCategories = categoriesDao.listCategories();
+                    }
+
+                    //List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
+                    if (listCategories != null && !listCategories.isEmpty()) {
+                        for (Category c : listCategories) {
+                %>
+                <a href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getNameCategories() %></a>
+                <%
+                    }
+                } else {
+                    %>
+                    <a href="#">KHÔNG CÓ</a>
+                    <%
+                    }
+                %>
             </div>
         </div>
+
+
 
         <a href="${pageContext.request.contextPath}/fontend/public/AbouUS.jsp">Liên hệ</a>
     </nav>

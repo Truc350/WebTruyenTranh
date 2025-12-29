@@ -37,7 +37,7 @@
 
 
                     <!-- Form login -->
-                    <form action="${pageContext.request.contextPath}/LoginServlet" method="post">
+                    <form action="${pageContext.request.contextPath}/login" method="post">
                         <div class="form-group first">
                             <label for="username">Tên đăng nhập hoặc Email</label>
                             <input type="text" class="form-control" id="username" name="username"

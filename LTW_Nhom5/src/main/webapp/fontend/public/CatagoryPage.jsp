@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,7 +100,7 @@
         <!-- content bên phải-->
         <div id="items-listing">
 
-            <h1>Hành động</h1>
+            <h1>${selectedCategory.nameCategories}</h1>
 
             <div id="sum-items">
                 <p><strong>Tổng sản phẩm hiển thị:</strong> 36</p>
