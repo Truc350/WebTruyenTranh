@@ -32,7 +32,15 @@
         <servlet-name>default</servlet-name>
         <url-pattern>*.webp</url-pattern>
     </servlet-mapping>
-<!--    <error-page>-->
+
+    <welcome-file-list>
+        <welcome-file>fontend/public/homePage.jsp</welcome-file>
+    </welcome-file-list>
+
+
+
+
+    <!--    <error-page>-->
 <!--        <error-code>404</error-code>-->
 <!--        <location>/Error/error404.jsp</location>-->
 <!--    </error-page>-->

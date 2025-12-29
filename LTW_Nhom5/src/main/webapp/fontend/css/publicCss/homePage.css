@@ -49,8 +49,6 @@ body {
 }
 
 
-
-
 /* dot */
 .dots {
   position: absolute;
@@ -526,3 +524,8 @@ a button:active {
   text-decoration: none !important;
   color: inherit;
 }
+
+
+
+
+

@@ -1,139 +1,134 @@
-// // banner
-// const listImage = document.querySelector('.list-images');
-// const imgs = document.querySelectorAll('.list-images img');
-// const dots = document.querySelectorAll('.dot');
-// const btnPrev = document.querySelector('.btn.prev');
-// const btnNext = document.querySelector('.btn.next');
+//banner
+document.addEventListener("DOMContentLoaded", function () {
+    const banner = document.querySelector('.banner');
+    const listImage = document.querySelector('.list-images');
+    const imgs = document.querySelectorAll('.list-images img');
+    const dots = document.querySelectorAll('.dot');
+    const btnPrev = document.querySelector('.banner .btn.prev');
+    const btnNext = document.querySelector('.banner .btn.next');
 
-// let index = 0;
+    if (!banner || imgs.length === 0) return;
 
-// function changeSlide(i) {
-//     let width = imgs[0].offsetWidth;
-//     listImage.style.transform = `translateX(${-width * i}px)`;
-//     document.querySelector('.dot.active').classList.remove('active');
-//     dots[i].classList.add('active');
-// }
+    let index = 0;
+    let interval;
 
-// setInterval(() => {
-//     index++;
-//     if (index >= imgs.length) index = 0;
-//     changeSlide(index);
-// }, 2000);
+    function updateSlider() {
+        const width = banner.clientWidth;  // luôn lấy mới, chính xác
+        listImage.style.transform = `translateX(${-width * index}px)`;
 
-// // Dots click
-// dots.forEach((dot, i) => {
-//     dot.addEventListener('click', () => {
-//         index = i;
-//         changeSlide(index);
-//     });
-// });
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
 
-// btnNext.addEventListener('click', () => {
-//     index++;
-//     if (index >= imgs.length) index = 0;
-//     changeSlide(index);
-// });
+    function nextSlide() {
+        index = (index + 1) % imgs.length;
+        updateSlider();
+    }
 
-// btnPrev.addEventListener('click', () => {
-//     index--;
-//     if (index < 0) index = imgs.length - 1;
-//     changeSlide(index);
-// });
+    function prevSlide() {
+        index = (index - 1 + imgs.length) % imgs.length;
+        updateSlider();
+    }
 
-// // slider
-// // document.querySelectorAll('.product-slider').forEach(slider => {
-// //     const track = slider.querySelector('.slider-track');
-// //     const prevBtn = slider.querySelector('.arrow.prev');
-// //     const nextBtn = slider.querySelector('.arrow.next');
-// //     const items = slider.querySelectorAll('.product-item');
+    // Auto play
+    interval = setInterval(nextSlide, 3000);
 
-// //     let currentPosition = 0;
+    // Nút
+    if (btnNext) btnNext.addEventListener('click', () => {
+        nextSlide();
+        clearInterval(interval);
+        interval = setInterval(nextSlide, 3000);
+    });
 
-// //     // Kích thước 1 item + khoảng cách giữa các item
-// //     const itemWidth = items[0].offsetWidth + 10; // 10 = gap
-// //     const totalItems = items.length;
+    if (btnPrev) btnPrev.addEventListener('click', () => {
+        prevSlide();
+        clearInterval(interval);
+        interval = setInterval(nextSlide, 3000);
+    });
 
-// //     // Tổng chiều rộng của toàn bộ track
-// //     const trackWidth = totalItems * itemWidth;
+    // Dot click
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            index = i;
+            updateSlider();
+            clearInterval(interval);
+            interval = setInterval(nextSlide, 3000);
+        });
+    });
 
-// //     // Chiều rộng của vùng hiển thị slider
-// //     const containerWidth = slider.offsetWidth;
+    // Quan trọng: resize cửa sổ + chờ ảnh load
+    window.addEventListener('resize', updateSlider);
 
-// //     // Vị trí trượt tối đa (âm)
-// //     const maxPosition = containerWidth - trackWidth;
+    // Chờ tất cả ảnh load xong mới start (tránh width sai ban đầu)
+    let loaded = 0;
+    imgs.forEach(img => {
+        if (img.complete) loaded++;
+        else img.addEventListener('load', () => { loaded++; if (loaded === imgs.length) updateSlider(); });
+    });
 
-// //     // Xử lý nút next
-// //     nextBtn.addEventListener('click', () => {
-// //         if (currentPosition > maxPosition) {
-// //             currentPosition -= itemWidth;
-
-// //             // Giới hạn không vượt quá maxPosition
-// //             if (currentPosition < maxPosition) {
-// //                 currentPosition = maxPosition;
-// //             }
-
-// //             track.style.transform = `translateX(${currentPosition}px)`;
-// //         }
-// //     });
-
-// //     // Xử lý nút prev
-// //     prevBtn.addEventListener('click', () => {
-// //         if (currentPosition < 0) {
-// //             currentPosition += itemWidth;
-            
-// //             // Giới hạn không vượt quá 0
-// //             if (currentPosition > 0) {
-// //                 currentPosition = 0;
-// //             }
-
-// //             track.style.transform = `translateX(${currentPosition}px)`;
-// //         }
-// //     })
-// // });
-
-
-// function initSlider(slider) {
-//     const track = slider.querySelector('.slider-track');
-//     const prevBtn = slider.querySelector('.arrow.prev');
-//     const nextBtn = slider.querySelector('.arrow.next');
-//     const items = slider.querySelectorAll('.product-item');
-
-//     let currentPosition = 0;
-
-//     function recalc() {
-//         const itemWidth = items[0].offsetWidth + 10; // gap
-//         const totalItems = items.length;
-//         const trackWidth = totalItems * itemWidth;
-//         const containerWidth = slider.offsetWidth;
-//         const maxPosition = containerWidth - trackWidth;
-//         return { itemWidth, maxPosition };
-//     }
-
-//     prevBtn.addEventListener('click', () => {
-//         const { itemWidth } = recalc();
-//         if (currentPosition < 0) {
-//             currentPosition += itemWidth;
-//             if (currentPosition > 0) currentPosition = 0;
-//             track.style.transform = `translateX(${currentPosition}px)`;
-//         }
-//     });
-
-//     nextBtn.addEventListener('click', () => {
-//         const { itemWidth, maxPosition } = recalc();
-//         if (currentPosition > maxPosition) {
-//             currentPosition -= itemWidth;
-//             if (currentPosition < maxPosition) currentPosition = maxPosition;
-//             track.style.transform = `translateX(${currentPosition}px)`;
-//         }
-//     });
-// }
-
-// // Khi popup mở thì gọi lại initSlider
-// document.querySelectorAll('.product-slider').forEach(initSlider);
+    if (loaded === imgs.length) updateSlider();
+    else imgs.forEach(img => img.addEventListener('load', () => { if (++loaded === imgs.length) { updateSlider(); interval = setInterval(nextSlide, 3000); } }));
+});
 
 
 
-// //cái này cho top truyện 
+
+
+//slider
+document.addEventListener("DOMContentLoaded", function () {
+    const sliders = document.querySelectorAll('.product-slider');
+
+    sliders.forEach(slider => {
+        const track = slider.querySelector('.slider-track');
+        const prevBtn = slider.querySelector('.arrow.prev');
+        const nextBtn = slider.querySelector('.arrow.next');
+        const items = slider.querySelectorAll('.product-item');
+
+        let currentPosition = 0;
+
+        function recalc() {
+            const itemWidth = items[0].offsetWidth + 10; // khoảng cách giữa các item
+            const totalItems = items.length;
+            const trackWidth = totalItems * itemWidth;
+            const containerWidth = slider.offsetWidth;
+            const maxPosition = containerWidth - trackWidth;
+            return { itemWidth, maxPosition };
+        }
+
+        function moveSlider(position) {
+            track.style.transform = `translateX(${position}px)`;
+        }
+
+        // Nút prev
+        prevBtn.addEventListener('click', () => {
+            const { itemWidth } = recalc();
+            currentPosition += itemWidth;
+            if (currentPosition > 0) currentPosition = 0; // không vượt quá đầu
+            moveSlider(currentPosition);
+        });
+
+        // Nút next
+        nextBtn.addEventListener('click', () => {
+            const { itemWidth, maxPosition } = recalc();
+            currentPosition -= itemWidth;
+            if (currentPosition < maxPosition) currentPosition = maxPosition; // không vượt quá cuối
+            moveSlider(currentPosition);
+        });
+
+        // Khởi tạo
+        moveSlider(currentPosition);
+    });
+
+    document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
+         document.querySelector("#product-slider-popup").style.display = "block";
+
+});
+
+});
+
+
+// // top truyện
 // document.getElementById("item-pop-1").addEventListener("mouseover", function () {
 //     document.querySelector(".pop-detail-home1").style.display = "flex";
 //     document.querySelector(".pop-detail-home2").style.display = "none";
@@ -141,7 +136,7 @@
 //     document.querySelector(".pop-detail-home4").style.display = "none";
 //     document.querySelector(".pop-detail-home5").style.display = "none";
 // });
-
+//
 // document.getElementById("item-pop-2").addEventListener("mouseover", function () {
 //     document.querySelector(".pop-detail-home2").style.display = "flex";
 //     document.querySelector(".pop-detail-home1").style.display = "none";
@@ -149,7 +144,7 @@
 //     document.querySelector(".pop-detail-home4").style.display = "none";
 //     document.querySelector(".pop-detail-home5").style.display = "none";
 // });
-
+//
 // document.getElementById("item-pop-3").addEventListener("mouseover", function () {
 //     document.querySelector(".pop-detail-home3").style.display = "flex";
 //     document.querySelector(".pop-detail-home1").style.display = "none";
@@ -157,7 +152,7 @@
 //     document.querySelector(".pop-detail-home4").style.display = "none";
 //     document.querySelector(".pop-detail-home5").style.display = "none";
 // });
-
+//
 // document.getElementById("item-pop-4").addEventListener("mouseover", function () {
 //     document.querySelector(".pop-detail-home4").style.display = "flex";
 //     document.querySelector(".pop-detail-home1").style.display = "none";
@@ -172,10 +167,10 @@
 //     document.querySelector(".pop-detail-home3").style.display = "none";
 //     document.querySelector(".pop-detail-home4").style.display = "none";
 // });
-
-
+//
+//
 // document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
 //     document.querySelector("#product-slider-popup").style.display = "block";
-
+//
 // });
 

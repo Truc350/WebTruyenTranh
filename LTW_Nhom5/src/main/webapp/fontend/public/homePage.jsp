@@ -1,50 +1,85 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html lang="en">
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ page import="java.util.List" %>
+    <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner" %>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/homePage.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/homePage.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="${pageContext.request.contextPath}/js/homePage.js"></script>
+    </head>
 
-<body>
+    <body>
 
-<jsp:include page="/fontend/public/header.jsp" />
+    <jsp:include page="/fontend/public/header.jsp" />
 
-<div class="container-content">
-    <!-- chỗ này banner -->
-    <div class="bannder-des">
-        <div class="banner">
-            <div class="list-images">
-                <!-- <img class="img" id="img-banner" src="../../img/imgBanner2.png" alt="">
-                <img class="img" id="img-banner" src="../../img/imgBanner1.png" alt="">
-                <img class="img" id="img-banner" src="../../img/imgBanner3.png" alt="">
-                <img class="img" id="img-banner" src="../../img/imgBanner4.png" alt=""> -->
+    <div class="container-content">
 
-                <img class="img" src="../../img/banner1.jpg" alt="">
-                <img class="img" src="../../img/banner2.jpg" alt="">
-                <img d="img-banner3" class="img" src="../../img/banner3.jpg" alt="">
-                <img class="img" src="../../img/banner4.jpg" alt="">
+
+    <%--banner    --%>
+
+        <%
+            List<Banner> banners = (List<Banner>) request.getAttribute("banners");
+        %>
+
+
+        <div class="bannder-des">
+            <div class="banner">
+                <div class="list-images">
+                    <% if (banners != null && !banners.isEmpty()) {
+                        for (Banner b : banners) { %>
+                    <img class="img" src="<%= b.getImageUrl() %>" alt="banner">
+                    <% }
+                    } else { %>
+                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
+                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
+                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
+                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
+                    <% } %>
+                </div>
+
+                <div class="btn prev">&#10094;</div>
+                <div class="btn next">&#10095;</div>
+
+                <div class="dots">
+                    <% if (banners != null) {
+                        for (int i = 0; i < banners.size(); i++) { %>
+                    <div class="dot <%= (i==0 ? "active" : "") %>"></div>
+                    <% } } %>
+                </div>
             </div>
-
-            <div class="btn prev">&#10094;</div>
-            <div class="btn next">&#10095;</div>
-
-            <div class="dots">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-
         </div>
-    </div>
+
+
+    <!-- chỗ này banner -->
+<%--    <div class="bannder-des">--%>
+<%--        <div class="banner">--%>
+<%--            <div class="list-images">--%>
+<%--                <img class="img" src="../../img/banner1.jpg" alt="">--%>
+<%--                <img class="img" src="../../img/banner2.jpg" alt="">--%>
+<%--                <img id="img-banner3" class="img" src="../../img/banner3.jpg" alt="">--%>
+<%--                <img class="img" src="../../img/banner4.jpg" alt="">--%>
+<%--            </div>--%>
+
+<%--            <div class="btn prev">&#10094;</div>--%>
+<%--            <div class="btn next">&#10095;</div>--%>
+
+<%--            <div class="dots">--%>
+<%--                <div class="dot active"></div>--%>
+<%--                <div class="dot"></div>--%>
+<%--                <div class="dot"></div>--%>
+<%--                <div class="dot"></div>--%>
+<%--            </div>--%>
+
+<%--        </div>--%>
+<%--    </div>--%>
 
 
     <!-- chỗ này là danh mục -->
@@ -582,144 +617,6 @@
 <!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 
-
-<script>
-    // banner
-    const listImage = document.querySelector('.list-images');
-    const imgs = document.querySelectorAll('.list-images img');
-    const dots = document.querySelectorAll('.dot');
-    const btnPrev = document.querySelector('.btn.prev');
-    const btnNext = document.querySelector('.btn.next');
-
-    let index = 0;
-
-    function changeSlide(i) {
-        let width = imgs[0].offsetWidth;
-        listImage.style.transform = `translateX(${-width * i}px)`;
-        document.querySelector('.dot.active').classList.remove('active');
-        dots[i].classList.add('active');
-    }
-
-    setInterval(() => {
-        index++;
-        if (index >= imgs.length) index = 0;
-        changeSlide(index);
-    }, 2000);
-
-    // Dots click
-    dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-            index = i;
-            changeSlide(index);
-        });
-    });
-
-    btnNext.addEventListener('click', () => {
-        index++;
-        if (index >= imgs.length) index = 0;
-        changeSlide(index);
-    });
-
-    btnPrev.addEventListener('click', () => {
-        index--;
-        if (index < 0) index = imgs.length - 1;
-        changeSlide(index);
-    });
-
-    // slider
-    function initSlider(slider) {
-        const track = slider.querySelector('.slider-track');
-        const prevBtn = slider.querySelector('.arrow.prev');
-        const nextBtn = slider.querySelector('.arrow.next');
-        const items = slider.querySelectorAll('.product-item');
-
-        let currentPosition = 0;
-
-        function recalc() {
-            const itemWidth = items[0].offsetWidth + 10; // gap
-            const totalItems = items.length;
-            const trackWidth = totalItems * itemWidth;
-            const containerWidth = slider.offsetWidth;
-            const maxPosition = containerWidth - trackWidth;
-            return {itemWidth, maxPosition};
-        }
-
-        prevBtn.addEventListener('click', () => {
-            const {itemWidth} = recalc();
-            if (currentPosition < 0) {
-                currentPosition += itemWidth;
-                if (currentPosition > 0) currentPosition = 0;
-                track.style.transform = `translateX(${currentPosition}px)`;
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            const {itemWidth, maxPosition} = recalc();
-            if (currentPosition > maxPosition) {
-                currentPosition -= itemWidth;
-                if (currentPosition < maxPosition) currentPosition = maxPosition;
-                track.style.transform = `translateX(${currentPosition}px)`;
-            }
-        });
-    }
-
-
-    // Khi popup mở thì gọi lại initSlider
-    document.querySelectorAll('.product-slider').forEach(initSlider);
-
-
-    function bindHover(itemId, popupClass) {
-        const el = document.getElementById(itemId);
-        if (!el) return;
-
-        el.addEventListener("mouseover", function () {
-            document.querySelectorAll(".sach-chi-tiet").forEach(p => p.style.display = "none");
-            const popup = document.querySelector(popupClass);
-            if (popup) popup.style.display = "flex";
-        });
-    }
-
-    bindHover("item-pop-1", ".pop-detail-home1");
-    bindHover("item-pop-2", ".pop-detail-home2");
-    bindHover("item-pop-3", ".pop-detail-home3");
-    bindHover("item-pop-4", ".pop-detail-home4");
-    bindHover("item-pop-5", ".pop-detail-home5");
-
-    document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
-        document.querySelector("#product-slider-popup").style.display = "block";
-
-    });
-</script>
-
-
-<script>
-    const countdownEl = document.getElementById("flash-sale-countdown");
-
-    if (countdownEl) {
-        const endTimeStr = countdownEl.dataset.endTime.replace(" ", "T");
-        const endTime = new Date(endTimeStr).getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const diff = endTime - now;
-
-            if (diff <= 0) {
-                countdownEl.innerText = "Flash Sale đã kết thúc";
-                return;
-            }
-
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            countdownEl.innerText =
-                `Thời gian còn lại: ${hours}h ${minutes}m ${seconds}s`;
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    }
-</script>
 </body>
 
 </html>
