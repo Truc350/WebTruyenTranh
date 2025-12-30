@@ -11,7 +11,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.utils.PasswordUtils;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet(name = "Login", value = "/LoginServlet")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private UserDao userDao;
 
@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
                 request.getSession().setAttribute("currentUser", user);
-                response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
+                response.sendRedirect(request.getContextPath() + "/home");
             } else {
                 request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
                 request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
@@ -50,5 +50,19 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
         }
     }
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Nếu đã login rồi thì redirect về home
+        if (request.getSession().getAttribute("currentUser") != null) {
+            response.sendRedirect(request.getContextPath() + "/home");
+            return;
+        }
+
+        // Chưa login → hiển thị form
+        request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
+    }
+
+
 
 }

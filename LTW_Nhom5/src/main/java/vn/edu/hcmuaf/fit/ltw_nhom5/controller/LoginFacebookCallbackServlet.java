@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /*
-frontend → Facebook → Servlet → Graph API → Session
+fontend → Facebook → Servlet → Graph API → Session
  */
 
 @WebServlet("/login-facebook-callback")

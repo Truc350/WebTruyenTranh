@@ -1,29 +1,47 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Category" %>
+<%@ page import="java.util.List" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao" %>
 <header class="navbar">
-    <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">
-    <div class="logo">
-        <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
-        <span>Comic Store</span>
-    </div>
+    <a href="${pageContext.request.contextPath}/home">
+        <div class="logo">
+            <img id="logo" src="${pageContext.request.contextPath}/img/logo.png" alt="Comic Store">
+            <span>Comic Store</span>
+        </div>
     </a>
     <nav class="menu">
-        <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">Trang chủ</a>
+        <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
 
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
-                <a href="${pageContext.request.contextPath}/fontend/public/CatagoryPage.jsp">Hành động</a>
-                <a href="#">Phiêu lưu</a>
-                <a href="#">Lãng mạn</a>
-                <a href="#">Học đường</a>
-                <a href="#">Kinh dị</a>
-                <a href="#">Hài hước</a>
-                <a href="#">Giả tưởng</a>
-                <a href="#">Trinh thám</a>
+                <%
+                    List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
+
+                    // Nếu chưa có trong request thì tự load luôn chỗ này
+                    if (listCategories == null || listCategories.isEmpty()) {
+                        CategoriesDao categoriesDao = new CategoriesDao();
+                        listCategories = categoriesDao.listCategories();
+                    }
+
+                    //List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
+                    if (listCategories != null && !listCategories.isEmpty()) {
+                        for (Category c : listCategories) {
+                %>
+                <a href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getNameCategories() %>
+                </a>
+                <%
+                    }
+                } else {
+                %>
+                <a href="#">KHÔNG CÓ</a>
+                <%
+                    }
+                %>
             </div>
         </div>
+
 
         <a href="${pageContext.request.contextPath}/fontend/public/AbouUS.jsp">Liên hệ</a>
     </nav>
@@ -57,32 +75,27 @@
     <div class="contain-left">
         <div class="actions">
             <div class="notify-wrapper">
-                <a href="#" class="bell-icon">
+                <a href="#" class="bell-icon" id="bell-icon">
                     <i class="fa-solid fa-bell"></i>
-                    <span id="span-bell">2</span>
+                    <span class="notification-badge" id="notification-badge">0</span>
                 </a>
-                <!-- Khung thông báo -->
-                <div class="notification-panel">
+
+                <!-- Dropdown thông báo -->
+                <div class="notification-panel" id="notification-panel">
                     <div class="notification-header">
                         <div class="inform-num">
                             <i class="fa-solid fa-bell"></i>
                             <span>Thông báo</span>
-                            <span class="notification-badge">(1)</span>
+                            <span class="notification-badge" id="header-badge-count">(0)</span>
                         </div>
                         <div class="inform-all">
-                            <a href="#">Xem tất cả</a>
+                            <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp#notifications">Xem
+                                tất cả</a>
                         </div>
                     </div>
-                    <div class="notification-content inform1">
-                        <strong>Cập nhật email ngay để nhận voucher nhé!</strong><br>
-                        Bạn vừa đăng kí tài khoản. Hãy cập nhật email ngay để nhận được các thông báo và phần quà
-                        hấp
-                        dẫn.
-                    </div>
-                    <div class="notification-content inform2">
-                        <strong>Cập nhật email ngay để nhận vorcher nhé!</strong><br>
-                        Bạn vừa đăng kí tài khoản.Hãy cập nhật email ngay để nhận được các thông báo và phần quà hấp
-                        dẫn.
+
+                    <div class="notification-list" id="header-notification-list">
+                        <div class="empty-noti">Chưa có thông báo mới</div>
                     </div>
                 </div>
             </div>
@@ -109,7 +122,6 @@
         </div>
     </div>
 </header>
-
 
 
 <script>
@@ -217,3 +229,104 @@
         }
     };
 </script>
+<script>
+    async function loadHeaderNotifications() {
+        try {
+            const response = await fetch('${pageContext.request.contextPath}/NotificationServlet/recent?limit=8');
+            if (!response.ok) throw new Error('Network error');
+
+            const data = await response.json();
+
+            // Cập nhật badge
+            const count = data.unread_count || 0;
+            document.getElementById('notification-badge').textContent = count;
+            document.getElementById('notification-badge').style.display = count > 0 ? 'flex' : 'none';
+            document.getElementById('header-badge-count').textContent = `(${count})`;
+
+            const list = document.getElementById('header-notification-list');
+
+            if (!data.notifications || data.notifications.length === 0) {
+                list.innerHTML = '<div class="empty-noti">Chưa có thông báo mới</div>';
+                return;
+            }
+
+            let html = '';
+            data.notifications.forEach(n => {
+                const unreadClass = n.is_read ? '' : 'unread';
+                html += `
+                <a href="${n.link || '#'}" class="header-noti-item ${unreadClass}" data-id="${n.id}">
+                    <div class="title">${n.title}</div>
+                    <div class="msg">${n.message}</div>
+                    <div class="time">${n.formatted_date}</div>
+                </a>
+            `;
+            });
+            list.innerHTML = html;
+
+            // Click thông báo → đánh dấu đã đọc
+            document.querySelectorAll('.header-noti-item').forEach(item => {
+                item.addEventListener('click', async function (e) {
+                    if (this.classList.contains('unread')) {
+                        const id = this.dataset.id;
+                        await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {method: 'POST'});
+                        loadHeaderNotifications(); // refresh lại
+                    }
+                });
+            });
+
+        } catch (err) {
+            console.error('Lỗi load thông báo header:', err);
+            document.getElementById('header-notification-list').innerHTML =
+                '<div class="empty-noti">Lỗi kết nối. Thử lại sau.</div>';
+        }
+    }
+
+    // Mở/đóng dropdown
+    document.addEventListener('DOMContentLoaded', () => {
+        const bell = document.getElementById('bell-icon');
+        const panel = document.getElementById('notification-panel');
+
+        bell.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+            } else {
+                panel.style.display = 'block';
+                loadHeaderNotifications(); // load mới mỗi lần mở
+            }
+        });
+
+        // Đóng khi click ngoài
+        document.addEventListener('click', function (e) {
+            if (!bell.contains(e.target) && !panel.contains(e.target)) {
+                panel.style.display = 'none';
+            }
+        });
+    });
+
+    // Load badge ngay khi trang mở
+    fetch('${pageContext.request.contextPath}/NotificationServlet/count')
+        .then(r => r.json())
+        .then(d => {
+            const count = d.unread_count || 0;
+            document.getElementById('notification-badge').textContent = count;
+            document.getElementById('notification-badge').style.display = count > 0 ? 'flex' : 'none';
+        })
+        .catch(() => {
+        });
+</script>
+<c:if test="${not empty sessionScope.user}">
+    <script>
+        document.body.dataset.userId = '${sessionScope.user.id}';
+        document.body.dataset.loggedIn = 'true';
+        document.body.dataset.contextPath = '${pageContext.request.contextPath}';
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+
+    <script src="${pageContext.request.contextPath}/fontend/js/firebase-notification.js"></script>
+</c:if>
+

@@ -1,7 +1,12 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.utils;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+//import javax.mail.*;
+//import javax.mail.internet.*;
+import jakarta.mail.Session;
+
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+
 import java.util.Properties;
 
 public class EmailUtils {
@@ -15,7 +20,7 @@ public class EmailUtils {
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
+                new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(username, password);
                     }
