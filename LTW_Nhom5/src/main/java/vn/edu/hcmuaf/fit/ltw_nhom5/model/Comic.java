@@ -42,6 +42,7 @@ public class Comic {
 
     private int totalSold; // lượt bán trong tuần
 
+    private Double discountPercent;
 
     public Comic() {}
 
@@ -180,4 +181,25 @@ public class Comic {
     public void setTotalSold(int totalSold) {
         this.totalSold = totalSold;
     }
+
+    public Double getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(Double discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+    public double getDiscountPrice() {
+        if (discountPercent == null || discountPercent == 0) {
+            return price;
+        }
+        return price * (100.0 - discountPercent) / 100.0;
+    }
+
+    public boolean hasDiscount() {
+        return discountPercent != null && discountPercent > 0;
+    }
+
+
 }

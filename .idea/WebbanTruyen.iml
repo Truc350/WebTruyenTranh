@@ -20,5 +20,8 @@
     <orderEntry type="library" name="Maven: org.jdbi:jdbi3-sqlobject:3.43.0" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20240303" level="project" />
     <orderEntry type="library" name="Maven: org.mindrot:jbcrypt:0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.21.9" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.mail:jakarta.mail:2.0.2" level="project" />
   </component>
 </module>

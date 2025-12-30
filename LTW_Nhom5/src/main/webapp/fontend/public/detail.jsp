@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,46 +29,37 @@
         <div class="cont-left-body">
 
             <div id="img-container" class="img-container">
-                <img id="img" src="../../img/conan100.jpg" alt="">
+                <c:choose>
+                    <c:when test="${not empty images and images.size() > 0}">
+                        <img id="img" src="${images[0].imageUrl}" alt="${comic.nameComics}">
+                    </c:when>
+                    <c:otherwise>
+                        <img id="img" src="${comic.thumbnailUrl}" alt="${comic.nameComics}">
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- popup cái ảnh dưới -->
-            <div id="img-container-popup1" class="img-container" style="display: none;">
-                <img class="img-small-popup"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_2-390x510.jpg?_gl=1*192eztq*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5MzY0NDAkbzE1JGcxJHQxNzYyOTM2NTY2JGo2MCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5MzY0MzMkbzE2JGcxJHQxNzYyOTM2NTY2JGo0OSRsMCRoOTUyODE0MzQy"
-                     alt="">
-            </div>
-            <div id="img-container-popup2" class="img-container" style="display: none;">
-                <img class="img-small-popup"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_3-390x510.jpg"
-                     alt="">
-            </div>
-            <div id="img-container-popup3" class="img-container" style="display: none;">
-                <img class="img-small-popup"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/_104__detective_conan_104/2023_12_13_16_37_44_3-390x510.jpg?_gl=1*ey826x*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5NTQxNDYkbzE4JGcxJHQxNzYyOTU0MTYyJGo0NCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5NTQxNDYkbzE5JGcxJHQxNzYyOTU0MTYzJGo0MyRsMCRoOTM4MTE4NDA."
-                     alt="">
-            </div>
+            <c:forEach var="image" items="${images}" varStatus="status">
+                <c:if test="${status.index > 0}">
+                    <div id="img-container-popup${status.index}" class="img-container" style="display: none;">
+                        <img class="img-small-popup" src="${image.imageUrl}" alt="${comic.nameComics}">
+                    </div>
+                </c:if>
+            </c:forEach>
 
 
             <div class="warehouse-img">
-                <img id="img-small1" class="img-small"
-                     src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                     alt="">
-                <img id="img-small2" class="img-small"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_2-390x510.jpg?_gl=1*192eztq*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5MzY0NDAkbzE1JGcxJHQxNzYyOTM2NTY2JGo2MCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5MzY0MzMkbzE2JGcxJHQxNzYyOTM2NTY2JGo0OSRsMCRoOTUyODE0MzQy"
-                     alt="">
-                <img id="img-small3" class="img-small"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/___detective_conan_106/2024_12_02_16_16_34_3-390x510.jpg"
-                     alt="">
-                <img id="img-small4" class="img-small"
-                     src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/_104__detective_conan_104/2023_12_13_16_37_44_3-390x510.jpg?_gl=1*ey826x*_ga*MzU5OTg1MjE5LjE3NjE3MjA4MDg.*_ga_D3YYPWQ9LN*czE3NjI5NTQxNDYkbzE4JGcxJHQxNzYyOTU0MTYyJGo0NCRsMCRoMA..*_gcl_au*MTM1MzE1NjYzNi4xNzYxNzIwODA4*_ga_460L9JMC2G*czE3NjI5NTQxNDYkbzE5JGcxJHQxNzYyOTU0MTYzJGo0MyRsMCRoOTM4MTE4NDA."
-                     alt="">
+                <c:forEach var="image" items="${images}" varStatus="status">
+                    <img id="img-small${status.index + 1}" class="img-small"
+                         src="${image.imageUrl}" alt="">
+                </c:forEach>
             </div>
 
 
             <div class="actions-btn">
                 <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
-                <button class="btn buy-now" style="display: none;">Mua ngay</button>
+                <button class="btn buy-now">Mua ngay</button>
 
                 <label class="heart-toggle">
                     <input type="checkbox" hidden>
@@ -80,17 +74,23 @@
 
     <div class="all-content">
         <div class="content">
-            <h2>Thám tử lừng danh <span>Tập 100</span></h2>
+            <h2>${comic.nameComics}
+            </h2>
             <div class="information">
                 <div class="line1">
-                    <!-- <p>Người dịch:<strong> Hương Giang</strong></p> -->
-                    <p>Nhà xuất bản:<strong> NXB Kim Đồng</strong></p>
+                    <c:if test="${not empty comic.publisher}">
+                        <p>Nhà xuất bản:<strong> ${comic.publisher}</strong></p>
+                    </c:if>
                 </div>
                 <div class="line2">
-                    <p>Tác giả:<strong> Gosho Aoyama</strong></p>
-                    <!-- <p>Hình thức bìa:<strong> Bìa Cứng</strong></p> -->
+                    <c:if test="${not empty comic.author}">
+                        <p>Tác giả:<strong> ${comic.author}</strong></p>
+                    </c:if>
                 </div>
             </div>
+
+            <p class="daban">Đã bán ${comic.totalSold}</p>
+
             <div class="line3">
                 <div class="star">
                     <i class="fas fa-star"></i>
@@ -99,19 +99,36 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
-                <p class="daban">Đã bán 196</p>
+                <%--                <p class="daban">Đã bán 196</p>--%>
             </div>
             <div class="line4">
-                <p id="giamdagiam">18.000 đ</p>
-                <p id="giagoc">30.000 đ</p>
-                <p id="khuyenmai">-40%</p>
+                <fmt:formatNumber value="${comic.discountPrice}" type="number" groupingUsed="true"
+                                  var="discountPriceFormatted"/>
+                <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true" var="priceFormatted"/>
+
+                <p id="giamdagiam">${discountPriceFormatted} đ</p>
+
+                <c:if test="${comic.discountPrice lt comic.price}">
+                    <p id="giagoc">${priceFormatted} đ</p>
+                </c:if>
+
             </div>
 
             <div class="line5">
                 <p>Chính sách khuyến mãi trên chỉ áp dụng tại Comic Store</p>
             </div>
             <div class="line6">
-                <p><em>Sản phẩm gần hết hàng</em></p>
+                <c:choose>
+                    <c:when test="${comic.stockQuantity == 0}">
+                        <p><em style="color: red;">Hết hàng</em></p>
+                    </c:when>
+                    <c:when test="${comic.stockQuantity > 0 and comic.stockQuantity < 10}">
+                        <p><em>Sản phẩm gần hết hàng (còn ${comic.stockQuantity})</em></p>
+                    </c:when>
+                    <c:otherwise>
+                        <p><em>Còn hàng</em></p>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <div class="container2">
@@ -140,76 +157,18 @@
             <section class="related-products">
                 <h2>Sản phẩm tương tự</h2>
                 <div class="product-grid">
-
-                    <div class="product-card">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.Q_HBIf5co74JHpujqEEbowHaL3?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <h3>Connan tập 101</h3>
-                        <p class="price">₫36.760</p>
-                        <p class="sold">Đã bán: <strong>142</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.eoE_6ogm0Md54J7nZyB0VQAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="Sách Tay Không Bóc Hành">
-                        <h3>Conan tập 59</h3>
-                        <p class="price">₫37.950</p>
-                        <p class="sold">Đã bán: <strong>72</strong></p>
-                        <!-- <div class="stars">★★★★☆</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/thumb/a/ab/Volume_30.jpg/275px-Volume_30.jpg"
-                             alt="Những Quy Luật Bản Chất Con Người">
-                        <h3>Conan tập 30</h3>
-                        <p class="price">₫37.359</p>
-                        <p class="sold">Đã bán: <strong>63</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://m.media-amazon.com/images/I/51XmJpvigQL.jpg"
-                             alt="Những Quy Luật Bản Chất Con Người">
-                        <h3>Conan tập 35</h3>
-                        <p class="price">₫33.359</p>
-                        <p class="sold">Đã bán: <strong>52</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/thumb/0/04/Volume22v.jpg/225px-Volume22v.jpg"
-                             alt="">
-                        <h3>Conan tập 22</h3>
-                        <p class="price">₫35.359</p>
-                        <p class="sold">Đã bán: <strong>120</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/0/08/Volume78v.jpg" alt="">
-                        <h3>Conan tập 78</h3>
-                        <p class="price">35.359</p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                        <p class="sold">Đã bán: <strong>172</strong></p>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/a/aa/Volume28v.jpg" alt="">
-                        <h3>Conan tập 285</h3>
-                        <p class="price">₫35.359</p>
-                        <p class="sold">Đã bán: <strong>82</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-                    <div class="product-card">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/e/e1/Volume21v.jpg" alt="">
-                        <h3>Conan tập 21</h3>
-                        <p class="price">₫35.359</p>
-                        <p class="sold">Đã bán: <strong>96</strong></p>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://newshop.vn/public/uploads/products/29224/sach-tham-tu-lung-danh-conan-tap-97.jpg"
-                             alt="">
-                        <h3>Conan tập 97</h3>
-                        <p class="price">₫35.359</p>
-                        <p class="sold">Đã bán: <strong>99</strong></p>
-                        <!-- <div class="stars">★★★★★</div> -->
-                    </div>
-
+                    <c:forEach var="relatedComic" items="${relatedComics}">
+                        <div class="product-card">
+                            <a href="${pageContext.request.contextPath}/comic-detail?id=${relatedComic.id}">
+                                <img src="${relatedComic.thumbnailUrl}" alt="${relatedComic.nameComics}">
+                                <h3>${relatedComic.nameComics}</h3>
+                                <fmt:formatNumber value="${relatedComic.discountPrice}" type="number"
+                                                  groupingUsed="true" var="price"/>
+                                <p class="price">₫${price}</p>
+                                <p class="sold">Đã bán: <strong>${relatedComic.totalSold}</strong></p>
+                            </a>
+                        </div>
+                    </c:forEach>
                 </div>
             </section>
         </div>
@@ -277,585 +236,622 @@
 </div>
 
 
-    <!-- phàn này đánh giá -->
-    <div class="rating-container">
-        <!-- Cột trái -->
-        <div class="rating-left">
-            <h3>Đánh giá sản phẩm</h3>
+<!-- phàn này đánh giá -->
+<div class="rating-container">
+    <!-- Cột trái -->
+    <div class="rating-left">
+        <h3>Đánh giá sản phẩm</h3>
 
-            <div class="rating-score">
-                <div class="score-number">5<span>/5</span></div>
-                <div class="score-stars">★★★★★</div>
-                <div class="score-count">(3 đánh giá)</div>
+        <div class="rating-score">
+            <div class="score-number">
+                <fmt:formatNumber value="${avgRating}" maxFractionDigits="1"/><span>/5</span>
             </div>
+            <div class="score-stars">
+                <c:set var="fullStars"
+                       value="${avgRating >= 1 ? (avgRating >= 2 ? (avgRating >= 3 ? (avgRating >= 4 ? (avgRating >= 5 ? 5 : 4) : 3) : 2) : 1) : 0}"/>
 
-            <div class="rating-bars">
-                <div class="bar-row">
-                    <span>5 sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:100%"></div>
-                    </div>
-                    <span>100%</span>
-                </div>
+                <c:forEach begin="1" end="${fullStars}">★</c:forEach>
 
-                <div class="bar-row">
-                    <span>4 sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:0%"></div>
-                    </div>
-                    <span>0%</span>
-                </div>
+                <c:set var="hasHalfStar" value="${avgRating - fullStars >= 0.5}"/>
+                <c:if test="${hasHalfStar}">★</c:if>
 
-                <div class="bar-row">
-                    <span>3 sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:0%"></div>
-                    </div>
-                    <span>0%</span>
-                </div>
-
-                <div class="bar-row">
-                    <span>2 sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:0%"></div>
-                    </div>
-                    <span>0%</span>
-                </div>
-
-                <div class="bar-row">
-                    <span>1 sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:0%"></div>
-                    </div>
-                    <span>0%</span>
-                </div>
+                <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}"/>
+                <c:forEach begin="1" end="${emptyStars}">☆</c:forEach>
             </div>
+            <div class="score-count">(${not empty reviews ? reviews.size() : 0} đánh giá)</div>
         </div>
 
-        <!-- Cột phải -->
-        <!-- <div class="rating-right">
-            <button class="write-btn">✎ Viết đánh giá</button>
-        </div> -->
-
-    </div>
-
-    <!-- lời comment -->
-    <div class="comment">
-
-        <!-- <div class="review-tabs">
-            <label class="tab1 active">Tất cả đánh giá</label>
-            <label class="tab2 active">Mới nhất</label>
-        </div> -->
-
-        <div class="review-tabs">
-            <label id="tab1" class="tab active">Tất cả đánh giá</label>
-            <!-- <label id="tab2" class="tab">Mới nhất</label> -->
-        </div>
-
-        <div id="reviewed-person" class="reviewed-person">
-            <div class="review-item">
-                <div class="review-left">
-                    <div class="avatar">HĐz</div>
-                    <div class="review-date">Hưng Đoàn</div>
-                    <div class="review-date">19/01/2020</div>
+        <div class="rating-bars">
+            <div class="bar-row">
+                <span>5 sao</span>
+                <div class="bar">
+                    <div class="fill" style="width:100%"></div>
                 </div>
-
-                <div class="review-right">
-                    <div class="review-stars">★★★★★</div>
-
-                    <p class="review-text">
-                        Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để
-                        đọc
-                        thử, cuốn như bánh cuốn luôn ý.
-                        Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.
-                    </p>
-
-                    <div class="review-actions">
-                        <i class="fa-regular fa-heart"></i>
-                        <span class="action">Thích (19)</span>
-                        <i class="fa-solid fa-reply"></i>
-                        <span class="action"> Trả lời</span>
-                    </div>
-                </div>
+                <span>100%</span>
             </div>
 
-            <div class="review-item">
-                <div class="review-left">
-                    <div class="avatar">HĐz</div>
-                    <div class="review-date">Bé heo</div>
-                    <div class="review-date">19/08/2020</div>
+            <div class="bar-row">
+                <span>4 sao</span>
+                <div class="bar">
+                    <div class="fill" style="width:0%"></div>
                 </div>
-
-                <div class="review-right">
-                    <div class="review-stars">★★★★★</div>
-
-                    <p class="review-text">
-                        Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất
-                        hài
-                        lòng với lần mua này!
-                    </p>
-
-                    <div class="review-actions">
-                        <i id="heart" class="fa-regular fa-heart"></i>
-                        <span class="action">Thích (9)</span>
-                        <i class="fa-solid fa-reply"></i>
-                        <span class="action"> Trả lời</span>
-                    </div>
-                </div>
+                <span>0%</span>
             </div>
 
-            <div class="review-item">
-                <div class="review-left">
-                    <div class="avatar">HĐz</div>
-                    <div class="review-date">Bé Gà</div>
-                    <div class="review-date">19/08/2020</div>
+            <div class="bar-row">
+                <span>3 sao</span>
+                <div class="bar">
+                    <div class="fill" style="width:0%"></div>
                 </div>
-
-                <div class="review-right">
-                    <div class="review-stars">★★★★★</div>
-
-                    <p class="review-text">
-                        Sách này quá tuyệt vời! Nội dung hấp dẫn, nhân vật được phát triển tốt. Chất lượng in ấn rất
-                        đẹp,
-                        bìa cứng chắc chắn. Giao hàng nhanh chóng và đóng gói cẩn thận.
-                        Tôi rất hài lòng với mua hàng lần này. Khuyến cáo mọi người nên mua!
-                    </p>
-
-                    <div class="review-actions">
-                        <i id="heart" class="fa-regular fa-heart"></i>
-                        <span class="action">Thích (4)</span>
-                        <i class="fa-solid fa-reply"></i>
-                        <span class="action"> Trả lời</span>
-                    </div>
-                </div>
+                <span>0%</span>
             </div>
 
-        </div>
-
-        <div id="reviewed-person-popup" class="reviewed-person-popup" style="display: none;">
-            <div class="review-item">
-                <div class="review-left">
-                    <div class="avatar">HĐz</div>
-                    <div class="review-date">Hưng Đoàn</div>
-                    <div class="review-date">19/08/2020</div>
+            <div class="bar-row">
+                <span>2 sao</span>
+                <div class="bar">
+                    <div class="fill" style="width:0%"></div>
                 </div>
-
-                <div class="review-right">
-                    <div class="review-stars">★★★★★</div>
-
-                    <p class="review-text">
-                        Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để
-                        đọc
-                        thử, cuốn như bánh cuốn luôn ý.
-                        Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.
-                    </p>
-
-                    <div class="review-actions">
-                        <i class="fa-regular fa-heart"></i>
-                        <span class="action">Thích (19)</span>
-                        <i class="fa-solid fa-reply"></i>
-                        <span class="action"> Trả lời</span>
-                    </div>
-                </div>
+                <span>0%</span>
             </div>
 
-            <div class="review-item">
-                <div class="review-left">
-                    <div class="avatar">HĐz</div>
-                    <div class="review-date">Bé heo</div>
-                    <div class="review-date">19/08/2020</div>
+            <div class="bar-row">
+                <span>1 sao</span>
+                <div class="bar">
+                    <div class="fill" style="width:0%"></div>
                 </div>
-
-                <div class="review-right">
-                    <div class="review-stars">★★★★★</div>
-
-                    <p class="review-text">
-                        Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất
-                        hài
-                        lòng với lần mua này!
-                    </p>
-
-                    <div class="review-actions">
-                        <i id="heart" class="fa-regular fa-heart"></i>
-                        <span class="action">Thích (9)</span>
-                        <i class="fa-solid fa-reply"></i>
-                        <span class="action"> Trả lời</span>
-                    </div>
-                </div>
+                <span>0%</span>
             </div>
         </div>
     </div>
 
-    <!-- phần này gợi ý cho bạn -->
-    <div class="container-slider">
-        <div id="slider">
-            <div class="suggest">
-                <h2>Gợi ý cho bạn</h2>
+    <!-- Cột phải -->
+    <!-- <div class="rating-right">
+        <button class="write-btn">✎ Viết đánh giá</button>
+    </div> -->
+
+</div>
+
+<!-- lời comment -->
+<div class="comment">
+
+    <!-- <div class="review-tabs">
+        <label class="tab1 active">Tất cả đánh giá</label>
+        <label class="tab2 active">Mới nhất</label>
+    </div> -->
+
+    <div class="review-tabs">
+        <label id="tab1" class="tab active">Tất cả đánh giá</label>
+        <!-- <label id="tab2" class="tab">Mới nhất</label> -->
+    </div>
+
+    <div id="reviewed-person" class="reviewed-person">
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Hưng Đoàn</div>--%>
+        <%--                <div class="review-date">19/01/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để--%>
+        <%--                    đọc--%>
+        <%--                    thử, cuốn như bánh cuốn luôn ý.--%>
+        <%--                    Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (19)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Bé heo</div>--%>
+        <%--                <div class="review-date">19/08/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất--%>
+        <%--                    hài--%>
+        <%--                    lòng với lần mua này!--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i id="heart" class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (9)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Bé Gà</div>--%>
+        <%--                <div class="review-date">19/08/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Sách này quá tuyệt vời! Nội dung hấp dẫn, nhân vật được phát triển tốt. Chất lượng in ấn rất--%>
+        <%--                    đẹp,--%>
+        <%--                    bìa cứng chắc chắn. Giao hàng nhanh chóng và đóng gói cẩn thận.--%>
+        <%--                    Tôi rất hài lòng với mua hàng lần này. Khuyến cáo mọi người nên mua!--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i id="heart" class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (4)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+        <c:choose>
+            <c:when test="${empty reviews}">
+                <p>Chưa có đánh giá nào.</p>
+            </c:when>
+            <c:otherwise>
+                <c:forEach var="review" items="${reviews}">
+                    <div class="review-item">
+                        <div class="review-left">
+                            <div class="avatar">
+                                    ${fn:substring(review.username, 0, 2).toUpperCase()}
+                            </div>
+                            <div class="review-date">${review.username}</div>
+                            <div class="review-date">
+                                <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy"/>
+                            </div>
+                        </div>
+
+                        <div class="review-right">
+                            <div class="review-stars">
+                                <c:forEach begin="1" end="${review.rating}">★</c:forEach>
+                                <c:forEach begin="${review.rating + 1}" end="5">☆</c:forEach>
+                            </div>
+
+                            <p class="review-text">${review.comment}</p>
+
+                            <div class="review-actions">
+                                <i class="fa-regular fa-heart"></i>
+                                <span class="action">Thích (0)</span>
+                                <i class="fa-solid fa-reply"></i>
+                                <span class="action"> Trả lời</span>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+
+    </div>
+
+    <div id="reviewed-person-popup" class="reviewed-person-popup" style="display: none;">
+        <div class="review-item">
+            <div class="review-left">
+                <div class="avatar">HĐz</div>
+                <div class="review-date">Hưng Đoàn</div>
+                <div class="review-date">19/08/2020</div>
             </div>
 
-            <!-- slider 1 -->
-            <div class="product-slider">
+            <div class="review-right">
+                <div class="review-stars">★★★★★</div>
 
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
+                <p class="review-text">
+                    Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để
+                    đọc
+                    thử, cuốn như bánh cuốn luôn ý.
+                    Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.
+                </p>
 
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
+                <div class="review-actions">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="action">Thích (19)</span>
+                    <i class="fa-solid fa-reply"></i>
+                    <span class="action"> Trả lời</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="review-item">
+            <div class="review-left">
+                <div class="avatar">HĐz</div>
+                <div class="review-date">Bé heo</div>
+                <div class="review-date">19/08/2020</div>
+            </div>
+
+            <div class="review-right">
+                <div class="review-stars">★★★★★</div>
+
+                <p class="review-text">
+                    Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất
+                    hài
+                    lòng với lần mua này!
+                </p>
+
+                <div class="review-actions">
+                    <i id="heart" class="fa-regular fa-heart"></i>
+                    <span class="action">Thích (9)</span>
+                    <i class="fa-solid fa-reply"></i>
+                    <span class="action"> Trả lời</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- phần này gợi ý cho bạn -->
+<div class="container-slider">
+    <div id="slider">
+        <div class="suggest">
+            <h2>Gợi ý cho bạn</h2>
+        </div>
+
+        <!-- slider 1 -->
+        <div class="product-slider">
+
+            <!-- mũi tên trái -->
+            <div class="arrow prev">&#10094;</div>
+
+            <div class="slider-track">
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Doraemon Tập 23</p>
+                    <p class="product-price">₫18,000</p>
+                    <p class="sold">Đã bán: <strong>196</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
+                         alt="">
+                    <p class="product-name">Doraemon Tập 1</p>
+                    <p class="product-price">₫27,000</p>
+                    <p class="sold">Đã bán: <strong>185</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
+                    <p class="product-name">Doraemon Tập 11</p>
+                    <p class="product-price">₫16,000</p>
+                    <p class="sold">Đã bán: <strong>128</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Doraemon Tập 6</p>
+                    <p class="product-price">₫19,000</p>
+                    <p class="sold">Đã bán: <strong>96</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Doraemon Tập 3</p>
+                    <p class="product-price">₫22,000</p>
+                    <p class="sold">Đã bán: <strong>46</strong></p>
+                </div>
+
+                <div class="product-item">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Doraemon Tập 15</p>
+                    <p class="product-price">₫19,000</p>
+                    <p class="sold">Đã bán: <strong>135</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
+                    <p class="product-name">Doraemon Tập 13</p>
+                    <p class="product-price">₫21,000</p>
+                    <p class="sold">Đã bán: <strong>296</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
+                    <p class="product-name">Doraemon Tập 6</p>
+                    <p class="product-price">₫17,000</p>
+                    <p class="sold">Đã bán: <strong>186</strong></p>
+                </div>
+
+
+            </div>
+
+            <!-- mũi tên phải -->
+            <div class="arrow next">&#10095;</div>
+        </div>
+
+        <!-- slider 2 -->
+        <div class="product-slider">
+
+            <!-- mũi tên trái -->
+            <div class="arrow prev">&#10094;</div>
+
+            <div class="slider-track">
+                <div class="product-item">
+                    <a href="detail.html">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
                              alt="">
-                        <p class="product-name">Doraemon Tập 23</p>
+                        <p class="product-name">Thám tử lừng danh Conan tập 100</p>
                         <p class="product-price">₫18,000</p>
                         <p class="sold">Đã bán: <strong>196</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 1</p>
-                        <p class="product-price">₫27,000</p>
-                        <p class="sold">Đã bán: <strong>185</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 11</p>
-                        <p class="product-price">₫16,000</p>
-                        <p class="sold">Đã bán: <strong>128</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 6</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>96</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 3</p>
-                        <p class="product-price">₫22,000</p>
-                        <p class="sold">Đã bán: <strong>46</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 15</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>135</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 13</p>
-                        <p class="product-price">₫21,000</p>
-                        <p class="sold">Đã bán: <strong>296</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 6</p>
-                        <p class="product-price">₫17,000</p>
-                        <p class="sold">Đã bán: <strong>186</strong></p>
-                    </div>
-
-
+                    </a>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 36</p>
+                    <p class="product-price">₫27,000</p>
+                    <p class="sold">Đã bán: <strong>108</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 98</p>
+                    <p class="product-price">₫18,000</p>
+                    <p class="sold">Đã bán: <strong>120</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 28</p>
+                    <p class="product-price">₫18,000</p>
+                    <p class="sold">Đã bán: <strong>130</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 86</p>
+                    <p class="product-price">₫22,000</p>
+                    <p class="sold">Đã bán: <strong>99</strong></p>
                 </div>
 
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <!-- slider 2 -->
-            <div class="product-slider">
-
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
-
-                <div class="slider-track">
-                    <div class="product-item">
-                        <a href="detail.html">
-                            <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                                 alt="">
-                            <p class="product-name">Thám tử lừng danh Conan tập 100</p>
-                            <p class="product-price">₫18,000</p>
-                            <p class="sold">Đã bán: <strong>196</strong></p>
-                        </a>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 36</p>
-                        <p class="product-price">₫27,000</p>
-                        <p class="sold">Đã bán: <strong>108</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 98</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>120</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 28</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>130</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 86</p>
-                        <p class="product-price">₫22,000</p>
-                        <p class="sold">Đã bán: <strong>99</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 75</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>82</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 72</p>
-                        <p class="product-price">₫21,000</p>
-                        <p class="sold">Đã bán: <strong>36</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 76</p>
-                        <p class="product-price">₫17,000</p>
-                        <p class="sold">Đã bán: <strong>83</strong></p>
-                    </div>
-
-
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 75</p>
+                    <p class="product-price">₫19,000</p>
+                    <p class="sold">Đã bán: <strong>82</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 72</p>
+                    <p class="product-price">₫21,000</p>
+                    <p class="sold">Đã bán: <strong>36</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Thám tử lừng danh Conan tập 76</p>
+                    <p class="product-price">₫17,000</p>
+                    <p class="sold">Đã bán: <strong>83</strong></p>
                 </div>
 
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
+
             </div>
 
-            <!-- slider 3 -->
-            <div class="product-slider">
+            <!-- mũi tên phải -->
+            <div class="arrow next">&#10095;</div>
+        </div>
 
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
+        <!-- slider 3 -->
+        <div class="product-slider">
 
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/61E6Vvsc6pL.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 24</p>
-                        <p class="product-price">₫35,000</p>
-                        <p class="sold">Đã bán: <strong>93</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 45</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>38</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/818RM6H2oHL._SL1500_.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 160</p>
-                        <p class="product-price">₫39,000</p>
-                        <p class="sold">Đã bán: <strong>79</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/81W0jEvdO9L.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 62</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>72</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 208</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>58</strong></p>
-                    </div>
+            <!-- mũi tên trái -->
+            <div class="arrow prev">&#10094;</div>
 
-                    <div class="product-item">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.9v3RcOMUqWTRHXD8RwdBqwHaK0?cb=ucfimg2ucfimg=1&w=876&h=1280&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Naruto Tâp 187</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>17</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://cdn0.fahasa.com/media/catalog/product/n/a/naruto1-2-page-001.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 1</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>49</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Naruto Tâp 123</p>
-                        <p class="product-price">₫25,000</p>
-                        <p class="sold">Đã bán: <strong>76</strong></p>
-                    </div>
-
-
+            <div class="slider-track">
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/61E6Vvsc6pL.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 24</p>
+                    <p class="product-price">₫35,000</p>
+                    <p class="sold">Đã bán: <strong>93</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 45</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>38</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/818RM6H2oHL._SL1500_.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 160</p>
+                    <p class="product-price">₫39,000</p>
+                    <p class="sold">Đã bán: <strong>79</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/81W0jEvdO9L.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 62</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>72</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 208</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>58</strong></p>
                 </div>
 
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <!-- slider-popup -->
-            <div id="product-slider-popup" class="product-slider" style="display: none;">
-
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
-
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
-                        <p class="product-name">Onepiece Tâp 8</p>
-                        <p class="product-price">₫35,000</p>
-                        <p class="sold">Đã bán: <strong>103</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 7</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>138</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 75</p>
-                        <p class="product-price">₫39,000</p>
-                        <p class="sold">Đã bán: <strong>109</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 22</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>72</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-                        <p class="product-name">Opiece Tâp 21</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>58</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-                        <p class="product-name">Onepiece Tâp 52</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>17</strong></p>
-                    </div>
-
-
+                <div class="product-item">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.9v3RcOMUqWTRHXD8RwdBqwHaK0?cb=ucfimg2ucfimg=1&w=876&h=1280&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Naruto Tâp 187</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>17</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://cdn0.fahasa.com/media/catalog/product/n/a/naruto1-2-page-001.jpg" alt="">
+                    <p class="product-name">Naruto Tâp 1</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>49</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Naruto Tâp 123</p>
+                    <p class="product-price">₫25,000</p>
+                    <p class="sold">Đã bán: <strong>76</strong></p>
                 </div>
 
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
+
             </div>
 
-            <div id="more-btn-popup-slider" class="more-btn">
-                <button>Xem thêm</button>
+            <!-- mũi tên phải -->
+            <div class="arrow next">&#10095;</div>
+        </div>
+
+        <!-- slider-popup -->
+        <div id="product-slider-popup" class="product-slider" style="display: none;">
+
+            <!-- mũi tên trái -->
+            <div class="arrow prev">&#10094;</div>
+
+            <div class="slider-track">
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
+                    <p class="product-name">Onepiece Tâp 8</p>
+                    <p class="product-price">₫35,000</p>
+                    <p class="sold">Đã bán: <strong>103</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Onepiece Tâp 7</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>138</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Onepiece Tâp 75</p>
+                    <p class="product-price">₫39,000</p>
+                    <p class="sold">Đã bán: <strong>109</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
+                         alt="">
+                    <p class="product-name">Onepiece Tâp 22</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>72</strong></p>
+                </div>
+                <div class="product-item">
+                    <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
+                    <p class="product-name">Opiece Tâp 21</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>58</strong></p>
+                </div>
+
+                <div class="product-item">
+                    <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
+                    <p class="product-name">Onepiece Tâp 52</p>
+                    <p class="product-price">₫40,000</p>
+                    <p class="sold">Đã bán: <strong>17</strong></p>
+                </div>
+
+
             </div>
 
+            <!-- mũi tên phải -->
+            <div class="arrow next">&#10095;</div>
+        </div>
+
+        <div id="more-btn-popup-slider" class="more-btn">
+            <button>Xem thêm</button>
         </div>
 
     </div>
 
-
-    <!-- INCLUDE FOOTER -->
-    <jsp:include page="/fontend/public/Footer.jsp"/>
+</div>
 
 
-    <script>
-
-        //cái popup hiện lên của ảnh bên trái
-        // ảnh chính
-        const mainImgContainer = document.getElementById("img-container");
-        // popup
-        const popup1 = document.getElementById("img-container-popup1");
-        const popup2 = document.getElementById("img-container-popup2");
-        const popup3 = document.getElementById("img-container-popup3");
-
-        // ảnh nhỏ trong warehouse
-        document.getElementById("img-small1").addEventListener("click", () => {
-            mainImgContainer.style.display = "block";
-            popup1.style.display = "none";
-            popup2.style.display = "none";
-            popup3.style.display = "none";
-        });
-
-        document.getElementById("img-small2").addEventListener("click", () => {
-            mainImgContainer.style.display = "none";
-            popup1.style.display = "block";
-            popup2.style.display = "none";
-            popup3.style.display = "none";
-        });
-
-        document.getElementById("img-small3").addEventListener("click", () => {
-            mainImgContainer.style.display = "none";
-            popup1.style.display = "none";
-            popup2.style.display = "block";
-            popup3.style.display = "none";
-        });
-
-        document.getElementById("img-small4").addEventListener("click", () => {
-            mainImgContainer.style.display = "none";
-            popup1.style.display = "none";
-            popup2.style.display = "none";
-            popup3.style.display = "block";
-        });
+<!-- INCLUDE FOOTER -->
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 
-        // slider
-        function initSlider(slider) {
-            const track = slider.querySelector('.slider-track');
-            const prevBtn = slider.querySelector('.arrow.prev');
-            const nextBtn = slider.querySelector('.arrow.next');
-            const items = slider.querySelectorAll('.product-item');
+<script>
 
-            let currentPosition = 0;
+    // lấy ảnh để hien thi
+    const mainImg = document.getElementById("img");
+    const imgSmalls = document.querySelectorAll(".img-small");
 
-            function recalc() {
-                const itemWidth = items[0].offsetWidth + 10; // gap
-                const totalItems = items.length;
-                const trackWidth = totalItems * itemWidth;
-                const containerWidth = slider.offsetWidth;
-                const maxPosition = containerWidth - trackWidth;
-                return {itemWidth, maxPosition};
+    imgSmalls.forEach((imgSmall, index) => {
+        imgSmall.addEventListener("click", () => {
+            // Ẩn tất cả popup
+            document.querySelectorAll(".img-container").forEach(container => {
+                container.style.display = "none";
+            });
+
+            // Hiện ảnh được click
+            if (index === 0) {
+                document.getElementById("img-container").style.display = "block";
+            } else {
+                const popup = document.getElementById(`img-container-popup${index}`);
+                if (popup) {
+                    popup.style.display = "block";
+                }
             }
+        });
+    });
 
-            prevBtn.addEventListener('click', () => {
-                const {itemWidth} = recalc();
-                if (currentPosition < 0) {
-                    currentPosition += itemWidth;
-                    if (currentPosition > 0) currentPosition = 0;
-                    track.style.transform = `translateX(${currentPosition}px)`;
-                }
-            });
 
-            nextBtn.addEventListener('click', () => {
-                const {itemWidth, maxPosition} = recalc();
-                if (currentPosition > maxPosition) {
-                    currentPosition -= itemWidth;
-                    if (currentPosition < maxPosition) currentPosition = maxPosition;
-                    track.style.transform = `translateX(${currentPosition}px)`;
-                }
-            });
+    // slider
+    function initSlider(slider) {
+        const track = slider.querySelector('.slider-track');
+        const prevBtn = slider.querySelector('.arrow.prev');
+        const nextBtn = slider.querySelector('.arrow.next');
+        const items = slider.querySelectorAll('.product-item');
+
+        let currentPosition = 0;
+
+        function recalc() {
+            const itemWidth = items[0].offsetWidth + 10; // gap
+            const totalItems = items.length;
+            const trackWidth = totalItems * itemWidth;
+            const containerWidth = slider.offsetWidth;
+            const maxPosition = containerWidth - trackWidth;
+            return {itemWidth, maxPosition};
         }
 
-        // Khi popup mở thì gọi lại initSlider
-        document.querySelectorAll('.product-slider').forEach(initSlider);
+        prevBtn.addEventListener('click', () => {
+            const {itemWidth} = recalc();
+            if (currentPosition < 0) {
+                currentPosition += itemWidth;
+                if (currentPosition > 0) currentPosition = 0;
+                track.style.transform = `translateX(${currentPosition}px)`;
+            }
+        });
 
-        // cái này cho trái tim đổi màu
-        const heart = document.getElementById("heart");
+        nextBtn.addEventListener('click', () => {
+            const {itemWidth, maxPosition} = recalc();
+            if (currentPosition > maxPosition) {
+                currentPosition -= itemWidth;
+                if (currentPosition < maxPosition) currentPosition = maxPosition;
+                track.style.transform = `translateX(${currentPosition}px)`;
+            }
+        });
+    }
+
+    // Khi popup mở thì gọi lại initSlider
+    document.querySelectorAll('.product-slider').forEach(initSlider);
+
+    // cái này cho trái tim đổi màu
+    const heart = document.getElementById("heart");
+    if (heart) {  // ← Kiểm tra null
         heart.addEventListener('click', () => {
             heart.classList.toggle("fa-regular");
             heart.classList.toggle("fa-solid");
         });
+    }
 
 
         //cái này review chuyển đổi
@@ -893,7 +889,7 @@
                 document.querySelector("#product-slider-popup").style.display = "block";
             });
         }
-    </script>
+</script>
 
 </body>
 
