@@ -116,16 +116,16 @@ body {
 
 /* ==== POPUP ==== */
 
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
+/*.modal-overlay {*/
+/*    position: fixed;*/
+/*    top: 0; left: 0;*/
+/*    width: 100%; height: 100%;*/
+/*    background: rgba(0,0,0,0.4);*/
+/*    display: none;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    z-index: 999;*/
+/*}*/
 
 .modal-flashsale {
     width: 800px;
@@ -170,16 +170,33 @@ body {
 .save-btn { background: #ff4c4c; color: white; }
 
 /* ==== POPUP OVERLAY ==== */
+/*.modal-overlay {*/
+/*    position: fixed;*/
+/*    top: 0; left: 0;*/
+/*    width: 100%; height: 100%;*/
+/*    background: rgba(0,0,0,0.5);*/
+/*    display: none;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    z-index: 999;*/
+/*    animation: fadeIn 0.25s ease;*/
+/*}*/
+
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none !important;
     justify-content: center;
     align-items: center;
     z-index: 999;
     animation: fadeIn 0.25s ease;
+}
+.modal-overlay.show {
+    display: flex !important;
 }
 
 @keyframes fadeIn {

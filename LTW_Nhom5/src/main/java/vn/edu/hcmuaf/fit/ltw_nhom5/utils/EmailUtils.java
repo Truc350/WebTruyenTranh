@@ -9,8 +9,8 @@ import java.util.Properties;
 
 public class EmailUtils {
     public static void sendEmail(String to, String subject, String content) {
-        final String username = "vinhhung091405@gmail.com";
-        final String password = "ukxsculfptnfltrh";
+        final String username = "comicstore365@gmail.com";
+        final String password = "ddnaxksbhrfimxux";
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -29,7 +29,20 @@ public class EmailUtils {
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
-            message.setText(content);
+
+             String form =
+                    "<html>" +
+                            "<head><meta charset='UTF-8'></head>" +
+                            "<body>" +
+                            "  <h3>Comic Store gửi mã code cho bạn: </h3>" + content +
+                            "</body>" +
+                            "</html>";
+
+            message.setContent(form, "text/html; charset=UTF-8");
+
+
+
+            //message.setText(content);
 
             Transport.send(message);
         } catch (MessagingException e) {

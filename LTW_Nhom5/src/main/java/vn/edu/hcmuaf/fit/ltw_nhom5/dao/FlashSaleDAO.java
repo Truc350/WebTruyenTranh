@@ -21,4 +21,10 @@ public class FlashSaleDAO extends ADao{
                         .orElse(null)
         );
     }
+
+
+
+
+
+
 }
