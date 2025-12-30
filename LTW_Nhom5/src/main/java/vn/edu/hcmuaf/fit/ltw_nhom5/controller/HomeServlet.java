@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
 
-@WebServlet({"/home", "/"})
+@WebServlet({"/home"})
 public class HomeServlet extends HttpServlet {
     private ComicDAO comicDAO;
     private FlashSaleDAO flashSaleDAO;
