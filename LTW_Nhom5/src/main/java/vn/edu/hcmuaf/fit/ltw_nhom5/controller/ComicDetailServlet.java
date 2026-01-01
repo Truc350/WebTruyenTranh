@@ -51,13 +51,17 @@ public class ComicDetailServlet extends HttpServlet {
             var images = comicService.getComicImages(comicId);
 
             // Lấy danh sách truyện tương tự (cùng thể loại hoặc tác giả)
-            var relatedComics = comicService.getRelatedComics(comicId, 8);
+            var relatedComics = comicService.getRelatedComics(comicId);
 
             // Lấy đánh giá của truyện
             var reviews = comicService.getComicReviews(comicId);
 
             // Tính điểm trung bình
             double avgRating = comicService.getAverageRating(comicId);
+
+            String seriesName = comicService.getSeriesName(comic.getSeriesId());
+
+            request.setAttribute("seriesName", seriesName);
 
             // Set attributes
             request.setAttribute("comic", comic);

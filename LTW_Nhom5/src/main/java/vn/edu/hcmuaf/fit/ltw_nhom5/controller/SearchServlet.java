@@ -21,11 +21,16 @@ public class SearchServlet extends HttpServlet {
     @Override
     public void init() {
         comicDAO = new ComicDAO();
+        System.out.println("🔥🔥🔥 SearchServlet INITIALIZED 🔥🔥🔥");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        System.out.println("\n🔍🔍🔍 SearchServlet doGet CALLED 🔍🔍🔍");
+        System.out.println("🔍 Request URI: " + request.getRequestURI());
+        System.out.println("🔍 Query String: " + request.getQueryString());
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -33,8 +38,12 @@ public class SearchServlet extends HttpServlet {
         String keyword = request.getParameter("keyword");
         String searchType = request.getParameter("type");
 
+        System.out.println("🔍 Keyword from request: [" + keyword + "]");
+        System.out.println("🔍 Search Type: [" + searchType + "]");
+
         // Keyword rỗng
         if (keyword == null || keyword.trim().isEmpty()) {
+            System.out.println("⚠️ Keyword is empty!");
             request.setAttribute("comics", new ArrayList<>());
             request.setAttribute("resultCount", 0);
             request.getRequestDispatcher("/fontend/public/searchResult.jsp")
@@ -46,16 +55,22 @@ public class SearchServlet extends HttpServlet {
         List<Comic> comics = new ArrayList<>();
 
         if ("author".equals(searchType)) {
+            System.out.println("📚 Searching by AUTHOR...");
             List<Comic> result = comicDAO.findByAuthor(keyword);
             if (result != null) comics.addAll(result);
+            System.out.println("✅ Found by author: " + result.size());
 
         } else if ("publisher".equals(searchType)) {
+            System.out.println("📚 Searching by PUBLISHER...");
             List<Comic> result = comicDAO.findByPublisher(keyword);
             if (result != null) comics.addAll(result);
+            System.out.println("✅ Found by publisher: " + result.size());
 
         } else {
+            System.out.println("📚 Searching by SMART SEARCH...");
             List<Comic> result = comicDAO.smartSearch(keyword);
             if (result != null) comics.addAll(result);
+            System.out.println("✅ smartSearch returned: " + (result != null ? result.size() : "NULL"));
         }
 
         // Thêm các tập cùng series

@@ -1,16 +1,16 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
-import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 
-public class SeriesDAO {
-//    public String getSeriesNameById(int seriesId) {
-//        String sql = "SELECT name FROM series WHERE id = :id";
-//        return JdbiConnector.me().withHandle(h ->
-//                h.createQuery(sql)
-//                        .bind("id", seriesId)
-//                        .mapTo(String.class)
-//                        .findOne()
-//                        .orElse(null)
-//        );
-//    }
+public class SeriesDAO extends ADao{
+    public String getSeriesNameById(int seriesId) {
+        String sql = "SELECT series_name FROM series WHERE id = :id";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("id", seriesId)
+                        .mapTo(String.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 }
