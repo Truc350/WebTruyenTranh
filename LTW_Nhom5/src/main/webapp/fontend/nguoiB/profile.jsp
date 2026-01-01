@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <main>
     <div class="profile-container">
@@ -32,7 +32,7 @@
                 <li><a href="#">Đổi mật khẩu</a></li>
                 <li><a href="#">Ưu đãi C-Point</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
-<%--                <li><a href="#">Ví voucher </a></li>--%>
+                <%--                <li><a href="#">Ví voucher </a></li>--%>
                 <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Sản phẩm yêu thích</a></li>
             </ul>
@@ -600,8 +600,8 @@
             <div class="tab active">Tất cả</div>
             <div class="tab">Đơn Hàng</div>
             <div class="tab">Sự kiện</div>
-<%--            <div class="tab">Mã giảm giá</div>--%>
-<%--            <div class="tab">Xác nhận</div>--%>
+            <%--            <div class="tab">Mã giảm giá</div>--%>
+            <%--            <div class="tab">Xác nhận</div>--%>
         </div>
         <div class="line"></div>
         <div class="empty-message">Không có thông báo.</div>
@@ -626,10 +626,10 @@
             <!--            <p class="rating-label" id="rating-label">Chọn số sao</p>-->
         </div>
 
-<%--        <div class="field">--%>
-<%--            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>--%>
-<%--            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>--%>
-<%--        </div>--%>
+        <%--        <div class="field">--%>
+        <%--            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>--%>
+        <%--            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>--%>
+        <%--        </div>--%>
 
         <div class="field">
             <label for="comment" class="nameDisplay">Nhận xét</label>
@@ -638,7 +638,7 @@
 
         <div class="field-img">
             <label for="image-upload" class="nameDisplay">Tải ảnh</label>
-            <input type="file" id="image-upload" accept="image/*" multiple />
+            <input type="file" id="image-upload" accept="image/*" multiple/>
             <div id="image-preview"></div>
         </div>
 
@@ -694,7 +694,7 @@
 
 
 <!-- ===================== FOOTER ===================== -->
-<jsp:include page="/fontend/public/Footer.jsp" />
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 <!------------------------------------------------------------------------------------------------>
 
@@ -884,7 +884,8 @@
             const dataTransfer = new DataTransfer();
             files.forEach(file => dataTransfer.items.add(file));
             this.files = dataTransfer.files;
-        });4
+        });
+        4
 // Gửi đánh giá
         submitReviewBtn.addEventListener('click', () => {
             const name = document.querySelector('#display-name').value.trim();
@@ -1019,7 +1020,7 @@
                 } else if (text == 'Thông báo') {
                     notificationContainer.style.display = 'block';
                     // tải lại danh sách thông báo(cso thể gọi API ở đây)
-                    loadNotification();
+                    loadNotifications();
                 } else {
                     profileForm.style.display = 'block'; // Default to profile form
                 }
@@ -1145,12 +1146,150 @@
 <script>
     // CHỈ CẦN ĐOẠN NÀY LÀ ĐỦ - SIÊU GỌN
     document.querySelectorAll('.notification-container .tab').forEach(tab => {
-        tab.addEventListener('click', function() {
+        tab.addEventListener('click', function () {
             document.querySelectorAll('.notification-container .tab').forEach(t =>
                 t.classList.remove('active')
             );
             this.classList.add('active');
         });
+    });
+</script>
+
+<script>
+    async function loadNotifications() {
+        const container = document.querySelector('.notification-container');
+        if (!container || container.style.display === 'none') return;
+
+        // Xác định loại filter từ tab active
+        const activeTab = container.querySelector('.tab.active');
+        let type = 'ALL';
+        if (activeTab) {
+            const tabText = activeTab.textContent.trim();
+            if (tabText === 'Đơn Hàng') type = 'ORDER';
+            if (tabText === 'Sự kiện') type = 'EVENT';
+        }
+
+        // Tạo khu vực hiển thị danh sách thông báo
+        let listArea = document.getElementById('notification-list-area');
+        if (!listArea) {
+            // Xóa nội dung cũ (empty-message)
+            container.innerHTML = `
+            <div class="tabs">
+                <div class="tab active">Tất cả</div>
+                <div class="tab">Đơn Hàng</div>
+                <div class="tab">Sự kiện</div>
+            </div>
+            <div class="line" style="height:1px;background:#eee;margin:10px 0;"></div>
+            <div id="notification-list-area" style="min-height:300px;"></div>
+            <div style="text-align:center;padding:20px;">
+                <button id="mark-all-read-btn" style="padding:10px 20px;background:#007bff;color:white;border:none;border-radius:4px;cursor:pointer;">Đánh dấu tất cả đã đọc</button>
+            </div>
+        `;
+            listArea = document.getElementById('notification-list-area');
+
+            // Gắn lại sự kiện cho các tab mới tạo
+            document.querySelectorAll('.notification-container .tab').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    document.querySelectorAll('.notification-container .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    loadNotifications();
+                });
+            });
+
+            // Gắn sự kiện đánh dấu tất cả
+            document.getElementById('mark-all-read-btn').addEventListener('click', markAllRead);
+        }
+
+        listArea.innerHTML = '<div style="text-align:center;padding:60px;color:#999;">Đang tải thông báo...</div>';
+
+        try {
+            const response = await fetch('${pageContext.request.contextPath}/NotificationServlet/list?type=' + type);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+
+            const data = await response.json();
+
+            if (!data.notifications || data.notifications.length === 0) {
+                listArea.innerHTML = '<div style="text-align:center;padding:80px;color:#999;font-size:16px;">Không có thông báo nào.</div>';
+                document.getElementById('mark-all-read-btn').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('mark-all-read-btn').style.display = 'block';
+
+            let html = '';
+            data.notifications.forEach(n => {
+                const unreadStyle = n.is_read ? '' : 'background:#f0f8ff; font-weight:600; border-left:4px solid #007bff; padding-left:16px;';
+                html += `
+                <div style="padding:16px; margin-bottom:8px; border-bottom:1px solid #eee; border-radius:6px; cursor:pointer; ${unreadStyle}"
+                     onclick="markReadAndGo(${n.id}, '${n.link}')">
+                    <strong style="font-size:16px;display:block;margin-bottom:6px;">${n.title}</strong>
+                    <div style="color:#555;font-size:14px;margin-bottom:10px;">${n.message}</div>
+                    <small style="color:#999;font-size:13px;">${n.formatted_date}</small>
+                </div>
+            `;
+            });
+
+            listArea.innerHTML = html;
+
+        } catch (err) {
+            console.error('Lỗi load thông báo:', err);
+            listArea.innerHTML = '<div style="text-align:center;padding:60px;color:red;">Lỗi tải thông báo<br><small>Vui lòng làm mới trang</small></div>';
+        }
+    }
+
+    async function markReadAndGo(id, link) {
+        try {
+            await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {method: 'POST'});
+            loadNotifications(); // refresh danh sách
+            if (link && link !== '#' && link !== '') {
+                window.location.href = link;
+            }
+        } catch (err) {
+            alert('Lỗi đánh dấu đã đọc');
+        }
+    }
+
+    async function markAllRead() {
+        if (!confirm('Đánh dấu tất cả thông báo là đã đọc?')) return;
+        try {
+            await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-all-read', {method: 'POST'});
+            loadNotifications();
+        } catch (err) {
+            alert('Lỗi thực hiện');
+        }
+    }
+
+    // Gọi load khi mở tab Thông báo (đã có trong menu click và #notifications)
+</script>
+
+<script>
+    // Tự động mở tab "Thông báo" nếu URL có #notifications
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash === '#notifications') {
+            // Tìm menu item "Thông báo" và click nó
+            const menuItems = document.querySelectorAll('.menu ul li');
+            menuItems.forEach(item => {
+                const linkText = item.querySelector('a').textContent.trim();
+                if (linkText === 'Thông báo') {
+                    // Xóa active cũ
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    // Thêm active cho tab Thông báo
+                    item.classList.add('active');
+
+                    // Ẩn tất cả container
+                    document.querySelectorAll('.profile-form-container, .change-password-container, .order-history-container, .voucher-container, .wishlist-container, .xu-container, .notification-container')
+                        .forEach(el => el.style.display = 'none');
+
+                    // Hiện tab thông báo
+                    document.querySelector('.notification-container').style.display = 'block';
+
+                    // Gọi hàm load thông báo (nếu bạn đã có hàm loadNotifications)
+                    if (typeof loadNotifications === 'function') {
+                        loadNotifications();
+                    }
+                }
+            });
+        }
     });
 </script>
 </body>

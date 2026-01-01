@@ -2,11 +2,12 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ComicDAO extends ADao {
 
@@ -24,7 +25,6 @@ public class ComicDAO extends ADao {
                     LIMIT 500
                 """;
 
-        // ⚠️ LUÔN ÉP SANG ARRAYLIST
         List<Comic> allComics = new ArrayList<>(
                 jdbi.withHandle(h ->
                         h.createQuery(sql)
@@ -399,4 +399,135 @@ public class ComicDAO extends ADao {
         return suggested;
     }
 
+    /**
+     * Lấy thông tin chi tiết truyện theo ID
+     */
+    public Comic getComicById(int id) {
+        String sql = "SELECT * FROM Comics WHERE id = :id AND is_deleted = 0";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("id", id)
+                        .mapToBean(Comic.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    /**
+     * Lấy danh sách ảnh của truyện
+     */
+    public List<ComicImage> getComicImages(int comicId) {
+        String sql = """
+            SELECT * FROM Comic_Images 
+            WHERE comic_id = :comicId 
+            ORDER BY sort_order ASC
+            """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("comicId", comicId)
+                        .mapToBean(ComicImage.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
+     */
+    public List<Comic> getRelatedComics(int comicId, int limit) {
+        String inforSql = """
+            SELECT series_id, volume
+            FROM Comics
+            WHERE id = :comicId
+            """;
+
+        Comic current = jdbi.withHandle(h ->
+                h.createQuery(inforSql)
+                        .bind("comicId", comicId)
+                        .mapToBean(Comic.class)
+                        .one()
+        );
+
+        Integer seriesId = current.getSeriesId();
+        Integer currentVolume = current.getVolume();
+
+        // 2️⃣ Query truyện liên quan
+        String sql = """
+        SELECT DISTINCT c.*
+        FROM Comics c
+        WHERE c.id != :comicId
+          AND c.is_deleted = 0
+          AND c.status = 'available'
+          AND (
+              (
+                  c.series_id = :seriesId
+                  AND c.volume IS NOT NULL
+              )
+              OR c.category_id = (
+                  SELECT category_id FROM Comics WHERE id = :comicId
+              )
+          )
+        ORDER BY
+            CASE
+                WHEN c.series_id = :seriesId AND c.volume > :currentVolume THEN 0
+                WHEN c.series_id = :seriesId AND c.volume < :currentVolume THEN 1
+                ELSE 2
+            END,
+            CASE
+                WHEN c.series_id = :seriesId THEN c.volume
+                ELSE c.created_at
+            END
+        LIMIT :limit
+        """;
+
+        return jdbi.withHandle(h ->
+                h.createQuery(sql)
+                        .bind("comicId", comicId)
+                        .bind("seriesId", seriesId)
+                        .bind("currentVolume", currentVolume != null ? currentVolume : -1)
+                        .bind("limit", limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy danh sách đánh giá của truyện
+     */
+    public List<Review> getComicReviews(int comicId) {
+        String sql = """
+        SELECT r.id, r.comic_id, r.user_id, r.rating, r.comment, r.created_at,
+               u.username 
+        FROM Reviews r
+        JOIN Users u ON r.user_id = u.id
+        WHERE r.comic_id = :comicId
+        ORDER BY r.created_at DESC
+        """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("comicId", comicId)
+                        .mapToBean(Review.class)
+                        .list()
+        );
+    }
+    /**
+     * Tính điểm đánh giá trung bình
+     */
+    public double getAverageRating(int comicId) {
+        String sql = """
+            SELECT COALESCE(AVG(rating), 0) as avg_rating 
+            FROM Reviews 
+            WHERE comic_id = :comicId
+            """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("comicId", comicId)
+                        .mapTo(Double.class)
+                        .findOne()
+                        .orElse(0.0)
+        );
+    }
 }

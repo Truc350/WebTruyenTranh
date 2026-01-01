@@ -2,18 +2,35 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.service;
 
 import org.jdbi.v3.core.Jdbi;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ComicService {
 
     private final Jdbi jdbi;
+    private final ComicDAO comicDAO;
+    private SeriesDAO seriesDAO = new SeriesDAO();
+
+    public ComicService() {
+        this.jdbi = JdbiConnector.get();
+        this.comicDAO = new ComicDAO();
+    }
 
     // Constructor nhận Jdbi (sẽ được inject từ servlet hoặc class config)
     public ComicService(Jdbi jdbi) {
         this.jdbi = jdbi;
+        this.comicDAO = new ComicDAO();
+    }
+
+    public ComicService(Jdbi jdbi, ComicDAO comicDAO) {
+        this.jdbi = jdbi;
+        this.comicDAO = comicDAO;
     }
 
     /**
@@ -21,87 +38,148 @@ public class ComicService {
      * @param userId ID người dùng (null nếu chưa login)
      * @return List<Comic> tối đa 12 cuốn
      */
+//    public List<Comic> getSuggestedComics(Integer userId) {
+//        List<Comic> suggested = new ArrayList<>();
+//
+//        if (userId != null) {
+//            // 1. Tập tiếp theo của series trong wishlist
+//            String sqlNextVolume = """
+//                SELECT c.*
+//                FROM comics c
+//                WHERE c.series_id IN (
+//                    SELECT DISTINCT c2.series_id
+//                    FROM comics c2
+//                    JOIN wishlist w ON c2.id = w.comic_id
+//                    WHERE w.user_id = :userId AND c2.is_deleted = 0
+//                )
+//                AND c.volume = (
+//                    SELECT MAX(c3.volume) + 1
+//                    FROM comics c3
+//                    JOIN wishlist w2 ON c3.id = w2.comic_id
+//                    WHERE c3.series_id = c.series_id
+//                      AND w2.user_id = :userId
+//                      AND c3.is_deleted = 0
+//                )
+//                AND c.is_deleted = 0
+//                LIMIT 8
+//                """;
+//
+//            List<Comic> nextVolumes = jdbi.withHandle(handle ->
+//                    handle.createQuery(sqlNextVolume)
+//                            .bind("userId", userId)
+//                            .mapToBean(Comic.class)
+//                            .list()
+//            );
+//            suggested.addAll(nextVolumes);
+//
+//            // 2. Bổ sung cùng thể loại nếu chưa đủ
+//            if (suggested.size() < 12) {
+//                int need = 12 - suggested.size();
+//
+//                String sqlSameCategory = """
+//                    SELECT c.*
+//                    FROM comics c
+//                    WHERE c.category_id IN (
+//                        SELECT DISTINCT c2.category_id
+//                        FROM comics c2
+//                        JOIN wishlist w ON c2.id = w.comic_id
+//                        WHERE w.user_id = :userId AND c2.is_deleted = 0
+//                    )
+//                    AND c.id NOT IN (SELECT comic_id FROM wishlist WHERE user_id = :userId)
+//                    AND c.is_deleted = 0
+//                    ORDER BY RAND()
+//                    LIMIT :limit
+//                    """;
+//
+//                List<Comic> sameCategory = jdbi.withHandle(handle ->
+//                        handle.createQuery(sqlSameCategory)
+//                                .bind("userId", userId)
+//                                .bind("limit", need)
+//                                .mapToBean(Comic.class)
+//                                .list()
+//                );
+//                suggested.addAll(sameCategory);
+//            }
+//        }
+//
+//        // 3. Fallback: Chưa login hoặc wishlist rỗng → truyện mới nhất
+//        if (suggested.isEmpty()) {
+//            String sqlLatest = """
+//                SELECT *
+//                FROM comics
+//                WHERE is_deleted = 0
+//                ORDER BY created_at DESC
+//                LIMIT 12
+//                """;
+//
+//            suggested = jdbi.withHandle(handle ->
+//                    handle.createQuery(sqlLatest)
+//                            .mapToBean(Comic.class)
+//                            .list()
+//            );
+//        }
+//
+//        return suggested;
+//    }
+
+    /**
+     * Lấy danh sách gợi ý truyện
+     */
     public List<Comic> getSuggestedComics(Integer userId) {
-        List<Comic> suggested = new ArrayList<>();
+        return comicDAO.getSuggestedComics(userId);
+    }
 
-        if (userId != null) {
-            // 1. Tập tiếp theo của series trong wishlist
-            String sqlNextVolume = """
-                SELECT c.*
-                FROM comics c
-                WHERE c.series_id IN (
-                    SELECT DISTINCT c2.series_id
-                    FROM comics c2
-                    JOIN wishlist w ON c2.id = w.comic_id
-                    WHERE w.user_id = :userId AND c2.is_deleted = 0
-                )
-                AND c.volume = (
-                    SELECT MAX(c3.volume) + 1
-                    FROM comics c3
-                    JOIN wishlist w2 ON c3.id = w2.comic_id
-                    WHERE c3.series_id = c.series_id
-                      AND w2.user_id = :userId
-                      AND c3.is_deleted = 0
-                )
-                AND c.is_deleted = 0
-                LIMIT 8
-                """;
+    /**
+     * Lấy danh sách ảnh của truyện
+     */
+    public List<ComicImage> getComicImages(int comicId) {
+        return comicDAO.getComicImages(comicId);
+    }
 
-            List<Comic> nextVolumes = jdbi.withHandle(handle ->
-                    handle.createQuery(sqlNextVolume)
-                            .bind("userId", userId)
-                            .mapToBean(Comic.class)
-                            .list()
-            );
-            suggested.addAll(nextVolumes);
+    /**
+     * Lấy danh sách truyện tương tự
+     */
+    public List<Comic> getRelatedComics(int comicId, int limit) {
+        return comicDAO.getRelatedComics(comicId, limit);
+    }
 
-            // 2. Bổ sung cùng thể loại nếu chưa đủ
-            if (suggested.size() < 12) {
-                int need = 12 - suggested.size();
+    /**
+     * Lấy danh sách đánh giá của truyện
+     */
+    public List<Review> getComicReviews(int comicId) {
+        return comicDAO.getComicReviews(comicId);
+    }
 
-                String sqlSameCategory = """
-                    SELECT c.*
-                    FROM comics c
-                    WHERE c.category_id IN (
-                        SELECT DISTINCT c2.category_id
-                        FROM comics c2
-                        JOIN wishlist w ON c2.id = w.comic_id
-                        WHERE w.user_id = :userId AND c2.is_deleted = 0
-                    )
-                    AND c.id NOT IN (SELECT comic_id FROM wishlist WHERE user_id = :userId)
-                    AND c.is_deleted = 0
-                    ORDER BY RAND()
-                    LIMIT :limit
-                    """;
+    /**
+     * Tính điểm đánh giá trung bình
+     */
+    public double getAverageRating(int comicId) {
+        return comicDAO.getAverageRating(comicId);
+    }
 
-                List<Comic> sameCategory = jdbi.withHandle(handle ->
-                        handle.createQuery(sqlSameCategory)
-                                .bind("userId", userId)
-                                .bind("limit", need)
-                                .mapToBean(Comic.class)
-                                .list()
-                );
-                suggested.addAll(sameCategory);
-            }
-        }
+    /**
+     * Tìm kiếm thông minh
+     */
+    public List<Comic> smartSearch(String keyword) {
+        return comicDAO.smartSearch(keyword);
+    }
 
-        // 3. Fallback: Chưa login hoặc wishlist rỗng → truyện mới nhất
-        if (suggested.isEmpty()) {
-            String sqlLatest = """
-                SELECT *
-                FROM comics
-                WHERE is_deleted = 0
-                ORDER BY created_at DESC
-                LIMIT 12
-                """;
+    /**
+     * Tìm theo tác giả
+     */
+    public List<Comic> findByAuthor(String authorName) {
+        return comicDAO.findByAuthor(authorName);
+    }
 
-            suggested = jdbi.withHandle(handle ->
-                    handle.createQuery(sqlLatest)
-                            .mapToBean(Comic.class)
-                            .list()
-            );
-        }
+    /**
+     * Tìm theo nhà xuất bản
+     */
+    public List<Comic> findByPublisher(String publisherName) {
+        return comicDAO.findByPublisher(publisherName);
+    }
 
-        return suggested;
+
+    public Comic getComicById(int comicId) {
+        return comicDAO.getComicById(comicId);
     }
 }
