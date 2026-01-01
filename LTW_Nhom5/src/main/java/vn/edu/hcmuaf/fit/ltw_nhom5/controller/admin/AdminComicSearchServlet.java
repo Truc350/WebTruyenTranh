@@ -35,12 +35,12 @@ public class AdminComicSearchServlet extends HttpServlet {
         response.setContentType("application/json");
 
         String keyword = request.getParameter("keyword");
-        String searchType = request.getParameter("type"); // author, publisher, all
+        String searchType = request.getParameter("type");
 
         List<Comic> comics = new ArrayList<>();
 
+        // Không có keyword thì trả về mảng rỗng
         if (keyword == null || keyword.trim().isEmpty()) {
-            // Không có keyword → trả về mảng rỗng
             sendJsonResponse(response, comics);
             return;
         }
@@ -61,7 +61,7 @@ public class AdminComicSearchServlet extends HttpServlet {
             if (result != null) comics.addAll(result);
         }
 
-        // Thêm các tập cùng series (giống SearchServlet cũ)
+        // Thêm các tập cùng series
         if (!comics.isEmpty()) {
             Comic first = comics.get(0);
             if (first.getSeriesId() != null) {
@@ -76,14 +76,12 @@ public class AdminComicSearchServlet extends HttpServlet {
             }
         }
 
-        // Chỉ trả về những field cần thiết cho admin chọn
+        //  trả về  id và name
         List<Map<String, Object>> simplifiedComics = new ArrayList<>();
         for (Comic comic : comics) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", comic.getId());
             map.put("name", comic.getNameComics());
-            // Nếu có thêm thông tin muốn hiển thị như tác giả, nhà xuất bản...
-            // map.put("author", comic.getAuthor());
             simplifiedComics.add(map);
         }
 

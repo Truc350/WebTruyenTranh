@@ -116,16 +116,16 @@ body {
 
 /* ==== POPUP ==== */
 
-/*.modal-overlay {*/
-/*    position: fixed;*/
-/*    top: 0; left: 0;*/
-/*    width: 100%; height: 100%;*/
-/*    background: rgba(0,0,0,0.4);*/
-/*    display: none;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    z-index: 999;*/
-/*}*/
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
 
 .modal-flashsale {
     width: 800px;
@@ -170,33 +170,16 @@ body {
 .save-btn { background: #ff4c4c; color: white; }
 
 /* ==== POPUP OVERLAY ==== */
-/*.modal-overlay {*/
-/*    position: fixed;*/
-/*    top: 0; left: 0;*/
-/*    width: 100%; height: 100%;*/
-/*    background: rgba(0,0,0,0.5);*/
-/*    display: none;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    z-index: 999;*/
-/*    animation: fadeIn 0.25s ease;*/
-/*}*/
-
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: none !important;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 999;
     animation: fadeIn 0.25s ease;
-}
-.modal-overlay.show {
-    display: flex !important;
 }
 
 @keyframes fadeIn {
@@ -441,4 +424,53 @@ body {
 
 .delete-confirm-btn:hover {
     background-color: #ff6a6a;
+}
+
+/*phần này làm với backend*/
+
+/*nhớ chỗ này nha*/
+/* Hiển thị popup khi có class .show */
+.modal-overlay.show {
+    display: flex !important;
+}
+.comic-search-container {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1.8px solid #ccc;
+    font-size: 15px;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+    display: none; /* Ẩn mặc định, JS sẽ bật khi có kết quả */
+}
+.selected-comics-list {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-height: 100px;
+    padding: 10px;
+    background-color: #fafafa;
+}
+
+.selected-comics-list .empty-message {
+    color: #888;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
 }

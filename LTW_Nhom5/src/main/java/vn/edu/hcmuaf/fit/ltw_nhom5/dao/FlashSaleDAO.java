@@ -23,7 +23,20 @@ public class FlashSaleDAO extends ADao{
     }
 
 
+    public int insert(FlashSale flashSale) {
+        String sql = """
+            INSERT INTO FlashSale (name, discount_percent, start_time, end_time, status)
+            VALUES (:name, :discountPercent, :startTime, :endTime, 'scheduled')
+        """;
 
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bindBean(flashSale)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(int.class)
+                        .one()
+        );
+    }
 
 
 

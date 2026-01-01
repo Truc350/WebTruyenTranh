@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script>
+        const contextPath = "${pageContext.request.contextPath}";
+    </script>
+    <script src="${pageContext.request.contextPath}/js/flashSaleMan.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -177,68 +182,45 @@
     <div class="modal-flashsale">
         <h3>Tạo Flash Sale</h3>
 
-        <form id="addFlashSaleForm" action="${pageContext.request.contextPath}/search" method="get">
+        <form id="addFlashSaleForm">
             <div class="form-row">
                 <div>
                     <label>Tên Flash Sale:</label>
-                    <input type="text" placeholder="nhập tên Flash Sale">
+                    <input type="text" name="flashSaleName" placeholder="Nhập tên Flash Sale" required>
                 </div>
 
                 <div>
                     <label>Giờ bắt đầu:</label>
-                    <input type="datetime-local">
+                    <input type="datetime-local" name="startTime" required>
                 </div>
 
                 <div>
                     <label>Giờ kết thúc:</label>
-                    <input type="datetime-local">
+                    <input type="datetime-local" name="endTime" required>
                 </div>
             </div>
 
             <h4>Áp dụng cho truyện:</h4>
-            <div class="category-select-list">
 
-                    <input type="text"
-                           id="searchInput"
-                           name="keyword"
-                           placeholder="Tìm truyện..."
-                           class="search-input"
-                           autocomplete="off"
-                           value="${param.keyword != null ? param.keyword : ''}"
-                           style="width: 500px"
-                    >
-                    <button type="submit" class="search-button">
-                        <i class="fas fa-magnifying-glass"></i>
-                    </button>
+            <!-- tìm kiếm truyện + hiển thị kết quả ở dưới -->
+            <div class="comic-search-container">
+                <input type="text" id="comicSearchInput" placeholder="Tìm truyện theo tên truyện muốn Flash Sale"
+                       class="search-input" autocomplete="off">
 
+                <div id="searchResults" class="search-results">
+                    <!-- result ở đây bằng js -->
+                </div>
             </div>
-            <h4>Chọn sản phẩm áp dụng:</h4>
 
-            <div class="product-select-list">
-
-
-                <label>
-                    <input type="checkbox">
-                    Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama
-                    <input class="percent-input" type="number" min="1" max="90" placeholder="Giảm %">
-                </label>
-
-                <label>
-                    <input type="checkbox">
-                    One Piece – Tập 100 – Eiichiro Oda
-                    <input class="percent-input" type="number" min="1" max="90" placeholder="Giảm %">
-                </label>
-                <label>
-                    <input type="checkbox">
-                    One Piece – Tập 100 – Eiichiro Oda
-                    <input class="percent-input" type="number" min="1" max="90" placeholder="Giảm %">
-                </label>
-
+            <!-- Danh sách các truyện hoặc không có flash sale-->
+            <div class="selected-comics-list" id="selectedProductList">
+                <p class="empty-message"> Chưa có truyện nào được chọn. Hãy tìm và thêm truyện ở trên. </p>
             </div>
+
 
             <div class="flashsale-buttons">
                 <button type="button" class="cancel-btn" id="closeAddFlashSale">Hủy</button>
-                <button type="submit" class="save-btn">Tạo Flash Sale</button>
+                <button type="button" class="save-btn" id="createFlashSaleBtn">Tạo Flash Sale</button>
             </div>
         </form>
     </div>
@@ -359,60 +341,6 @@
     </div>
 </div>
 
-
-<script>
-    document.getElementById("openAddPopup").onclick = () => {
-        document.getElementById("addFlashSaleModal").style.display = "flex";
-    }
-    document.getElementById("closeAddFlashSale").onclick = () => {
-        document.getElementById("addFlashSaleModal").style.display = "none";
-    }
-
-    document.querySelectorAll(".openEditFlashSale").forEach(btn => {
-        btn.onclick = () => {
-            document.getElementById("editFlashSaleModal").style.display = "flex";
-        };
-    });
-
-    document.getElementById("closeEditFlashSale").onclick = () => {
-        document.getElementById("editFlashSaleModal").style.display = "none";
-    }
-
-    document.querySelectorAll(".btn-view").forEach(btn => {
-        btn.onclick = () => {
-            document.getElementById("viewFlashSaleModal").style.display = "flex";
-        };
-    });
-
-    document.getElementById("closeViewFlashSale").onclick = () => {
-        document.getElementById("viewFlashSaleModal").style.display = "none";
-    }
-
-    document.querySelectorAll(".btn-delete").forEach(btn => {
-        btn.onclick = () => {
-            document.getElementById("deleteFlashSaleModal").style.display = "flex";
-        };
-    });
-
-    document.getElementById("closeDeleteFlashSale").onclick = () => {
-        document.getElementById("deleteFlashSaleModal").style.display = "none";
-    };
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".sidebar li a");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-
-            if (linkPage === current) {
-                link.classList.add("active");
-            }
-        });
-    });
-</script>
 
 </body>
 </html>
