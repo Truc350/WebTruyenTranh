@@ -13,6 +13,8 @@ public class ComicDAO extends ADao {
 
     public List<Comic> searchCandidate(String keyword) {
 
+        System.out.println("=== DEBUG searchCandidate ===");
+        System.out.println("Input keyword: " + keyword);
         String normalized = TextUtils.normalize(keyword.toLowerCase());
         String number = keyword.replaceAll("\\D+", "");
 
@@ -32,6 +34,8 @@ public class ComicDAO extends ADao {
                                 .list()
                 )
         );
+
+        System.out.println("✅ Total comics from DB: " + allComics.size());
 
         // ===== TÁCH TỪ =====
         String[] words = normalized.split("\\s+");
@@ -83,6 +87,9 @@ public class ComicDAO extends ADao {
 
             if (result.size() >= 100) break;
         }
+
+        System.out.println("✅ After filter: " + result.size());
+        System.out.println("===========================\n");
 
         return result;
     }
@@ -403,7 +410,19 @@ public class ComicDAO extends ADao {
      * Lấy thông tin chi tiết truyện theo ID
      */
     public Comic getComicById(int id) {
-        String sql = "SELECT * FROM Comics WHERE id = :id AND is_deleted = 0";
+        String sql = """
+                    SELECT
+                        id,
+                        name_comics,
+                        description,
+                        author,
+                        publisher,
+                        price,
+                        thumbnail_url
+                    FROM Comics
+                    WHERE id = :id
+                """;
+
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -419,10 +438,10 @@ public class ComicDAO extends ADao {
      */
     public List<ComicImage> getComicImages(int comicId) {
         String sql = """
-            SELECT * FROM Comic_Images 
-            WHERE comic_id = :comicId 
-            ORDER BY sort_order ASC
-            """;
+                SELECT * FROM Comic_Images 
+                WHERE comic_id = :comicId 
+                ORDER BY sort_order ASC
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -435,61 +454,103 @@ public class ComicDAO extends ADao {
     /**
      * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
      */
-    public List<Comic> getRelatedComics(int comicId, int limit) {
-        String inforSql = """
-            SELECT series_id, volume
-            FROM Comics
-            WHERE id = :comicId
-            """;
+    public List<Comic> getRelatedComics(int comicId) {
+
+        final int LIMIT = 9;
 
         Comic current = jdbi.withHandle(h ->
-                h.createQuery(inforSql)
+                h.createQuery("""
+            SELECT id, series_id, volume, category_id
+            FROM Comics
+            WHERE id = :comicId
+        """)
                         .bind("comicId", comicId)
                         .mapToBean(Comic.class)
                         .one()
         );
 
-        Integer seriesId = current.getSeriesId();
-        Integer currentVolume = current.getVolume();
+        List<Comic> result = new ArrayList<>();
 
-        // 2️⃣ Query truyện liên quan
-        String sql = """
-        SELECT DISTINCT c.*
-        FROM Comics c
-        WHERE c.id != :comicId
-          AND c.is_deleted = 0
-          AND c.status = 'available'
-          AND (
-              (
-                  c.series_id = :seriesId
-                  AND c.volume IS NOT NULL
-              )
-              OR c.category_id = (
-                  SELECT category_id FROM Comics WHERE id = :comicId
-              )
-          )
-        ORDER BY
-            CASE
-                WHEN c.series_id = :seriesId AND c.volume > :currentVolume THEN 0
-                WHEN c.series_id = :seriesId AND c.volume < :currentVolume THEN 1
-                ELSE 2
-            END,
-            CASE
-                WHEN c.series_id = :seriesId THEN c.volume
-                ELSE c.created_at
-            END
-        LIMIT :limit
-        """;
+        // 1️⃣ Cùng series
+        if (current.getSeriesId() != null && current.getVolume() != null) {
+            result.addAll(jdbi.withHandle(h ->
+                    h.createQuery("""
+                SELECT *
+                FROM Comics
+                WHERE series_id = :seriesId
+                  AND volume > :volume
+                  AND id != :comicId
+                  AND is_deleted = 0
+                  AND status = 'available'
+                ORDER BY volume ASC
+                LIMIT 9
+            """)
+                            .bind("seriesId", current.getSeriesId())
+                            .bind("volume", current.getVolume())
+                            .bind("comicId", comicId)
+                            .mapToBean(Comic.class)
+                            .list()
+            ));
+        }
 
-        return jdbi.withHandle(h ->
-                h.createQuery(sql)
-                        .bind("comicId", comicId)
-                        .bind("seriesId", seriesId)
-                        .bind("currentVolume", currentVolume != null ? currentVolume : -1)
-                        .bind("limit", limit)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
+        // 2️⃣ Build Excluded IDs (LUÔN CÓ ÍT NHẤT 1 PHẦN TỬ)
+        List<Integer> excludedIds = new ArrayList<>();
+        excludedIds.add(comicId); // ← Luôn có ít nhất comicId
+        result.forEach(c -> excludedIds.add(c.getId()));
+
+        // 3️⃣ Cùng thể loại (CHECK SIZE TRƯỚC KHI QUERY)
+        if (result.size() < LIMIT) {
+            int need = LIMIT - result.size();
+
+            result.addAll(jdbi.withHandle(h ->
+                    h.createQuery("""
+                SELECT *
+                FROM Comics
+                WHERE category_id = :categoryId
+                  AND id NOT IN (<excludedIds>)
+                  AND is_deleted = 0
+                  AND status = 'available'
+                ORDER BY created_at DESC
+                LIMIT :limit
+            """)
+                            .bind("categoryId", current.getCategoryId())
+                            .bind("limit", need)
+                            .bindList("excludedIds", excludedIds)
+                            .mapToBean(Comic.class)
+                            .list()
+            ));
+        }
+
+        // UPDATE excludedIds sau mỗi lần thêm
+        List<Integer> finalExcludedIds = new ArrayList<>();
+        finalExcludedIds.add(comicId);
+        result.forEach(c -> finalExcludedIds.add(c.getId()));
+
+        // 4️⃣ Random (NẾU VẪN CHƯA ĐỦ)
+        if (result.size() < LIMIT) {
+            int need = LIMIT - result.size();
+
+            result.addAll(jdbi.withHandle(h ->
+                    h.createQuery("""
+                SELECT *
+                FROM Comics
+                WHERE id NOT IN (<excludedIds>)
+                  AND is_deleted = 0
+                  AND status = 'available'
+                ORDER BY RAND()
+                LIMIT :limit
+            """)
+                            .bind("limit", need)
+                            .bindList("excludedIds", finalExcludedIds)
+                            .mapToBean(Comic.class)
+                            .list()
+            ));
+        }
+
+        // 5️⃣ CẮT CỨNG 9
+        return result.size() > LIMIT
+                ? result.subList(0, LIMIT)
+                : result;
     }
 
     /**
@@ -497,13 +558,13 @@ public class ComicDAO extends ADao {
      */
     public List<Review> getComicReviews(int comicId) {
         String sql = """
-        SELECT r.id, r.comic_id, r.user_id, r.rating, r.comment, r.created_at,
-               u.username 
-        FROM Reviews r
-        JOIN Users u ON r.user_id = u.id
-        WHERE r.comic_id = :comicId
-        ORDER BY r.created_at DESC
-        """;
+                SELECT r.id, r.comic_id, r.user_id, r.rating, r.comment, r.created_at,
+                       u.username 
+                FROM Reviews r
+                JOIN Users u ON r.user_id = u.id
+                WHERE r.comic_id = :comicId
+                ORDER BY r.created_at DESC
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -512,15 +573,16 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
+
     /**
      * Tính điểm đánh giá trung bình
      */
     public double getAverageRating(int comicId) {
         String sql = """
-            SELECT COALESCE(AVG(rating), 0) as avg_rating 
-            FROM Reviews 
-            WHERE comic_id = :comicId
-            """;
+                SELECT COALESCE(AVG(rating), 0) as avg_rating 
+                FROM Reviews 
+                WHERE comic_id = :comicId
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)

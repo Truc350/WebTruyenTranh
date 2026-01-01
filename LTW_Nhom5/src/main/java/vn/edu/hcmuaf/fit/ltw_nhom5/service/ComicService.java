@@ -139,8 +139,8 @@ public class ComicService {
     /**
      * Lấy danh sách truyện tương tự
      */
-    public List<Comic> getRelatedComics(int comicId, int limit) {
-        return comicDAO.getRelatedComics(comicId, limit);
+    public List<Comic> getRelatedComics(int comicId) {
+        return comicDAO.getRelatedComics(comicId);
     }
 
     /**
@@ -181,5 +181,10 @@ public class ComicService {
 
     public Comic getComicById(int comicId) {
         return comicDAO.getComicById(comicId);
+    }
+
+    public String getSeriesName(Integer seriesId) {
+        if (seriesId == null) return null;
+        return seriesDAO.getSeriesNameById(seriesId);
     }
 }

@@ -11,6 +11,8 @@ public class Comic {
     private String nameComics;
     private String author;
     private String publisher;
+
+    @ColumnName("description")
     private String description;
     private double price;
 
