@@ -12,6 +12,18 @@ public class FlashSale {
     private String status;
     private LocalDateTime createdAt;
 
+    public FlashSale() {}
+
+    public FlashSale(String name, Double discountPercent, LocalDateTime startTime, LocalDateTime endTime) {
+        this.name = name;
+        this.discountPercent = discountPercent;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = "scheduled";
+    }
+
+
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

@@ -18,7 +18,6 @@
         <div class="banner-header">
             <img src="../../img/BannerFlashSale.png" alt="">
         </div>
-
     </div>
 
     <div class="flash-banner">
