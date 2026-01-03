@@ -29,22 +29,29 @@
         <div class="cont-left-body">
 
             <div id="img-container" class="img-container">
-                <img id="img" src="${comic.thumbnailUrl}" alt="${comic.nameComics}">
+                <c:choose>
+                    <c:when test="${not empty images and images.size() > 0}">
+                        <img id="img" src="${images[0].imageUrl}" alt="${comic.nameComics}">
+                    </c:when>
+                    <c:otherwise>
+                        <img id="img" src="${comic.thumbnailUrl}" alt="${comic.nameComics}">
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- popup cái ảnh dưới -->
             <c:forEach var="image" items="${images}" varStatus="status">
-                <div id="img-popup-${status.index}" class="img-container" style="display: none;">
-                    <img class="img-small-popup" src="${image.imageUrl}" alt="${comic.nameComics}">
-                </div>
+                <c:if test="${status.index > 0}">
+                    <div id="img-container-popup${status.index}" class="img-container" style="display: none;">
+                        <img class="img-small-popup" src="${image.imageUrl}" alt="${comic.nameComics}">
+                    </div>
+                </c:if>
             </c:forEach>
 
+
             <div class="warehouse-img">
-                <!-- Thêm ảnh thumbnail đầu tiên -->
-                <img class="img-small" data-img-index="-1" src="${comic.thumbnailUrl}" alt="${comic.nameComics}">
-                <!-- Các ảnh còn lại từ images -->
                 <c:forEach var="image" items="${images}" varStatus="status">
-                    <img class="img-small" data-img-index="${status.index}"
+                    <img id="img-small${status.index + 1}" class="img-small"
                          src="${image.imageUrl}" alt="">
                 </c:forEach>
             </div>
@@ -54,7 +61,7 @@
                 <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                 <button class="btn buy-now">Mua ngay</button>
 
-                <label class="heart-toggle">
+                <label class="heart-toggle" data-comic-id = "${comic.id}">
                     <input type="checkbox" hidden>
                     <i class="fa-regular fa-heart"></i>
                     <i class="fa-solid fa-heart"></i>
@@ -134,23 +141,15 @@
                 </div>
             </div>
 
-            <c:if test="${not empty seriesName}">
-                <div style="display: flex; align-items: center; gap: 8px; font-family: sans-serif;">
-                    <div style="background-color: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
-                        Bộ
-                    </div>
-                    <div style="font-size: 18px; font-weight: bold;">
-                            ${seriesName}
-                    </div>
+            <div style="display: flex; align-items: center; gap: 8px; font-family: sans-serif;">
+                <div style="background-color: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                    Bộ
                 </div>
-            </c:if>
+                <div style="font-size: 18px; font-weight: bold;">
+                    Thám tử lừng danh Connan
+                </div>
+            </div>
 
-            <c:if test="${not empty comic.description}">
-                <div class="comic-description">
-                    <h3>Mô tả</h3>
-                    <p>${comic.description}</p>
-                </div>
-            </c:if>
         </div>
 
 
@@ -165,7 +164,7 @@
                                 <h3>${relatedComic.nameComics}</h3>
                                 <fmt:formatNumber value="${relatedComic.discountPrice}" type="number"
                                                   groupingUsed="true" var="price"/>
-                                <p class="price">${price} đ</p>
+                                <p class="price">₫${price}</p>
                                 <p class="sold">Đã bán: <strong>${relatedComic.totalSold}</strong></p>
                             </a>
                         </div>
@@ -326,6 +325,82 @@
     </div>
 
     <div id="reviewed-person" class="reviewed-person">
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Hưng Đoàn</div>--%>
+        <%--                <div class="review-date">19/01/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để--%>
+        <%--                    đọc--%>
+        <%--                    thử, cuốn như bánh cuốn luôn ý.--%>
+        <%--                    Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (19)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Bé heo</div>--%>
+        <%--                <div class="review-date">19/08/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất--%>
+        <%--                    hài--%>
+        <%--                    lòng với lần mua này!--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i id="heart" class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (9)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+
+        <%--        <div class="review-item">--%>
+        <%--            <div class="review-left">--%>
+        <%--                <div class="avatar">HĐz</div>--%>
+        <%--                <div class="review-date">Bé Gà</div>--%>
+        <%--                <div class="review-date">19/08/2020</div>--%>
+        <%--            </div>--%>
+
+        <%--            <div class="review-right">--%>
+        <%--                <div class="review-stars">★★★★★</div>--%>
+
+        <%--                <p class="review-text">--%>
+        <%--                    Sách này quá tuyệt vời! Nội dung hấp dẫn, nhân vật được phát triển tốt. Chất lượng in ấn rất--%>
+        <%--                    đẹp,--%>
+        <%--                    bìa cứng chắc chắn. Giao hàng nhanh chóng và đóng gói cẩn thận.--%>
+        <%--                    Tôi rất hài lòng với mua hàng lần này. Khuyến cáo mọi người nên mua!--%>
+        <%--                </p>--%>
+
+        <%--                <div class="review-actions">--%>
+        <%--                    <i id="heart" class="fa-regular fa-heart"></i>--%>
+        <%--                    <span class="action">Thích (4)</span>--%>
+        <%--                    <i class="fa-solid fa-reply"></i>--%>
+        <%--                    <span class="action"> Trả lời</span>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
         <c:choose>
             <c:when test="${empty reviews}">
                 <p>Chưa có đánh giá nào.</p>
@@ -709,31 +784,20 @@
     const mainImg = document.getElementById("img");
     const imgSmalls = document.querySelectorAll(".img-small");
 
-    imgSmalls.forEach((imgSmall) => {
+    imgSmalls.forEach((imgSmall, index) => {
         imgSmall.addEventListener("click", () => {
-            const imgIndex = imgSmall.getAttribute("data-img-index");
-            console.log("Clicked img-index:", imgIndex);
-            const newSrc = imgSmall.getAttribute("src");
-            mainImg.src = newSrc;
-
-            console.log("Changed to:", newSrc);
-
-            // Ẩn tất cả container
+            // Ẩn tất cả popup
             document.querySelectorAll(".img-container").forEach(container => {
                 container.style.display = "none";
             });
 
-            if (imgIndex === "-1") {
-                const mainContainer = document.getElementById("img-container");
-                if (mainContainer) {
-                    mainContainer.style.display = "block";
-                    mainContainer.style.visibility = "visible"; // Thêm dòng này
-                }
+            // Hiện ảnh được click
+            if (index === 0) {
+                document.getElementById("img-container").style.display = "block";
             } else {
-                const mainContainer = document.getElementById("img-container");
-                if (mainContainer) {
-                    mainContainer.style.display = "block";
-                    mainContainer.style.visibility = "visible"; // Thêm dòng này
+                const popup = document.getElementById(`img-container-popup${index}`);
+                if (popup) {
+                    popup.style.display = "block";
                 }
             }
         });
@@ -790,40 +854,259 @@
     }
 
 
-    //cái này review chuyển đổi
-    document.querySelectorAll(".review-tabs .tab").forEach(tab => {
-        tab.addEventListener("click", function () {
-            // bỏ active ở tất cả tab
-            document.querySelectorAll(".review-tabs .tab").forEach(t => t.classList.remove("active"));
-            // thêm active cho tab được click
-            this.classList.add("active");
+        //cái này review chuyển đổi
+        document.querySelectorAll(".review-tabs .tab").forEach(tab => {
+            tab.addEventListener("click", function () {
+                // bỏ active ở tất cả tab
+                document.querySelectorAll(".review-tabs .tab").forEach(t => t.classList.remove("active"));
+                // thêm active cho tab được click
+                this.classList.add("active");
+            });
+        });
+
+
+        //cái này reviewed
+        const tab2 = document.getElementById("tab2");
+        if (tab2) {
+            tab2.addEventListener("click", function (event) {
+                event.preventDefault();
+                document.querySelector(".reviewed-person").style.display = "none";
+                document.querySelector(".reviewed-person-popup").style.display = "block";
+            });
+        }
+        const tab1 = document.getElementById("tab1");
+        if (tab1) {
+            tab1.addEventListener("click", function (event) {
+                event.preventDefault();
+                document.querySelector(".reviewed-person").style.display = "block";
+                document.querySelector(".reviewed-person-popup").style.display = "none";
+            });
+        }
+
+        const moreBtn = document.getElementById("more-btn-popup-slider");
+        if (moreBtn) {
+            moreBtn.addEventListener("click", function () {
+                document.querySelector("#product-slider-popup").style.display = "block";
+            });
+        }
+</script>
+
+
+
+<%--<script>--%>
+<%--    document.addEventListener('DOMContentLoaded', function () {--%>
+<%--        const heartCheckbox = document.querySelector('.heart-toggle input[type="checkbox"]');--%>
+<%--        if (!heartCheckbox) return;--%>
+
+<%--        // Lấy comicId từ URL: /comic-detail?id=15 → lấy 'id'--%>
+<%--        const urlParams = new URLSearchParams(window.location.search);--%>
+<%--        const comicId = urlParams.get('id'); // nếu URL dùng ?comicId= thì đổi thành get('comicId')--%>
+<%--        if (!comicId) {--%>
+<%--            console.error('Không tìm thấy ID truyện');--%>
+<%--            return;--%>
+<%--        }--%>
+
+<%--        // Hàm cập nhật trạng thái trái tim--%>
+<%--        function setHeartChecked(checked) {--%>
+<%--            heartCheckbox.checked = checked;--%>
+<%--        }--%>
+
+<%--        // Kiểm tra trạng thái yêu thích khi load trang (nếu đã login)--%>
+<%--        fetch('${pageContext.request.contextPath}/wishlist?action=check&comic_id=' + comicId, {--%>
+<%--            credentials: 'include'--%>
+<%--        })--%>
+<%--            .then(res => res.json())--%>
+<%--            .then(data => setHeartChecked(data.inWishlist || false))--%>
+<%--            .catch(() => setHeartChecked(false));--%>
+
+<%--        // Khi click trái tim--%>
+<%--        heartCheckbox.addEventListener('change', function () {--%>
+<%--            const action = this.checked ? 'add' : 'remove';--%>
+
+<%--            fetch('${pageContext.request.contextPath}/wishlist', {--%>
+<%--                method: 'POST',--%>
+<%--                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },--%>
+<%--                credentials: 'include',--%>
+<%--                body: 'action=' + action + '&comic_id=' + comicId--%>
+<%--            })--%>
+<%--                .then(res => res.json())--%>
+<%--                .then(data => {--%>
+<%--                    if (!data.success) {--%>
+<%--                        alert(data.message);--%>
+<%--                        this.checked = !this.checked; // trả về trạng thái cũ nếu lỗi--%>
+<%--                    } else {--%>
+<%--                        // Có thể thêm toast nhẹ thay alert nếu muốn đẹp hơn--%>
+<%--                        // alert(data.message);--%>
+<%--                    }--%>
+<%--                })--%>
+<%--                .catch(err => {--%>
+<%--                    console.error(err);--%>
+<%--                    alert('Lỗi kết nối server');--%>
+<%--                    this.checked = !this.checked;--%>
+<%--                });--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const heartLabel = document.querySelector('.heart-toggle');
+        const checkbox = heartLabel.querySelector('input[type="checkbox"]');
+        const comicId = ${comic.id}; // Lấy ID từ JSP
+
+        if (!heartLabel) return;
+
+        // 1. Load trạng thái yêu thích khi trang được mở
+        fetch('${pageContext.request.contextPath}/WishlistServlet?comic_id=' + comicId, {
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(data => {
+                checkbox.checked = data.inWishlist;
+            })
+            .catch(() => {
+                checkbox.checked = false;
+            });
+
+        // 2. Khi click vào trái tim
+        heartLabel.addEventListener('click', function(e) {
+            // Ngăn click liên tục
+            if (heartLabel.classList.contains('loading')) return;
+            heartLabel.classList.add('loading');
+
+            const willBeChecked = !checkbox.checked;
+            const action = willBeChecked ? 'add' : 'remove';
+
+            fetch('${pageContext.request.contextPath}/WishlistServlet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                credentials: 'include',
+                body: 'action=' + action + '&comic_id=' + comicId
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        checkbox.checked = willBeChecked;
+                        alert(data.message);
+
+                        // Cập nhật số lượng yêu thích trên header (nếu có phần hiển thị)
+                        const wishCountEl = document.querySelector('.wishlist-count'); // ví dụ class trên header
+                        if (wishCountEl) wishCountEl.textContent = data.count;
+                    } else {
+                        alert(data.message);
+                        // Không thay đổi trạng thái nếu lỗi
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Lỗi kết nối, vui lòng thử lại');
+                })
+                .finally(() => {
+                    heartLabel.classList.remove('loading');
+                });
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const heartLabel = document.querySelector('.heart-toggle');
+        const checkbox = heartLabel ? heartLabel.querySelector('input[type="checkbox"]') : null;
+
+        if (!heartLabel || !checkbox) {
+            console.error('Không tìm thấy phần tử wishlist');
+            return;
+        }
+
+        const comicId = heartLabel.getAttribute('data-comic-id');
+
+        if (!comicId) {
+            console.error('Không tìm thấy comic ID');
+            return;
+        }
+
+        // Kiểm tra trạng thái yêu thích khi load trang
+        fetch('${pageContext.request.contextPath}/WishlistServlet?comic_id=' + comicId, {
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    checkbox.checked = data.inWishlist;
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi kiểm tra wishlist:', err);
+            });
+
+        // Xử lý khi click vào trái tim
+        heartLabel.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            if (heartLabel.classList.contains('loading')) {
+                return;
+            }
+
+            heartLabel.classList.add('loading');
+
+            const willBeChecked = !checkbox.checked;
+            const action = willBeChecked ? 'add' : 'remove';
+
+            fetch('${pageContext.request.contextPath}/WishlistServlet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                credentials: 'include',
+                body: 'action=' + action + '&comic_id=' + comicId
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        checkbox.checked = willBeChecked;
+                        showToast(data.message);
+                        updateWishlistCount(data.count);
+                    } else {
+                        if (data.message.includes('đăng nhập')) {
+                            if (confirm(data.message + '. Chuyển đến trang đăng nhập?')) {
+                                window.location.href = '${pageContext.request.contextPath}/login';
+                            }
+                        } else {
+                            showToast(data.message, 'error');
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                    showToast('Lỗi kết nối, vui lòng thử lại', 'error');
+                })
+                .finally(() => {
+                    heartLabel.classList.remove('loading');
+                });
         });
     });
 
+    function showToast(message, type = 'success') {
+        const oldToast = document.querySelector('.wishlist-toast');
+        if (oldToast) oldToast.remove();
 
-    //cái này reviewed
-    const tab2 = document.getElementById("tab2");
-    if (tab2) {
-        tab2.addEventListener("click", function (event) {
-            event.preventDefault();
-            document.querySelector(".reviewed-person").style.display = "none";
-            document.querySelector(".reviewed-person-popup").style.display = "block";
-        });
-    }
-    const tab1 = document.getElementById("tab1");
-    if (tab1) {
-        tab1.addEventListener("click", function (event) {
-            event.preventDefault();
-            document.querySelector(".reviewed-person").style.display = "block";
-            document.querySelector(".reviewed-person-popup").style.display = "none";
-        });
+        const toast = document.createElement('div');
+        toast.className = 'wishlist-toast ' + type;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
-    const moreBtn = document.getElementById("more-btn-popup-slider");
-    if (moreBtn) {
-        moreBtn.addEventListener("click", function () {
-            document.querySelector("#product-slider-popup").style.display = "block";
-        });
+    function updateWishlistCount(count) {
+        const countElement = document.querySelector('.wishlist-count');
+        if (countElement) {
+            countElement.textContent = count;
+            countElement.classList.add('bounce');
+            setTimeout(() => countElement.classList.remove('bounce'), 500);
+        }
     }
 
 
@@ -850,6 +1133,13 @@
     });
 
 </script>
+
+<style>
+    .heart-toggle.loading {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+</style>
 
 
 </body>
