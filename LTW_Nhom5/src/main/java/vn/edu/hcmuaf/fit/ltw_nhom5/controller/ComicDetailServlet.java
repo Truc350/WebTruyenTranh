@@ -31,7 +31,6 @@ public class ComicDetailServlet extends HttpServlet {
         try {
             // Lấy ID từ parameter
             String idParam = request.getParameter("id");
-
             if (idParam == null || idParam.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
