@@ -128,9 +128,9 @@
             <div class="voucherbutton">
                 <p>Số lượng: </p>
                 <div class="quantity-control">
-                    <button><i class="fas fa-minus" id="btn-vol"></i></button>
-                    <span>1</span>
-                    <button><i class="fas fa-plus" id="btn-vol"></i></button>
+                    <button id="btn-minus"><i class="fas fa-minus" id="btn-vol"></i></button>
+                    <input type="number" id="quantity" value="1" min="1" />
+                    <button id="btn-plus"><i class="fas fa-plus" id="btn-vol"></i></button>
                 </div>
             </div>
 
@@ -825,7 +825,32 @@
             document.querySelector("#product-slider-popup").style.display = "block";
         });
     }
+
+
+    // cái này tăng giảm số lượng
+        const minusBtn = document.getElementById("btn-minus");
+        const plusBtn = document.getElementById("btn-plus");
+        const quantityInput = document.getElementById("quantity");
+
+        plusBtn.addEventListener("click", () => {
+        quantityInput.value = parseInt(quantityInput.value) + 1;
+    });
+
+        minusBtn.addEventListener("click", () => {
+        if (parseInt(quantityInput.value) > 1) {
+        quantityInput.value = parseInt(quantityInput.value) - 1;
+    }
+    });
+
+        // Nếu muốn kiểm soát khi người dùng nhập tay
+        quantityInput.addEventListener("input", () => {
+        if (quantityInput.value < 1) {
+        quantityInput.value = 1;
+    }
+    });
+
 </script>
+
 
 </body>
 

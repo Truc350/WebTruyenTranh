@@ -142,7 +142,7 @@
 }
 
 .actions-btn .heart-toggle p{
-  font-weight: 100px;
+  font-weight: 100;
   position: relative;
   left: -5px;
 
@@ -282,7 +282,7 @@
 
 .voucherbutton .quantity-control {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 .quantity-control button {
@@ -477,3 +477,22 @@ a{
   margin: 0;
   white-space: pre-line;   /* giữ xuống dòng */
 }
+
+/*cái này sửa sau khi thêm giảm số lượng*/
+#quantity {
+    width: 40px;
+    height: 28px;
+    text-align: left;
+    font-size: 14px;
+    padding: 2px 2px 2px 6px;
+    border: none;
+    outline: none;
+    background-color: #f9f9f9;
+}
+/* Áp dụng cho Chrome, Safari, Edge */
+#quantity::-webkit-inner-spin-button,
+#quantity::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
