@@ -61,14 +61,18 @@
                                 <input type="checkbox" class="form-check-input" id="remember" name="remember" checked>
                                 <label class="form-check-label" for="remember">Nhớ mật khẩu</label>
                             </div>
-                            <span class="ml-auto"><a href="${pageContext.request.contextPath}/fontend/public/ForgotPass.jsp" class="forgot-pass">Quên mật khẩu</a></span>
+                            <span class="ml-auto"><a
+                                    href="${pageContext.request.contextPath}/fontend/public/ForgotPass.jsp"
+                                    class="forgot-pass">Quên mật khẩu</a></span>
                         </div>
 
                         <input type="submit" value="Đăng nhập" class="btn btn-block btn-primary">
                     </form>
 
                     <div>
-                        <span class="signup-tran"><a href="${pageContext.request.contextPath}/fontend/public/Register.jsp" class="forgot-pass">Đăng kí tài khoản</a></span>
+                        <span class="signup-tran"><a
+                                href="${pageContext.request.contextPath}/fontend/public/Register.jsp"
+                                class="forgot-pass">Đăng kí tài khoản</a></span>
                     </div>
 
 
@@ -79,7 +83,13 @@
                             <a href="#" class="btn btn-danger mr-2 social-btn">
                                 <i class="fab fa-google mr-1"></i> Google
                             </a>
-                            <a href="#" class="btn btn-primary social-btn">
+                            <a href="https://www.facebook.com/v20.0/dialog/oauth?
+                                 client_id=<%= System.getenv("FACEBOOK_APP_ID") %>
+                              &redirect_uri=${pageContext.request.contextPath}/login-facebook-callback
+                             &scope=email
+                             &response_type=code
+                                &state=xyz123"
+                               class="btn btn-primary social-btn">
                                 <i class="fab fa-facebook-f mr-1"></i> Facebook
                             </a>
                         </div>
@@ -115,19 +125,18 @@
     // });
 
 
-
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         const togglePassword = document.getElementById("togglePassword");
         const passwordInput = document.getElementById("password");
 
         togglePassword.addEventListener("click", function () {
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-        passwordInput.setAttribute("type", type);
+            const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+            passwordInput.setAttribute("type", type);
 
-        // Đổi icon khi toggle
-        this.querySelector("i").classList.toggle("fa-eye");
-        this.querySelector("i").classList.toggle("fa-eye-slash");
-    });
+            // Đổi icon khi toggle
+            this.querySelector("i").classList.toggle("fa-eye");
+            this.querySelector("i").classList.toggle("fa-eye-slash");
+        });
     });
 
 

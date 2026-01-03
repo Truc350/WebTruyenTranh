@@ -1,4 +1,21 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%--<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>--%>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.User" %>
+<%@ page import="java.util.List" %>
+
+<%
+    WishlistDAO wishlistDAO = new WishlistDAO();
+    User currentUser = (User) session.getAttribute("currentUser");
+
+    List<Comic> wishlistComics = null;
+    int wishlistCount = 0;
+
+    if (currentUser != null) {
+        wishlistComics = wishlistDAO.getWishlistComics(currentUser.getId());
+        wishlistCount = wishlistComics.size();
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +25,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+
 </head>
 <body>
 
@@ -480,88 +499,79 @@
         </div>
     </div>
     <div class="wishlist-container" style="display: none;">
-        <h2>Sản phẩm yêu thích</h2>
+        <h2>Sản phẩm yêu thích (<%= wishlistCount %> sản phẩm)</h2>
 
-        <!-- Danh sách sản phẩm yêu thích -->
-        <div class="wishlist-grid">
-            <!-- Sản phẩm 1 -->
-            <div class="wishlist-item">
-                <img src="https://product.hstatic.net/200000343865/product/thanh-pho-len-day-cot-2_b38b1803c2894d72ba2852cacb606a78_master.jpg"
-                     alt="Doraemon" class="wishlist-img">
-                <div class="wishlist-info">
-                    <h3>Doraemon - Nobita và thành phố dây cót</h3>
-                    <div class="wishlist-price">
-                        <span class="original-price">100.000đ</span>
-                        <span class="discount-price">95.000đ</span>
-                    </div>
-                    <div class="wishlist-actions">
-                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
-                        <button class="remove-wishlist-btn">Xóa</button>
-                    </div>
+        <c:choose>
+            <c:when test="${empty sessionScope.currentUser}">
+                <div style="text-align:center; padding:80px 20px; color:#666;">
+                    <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px;"></i>
+                    <p style="font-size:18px; margin:10px 0;">Vui lòng đăng nhập để xem danh sách yêu thích</p>
+                    <a href="${pageContext.request.contextPath}/login"
+                       style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
+                          text-decoration:none; border-radius:6px; margin-top:20px;">
+                        Đăng nhập ngay
+                    </a>
                 </div>
-            </div>
-
-            <!-- Sản phẩm 2 -->
-            <div class="wishlist-item">
-                <img src="https://salt.tikicdn.com/media/catalog/product/b/i/bia_1-_co_be_ban_diem_1.jpg"
-                     alt="Cô bé bán diêm" class="wishlist-img">
-                <div class="wishlist-info">
-                    <h3>Cô bé bán diêm</h3>
-
-                    <div class="wishlist-price">
-                        <span class="original-price">60.000đ</span>
-                        <span class="discount-price">55.000đ</span>
-                    </div>
-                    <div class="wishlist-actions">
-                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
-                        <button class="remove-wishlist-btn">Xóa</button>
-                    </div>
+            </c:when>
+            <c:when test="${empty wishlistComics || wishlistComics.size() == 0}">
+                <div style="text-align:center; padding:80px 20px; color:#666;">
+                    <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px;"></i>
+                    <p style="font-size:18px; margin:10px 0;">Danh sách yêu thích còn trống</p>
+                    <a href="${pageContext.request.contextPath}/home"
+                       style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
+                          text-decoration:none; border-radius:6px; margin-top:20px;">
+                        Khám phá ngay!
+                    </a>
                 </div>
-            </div>
-
-            <!-- Sản phẩm 3 -->
-            <div class="wishlist-item">
-                <img src="https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/s/h/shin_pink_poster_social.jpg"
-                     alt="Shin cậu bé bút chì" class="wishlist-img">
-                <div class="wishlist-info">
-                    <h3>Shin cậu bé bút chì - Học viện hoa lệ Tenkasu</h3>
-                    <div class="wishlist-price">
-                        <span class="original-price">89.000đ</span>
-                        <span class="discount-price">80.000đ</span>
+            </c:when>
+            <c:otherwise>
+                <div class="wishlist-grid">
+                    <% for (Comic comic : wishlistComics) { %>
+                    <div class="wishlist-item" data-comic-id="<%= comic.getId() %>">
+                        <a href="${pageContext.request.contextPath}/comic-detail?id=<%= comic.getId() %>">
+                            <img src="<%= comic.getThumbnailUrl() %>"
+                                 alt="<%= comic.getNameComics() %>"
+                                 class="wishlist-img">
+                        </a>
+                        <div class="wishlist-info">
+                            <h3><a href="${pageContext.request.contextPath}/comic-detail?id=<%= comic.getId() %>">
+                                <%= comic.getNameComics() %>
+                            </a></h3>
+                            <div class="wishlist-price">
+                                <fmt:formatNumber value="<%= comic.getDiscountPrice() %>"
+                                                  type="number"
+                                                  groupingUsed="true"/> đ
+                                <% if (comic.hasDiscount()) { %>
+                                <span class="original-price">
+                                        <fmt:formatNumber value="<%= comic.getPrice() %>"
+                                                          type="number"
+                                                          groupingUsed="true"/> đ
+                                    </span>
+                                <% } %>
+                            </div>
+                            <% if (comic.getStockQuantity() > 0) { %>
+                            <p class="stock-status available">Còn hàng</p>
+                            <% } else { %>
+                            <p class="stock-status out-of-stock">Hết hàng</p>
+                            <% } %>
+                            <div class="wishlist-actions">
+                                <button class="add-to-cart-btn"
+                                        data-comic-id="<%= comic.getId() %>"
+                                        <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>
+                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                                </button>
+                                <button class="remove-wishlist-btn"
+                                        data-comic-id="<%= comic.getId() %>">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="wishlist-actions">
-                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
-                        <button class="remove-wishlist-btn">Xóa</button>
-                    </div>
+                    <% } %>
                 </div>
-            </div>
-
-            <!-- Sản phẩm 4 -->
-            <div class="wishlist-item">
-                <img src="https://product.hstatic.net/200000287623/product/5cm_5f3b4ebe155b4d6491c244b8623657b5_master.jpg"
-                     alt="5cm/s" class="wishlist-img">
-                <div class="wishlist-info">
-                    <h3>5cm/s</h3>
-                    <div class="wishlist-price">
-                        <span class="original-price">125.000đ</span>
-                        <span class="discount-price">120.000đ</span>
-                    </div>
-                    <div class="wishlist-actions">
-                        <button class="add-to-cart-btn">Thêm vào giỏ</button>
-                        <button class="remove-wishlist-btn">Xóa</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Thông báo nếu không có sản phẩm -->
-        <div class="no-wishlist" style="display: none; text-align: center; padding: 60px 20px; color: #666;">
-            <img src="https://png.pngtree.com/png-clipart/20230418/original/pngtree-heart-empty-line-icon-png-image_9065105.png"
-                 alt="No wishlist" style="width: 120px; height: auto;">
-            <p style="font-weight: 500; color: #555;">Bạn chưa có sản phẩm yêu thích nào</p>
-        </div>
+            </c:otherwise>
+        </c:choose>
     </div>
-
 
     <div class="xu-container" style="display: none">
         <div class="xu-header">
@@ -1292,5 +1302,114 @@
         }
     });
 </script>
+
+
+<script>
+    document.querySelectorAll('.remove-wishlist-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const comicId = this.dataset.comicId;
+            const item = this.closest('.wishlist-item');
+
+            fetch('${pageContext.request.contextPath}/wishlist', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'action=remove&comic_id=' + comicId
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        item.remove();
+                        alert(data.message);
+                        // Cập nhật số lượng
+                        document.querySelector('h2').innerHTML =
+                            `Sản phẩm yêu thích (${data.count} sản phẩm)`;
+                    } else {
+                        alert(data.message);
+                    }
+                });
+        });
+    });
+</script>
+
+
+<script>
+    // Xử lý xóa sản phẩm khỏi wishlist
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-wishlist-btn') ||
+            e.target.closest('.remove-wishlist-btn')) {
+
+            const btn = e.target.classList.contains('remove-wishlist-btn') ?
+                e.target : e.target.closest('.remove-wishlist-btn');
+            const comicId = btn.dataset.comicId;
+            const item = btn.closest('.wishlist-item');
+
+            if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
+                return;
+            }
+
+            // Disable button
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
+
+            fetch('${pageContext.request.contextPath}/WishlistServlet', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                credentials: 'include',
+                body: 'action=remove&comic_id=' + comicId
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hiệu ứng fade out
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+
+                        setTimeout(() => {
+                            item.remove();
+
+                            // Cập nhật số lượng
+                            const countEl = document.querySelector('.wishlist-container h2');
+                            if (countEl) {
+                                countEl.textContent = `Sản phẩm yêu thích (${data.count} sản phẩm)`;
+                            }
+
+                            // Kiểm tra nếu không còn sản phẩm nào
+                            const grid = document.querySelector('.wishlist-grid');
+                            if (grid && grid.children.length === 0) {
+                                location.reload(); // Reload để hiển thị message trống
+                            }
+
+                            showToast(data.message);
+                        }, 300);
+                    } else {
+                        alert(data.message);
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Lỗi kết nối');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                });
+        }
+    });
+
+    // Xử lý thêm vào giỏ hàng
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('add-to-cart-btn') ||
+            e.target.closest('.add-to-cart-btn')) {
+
+            const btn = e.target.classList.contains('add-to-cart-btn') ?
+                e.target : e.target.closest('.add-to-cart-btn');
+            const comicId = btn.dataset.comicId;
+
+            // TODO: Implement thêm vào giỏ hàng
+            alert('Chức năng thêm vào giỏ hàng (Comic ID: ' + comicId + ')');
+        }
+    });
+</script>
+
 </body>
 </html>
