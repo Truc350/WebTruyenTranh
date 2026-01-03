@@ -845,7 +845,7 @@
         // Nếu muốn kiểm soát khi người dùng nhập tay
         quantityInput.addEventListener("input", () => {
         if (quantityInput.value < 1) {
-        quantityInput.value = 1;
+        quantityInput.value = 1;c
     }
     });
 

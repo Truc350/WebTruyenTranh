@@ -14,6 +14,20 @@
 <jsp:include page="/fontend/public/header.jsp"/>
 
 <main>
+    <%
+        String message = (String) request.getAttribute("message");
+        if (message != null) {
+    %>
+    <script>
+        window.onload = function() {
+            alert("<%= message %>");
+        };
+    </script>
+    <%
+        }
+    %>
+
+
     <div class="profile-container">
         <div class="profile-header">
             <div class="avatar">
@@ -40,7 +54,7 @@
     </div>
     <div class="profile-form-container">
         <h2>Hồ sơ cá nhân</h2>
-        <form>
+        <form action="${pageContext.request.contextPath}/updateUser" method="post">
             <div class="form-group">
                 <label for="ho">Họ: *</label>
                 <input type="text" id="ho" name="ho" value="" placeholder="Nhập họ" required>
@@ -51,8 +65,9 @@
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>
-                <input type="tel" id="phone" name="phone" value="" placeholder="Nhập số điện thoại" required>
-                <!--                <button type="button" class="edit-btn">Chỉnh sửa</button>-->
+                <input type="tel" id="phone" name="phone"placeholder="Nhập số điện thoại"
+                        required pattern="[0-9]{10}" maxlength="10" title="nhập lại sdt"/>
+
             </div>
             <div class="form-group">
                 <label for="email">Email: </label>
@@ -106,6 +121,9 @@
             </div>
             <button type="submit" class="save-btn">Lưu thay đổi</button>
         </form>
+
+
+
     </div>
     <div class="change-password-container" style="display: none;">
         <h2>Đổi Mật Khẩu</h2>
