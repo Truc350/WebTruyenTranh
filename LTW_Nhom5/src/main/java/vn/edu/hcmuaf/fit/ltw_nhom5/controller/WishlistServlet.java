@@ -1,26 +1,67 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import org.jdbi.v3.core.Jdbi;
-import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-@WebServlet(name = "WishlistServlet", value = "/WishlistServlet")
+@WebServlet("/WishlistServlet")
 public class WishlistServlet extends HttpServlet {
-    private Jdbi jdbi;
+    private WishlistDAO wishlistDAO;
+    private Gson gson;
 
     @Override
     public void init() throws ServletException {
-        jdbi = JdbiConnector.get();
+        wishlistDAO = new WishlistDAO();
+        gson = new Gson();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        Map<String, Object> result = new HashMap<>();
 
+        // kiểm tra đăng nhập
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        if (currentUser == null) {
+            result.put("success", false);
+            result.put("message", "Vui lòng đăng nhập để có thể thêm sản phẩm vào danh sách yêu thích");
+            result.put("inWishlist", false);
+            out.print(gson.toJson(result));
+            return;
+        }
+        String comicIdStr = request.getParameter("comic_id");
+        if (comicIdStr == null || comicIdStr.isEmpty()) {
+            result.put("success", false);
+            result.put("message", "Thiếu thông tin sản phẩm");
+            out.print(gson.toJson(result));
+            return;
+        }
+        try {
+            int comicId = Integer.parseInt(comicIdStr);
+            boolean inWishlist = wishlistDAO.isInWishlist(currentUser.getId(), comicId);
+
+            result.put("success", true);
+            result.put("inWishlist", inWishlist);
+            result.put("count", wishlistDAO.getWishlistCount(currentUser.getId()));
+
+        } catch (NumberFormatException e) {
+            result.put("success", false);
+            result.put("message", "ID sản phẩm không hợp lệ");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "Lỗi hệ thống: " + e.getMessage());
+        }
+        out.print(gson.toJson(result));
     }
 
     @Override
@@ -28,26 +69,54 @@ public class WishlistServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        Map<String, Object> result = new HashMap<>();
 
-        HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("user_id");
-
-        if (userId == null) {
-            out.print("{\"success\": false, \"message\": \"Vui lòng đăng nhập!\"}");
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        if (currentUser == null) {
+            result.put("success", false);
+            result.put("message", "Vui lòng đăng nhập để có thể thêm sản phẩm vào danh sách yêu thích");
+            out.print(gson.toJson(result));
             return;
         }
-        String action = request.getParameter("action");// add hoặc remove
-        int comicId = Integer.parseInt(request.getParameter("comic_id"));
-        try {
-            if ("add".equals(action)) {
-                // kiểm tra trong wishlist chưa
-                boolean exists = jdbi.withHandle(handle ->
-                        handle.createQuery("SELECT COUNT(*) FROM wishlist WHERE user_id = :userId AND comic_id = :comicId").bind("userId", userId).bind("comicId", comicId).mapTo(Integer.class).one() > 0);
-            }
+        String action = request.getParameter("action");
+        String comicIdStr = request.getParameter("comic_id");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            out.print("{\"success\": false, \"message\": \"Lỗi hệ thống\"}");
+        if (action == null || comicIdStr == null) {
+            result.put("success", false);
+            result.put("message", "Thiếu thông tin");
+            out.print(gson.toJson(result));
+            return;
         }
+        try {
+            int comicId = Integer.parseInt(comicIdStr);
+            boolean success = false;
+            String message = "";
+            switch (action) {
+                case "add":
+                    success = wishlistDAO.addToWishlist(currentUser.getId(), comicId);
+                    message = success ? "Đã thêm vào danh sách yêu thích" : "Sản phẩm đã có trong danh sách yêu thích";
+                    break;
+                case "remove":
+                    success = wishlistDAO.removeFromWishlist(currentUser.getId(), comicId);
+                    message = success ? "Đã xóa khỏi danh sách yêu thích" : "Không tìm thấy sản phẩm trong danh sách";
+                    break;
+                default:
+                    result.put("success", false);
+                    result.put("message", "Hành động không hợp lệ");
+                    out.print(gson.toJson(result));
+                    return;
+            }
+            result.put("success", success);
+            result.put("message", message);
+            result.put("count", wishlistDAO.getWishlistCount(currentUser.getId()));
+        } catch (NumberFormatException e) {
+            result.put("success", false);
+            result.put("message", "ID sản phẩm không hợp lệ");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+        }
+        out.print(gson.toJson(result));
     }
 }
