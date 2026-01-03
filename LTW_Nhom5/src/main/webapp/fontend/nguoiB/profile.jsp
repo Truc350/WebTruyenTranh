@@ -1,25 +1,20 @@
-<%--<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>--%>
+
+
+
+
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.User" %>
 <%@ page import="java.util.List" %>
 
-<%
-    WishlistDAO wishlistDAO = new WishlistDAO();
-    User currentUser = (User) session.getAttribute("currentUser");
 
-    List<Comic> wishlistComics = null;
-    int wishlistCount = 0;
-
-    if (currentUser != null) {
-        wishlistComics = wishlistDAO.getWishlistComics(currentUser.getId());
-        wishlistCount = wishlistComics.size();
-    }
-%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
@@ -27,6 +22,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+    body, html, input, button, select, textarea, h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th {
+    font-family: 'Noto Sans', 'Roboto', Arial, sans-serif !important;
+    }
 </head>
 <body>
 
@@ -498,79 +500,112 @@
             </div>
         </div>
     </div>
-    <div class="wishlist-container" style="display: none;">
-        <h2>Sản phẩm yêu thích (<%= wishlistCount %> sản phẩm)</h2>
 
-        <c:choose>
-            <c:when test="${empty sessionScope.currentUser}">
-                <div style="text-align:center; padding:80px 20px; color:#666;">
-                    <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px;"></i>
-                    <p style="font-size:18px; margin:10px 0;">Vui lòng đăng nhập để xem danh sách yêu thích</p>
-                    <a href="${pageContext.request.contextPath}/login"
-                       style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
-                          text-decoration:none; border-radius:6px; margin-top:20px;">
-                        Đăng nhập ngay
-                    </a>
-                </div>
-            </c:when>
-            <c:when test="${empty wishlistComics || wishlistComics.size() == 0}">
-                <div style="text-align:center; padding:80px 20px; color:#666;">
-                    <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px;"></i>
-                    <p style="font-size:18px; margin:10px 0;">Danh sách yêu thích còn trống</p>
-                    <a href="${pageContext.request.contextPath}/home"
-                       style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
-                          text-decoration:none; border-radius:6px; margin-top:20px;">
-                        Khám phá ngay!
-                    </a>
-                </div>
-            </c:when>
-            <c:otherwise>
-                <div class="wishlist-grid">
-                    <% for (Comic comic : wishlistComics) { %>
-                    <div class="wishlist-item" data-comic-id="<%= comic.getId() %>">
+    <%
+        WishlistDAO wishlistDAO = new WishlistDAO();
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        List<Comic> wishlistComics = null;
+        int wishlistCount = 0;
+
+        if (currentUser != null) {
+            wishlistComics = wishlistDAO.getWishlistComics(currentUser.getId());
+            wishlistCount = wishlistComics != null ? wishlistComics.size() : 0;
+        }
+    %>
+    <div class="wishlist-container" style="display: none;">
+        <h2>Sản phẩm yêu thích (<%= currentUser != null ? wishlistCount : 0 %> sản phẩm)</h2>
+
+        <% if (currentUser == null) { %>
+        <%-- Trường hợp 1: Chưa đăng nhập --%>
+        <div style="text-align:center; padding:80px 20px; color:#666;">
+            <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px; display:block;"></i>
+            <p style="font-size:18px; margin:10px 0; font-weight:500;">Vui lòng đăng nhập để xem danh sách yêu thích</p>
+            <p style="font-size:14px; color:#999; margin:10px 0;">Lưu trữ những truyện yêu thích để không bao giờ bỏ lỡ!</p>
+            <a href="${pageContext.request.contextPath}/login"
+               style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
+                      text-decoration:none; border-radius:6px; margin-top:20px; font-weight:500;
+                      transition: all 0.3s ease;">
+                Đăng nhập ngay
+            </a>
+        </div>
+
+        <% } else if (wishlistComics == null || wishlistComics.isEmpty()) { %>
+        <%-- Trường hợp 2: Đã đăng nhập nhưng chưa có sản phẩm yêu thích --%>
+        <div style="text-align:center; padding:80px 20px; color:#666;">
+            <i class="fa-regular fa-heart" style="font-size:80px; color:#ddd; margin-bottom:20px; display:block;"></i>
+            <p style="font-size:18px; margin:10px 0; font-weight:500;">Danh sách yêu thích còn trống</p>
+            <p style="font-size:14px; color:#999; margin:10px 0;">Hãy thêm những truyện bạn yêu thích vào đây!</p>
+            <a href="${pageContext.request.contextPath}/home"
+               style="display:inline-block; padding:12px 30px; background:#007bff; color:white;
+                      text-decoration:none; border-radius:6px; margin-top:20px; font-weight:500;
+                      transition: all 0.3s ease;">
+                Khám phá ngay!
+            </a>
+        </div>
+
+        <% } else { %>
+        <%-- Trường hợp 3: Có sản phẩm yêu thích --%>
+        <div class="wishlist-grid">
+            <% for (Comic comic : wishlistComics) { %>
+            <div class="wishlist-item" data-comic-id="<%= comic.getId() %>">
+                <a href="${pageContext.request.contextPath}/comic-detail?id=<%= comic.getId() %>"
+                   style="text-decoration: none;">
+                    <img src="<%= comic.getThumbnailUrl() != null ? comic.getThumbnailUrl() : "" %>"
+                         alt="<%= comic.getNameComics() %>"
+                         class="wishlist-img"
+                         onerror="this.src='${pageContext.request.contextPath}/images/default-comic.jpg'">
+                </a>
+                <div class="wishlist-info">
+                    <h3>
                         <a href="${pageContext.request.contextPath}/comic-detail?id=<%= comic.getId() %>">
-                            <img src="<%= comic.getThumbnailUrl() %>"
-                                 alt="<%= comic.getNameComics() %>"
-                                 class="wishlist-img">
+                            <%= comic.getNameComics() %>
                         </a>
-                        <div class="wishlist-info">
-                            <h3><a href="${pageContext.request.contextPath}/comic-detail?id=<%= comic.getId() %>">
-                                <%= comic.getNameComics() %>
-                            </a></h3>
-                            <div class="wishlist-price">
+                    </h3>
+                    <div class="wishlist-price">
+                            <span class="current-price">
                                 <fmt:formatNumber value="<%= comic.getDiscountPrice() %>"
                                                   type="number"
                                                   groupingUsed="true"/> đ
-                                <% if (comic.hasDiscount()) { %>
-                                <span class="original-price">
-                                        <fmt:formatNumber value="<%= comic.getPrice() %>"
-                                                          type="number"
-                                                          groupingUsed="true"/> đ
-                                    </span>
-                                <% } %>
-                            </div>
-                            <% if (comic.getStockQuantity() > 0) { %>
-                            <p class="stock-status available">Còn hàng</p>
-                            <% } else { %>
-                            <p class="stock-status out-of-stock">Hết hàng</p>
-                            <% } %>
-                            <div class="wishlist-actions">
-                                <button class="add-to-cart-btn"
-                                        data-comic-id="<%= comic.getId() %>"
-                                        <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>
-                                    <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
-                                </button>
-                                <button class="remove-wishlist-btn"
-                                        data-comic-id="<%= comic.getId() %>">
-                                    <i class="fas fa-trash"></i> Xóa
-                                </button>
-                            </div>
-                        </div>
+                            </span>
+                        <% if (comic.hasDiscount()) { %>
+                        <span class="original-price">
+                                    <fmt:formatNumber value="<%= comic.getPrice() %>"
+                                                      type="number"
+                                                      groupingUsed="true"/> đ
+                                </span>
+                        <span class="discount-badge">
+                                    -<%= Math.round(comic.getDiscountPercent()) %>%
+                                </span>
+                        <% } %>
                     </div>
+
+                    <% if (comic.getStockQuantity() > 0) { %>
+                    <p class="stock-status available">
+                        <i class="fas fa-check-circle"></i> Còn hàng
+                    </p>
+                    <% } else { %>
+                    <p class="stock-status out-of-stock">
+                        <i class="fas fa-times-circle"></i> Hết hàng
+                    </p>
                     <% } %>
+
+                    <div class="wishlist-actions">
+                        <button class="add-to-cart-btn"
+                                data-comic-id="<%= comic.getId() %>"
+                                <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>
+                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                        </button>
+                        <button class="remove-wishlist-btn"
+                                data-comic-id="<%= comic.getId() %>">
+                            <i class="fas fa-trash-alt"></i> Xóa
+                        </button>
+                    </div>
                 </div>
-            </c:otherwise>
-        </c:choose>
+            </div>
+            <% } %>
+        </div>
+        <% } %>
     </div>
 
     <div class="xu-container" style="display: none">
@@ -1334,7 +1369,7 @@
 
 <script>
     // Xử lý xóa sản phẩm khỏi wishlist
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-wishlist-btn') ||
             e.target.closest('.remove-wishlist-btn')) {
 
@@ -1347,8 +1382,9 @@
                 return;
             }
 
-            // Disable button
+            // Disable button và hiển thị loading
             btn.disabled = true;
+            const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
 
             fetch('${pageContext.request.contextPath}/WishlistServlet', {
@@ -1361,43 +1397,45 @@
                 .then(data => {
                     if (data.success) {
                         // Hiệu ứng fade out
+                        item.style.transition = 'all 0.3s ease';
                         item.style.opacity = '0';
                         item.style.transform = 'scale(0.8)';
 
                         setTimeout(() => {
                             item.remove();
 
-                            // Cập nhật số lượng
-                            const countEl = document.querySelector('.wishlist-container h2');
-                            if (countEl) {
-                                countEl.textContent = `Sản phẩm yêu thích (${data.count} sản phẩm)`;
+                            // Cập nhật số lượng trong tiêu đề
+                            const titleElement = document.querySelector('.wishlist-container h2');
+                            if (titleElement) {
+                                titleElement.textContent = 'Sản phẩm yêu thích (' + data.count + ' sản phẩm)';
                             }
 
-                            // Kiểm tra nếu không còn sản phẩm nào
+                            // Kiểm tra nếu không còn sản phẩm nào thì reload
                             const grid = document.querySelector('.wishlist-grid');
                             if (grid && grid.children.length === 0) {
-                                location.reload(); // Reload để hiển thị message trống
+                                location.reload();
                             }
 
-                            showToast(data.message);
+                            // Hiển thị thông báo
+                            showWishlistToast(data.message, 'success');
                         }, 300);
                     } else {
                         alert(data.message);
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                        btn.innerHTML = originalHTML;
                     }
                 })
                 .catch(err => {
-                    console.error(err);
-                    alert('Lỗi kết nối');
+                    console.error('Lỗi:', err);
+                    alert('Lỗi kết nối, vui lòng thử lại');
                     btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                    btn.innerHTML = originalHTML;
                 });
         }
     });
 
     // Xử lý thêm vào giỏ hàng
-    document.addEventListener('click', function (e) {
+    document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-to-cart-btn') ||
             e.target.closest('.add-to-cart-btn')) {
 
@@ -1406,8 +1444,53 @@
             const comicId = btn.dataset.comicId;
 
             // TODO: Implement thêm vào giỏ hàng
-            alert('Chức năng thêm vào giỏ hàng (Comic ID: ' + comicId + ')');
+            // Tạm thời hiển thị thông báo
+            showWishlistToast('Đang phát triển chức năng thêm vào giỏ hàng...', 'info');
+            console.log('Thêm vào giỏ hàng - Comic ID:', comicId);
         }
+    });
+
+    // Hàm hiển thị toast notification cho wishlist
+    function showWishlistToast(message, type = 'success') {
+        // Xóa toast cũ nếu có
+        const oldToast = document.querySelector('.wishlist-toast');
+        if (oldToast) {
+            oldToast.remove();
+        }
+
+        // Icon theo type
+        const icons = {
+            success: '<i class="fas fa-check-circle"></i>',
+            error: '<i class="fas fa-exclamation-circle"></i>',
+            info: '<i class="fas fa-info-circle"></i>'
+        };
+
+        // Tạo toast
+        const toast = document.createElement('div');
+        toast.className = 'wishlist-toast ' + type;
+        toast.innerHTML = icons[type] + ' ' + message;
+        document.body.appendChild(toast);
+
+        // Hiển thị với animation
+        setTimeout(() => toast.classList.add('show'), 10);
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Thêm hover effect cho links
+    document.querySelectorAll('.wishlist-container a[href*="login"], .wishlist-container a[href*="home"]').forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 4px 12px rgba(0,123,255,0.3)';
+        });
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+        });
     });
 </script>
 
