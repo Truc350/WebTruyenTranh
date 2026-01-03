@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -16,7 +20,7 @@
 </head>
 
 <body>
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <!-- ===================== MAIN CONTENT ===================== -->
 <main class="wrapper">
@@ -28,7 +32,7 @@
         <!-- Chọn tất cả -->
         <div class="select-all">
             <input type="checkbox" class="item-checkbox" id="select-all"/>
-            <label for="select-all">Chọn tất cả (2 sản phẩm)</label>
+            <label for="select-all"> Chọn tất cả (${fn:length(cartItems)} sản phẩm)</label>
             <div class="quantity-header">Số lượng</div>
             <div class="price-header">Thành tiền</div>
         </div>
@@ -36,60 +40,57 @@
         <!-- Scrollable Area -->
         <div class="cart-items-scrollable">
             <div class="cart-items">
-                <!-- Sản phẩm 1 -->
-                <div class="cart-item">
-                    <input type="checkbox" class="item-checkbox"/>
-                    <img src="https://cdn.hstatic.net/products/1000376556/thien_quan_tu_phuc_2_-_bia_1_1__8dd3bc9af4784d79a7451f64899ef0d9_1024x1024.jpg"
-                         alt="Thiên quan từ phúc" class="item-image"/>
-                    <div class="item-info">
-                        <div class="item-title">Thiên quan từ phúc</div>
-                        <div class="item-subtitle">Thiên quan từ phúc</div>
-                        <div class="item-price">86.000 đ
-                            <del>115.000 đ</del>
+                <c:choose>
+                    <c:when test="${empty cartItems}">
+                        <div style="text-align: center; padding: 40px; color: #999;">
+                            <i class="fas fa-shopping-cart" style="font-size: 64px; margin-bottom: 20px;"></i>
+                            <p style="font-size: 18px;">Giỏ hàng của bạn đang trống</p>
+                            <a href="${pageContext.request.contextPath}/"
+                               style="display: inline-block; margin-top: 20px; padding: 10px 30px; background: #e74c3c; color: white; text-decoration: none; border-radius: 5px;">
+                                Tiếp tục mua sắm
+                            </a>
                         </div>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="text" value="1" class="quantity-input" readonly/>
-                        <button class="quantity-btn plus">+</button>
-                    </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="item" items="${cartItems}">
+                            <%--TRÂM--%>
+                            <!--Sản phẩm -->
+                            <div class="cart-item" data-comic-id="${item.comic.id}">
+                                <input type="checkbox" class="item-checkbox"/>
+                                <img src="${item.comic.thumbnailUrl}"
+                                     alt="${item.comic.nameComics}" class="item-image"/>
+                                <div class="item-info">
+                                    <div class="item-title">${item.comic.nameComics}</div>
+                                    <div class="item-subtitle">${item.comic.nameComics}</div>
+                                    <div class="item-price">
+                                        <fmt:formatNumber value="${item.comic.discountPrice}" type="number"
+                                                          groupingUsed="true"/> đ
+                                        <c:if test="${item.comic.discountPrice < item.comic.price}">
+                                            <del><fmt:formatNumber value="${item.comic.price}" type="number"
+                                                                   groupingUsed="true"/> đ
+                                            </del>
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn minus">-</button>
+                                    <input type="text" value="${item.quantity}" class="quantity-input" readonly/>
+                                    <button class="quantity-btn plus">+</button>
+                                </div>
 
-
-                    <div class="item-footer">
-                        <div class="item-total">86.000 đ</div>
-                        <button class="delete-btn">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sản phẩm 2 -->
-                <div class="cart-item">
-                    <input type="checkbox" class="item-checkbox"/>
-                    <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
-                         alt="Nhật Ký Tarot" class="item-image"/>
-                    <div class="item-info">
-                        <div class="item-title">Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)</div>
-                        <div class="item-subtitle">
-                            1 x Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn (Tái Bản 2022)<br>
-                            1 x Bộ Bìa Góc Bảo Quản
-                        </div>
-                        <div class="item-price">164.002 đ
-                            <del>205.000 đ</del>
-                        </div>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="quantity-btn minus">-</button>
-                        <input type="text" value="1" class="quantity-input" readonly/>
-                        <button class="quantity-btn plus">+</button>
-                    </div>
-                    <div class="item-footer">
-                        <div class="item-total">164.002 đ</div>
-                        <button class="delete-btn">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
+                                <div class="item-footer">
+                                    <div class="item-total">
+                                        <fmt:formatNumber value="${item.comic.discountPrice * item.quantity}"
+                                                          type="number" groupingUsed="true"/> đ
+                                    </div>
+                                    <button class="delete-btn">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>
@@ -122,69 +123,29 @@
                 Có thể áp dụng đồng thời nhiều...
             </div>
         </div>
-
         <!-- Tổng tiền -->
         <div class="total-section">
             <div class="total-row">
                 <span>Thành tiền</span>
-                <span class="total-price">0 đ</span>
+                <span class="total-price"><fmt:formatNumber value="${totalAmount}" type="number" groupingUsed="true"/> đ
+                </span>
             </div>
             <div class="total-row final">
                 <span>Tổng Tiền:</span>
-                <span class="total-final">0 đ</span>
+                <span class="total-final"><fmt:formatNumber value="${totalAmount}" type="number"
+                                                            groupingUsed="true"/> đ</span>
             </div>
         </div>
 
         <!-- Thanh toán -->
         <div class="checkout-section">
             <a href="checkout.jsp">
-                <button class="btn-checkout">THANH TOÁN</button>
+                <button class="btn-checkout ${not empty cartItems ? 'active' : ''}">THANH TOÁN</button>
             </a>
             <!--            <div class="checkout-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</div>-->
         </div>
     </div>
 </main>
-
-
-<div class="promoPopup" id="modal">
-    <div class="modalContent">
-        <span class="closeBtn">&times;</span>
-        <h2>CHỌN MÃ KHUYẾN MÃI</h2>
-        <p>Hướng dẫn sử dụng Gift Card ⓘ</p>
-        <div class="promoInput">
-            <input type="text" id="promoCodeInput" placeholder="Nhập mã khuyến mãi..." class="promoInputField">
-            <button id="applyManualCode" class="btnApply">Áp dụng</button>
-        </div>
-        <div class="promo-list" id="promoList">
-            <div class="promoItem">
-                <input type="radio" id="promo10k" name="promo" value="10k">
-                <label for="promo10k">Mã giảm giá 10K - Toàn sàn <br><small>Đơn hàng từ 130k - Không bao gồm giá trị
-                    <br>của các sản phẩm sau Manga, Ngoại...</small><br><small>HSD: 31/11/2025</small></label>
-                <button class="btnApply">Áp dụng</button>
-            </div>
-            <div class="promoItem">
-                <input type="radio" id="promo25k" name="promo" value="25k">
-                <label for="promo25k">Mã giảm giá 25K - Truyện Manga <br><small>Đơn hàng từ 210k</small><br><small>HSD:
-                    31/11/2025</small></label>
-                <button class="btnApply">Áp dụng</button>
-            </div>
-            <!-- Thêm các promoItem ẩn để minh họa chức năng "Xem thêm" -->
-            <div class="promoItem hidden">
-                <input type="radio" id="promo50k" name="promo" value="50k">
-                <label for="promo50k">Mã giảm giá 50K - Sách Học Đường <br><small>Đơn hàng từ 300k</small><br><small>HSD:
-                    31/12/2025</small></label>
-                <button class="btnApply">Áp dụng</button>
-            </div>
-            <div class="promoItem hidden">
-                <input type="radio" id="promo100k" name="promo" value="100k">
-                <label for="promo100k">Mã giảm giá 100K - Toàn Sàn <br><small>Đơn hàng từ 500k</small><br><small>HSD:
-                    31/12/2025</small></label>
-                <button class="btnApply">Áp dụng</button>
-            </div>
-        </div>
-        <button id="viewMoreBtn" class="btnViewMore">Xem thêm</button>
-    </div>
-</div>
 
 <!-- Thêm Message Box -->
 <div class="message-box" id="messageBox">
@@ -193,14 +154,16 @@
 </div>
 
 <!-- ===================== FOOTER ===================== -->
-<jsp:include page="/fontend/public/Footer.jsp" />
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 <!-- JavaScript -->
 <script>
+
+    const contextPath = '${pageContext.request.contextPath}';
     // Get elements
     var modal = document.getElementById("modal");
     var viewMoreLink = document.querySelector(".promo-section .view-more");
-    var span = document.getElementsByClassName("closeBtn")[0];
+    // var span = document.getElementsByClassName("closeBtn")[0];
     var viewMoreBtn = document.getElementById("viewMoreBtn");
     var messageBox = document.getElementById("messageBox");
     var messageText = document.getElementById("messageText");
@@ -210,53 +173,61 @@
     var totalPriceElement = document.querySelector(".total-price");
     var checkoutButton = document.querySelector(".btn-checkout");
 
+    // TRAM
     // Hàm tính tiền dựa trên sản phẩm được tick
     function calculateTotal() {
         var cartItems = document.querySelectorAll(".cart-item");
         let total = 0;
+        let count = 0;
 
         cartItems.forEach(item => {
             var checkbox = item.querySelector(".item-checkbox");
             if (checkbox && checkbox.checked) {
-                var priceText = item.querySelector(".item-price").textContent.match(/[\d,.]+/)[0].replace(/\./g, '');
+                var priceText = item.querySelector(".item-price").textContent.match(/[\d,.]+/)[0].replace(/\./g, '').replace(/,/g, '');
                 var quantity = parseInt(item.querySelector(".quantity-input").value);
                 var price = parseInt(priceText);
                 total += price * quantity;
+                count++;
             }
         });
 
         // Định dạng tiền tệ
-        totalPriceElement.textContent = `${total.toLocaleString('vi-VN')} đ`;
-        let finalTotal = total * 1.1; // VAT 10%
-        totalFinalElement.textContent = `${finalTotal.toLocaleString('vi-VN')} đ`;
-    }
+        if (totalPriceElement) {
+            totalPriceElement.textContent = `\${total.toLocaleString('vi-VN')} đ`;
+        }
+        if (totalFinalElement) {
+            totalFinalElement.textContent = `\${total.toLocaleString('vi-VN')} đ`;
+        }
 
-    // Cập nhật tiêu đề "Chọn tất cả (X sản phẩm)"
-    function updateCartItemCount() {
-        var itemCount = document.querySelectorAll(".cart-item").length;
-        selectAllLabel.textContent = `Chọn tất cả (${itemCount} sản phẩm)`;
+        // Kích hoạt/vô hiệu hóa nút thanh toán
+        if (checkoutButton) {
+            if (count > 0) {
+                checkoutButton.classList.add("active");
+            } else {
+                checkoutButton.classList.remove("active");
+            }
+        }
     }
 
     // Gọi hàm cập nhật khi trang tải
     window.onload = function () {
-        console.log("Page loaded, calculating total...");
+        restoreCheckboxStates();
         updateCartItemCount();
         calculateTotal();
-        // Thêm class 'active' để kích hoạt nút thanh toán mặc định
-        if (checkoutButton && !checkoutButton.classList.contains("active")) {
-            checkoutButton.classList.add("active");
-            console.log("Added 'active' class to checkout button");
-        }
     };
+
+    // Cập nhật tiêu đề "Chọn tất cả (X sản phẩm)"
+    function updateCartItemCount() {
+        const itemCount = document.querySelectorAll(".cart-item").length;
+        selectAllLabel.textContent = `Chọn tất cả (${itemCount} sản phẩm)`;
+    }
 
     // Sự kiện "Chọn tất cả"
     document.getElementById("select-all").addEventListener("change", function () {
-        var allCheckedboxes = document.querySelectorAll(".cart-item .item-checkbox");
+        const allCheckedboxes = document.querySelectorAll(".cart-item .item-checkbox");
         allCheckedboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
         });
-        console.log("Select all changed, recalculating...");
-        calculateTotal();
     });
 
     // Sự kiện thay đổi checkbox riêng lẻ
@@ -268,6 +239,7 @@
             } else if (document.querySelectorAll(".cart-item .item-checkbox:checked").length === document.querySelectorAll(".cart-item .item-checkbox").length) {
                 document.getElementById("select-all").checked = true;
             }
+            saveCheckboxStates();
             calculateTotal();
         });
     });
@@ -275,25 +247,27 @@
     // Sự kiện tăng giảm số lượng sách
     document.querySelectorAll(".quantity-control .quantity-btn").forEach(button => {
         button.addEventListener("click", function () {
-            var quantityInput = this.parentElement.querySelector(".quantity-input");
-            var currentValue = parseInt(quantityInput.value);
+            const quantityInput = this.parentElement.querySelector(".quantity-input");
+            const comicId = this.closest(".cart-item").dataset.comicId;
+            let currentValue = parseInt(quantityInput.value);
+
             if (this.classList.contains("plus")) {
-                quantityInput.value = currentValue + 1;
+                currentValue++;
             } else if (this.classList.contains("minus") && currentValue > 1) {
-                quantityInput.value = currentValue - 1;
+                currentValue--;
             }
-            console.log("Quantity changed, recalculating...");
-            calculateTotal();
+            // Gọi servlet để cập nhật
+            window.location.href = contextPath + `/cart?action=update&comicId=\${comicId}&quantity=\${currentValue}`;
         });
     });
 
     // Sự kiện cho nút xóa sản phẩm
     document.querySelectorAll(".delete-btn").forEach(button => {
         button.addEventListener("click", function () {
-            this.closest(".cart-item").remove();
-            updateCartItemCount();
-            console.log("Item deleted, recalculating...");
-            calculateTotal();
+            const comicId = this.closest(".cart-item").dataset.comicId;
+            if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+                window.location.href = contextPath + `/cart?action=remove&comicId=${comicId}`;
+            }
         });
     });
 
@@ -306,11 +280,11 @@
     }
 
     // Close modal and enable scroll
-    span.onclick = function () {
-        modal.style.display = "none";
-        document.body.classList.remove("no-scroll");
-        document.documentElement.classList.remove("no-scroll");
-    }
+    // span.onclick = function () {
+    //     modal.style.display = "none";
+    //     document.body.classList.remove("no-scroll");
+    //     document.documentElement.classList.remove("no-scroll");
+    // }
 
     // Close modal when clicking outside
     window.onclick = function (event) {
@@ -346,42 +320,66 @@
     });
 
     // Apply manually entered promo code with message box and auto-close
-    document.getElementById("applyManualCode").onclick = function () {
-        var promoCode = document.getElementById("promoCodeInput").value.trim();
-        if (promoCode) {
-            messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promoCode + '</b> thành công!';
-            messageBox.style.display = "block";
-            document.body.classList.add("no-scroll");
-            document.documentElement.classList.add("no-scroll");
-            setTimeout(() => {
-                messageBox.style.display = "none";
-                document.body.classList.remove("no-scroll");
-                document.documentElement.classList.remove("no-scroll");
-            }, 3000);
-        } else {
-            messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng nhập mã khuyến mãi!';
-            messageBox.style.display = "block";
-            document.body.classList.add("no-scroll");
-            document.documentElement.classList.add("no-scroll");
-        }
-    };
+    // document.getElementById("applyManualCode").onclick = function () {
+    //     var promoCode = document.getElementById("promoCodeInput").value.trim();
+    //     if (promoCode) {
+    //         messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promoCode + '</b> thành công!';
+    //         messageBox.style.display = "block";
+    //         document.body.classList.add("no-scroll");
+    //         document.documentElement.classList.add("no-scroll");
+    //         setTimeout(() => {
+    //             messageBox.style.display = "none";
+    //             document.body.classList.remove("no-scroll");
+    //             document.documentElement.classList.remove("no-scroll");
+    //         }, 3000);
+    //     } else {
+    //         messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng nhập mã khuyến mãi!';
+    //         messageBox.style.display = "block";
+    //         document.body.classList.add("no-scroll");
+    //         document.documentElement.classList.add("no-scroll");
+    //     }
+    // };
 
     // Close message box and enable scroll
-    closeMsg.onclick = function () {
-        messageBox.style.display = "none";
-        document.body.classList.remove("no-scroll");
-        document.documentElement.classList.remove("no-scroll");
-    }
+    // closeMsg.onclick = function () {
+    //     messageBox.style.display = "none";
+    //     document.body.classList.remove("no-scroll");
+    //     document.documentElement.classList.remove("no-scroll");
+    // }
 
     // View more functionality
-    viewMoreBtn.onclick = function () {
-        var hiddenItems = document.querySelectorAll(".promoItem.hidden");
-        hiddenItems.forEach(item => {
-            item.classList.remove("hidden");
+    // viewMoreBtn.onclick = function () {
+    //     var hiddenItems = document.querySelectorAll(".promoItem.hidden");
+    //     hiddenItems.forEach(item => {
+    //         item.classList.remove("hidden");
+    //     });
+    //     if (document.querySelectorAll(".promoItem.hidden").length === 0) {
+    //         viewMoreBtn.style.display = "none";
+    //     }
+    // }
+
+    function saveCheckboxStates() {
+        const states = {};
+        document.querySelectorAll(".cart-item").forEach(item => {
+            const comicId = item.dataset.comicId;
+            const checkbox = item.querySelector(".item-checkbox");
+            states[comicId] = checkbox.checked; // Lưu trạng thái
         });
-        if (document.querySelectorAll(".promoItem.hidden").length === 0) {
-            viewMoreBtn.style.display = "none";
-        }
+        localStorage.setItem('cartCheckboxStates', JSON.stringify(states));
+    }
+
+    function restoreCheckboxStates() {
+        const states = JSON.parse(localStorage.getItem('cartCheckboxStates'));
+        if (!states) return;
+
+        document.querySelectorAll(".cart-item").forEach(item => {
+            const comicId = item.dataset.comicId;
+            const checkbox = item.querySelector(".item-checkbox");
+
+            if (states[comicId]) {
+                checkbox.checked = true;
+            }
+        });
     }
 </script>
 </body>
