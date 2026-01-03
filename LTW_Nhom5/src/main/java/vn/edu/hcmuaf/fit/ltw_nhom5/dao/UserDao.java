@@ -1,8 +1,12 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import org.jdbi.v3.core.Jdbi;
+import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class UserDao {
@@ -62,5 +66,39 @@ public class UserDao {
                         .execute()
         );
     }
+
+
+
+    //cái này để chỉnh sủa thoogn tin user ở profile
+
+        // Cập nhật thông tin user
+        public boolean updateUser(User user) {
+            return jdbi.withHandle(handle ->
+                    handle.createUpdate("UPDATE users SET full_name = :fullName, phone = :phone, email = :email, gender = :gender, birthdate = :birthdate, address = :address, updated_at = :updatedAt WHERE id = :id")
+                            .bind("fullName", user.getFullName())
+                            .bind("phone", user.getPhone())
+                            .bind("email", user.getEmail())
+                            .bind("gender", user.getGender())
+                            .bind("birthdate", user.getBirthdate())
+                            .bind("address", user.getAddress())
+                            .bind("updatedAt", LocalDateTime.now())
+                            .bind("id", user.getId())
+                            .execute() > 0
+            );
+        }
+
+        // Lấy user theo ID
+        public User getUserById(int id) {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery("SELECT * FROM users WHERE id = :id")
+                            .bind("id", id)
+                            .mapToBean(User.class)
+                            .findOne()
+                            .orElse(null)
+            );
+        }
+
+
+
 
 }
