@@ -186,70 +186,72 @@
         </div>
 
         <!-- POPUP THÊM SERIES -->
-        <div class="modal-overlay" id="addSeriesModal">
-            <div class="modal-box two-column">
+        <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data">
+            <div class="modal-overlay" id="addSeriesModal">
+                <div class="modal-box two-column">
 
-                <h3>Thêm series mới</h3>
+                    <h3>Thêm series mới</h3>
 
-                <div class="popup-content">
+                    <div class="popup-content">
 
-                    <!-- Cột trái -->
-                    <div class="left-col">
+                        <!-- Cột trái -->
+                        <div class="left-col">
 
-                        <div class="form-group">
-                            <label>Tên series</label>
-                            <input type="text" id="newSeriesName">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Số tập</label>
-                            <input type="number" id="newSeriesVolumes" min="1">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tình trạng</label>
-                            <select id="newSeriesStatus">
-                                <option>Đang phát hành</option>
-                                <option>Đã hoàn thành</option>
-                                <option>Tạm dừng</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Ngày đăng</label>
-                            <input type="date">
-                        </div>
-
-                    </div>
-
-                    <!-- Cột phải -->
-                    <div class="right-col">
-
-                        <div class="form-group">
-                            <label>Ảnh bìa</label>
-                            <div class="image-upload-box" id="newSeriesImageBox">
-                                <span>+</span>
-                                <img id="newSeriesPreview" class="preview-img" style="display:none;">
+                            <div class="form-group">
+                                <label>Tên series</label>
+                                <input type="text" id="newSeriesName" name="seriesName" required>
                             </div>
-                            <input type="file" id="newSeriesCoverFile" accept="image/*" style="display:none;">
+
+                            <div class="form-group">
+                                <label>Số tập</label>
+                                <input type="number" id="newSeriesVolumes" name="seriesVolumes" required min="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tình trạng</label>
+                                <select id="newSeriesStatus" name="seriesStatus">
+                                    <option>Đang phát hành</option>
+                                    <option>Đã hoàn thành</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" >
+                                <label>Ngày đăng</label>
+                                <input type="date">
+                            </div>
+
                         </div>
 
-                        <div class="form-group">
-                            <label>Mô tả</label>
-                            <textarea id="newSeriesDescription" rows="6" placeholder="Nhập mô tả..."></textarea>
+                        <!-- Cột phải -->
+                        <div class="right-col">
+
+                            <div class="form-group">
+                                <label>Ảnh bìa</label>
+                                <div class="image-upload-box" id="newSeriesImageBox">
+                                    <span>+</span>
+                                    <img id="newSeriesPreview" class="preview-img" style="display:none;">
+                                </div>
+                                <input type="file" id="newSeriesCoverFile" name="seriesCover" accept="image/*" style="display:none;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mô tả</label>
+                                <textarea id="newSeriesDescription" name="seriesDescription" rows="6"
+                                          placeholder="Nhập mô tả..."></textarea>
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                    <div class="button-wrap">
+                        <button class="save-btn" id="saveNewSeries">Lưu</button>
+                        <button class="cancel-btn close-add-series">Hủy</button>
+                    </div>
 
-                <div class="button-wrap">
-                    <button class="save-btn" id="saveNewSeries">Lưu</button>
-                    <button class="cancel-btn close-add-series">Hủy</button>
                 </div>
-
             </div>
-        </div>
+        </form>
 
 
 
