@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.db;
 
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,8 @@ public class JdbiConnector {
                     DBProperties.username(),
                     DBProperties.password()
             );
+
+            jdbi.installPlugin(new SqlObjectPlugin());
         }
         return jdbi;
     }

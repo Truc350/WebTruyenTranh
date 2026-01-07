@@ -159,6 +159,19 @@
 <!-- JavaScript -->
 <script>
 
+    // XÓA localStorage khi vừa đăng nhập HOẶC khi giỏ hàng trống
+    <c:if test="${not empty sessionScope.clearCartLocalStorage}">
+    console.log("Clearing localStorage after login...");
+    localStorage.removeItem('cartCheckboxStates');
+    <% session.removeAttribute("clearCartLocalStorage"); %>
+    </c:if>
+
+    // Nếu giỏ hàng trống thì cũng xóa localStorage
+    <c:if test="${empty cartItems}">
+    console.log("Cart is empty, clearing localStorage...");
+    localStorage.removeItem('cartCheckboxStates');
+    </c:if>
+
     const contextPath = '${pageContext.request.contextPath}';
     // Get elements
     var modal = document.getElementById("modal");
@@ -319,45 +332,6 @@
         }
     });
 
-    // Apply manually entered promo code with message box and auto-close
-    // document.getElementById("applyManualCode").onclick = function () {
-    //     var promoCode = document.getElementById("promoCodeInput").value.trim();
-    //     if (promoCode) {
-    //         messageText.innerHTML = '<span style="font-size:24px; color:#4caf50;">✔️</span><br>Áp dụng mã <b>' + promoCode + '</b> thành công!';
-    //         messageBox.style.display = "block";
-    //         document.body.classList.add("no-scroll");
-    //         document.documentElement.classList.add("no-scroll");
-    //         setTimeout(() => {
-    //             messageBox.style.display = "none";
-    //             document.body.classList.remove("no-scroll");
-    //             document.documentElement.classList.remove("no-scroll");
-    //         }, 3000);
-    //     } else {
-    //         messageText.innerHTML = '<span style="font-size:24px; color:#d32f2f;">❌</span><br>Vui lòng nhập mã khuyến mãi!';
-    //         messageBox.style.display = "block";
-    //         document.body.classList.add("no-scroll");
-    //         document.documentElement.classList.add("no-scroll");
-    //     }
-    // };
-
-    // Close message box and enable scroll
-    // closeMsg.onclick = function () {
-    //     messageBox.style.display = "none";
-    //     document.body.classList.remove("no-scroll");
-    //     document.documentElement.classList.remove("no-scroll");
-    // }
-
-    // View more functionality
-    // viewMoreBtn.onclick = function () {
-    //     var hiddenItems = document.querySelectorAll(".promoItem.hidden");
-    //     hiddenItems.forEach(item => {
-    //         item.classList.remove("hidden");
-    //     });
-    //     if (document.querySelectorAll(".promoItem.hidden").length === 0) {
-    //         viewMoreBtn.style.display = "none";
-    //     }
-    // }
-
     function saveCheckboxStates() {
         const states = {};
         document.querySelectorAll(".cart-item").forEach(item => {
@@ -372,6 +346,12 @@
         const states = JSON.parse(localStorage.getItem('cartCheckboxStates'));
         if (!states) return;
 
+        // Lấy danh sách comicId hiện tại trong giỏ hàng
+        const currentComicIds = [];
+        document.querySelectorAll(".cart-item").forEach(item => {
+            currentComicIds.push(item.dataset.comicId);
+        });
+
         document.querySelectorAll(".cart-item").forEach(item => {
             const comicId = item.dataset.comicId;
             const checkbox = item.querySelector(".item-checkbox");
@@ -380,6 +360,15 @@
                 checkbox.checked = true;
             }
         });
+
+        // Xóa các comicId không còn tồn tại khỏi localStorage
+        const cleanedStates = {};
+        currentComicIds.forEach(id => {
+            if (states[id] !== undefined) {
+                cleanedStates[id] = states[id];
+            }
+        });
+        localStorage.setItem('cartCheckboxStates', JSON.stringify(cleanedStates));
     }
 </script>
 </body>
