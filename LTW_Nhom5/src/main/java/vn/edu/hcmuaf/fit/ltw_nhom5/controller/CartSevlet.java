@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Cart;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.CartItem;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class CartSevlet extends HttpServlet {
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
+            session.setAttribute("cart", cart);
         }
 
         if (action == null || action.equals("view")) {
@@ -43,10 +45,37 @@ public class CartSevlet extends HttpServlet {
             // Xóa toàn bộ giỏ hàng
             clearCart(request, response, cart, session);
 
+        } else if (action.equals("checkout")) {
+            // Thanh toán phải đăng nhập
+            checkout(request, response, session);
         } else {
             // Action không hợp lệ
             response.sendRedirect(request.getContextPath() + "/cart");
         }
+    }
+
+    private void checkout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            // Chưa đăng nhập -> chuyển đến trang login
+            session.setAttribute("errorMsg", "Vui lòng đăng nhập để thanh toán!");
+            session.setAttribute("redirectAfterLogin", request.getContextPath() + "/cart");
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        // Kiểm tra giỏ hàng có sản phẩm không
+        Cart cart = (Cart) session.getAttribute("cart");
+        if (cart == null || cart.getItems().isEmpty()) {
+            session.setAttribute("errorMsg", "Giỏ hàng trống!");
+            response.sendRedirect(request.getContextPath() + "/cart");
+            return;
+        }
+
+        // Đã đăng nhập và có sản phẩm -> chuyển đến trang thanh toán
+        response.sendRedirect(request.getContextPath() + "/checkout");
+
     }
 
     private void clearCart(HttpServletRequest request, HttpServletResponse response, Cart cart, HttpSession session) throws ServletException, IOException {
@@ -80,7 +109,19 @@ public class CartSevlet extends HttpServlet {
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             if (quantity <= 0) {
+                session.setAttribute("errorMsg", "Số lượng phải lớn hơn 0");
+                response.sendRedirect(request.getContextPath() + "/cart");
                 quantity = 1;
+            }
+
+            // ktra ton kho
+            ComicService comicService = new ComicService();
+            Comic comic = comicService.getComicById(comicId);
+
+            if(comic != null && comic.getStockQuantity() < quantity){
+                session.setAttribute("errorMsg", "Sản phẩm không đủ hàng. Chỉ còn " + comic.getStockQuantity() + " sản phẩm.");
+                response.sendRedirect(request.getContextPath() + "/cart");
+                return;
             }
 
             boolean success = cart.updateItem(comicId, quantity);
@@ -103,6 +144,11 @@ public class CartSevlet extends HttpServlet {
     }
 
     private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+        // Tắt cache
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+
         List<CartItem> cartItems = cart.getItems();
         double totalAmount = cart.total();
         int totalQuantity = cart.totalQuantity();
@@ -112,6 +158,10 @@ public class CartSevlet extends HttpServlet {
         request.setAttribute("totalAmount", totalAmount);
         request.setAttribute("totalQuantity", totalQuantity);
 
+        // Kiểm tra trạng thái đăng nhập để hiển thị giao diện
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        request.setAttribute("isLoggedIn", currentUser != null);
+
         request.getRequestDispatcher("/fontend/nguoiB/cart.jsp").forward(request, response);
     }
 
@@ -119,6 +169,16 @@ public class CartSevlet extends HttpServlet {
         try {
             int comicId = Integer.parseInt(request.getParameter("comicId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
+
+            // ===== DEBUG =====
+            User currentUser = (User) session.getAttribute("currentUser");
+            System.out.println("===== THÊM VÀO GIỎ HÀNG =====");
+            System.out.println("Comic ID: " + comicId);
+            System.out.println("Số lượng: " + quantity);
+            System.out.println("Đã đăng nhập: " + (currentUser != null ? currentUser.getUsername() : "CHƯA"));
+            System.out.println("Session ID: " + session.getId());
+            System.out.println("Giỏ hàng trước khi thêm: " + cart.getItems().size() + " sản phẩm");
+            System.out.println("============================");
 
             if (quantity <= 0) {
                 quantity = 1;
@@ -128,8 +188,11 @@ public class CartSevlet extends HttpServlet {
             Comic comic = comicService.getComicById(comicId);
 
             if (comic != null) {
+                // ktra SL trong giỏ hiện tại
+                CartItem existingItem = cart.get(comicId);
+                int totalQuantity = (existingItem != null) ? existingItem.getQuantity() + quantity : quantity;
                 // Kiểm tra tồn kho
-                if (comic.getStockQuantity() < quantity) {
+                if (comic.getStockQuantity() < totalQuantity) {
                     session.setAttribute("errorMsg", "Sản phẩm không đủ hàng. Chỉ còn " +
                             comic.getStockQuantity() + " sản phẩm.");
                     response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
@@ -139,6 +202,7 @@ public class CartSevlet extends HttpServlet {
                 // Thêm vào giỏ
                 cart.addItem(comic, quantity);
                 session.setAttribute("cart", cart);
+
                 session.setAttribute("successMsg", "Đã thêm \"" + comic.getNameComics() +
                         "\" vào giỏ hàng!");
 

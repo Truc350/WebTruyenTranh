@@ -429,9 +429,10 @@ public class ComicDAO extends ADao {
                         author,
                         publisher,
                         price,
-                        thumbnail_url
-                    FROM Comics
-                    WHERE id = :id
+                        thumbnail_url,
+                        stock_quantity as stockQuantity
+                    FROM comics
+                    WHERE id = :id and is_deleted = 0
                 """;
 
 
