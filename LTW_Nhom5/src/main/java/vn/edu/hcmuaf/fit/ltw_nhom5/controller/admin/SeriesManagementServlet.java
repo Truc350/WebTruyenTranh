@@ -18,6 +18,7 @@ public class SeriesManagementServlet extends HttpServlet {
         seriesDAO = new SeriesDAO();
     }
 
+    // Hiển thị danh sách series (GET)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -33,9 +34,8 @@ public class SeriesManagementServlet extends HttpServlet {
             }
         }
 
-        SeriesDAO dao = new SeriesDAO();
-        List<Series> seriesList = dao.getSeriesByPage(page, pageSize);
-        int totalSeries = dao.countSeries();
+        List<Series> seriesList = seriesDAO.getSeriesByPage(page, pageSize);
+        int totalSeries = seriesDAO.countSeries();
         int totalPages = (int) Math.ceil((double) totalSeries / pageSize);
 
         request.setAttribute("seriesList", seriesList);
@@ -44,5 +44,19 @@ public class SeriesManagementServlet extends HttpServlet {
 
         request.getRequestDispatcher("fontend/admin/seriesManagement.jsp").forward(request, response);
     }
+
+    // Cập nhật trạng thái ẩn/hiện (POST), cái này của AJAX
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String action = request.getParameter("action"); // "hide" hoặc "show"
+
+        boolean hidden = "hide".equals(action);
+        seriesDAO.updateHiddenStatus(id, hidden);
+
+        // Không redirect, chỉ trả về status 200 OK
+        response.setStatus(HttpServletResponse.SC_OK);
+      }
 
 }

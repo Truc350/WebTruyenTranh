@@ -386,3 +386,9 @@ body {
     resize: none;
 }
 
+.page-btn.active {
+    font-weight: bold;
+    background-color: #007bff; /* xanh */
+    color: #fff;
+    border: 1px solid #007bff;
+}

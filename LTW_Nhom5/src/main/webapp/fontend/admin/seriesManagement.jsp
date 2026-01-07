@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-
 <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -144,10 +143,18 @@
 
                                 <div class="menu-container">
                                     <button class="more-btn">⋮</button>
+
                                     <div class="dropdown-menu">
-                                        <label><input type="radio" name="display_S${s.id}" checked> Hiển thị</label>
-                                        <label><input type="radio" name="display_S${s.id}"> Ẩn series</label>
+                                        <input type="hidden" class="series-id" value="${s.id}">
+                                        <label>
+                                            <input type="radio" name="display_S${s.id}" value="show" ${!s.hidden ? 'checked' : ''}> Hiển thị
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="display_S${s.id}" value="hide" ${s.hidden ? 'checked' : ''}> Ẩn đi
+                                        </label>
                                     </div>
+
+
                                 </div>
                             </div>
                         </td>
@@ -168,16 +175,6 @@
                     </td>
                 </tr>
 
-
-                <%--                <tr class="pagination-row">--%>
-<%--                    <td colspan="10">--%>
-<%--                        <div class="pagination">--%>
-<%--                            <button class="page-btn product-page" data-page="1">1</button>--%>
-<%--                            <button class="page-btn product-page" data-page="2">2</button>--%>
-<%--                            <button class="page-btn product-page" data-page="3">3</button>--%>
-<%--                        </div>--%>
-<%--                    </td>--%>
-<%--                </tr>--%>
                 </tbody>
             </table>
         </div>
@@ -481,6 +478,31 @@
     // });
 </script>
 
+
+
+<script>
+    document.querySelectorAll('.dropdown-menu input[type=radio]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const seriesId = this.closest('.dropdown-menu').querySelector('.series-id').value;
+            const action = this.value;
+
+            fetch('${pageContext.request.contextPath}/SeriesManagement', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ id: seriesId, action: action })
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("Cập nhật thành công series " + seriesId + " → " + action);
+                        // Nếu muốn, bạn có thể cập nhật UI ngay tại đây
+                    } else {
+                        console.error("Có lỗi khi cập nhật");
+                    }
+                })
+                .catch(err => console.error("Fetch error:", err));
+        });
+    });
+</script>
 
 </body>
 </html>
