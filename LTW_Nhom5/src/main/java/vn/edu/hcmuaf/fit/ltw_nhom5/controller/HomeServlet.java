@@ -4,15 +4,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import org.jdbi.v3.core.Jdbi;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.BannerDao;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -24,6 +23,8 @@ public class HomeServlet extends HttpServlet {
     private FlashSaleDAO flashSaleDAO;
     private ComicService comicService;
     private BannerDao bannerDao;
+    private WishlistDAO wishlistDAO;
+    private RecommendationService recommendationService;
 
     @Override
     public void init() throws ServletException {
@@ -36,10 +37,16 @@ public class HomeServlet extends HttpServlet {
 //                "root",
 //                ""  // password rỗng
 //        );
+        wishlistDAO = new WishlistDAO();
+        recommendationService = new RecommendationService(comicDAO, wishlistDAO);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
+
+
         // Top 5 truyện bán chạy trong tuần
         request.setAttribute(
                 "topComics",
@@ -52,13 +59,13 @@ public class HomeServlet extends HttpServlet {
                 flashSaleDAO.getActiveFlashSaleEndingSoon()
         );
 
-        //gợi ý truyện theo wishlist + số tập
-        HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");// null nnếu chưa login
-        // Goij server để lấy gợi ý.,
-        List<Comic> suggestedComics = comicService.getSuggestedComics(userId);
-        // Đưa dữ liệu vào request
-        request.setAttribute("suggestedComics", suggestedComics);
+//        //gợi ý truyện theo wishlist + số tập
+//        HttpSession session = request.getSession();
+//        Integer userId = (Integer) session.getAttribute("userId");// null nnếu chưa login
+//        // Goij server để lấy gợi ý.,
+//        List<Comic> suggestedComics = comicService.getSuggestedComics(userId);
+//        // Đưa dữ liệu vào request
+//        request.setAttribute("suggestedComics", suggestedComics);
 
 
         //chỗ này của banner
@@ -82,8 +89,38 @@ public class HomeServlet extends HttpServlet {
 //        List<Category> listCategories = categoriesDao.listCategories();
 //        request.setAttribute("listCategories", listCategories);
 
+
+        // Lấy comics gợi ý
+        List<Comic> recommendedComics;
+        if (currentUser != null) {
+            int wishlistCount = wishlistDAO.getWishlistCount(currentUser.getId());
+
+            if (wishlistCount > 0) {
+                recommendedComics = comicDAO.getRecommendedComics(currentUser.getId(), 16);
+
+            } else {
+                recommendedComics = comicDAO.getPopularComics(16);
+            }
+        } else {
+            //chua dang nhap
+            recommendedComics = comicDAO.getPopularComics(16);
+        }
+        // Lấy top comics bán chạy trong tuần
+        List<Comic> topComics = comicDAO.getTopSellingComics(5);
+        // Set attributes
+        request.setAttribute("recommendedComics", recommendedComics);
+        request.setAttribute("topComics", topComics);
+        request.setAttribute("isLoggedIn", currentUser != null);
+
+
         request.getRequestDispatcher("/fontend/public/homePage.jsp")
                 .forward(request, response);
+
+
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
 }
