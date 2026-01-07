@@ -1,82 +1,84 @@
-    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    <%@ page import="java.util.List" %>
-    <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner" %>
-    <!DOCTYPE html>
-    <html lang="en">
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner" %>
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/homePage.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <script src="${pageContext.request.contextPath}/js/homePage.js"></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/homePage.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="${pageContext.request.contextPath}/js/homePage.js"></script>
+</head>
 
-    <body>
+<body>
 
-    <jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
-    <div class="container-content">
+<div class="container-content">
 
 
     <%--banner    --%>
 
-        <%
-            List<Banner> banners = (List<Banner>) request.getAttribute("banners");
-        %>
+    <%
+        List<Banner> banners = (List<Banner>) request.getAttribute("banners");
+    %>
 
 
-        <div class="bannder-des">
-            <div class="banner">
-                <div class="list-images">
-                    <% if (banners != null && !banners.isEmpty()) {
-                        for (Banner b : banners) { %>
-                    <img class="img" src="<%= b.getImageUrl() %>" alt="banner">
-                    <% }
-                    } else { %>
-                    <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
-                    <% } %>
-                </div>
+    <div class="bannder-des">
+        <div class="banner">
+            <div class="list-images">
+                <% if (banners != null && !banners.isEmpty()) {
+                    for (Banner b : banners) { %>
+                <img class="img" src="<%= b.getImageUrl() %>" alt="banner">
+                <% }
+                } else { %>
+                <img class="img" src="${pageContext.request.contextPath}/img/banner1.jpg" alt="banner">
+                <% } %>
+            </div>
 
-                <div class="btn prev">&#10094;</div>
-                <div class="btn next">&#10095;</div>
+            <div class="btn prev">&#10094;</div>
+            <div class="btn next">&#10095;</div>
 
-                <div class="dots">
-                    <% if (banners != null) {
-                        for (int i = 0; i < banners.size(); i++) { %>
-                    <div class="dot <%= (i==0 ? "active" : "") %>"></div>
-                    <% } } %>
-                </div>
+            <div class="dots">
+                <% if (banners != null) {
+                    for (int i = 0; i < banners.size(); i++) { %>
+                <div class="dot <%= (i==0 ? "active" : "") %>"></div>
+                <% }
+                } %>
             </div>
         </div>
+    </div>
 
 
     <!-- chỗ này banner -->
-<%--    <div class="bannder-des">--%>
-<%--        <div class="banner">--%>
-<%--            <div class="list-images">--%>
-<%--                <img class="img" src="../../img/banner1.jpg" alt="">--%>
-<%--                <img class="img" src="../../img/banner2.jpg" alt="">--%>
-<%--                <img id="img-banner3" class="img" src="../../img/banner3.jpg" alt="">--%>
-<%--                <img class="img" src="../../img/banner4.jpg" alt="">--%>
-<%--            </div>--%>
+    <%--    <div class="bannder-des">--%>
+    <%--        <div class="banner">--%>
+    <%--            <div class="list-images">--%>
+    <%--                <img class="img" src="../../img/banner1.jpg" alt="">--%>
+    <%--                <img class="img" src="../../img/banner2.jpg" alt="">--%>
+    <%--                <img id="img-banner3" class="img" src="../../img/banner3.jpg" alt="">--%>
+    <%--                <img class="img" src="../../img/banner4.jpg" alt="">--%>
+    <%--            </div>--%>
 
-<%--            <div class="btn prev">&#10094;</div>--%>
-<%--            <div class="btn next">&#10095;</div>--%>
+    <%--            <div class="btn prev">&#10094;</div>--%>
+    <%--            <div class="btn next">&#10095;</div>--%>
 
-<%--            <div class="dots">--%>
-<%--                <div class="dot active"></div>--%>
-<%--                <div class="dot"></div>--%>
-<%--                <div class="dot"></div>--%>
-<%--                <div class="dot"></div>--%>
-<%--            </div>--%>
+    <%--            <div class="dots">--%>
+    <%--                <div class="dot active"></div>--%>
+    <%--                <div class="dot"></div>--%>
+    <%--                <div class="dot"></div>--%>
+    <%--                <div class="dot"></div>--%>
+    <%--            </div>--%>
 
-<%--        </div>--%>
-<%--    </div>--%>
+    <%--        </div>--%>
+    <%--    </div>--%>
 
 
     <!-- chỗ này là danh mục -->
@@ -231,9 +233,10 @@
                                         </c:otherwise>
                                     </c:choose>
 
-                                    <c:if test="${comic.totalSold > 0}">
-                                        <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
-                                    </c:if>
+                                        <%--                                    <c:if test="${comic.totalSold > 0}">--%>
+                                        <%--                                        <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>--%>
+                                        <%--                                    </c:if>--%>
+                                    <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
                                 </div>
                             </c:forEach>
                         </div>
@@ -412,7 +415,7 @@
 
 
 <!-- INCLUDE FOOTER -->
-<jsp:include page="/fontend/public/Footer.jsp" />
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 </body>
 

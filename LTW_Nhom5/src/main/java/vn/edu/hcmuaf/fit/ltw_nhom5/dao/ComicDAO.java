@@ -615,116 +615,103 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getRecommendedComics(int userId, int limit) {
         String sql = """
-            WITH wishlist_series AS (
-                -- Lấy tất cả series_id và volume từ wishlist
-                SELECT DISTINCT 
-                    c.series_id,
-                    MAX(c.volume) as max_volume
-                FROM Wishlist w
-                JOIN Comics c ON w.comic_id = c.id
-                WHERE w.user_id = :userId 
-                AND c.is_deleted = 0
-                AND c.series_id IS NOT NULL
-                GROUP BY c.series_id
-            ),
-            wishlist_categories AS (
-                -- Lấy tất cả category_id từ wishlist
-                SELECT DISTINCT c.category_id
-                FROM Wishlist w
-                JOIN Comics c ON w.comic_id = c.id
-                WHERE w.user_id = :userId 
-                AND c.is_deleted = 0
-                AND c.category_id IS NOT NULL
-            ),
-            next_volumes AS (
-                -- Tìm tập tiếp theo của các series trong wishlist
-                SELECT 
-                    c.*,
-                    1 as priority
-                FROM Comics c
-                INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
-                WHERE c.volume = ws.max_volume + 1
-                AND c.is_deleted = 0
-                AND c.stock_quantity > 0
-                AND NOT EXISTS (
-                    SELECT 1 FROM Wishlist w2 
-                    WHERE w2.user_id = :userId AND w2.comic_id = c.id
-                )
-            ),
-            same_category AS (
-                -- Tìm comics cùng thể loại với wishlist
-                SELECT 
-                    c.*,
-                    2 as priority
-                FROM Comics c
-                INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
-                WHERE c.is_deleted = 0
-                AND c.stock_quantity > 0
-                AND NOT EXISTS (
-                    SELECT 1 FROM Wishlist w2 
-                    WHERE w2.user_id = :userId AND w2.comic_id = c.id
-                )
-                AND c.id NOT IN (SELECT id FROM next_volumes)
-                ORDER BY RAND()
-                LIMIT :limit
+        WITH wishlist_series AS (
+            SELECT DISTINCT 
+                c.series_id,
+                MAX(c.volume) as max_volume
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.series_id IS NOT NULL
+            GROUP BY c.series_id
+        ),
+        wishlist_categories AS (
+            SELECT DISTINCT c.category_id
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.category_id IS NOT NULL
+        ),
+        next_volumes AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                1 as priority
+            FROM Comics c
+            INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            WHERE c.volume = ws.max_volume + 1
+            AND c.is_deleted = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
             )
-            -- Kết hợp kết quả
-            SELECT * FROM (
-                SELECT * FROM next_volumes
-                UNION ALL
-                SELECT * FROM same_category
-            ) as final_result
-            ORDER BY priority, RAND()
+            GROUP BY c.id
+        ),
+        same_category AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                2 as priority
+            FROM Comics c
+            INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            WHERE c.is_deleted = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
+            )
+            AND c.id NOT IN (SELECT id FROM next_volumes)
+            GROUP BY c.id
+            ORDER BY RAND()
             LIMIT :limit
-            """;
+        )
+        SELECT * FROM (
+            SELECT * FROM next_volumes
+            UNION ALL
+            SELECT * FROM same_category
+        ) as final_result
+        ORDER BY priority, RAND()
+        LIMIT :limit
+        """;
 
-        List<Comic> recommendations = jdbi.withHandle(handle ->
+        return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
                         .bind("userId", userId)
                         .bind("limit", limit)
                         .mapToBean(Comic.class)
                         .list()
         );
-
-        // Nếu không đủ recommendations, bổ sung bằng popular comics
-        if (recommendations.size() < limit) {
-            List<Comic> popularComics = getPopularComics(limit - recommendations.size());
-
-            // Lọc bỏ những comic đã có trong recommendations
-            List<Integer> existingIds = recommendations.stream()
-                    .map(Comic::getId)
-                    .toList();
-
-            for (Comic comic : popularComics) {
-                if (!existingIds.contains(comic.getId())) {
-                    recommendations.add(comic);
-                    if (recommendations.size() >= limit) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return recommendations;
     }
     /**
      * Gợi ý cho user chưa đăng nhập hoặc wishlist trống
      */
     public List<Comic> getPopularComics(int limit) {
         String sql = """
-            SELECT c.*,
-                   COALESCE(SUM(oi.quantity), 0) as totalSold
-            FROM Comics c
-            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-            LEFT JOIN Orders o ON oi.order_id = o.id 
-                AND o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                AND o.status NOT IN ('cancelled', 'returned')
-            WHERE c.is_deleted = 0
-            AND c.stock_quantity > 0
-            GROUP BY c.id
-            ORDER BY totalSold DESC, c.created_at DESC
-            LIMIT :limit
-            """;
+        SELECT 
+            c.*,
+            COALESCE(SUM(oi.quantity), 0) as totalSold
+        FROM Comics c
+        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+        LEFT JOIN Orders o ON oi.order_id = o.id 
+            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            AND o.status NOT IN ('cancelled', 'returned')
+        WHERE c.is_deleted = 0
+        AND c.stock_quantity > 0
+        GROUP BY c.id
+        ORDER BY totalSold DESC, c.created_at DESC
+        LIMIT :limit
+        """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -786,18 +773,18 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getTopSellingComics(int limit) {
         String sql = """
-            SELECT c.*, 
-                COALESCE(SUM(oi.quantity), 0) as totalSold
-            FROM Comics c
-            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-            LEFT JOIN Orders o ON oi.order_id = o.id
-                AND o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-                AND o.status NOT IN ('cancelled', 'returned')
-            WHERE c.is_deleted = 0
-            GROUP BY c.id
-            ORDER BY totalSold DESC, c.created_at DESC
-            LIMIT :limit
-            """;
+        SELECT c.*, 
+            COALESCE(SUM(oi.quantity), 0) as totalSold
+        FROM Comics c
+        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+        LEFT JOIN Orders o ON oi.order_id = o.id
+            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            AND o.status NOT IN ('cancelled', 'returned')
+        WHERE c.is_deleted = 0
+        GROUP BY c.id
+        ORDER BY totalSold DESC, c.created_at DESC
+        LIMIT :limit
+        """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
