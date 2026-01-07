@@ -108,9 +108,12 @@
             </a>
         </div>
 
-        <div class="actions">
-            <a href="../nguoiB/cart.jsp">
+        <div class="actions cart-icon-wrapper">
+            <a href="${pageContext.request.contextPath}/cart" class="cart-icon">
                 <i class="fa-solid fa-cart-shopping"></i>
+                <c:if test="${not empty sessionScope.cart && sessionScope.cart.totalQuantity() > 0}">
+                    <span class="cart-badge">${sessionScope.cart.totalQuantity()}</span>
+                </c:if>
             </a>
         </div>
 
@@ -345,4 +348,3 @@
 
     <script src="${pageContext.request.contextPath}/fontend/js/firebase-notification.js"></script>
 </c:if>
-
