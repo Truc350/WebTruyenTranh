@@ -41,7 +41,7 @@ public class Comic {
 
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
-
+    @ColumnName("totalSold")
     private int totalSold; // lượt bán trong tuần
 
     private Double discountPercent;
@@ -183,6 +183,7 @@ public class Comic {
     public void setTotalSold(int totalSold) {
         this.totalSold = totalSold;
     }
+
 
     public Double getDiscountPercent() {
         return discountPercent;
