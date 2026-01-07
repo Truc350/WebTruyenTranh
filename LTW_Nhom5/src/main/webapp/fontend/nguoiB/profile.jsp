@@ -26,9 +26,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&display=swap"
           rel="stylesheet">
-    body, html, input, button, select, textarea, h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th {
-    font-family: 'Noto Sans', 'Roboto', Arial, sans-serif !important;
-    }
+<%--    body, html, input, button, select, textarea, h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th {--%>
+<%--    font-family: 'Noto Sans', 'Roboto', Arial, sans-serif !important;--%>
+<%--    }--%>
 </head>
 <body>
 

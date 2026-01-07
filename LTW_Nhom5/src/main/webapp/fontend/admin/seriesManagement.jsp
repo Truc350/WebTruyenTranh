@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <html>
 <head>
     <title>Quản lý series</title>
@@ -8,55 +10,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-
 <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
+            <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo">
             <h2>Comic Store</h2>
         </div>
 
         <ul>
             <li>
                 <a href="dashboard.jsp">
-                    <img src="../../img/home.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
             </li>
             <li>
                 <a href="seriesManagement.jsp">
-                    <img src="../../img/series.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
                     <span>Quản lý series</span>
                 </a>
             </li>
             <li>
                 <a href="productManagement.jsp">
-                    <img src="../../img/product.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
                 <a href="category.jsp">
-                    <img src="../../img/category.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
                     <span>Quản lý thể loại</span>
                 </a>
             </li>
             <li>
                 <a href="order.jsp">
-                    <img src="../../img/order.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/order.png" class="icon">
                     <span>Quản lý đơn hàng</span>
                 </a>
             </li>
             <li>
                 <a href="userManagement.html">
-                    <img src="../../img/user.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
                     <span>Quản lý người dùng</span>
                 </a>
             </li>
             <li>
                 <a href="flashSaleMan.jsp">
-                    <img src="../../img/flashSale.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon">
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
@@ -68,7 +69,7 @@
             <%--            </li>--%>
             <li>
                 <a href="report.jsp">
-                    <img src="../../img/report.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
                     <span>Thống kê</span>
                 </a>
             </li>
@@ -84,7 +85,7 @@
 
                 <div class="admin-profile">
                     <a href="profileAdmin.jsp">
-                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                        <img src="${pageContext.request.contextPath}/img/admin.png" class="admin-avatar" alt="Admin">
                     </a>
                     <span class="admin-name">Admin</span>
                 </div>
@@ -110,7 +111,6 @@
             </button>
         </div>
 
-
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -124,59 +124,53 @@
                 </thead>
 
                 <tbody id="seriesTableBody">
-                <!-- Tạm dữ liệu mẫu -->
-                <tr>
-                    <td>SR001</td>
-                    <td>Thám tử lừng danh Conan</td>
-                    <td>105 tập</td>
-                    <td>Đang phát hành</td>
-                    <td class="action-cell">
-                        <div class="action-wrapper">
-                            <button class="edit-series-btn" data-id="SR001" data-name="Thám tử lừng danh Conan"
-                                    data-vol="105" data-status="Đang phát hành">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
+                <%-- Lặp qua danh sách series --%>
+                <c:forEach var="s" items="${seriesList}">
+                    <tr>
+                        <td>${s.id}</td>
+                        <td>${s.seriesName}</td>
+                        <td>${s.totalVolumes} tập</td>
+                        <td>${s.status}</td>
+                        <td class="action-cell">
+                            <div class="action-wrapper">
+                                <button class="edit-series-btn"
+                                        data-id="${s.id}"
+                                        data-name="${s.seriesName}"
+                                        data-vol="${s.totalVolumes}"
+                                        data-status="${s.status}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
 
-                            <div class="menu-container">
-                                <button class="more-btn">⋮</button>
-                                <div class="dropdown-menu">
-                                    <label><input type="radio" name="display_S001" checked> Hiển thị</label>
-                                    <label><input type="radio" name="display_S001"> Ẩn series</label>
+                                <div class="menu-container">
+                                    <button class="more-btn">⋮</button>
+
+                                    <div class="dropdown-menu">
+                                        <input type="hidden" class="series-id" value="${s.id}">
+                                        <label>
+                                            <input type="radio" name="display_S${s.id}" value="show" ${!s.hidden ? 'checked' : ''}> Hiển thị
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="display_S${s.id}" value="hide" ${s.hidden ? 'checked' : ''}> Ẩn đi
+                                        </label>
+                                    </div>
+
+
                                 </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                </c:forEach>
 
-                <tr>
-                    <td>SR002</td>
-                    <td>One Piece</td>
-                    <td>110 tập</td>
-                    <td>Đang phát hành</td>
-                    <td class="action-cell">
-                        <div class="action-wrapper">
-                            <button class="edit-series-btn" data-id="SR002" data-name="One Piece" data-vol="110"
-                                    data-status="Đang phát hành">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-
-                            <div class="menu-container">
-                                <button class="more-btn">⋮</button>
-                                <div class="dropdown-menu">
-                                    <label><input type="radio" name="display_S001" checked> Hiển thị</label>
-                                    <label><input type="radio" name="display_S001"> Ẩn series</label>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
 
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination">
-                            <button class="page-btn product-page" data-page="1">1</button>
-                            <button class="page-btn product-page" data-page="2">2</button>
-                            <button class="page-btn product-page" data-page="3">3</button>
+                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                <button class="page-btn product-page ${i == currentPage ? 'active' : ''}"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/SeriesManagement?page=${i}'">
+                                        ${i}
+                                </button>
+                            </c:forEach>
                         </div>
                     </td>
                 </tr>
@@ -185,71 +179,75 @@
             </table>
         </div>
 
+    </div>
+
         <!-- POPUP THÊM SERIES -->
-        <div class="modal-overlay" id="addSeriesModal">
-            <div class="modal-box two-column">
+        <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data">
+            <div class="modal-overlay" id="addSeriesModal">
+                <div class="modal-box two-column">
 
-                <h3>Thêm series mới</h3>
+                    <h3>Thêm series</h3>
 
-                <div class="popup-content">
+                    <div class="popup-content">
 
-                    <!-- Cột trái -->
-                    <div class="left-col">
+                        <!-- Cột trái -->
+                        <div class="left-col">
 
-                        <div class="form-group">
-                            <label>Tên series</label>
-                            <input type="text" id="newSeriesName">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Số tập</label>
-                            <input type="number" id="newSeriesVolumes" min="1">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tình trạng</label>
-                            <select id="newSeriesStatus">
-                                <option>Đang phát hành</option>
-                                <option>Đã hoàn thành</option>
-                                <option>Tạm dừng</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Ngày đăng</label>
-                            <input type="date">
-                        </div>
-
-                    </div>
-
-                    <!-- Cột phải -->
-                    <div class="right-col">
-
-                        <div class="form-group">
-                            <label>Ảnh bìa</label>
-                            <div class="image-upload-box" id="newSeriesImageBox">
-                                <span>+</span>
-                                <img id="newSeriesPreview" class="preview-img" style="display:none;">
+                            <div class="form-group">
+                                <label>Tên series</label>
+                                <input type="text" id="newSeriesName" name="seriesName" required>
                             </div>
-                            <input type="file" id="newSeriesCoverFile" accept="image/*" style="display:none;">
+
+                            <div class="form-group">
+                                <label>Số tập</label>
+                                <input type="number" id="newSeriesVolumes" name="seriesVolumes" required min="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tình trạng</label>
+                                <select id="newSeriesStatus" name="seriesStatus">
+                                    <option>Đang phát hành</option>
+                                    <option>Đã hoàn thành</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" >
+                                <label>Ngày đăng</label>
+                                <input type="date">
+                            </div>
+
                         </div>
 
-                        <div class="form-group">
-                            <label>Mô tả</label>
-                            <textarea id="newSeriesDescription" rows="6" placeholder="Nhập mô tả..."></textarea>
+                        <!-- Cột phải -->
+                        <div class="right-col">
+
+                            <div class="form-group">
+                                <label>Ảnh bìa</label>
+                                <div class="image-upload-box" id="newSeriesImageBox">
+                                    <span>+</span>
+                                    <img id="newSeriesPreview" class="preview-img" style="display:none;">
+                                </div>
+                                <input type="file" id="newSeriesCoverFile" name="seriesCover" accept="image/*" style="display:none;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mô tả</label>
+                                <textarea id="newSeriesDescription" name="seriesDescription" rows="6"
+                                          placeholder="Nhập mô tả..."></textarea>
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                    <div class="button-wrap">
+                        <button class="save-btn" id="saveNewSeries">Lưu</button>
+                        <button class="cancel-btn close-add-series">Hủy</button>
+                    </div>
 
-                <div class="button-wrap">
-                    <button class="save-btn" id="saveNewSeries">Lưu</button>
-                    <button class="cancel-btn close-add-series">Hủy</button>
                 </div>
-
             </div>
-        </div>
+        </form>
 
 
 
@@ -416,16 +414,16 @@
     (function () {
         const ROWS_PER_PAGE = 5;
         const tbody = document.getElementById('seriesTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
+        // const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
         const pageButtons = document.querySelectorAll('.product-page');
 
         function showPage(page) {
             const start = (page - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
 
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
+            // rows.forEach((r, idx) => {
+            //     r.style.display = (idx >= start && idx < end) ? "" : "none";
+            // });
 
             pageButtons.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.product-page[data-page="${page}"]`)?.classList.add('active');
@@ -468,18 +466,43 @@
 
     editBox.addEventListener("click", () => editInput.click());
 
-    editInput.addEventListener("change", () => {
-        if (editInput.files && editInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                editPreview.src = e.target.result;
-                editPreview.style.display = "block";
-            };
-            reader.readAsDataURL(editInput.files[0]);
-        }
-    });
+    // editInput.addEventListener("change", () => {
+    //     if (editInput.files && editInput.files[0]) {
+    //         const reader = new FileReader();
+    //         reader.onload = e => {
+    //             editPreview.src = e.target.result;
+    //             editPreview.style.display = "block";
+    //         };
+    //         reader.readAsDataURL(editInput.files[0]);
+    //     }
+    // });
 </script>
 
+
+
+<script>
+    document.querySelectorAll('.dropdown-menu input[type=radio]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const seriesId = this.closest('.dropdown-menu').querySelector('.series-id').value;
+            const action = this.value;
+
+            fetch('${pageContext.request.contextPath}/SeriesManagement', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ id: seriesId, action: action })
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("Cập nhật thành công series " + seriesId + " → " + action);
+                        // Nếu muốn, bạn có thể cập nhật UI ngay tại đây
+                    } else {
+                        console.error("Có lỗi khi cập nhật");
+                    }
+                })
+                .catch(err => console.error("Fetch error:", err));
+        });
+    });
+</script>
 
 </body>
 </html>

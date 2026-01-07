@@ -10,6 +10,7 @@ public class Series {
     private int totalVolumes;
     private String status;
     private boolean isDeleted;
+    private boolean isHidden;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -96,5 +97,12 @@ public class Series {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 }
