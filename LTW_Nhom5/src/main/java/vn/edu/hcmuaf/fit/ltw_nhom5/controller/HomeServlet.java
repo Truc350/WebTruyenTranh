@@ -43,8 +43,27 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+
         HttpSession session = request.getSession(false);
-        User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
+        User currentUser = null;
+        Integer userId = null;
+        if (session != null) {
+            // Lấy từ "currentUser" (như LoginServlet đang lưu)
+            currentUser = (User) session.getAttribute("currentUser");
+
+            if (currentUser != null) {
+                userId = currentUser.getId();
+                System.out.println("✓ Found user from session");
+                System.out.println("  - User ID: " + userId);
+                System.out.println("  - Username: " + currentUser.getUsername());
+            } else {
+                System.out.println("⚠️ No user found in session (Guest user)");
+            }
+        } else {
+            System.out.println("⚠️ No session found (Guest user)");
+        }
 
 
         // Top 5 truyện bán chạy trong tuần
@@ -124,3 +143,7 @@ public class HomeServlet extends HttpServlet {
         doGet(req, resp);
     }
 }
+
+
+
+

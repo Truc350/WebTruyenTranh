@@ -75,7 +75,7 @@ public class RecommendationService {
      * Gợi ý tập tiếp theo của series
      */
     public Comic getNextVolumeRecommendation(int comicId) {
-        Comic currentComic = comicDAO.getComicById1(comicId);
+        Comic currentComic = comicDAO.getComicById(comicId);
         if (currentComic == null || currentComic.getSeriesId() == null) {
             return null;
         }
@@ -86,7 +86,7 @@ public class RecommendationService {
      * Gợi ý comics tương tự (cùng thể loại)
      */
     public List<Comic> getSimilarComics(int comicId, int limit) {
-        Comic comic = comicDAO.getComicById1(comicId);
+        Comic comic = comicDAO.getComicById(comicId);
         if (comic == null || comic.getCategoryId() == null) {
             return comicDAO.getPopularComics(limit);
         }
