@@ -59,7 +59,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Chưa login → hiển thị form
+        // Chưa login thì hiển thị form
         request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
     }
 

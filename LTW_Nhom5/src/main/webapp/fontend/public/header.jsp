@@ -3,6 +3,7 @@
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Category" %>
 <%@ page import="java.util.List" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao" %>
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.User" %>
 <header class="navbar">
     <a href="${pageContext.request.contextPath}/home">
         <div class="logo">
@@ -119,8 +120,23 @@
         <div class="actions user-nav">
             <i class="fa-solid fa-user" id="user"></i>
             <div class="dropdown-user">
-                <a href="../nguoiB/profile.jsp">Trang chủ</a>
-                <a href="login_bo.jsp">Đăng xuất</a>
+                <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp">Trang chủ</a>
+
+                <%
+                    User curnentUser = (User) session.getAttribute("currentUser");
+                    if (curnentUser != null){
+                %>
+                    <a href="<%= request.getContextPath() %>/logout">Đăng xuất</a>
+                <%
+                    } else {
+
+                %>
+                    <a href="<%= request.getContextPath() %>/login">Đăng nhập</a>
+                <%
+                    }
+                %>
+
+
             </div>
         </div>
     </div>

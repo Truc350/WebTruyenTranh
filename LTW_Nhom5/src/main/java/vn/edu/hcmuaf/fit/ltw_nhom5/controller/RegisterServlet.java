@@ -63,6 +63,7 @@ public class RegisterServlet extends HttpServlet {
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
         user.setFullName(username);
+        request.getSession().setAttribute("currentUser", user);
 
         userDao.insert(user);
         response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
