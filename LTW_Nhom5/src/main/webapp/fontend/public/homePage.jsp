@@ -178,275 +178,75 @@
 
         <div id="slider">
             <div class="suggest">
-                <h2>Gợi ý cho bạn</h2>
+                <h2>
+                    <c:choose>
+                        <c:when test="${isLoggedIn}">
+                            <i class="fa-solid fa-star"></i> Dành riêng cho bạn
+                        </c:when>
+                        <c:otherwise>
+                            Gợi ý cho bạn
+                        </c:otherwise>
+                    </c:choose>
+                </h2>
             </div>
 
-            <!-- slider 1 -->
-            <div class="product-slider">
+            <%-- Hiển thị comics gợi ý --%>
+            <c:if test="${not empty recommendedComics}">
+                <%-- Chia thành các slider 8 items/slider --%>
+                <c:forEach var="i" begin="0" end="${(recommendedComics.size() - 1) / 8}" step="1">
+                    <div class="product-slider">
+                        <div class="arrow prev">&#10094;</div>
+                        <div class="slider-track">
+                            <c:forEach var="comic" items="${recommendedComics}"
+                                       begin="${i * 8}"
+                                       end="${i * 8 + 7}">
+                                <div class="product-item">
+                                    <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
+                                        <img src="${comic.thumbnailUrl}"
+                                             alt="${comic.nameComics}"
+                                             onerror="this.src='${pageContext.request.contextPath}/img/no-image.jpg'">
+                                        <p class="product-name">${comic.nameComics}</p>
+                                    </a>
 
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
+                                    <c:choose>
+                                        <c:when test="${comic.hasDiscount()}">
+                                            <p class="product-price">
+                                                <fmt:formatNumber value="${comic.discountPrice}"
+                                                                  pattern="#,###"/>₫
+                                            </p>
+                                            <p class="original-price">
+                                                <s><fmt:formatNumber value="${comic.price}"
+                                                                     pattern="#,###"/>₫</s>
+                                                <span class="discount-badge">
+                                                    -<fmt:formatNumber value="${comic.discountPercent}"
+                                                                       pattern="#"/>%
+                                                </span>
+                                            </p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p class="product-price">
+                                                <fmt:formatNumber value="${comic.price}"
+                                                                  pattern="#,###"/>₫
+                                            </p>
+                                        </c:otherwise>
+                                    </c:choose>
 
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 23</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>196</strong></p>
+                                    <c:if test="${comic.totalSold > 0}">
+                                        <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
+                                    </c:if>
+                                </div>
+                            </c:forEach>
+                        </div>
+                        <div class="arrow next">&#10095;</div>
                     </div>
-                    <div class="product-item">
-                        <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 1</p>
-                        <p class="product-price">₫27,000</p>
-                        <p class="sold">Đã bán: <strong>185</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 11</p>
-                        <p class="product-price">₫16,000</p>
-                        <p class="sold">Đã bán: <strong>128</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 6</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>96</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 3</p>
-                        <p class="product-price">₫22,000</p>
-                        <p class="sold">Đã bán: <strong>46</strong></p>
-                    </div>
+                </c:forEach>
+            </c:if>
 
-                    <div class="product-item">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Doraemon Tập 15</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>135</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 13</p>
-                        <p class="product-price">₫21,000</p>
-                        <p class="sold">Đã bán: <strong>296</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
-                        <p class="product-name">Doraemon Tập 6</p>
-                        <p class="product-price">₫17,000</p>
-                        <p class="sold">Đã bán: <strong>186</strong></p>
-                    </div>
-
-
+            <c:if test="${empty recommendedComics}">
+                <div class="no-products">
+                    <p>Chưa có sản phẩm gợi ý</p>
                 </div>
-
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <!-- slider 2 -->
-            <div class="product-slider">
-
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
-
-                <div class="slider-track">
-                    <div class="product-item">
-                        <a href="detail.jsp">
-                            <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                                 alt="">
-                            <p class="product-name">Thám tử lừng danh Conan tập 100</p>
-                        </a>
-                        <p class="product-price">18,000 đ</p>
-                        <p class="sold">Đã bán: <strong>196</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 36</p>
-                        <p class="product-price">₫27,000</p>
-                        <p class="sold">Đã bán: <strong>108</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 98</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>120</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/a/aa/Volume28v.jpg" alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 28</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>130</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 86</p>
-                        <p class="product-price">₫22,000</p>
-                        <p class="sold">Đã bán: <strong>99</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/thumb/7/7d/Volume75v.jpg/225px-Volume75v.jpg"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 75</p>
-                        <p class="product-price">₫19,000</p>
-                        <p class="sold">Đã bán: <strong>82</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/d/d8/Volume72v.jpg" alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 72</p>
-                        <p class="product-price">₫21,000</p>
-                        <p class="sold">Đã bán: <strong>36</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://www.detectiveconanworld.com/wiki/images/3/30/Volume76v.jpg" alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 76</p>
-                        <p class="product-price">₫17,000</p>
-                        <p class="sold">Đã bán: <strong>83</strong></p>
-                    </div>
-
-
-                </div>
-
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <!-- slider 3 -->
-            <div class="product-slider">
-
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
-
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/61E6Vvsc6pL.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 24</p>
-                        <p class="product-price">₫35,000</p>
-                        <p class="sold">Đã bán: <strong>93</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 45</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>38</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/818RM6H2oHL._SL1500_.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 160</p>
-                        <p class="product-price">₫39,000</p>
-                        <p class="sold">Đã bán: <strong>79</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/81W0jEvdO9L.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 62</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>72</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg"
-                             alt="">
-                        <p class="product-name">Naruto Tâp 208</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>58</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.9v3RcOMUqWTRHXD8RwdBqwHaK0?cb=ucfimg2ucfimg=1&w=876&h=1280&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Naruto Tâp 187</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>17</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://cdn0.fahasa.com/media/catalog/product/n/a/naruto1-2-page-001.jpg" alt="">
-                        <p class="product-name">Naruto Tâp 1</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>49</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Naruto Tâp 123</p>
-                        <p class="product-price">₫25,000</p>
-                        <p class="sold">Đã bán: <strong>76</strong></p>
-                    </div>
-
-
-                </div>
-
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <!-- slider-popup -->
-            <div id="product-slider-popup" class="product-slider">
-
-                <!-- mũi tên trái -->
-                <div class="arrow prev">&#10094;</div>
-
-                <div class="slider-track">
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
-                        <p class="product-name">Onepiece Tâp 8</p>
-                        <p class="product-price">₫35,000</p>
-                        <p class="sold">Đã bán: <strong>103</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 7</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>138</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 75</p>
-                        <p class="product-price">₫39,000</p>
-                        <p class="sold">Đã bán: <strong>109</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Onepiece Tâp 22</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>72</strong></p>
-                    </div>
-                    <div class="product-item">
-                        <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-                        <p class="product-name">Opiece Tâp 21</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>58</strong></p>
-                    </div>
-
-                    <div class="product-item">
-                        <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-                        <p class="product-name">Onepiece Tâp 52</p>
-                        <p class="product-price">₫40,000</p>
-                        <p class="sold">Đã bán: <strong>17</strong></p>
-                    </div>
-
-
-                </div>
-
-                <!-- mũi tên phải -->
-                <div class="arrow next">&#10095;</div>
-            </div>
-
-            <div id="more-btn-popup-slider" class="more-btn">
-                <button>Xem thêm</button>
-            </div>
-
+            </c:if>
         </div>
 
 

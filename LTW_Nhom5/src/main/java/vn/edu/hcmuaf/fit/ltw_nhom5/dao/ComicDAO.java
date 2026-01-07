@@ -1,6 +1,8 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
+import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
+import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
@@ -10,6 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ComicDAO extends ADao {
+    private final Jdbi jdbi;
+
+    public ComicDAO() {
+        this.jdbi = JdbiConnector.get();
+    }
+
+    public ComicDAO(Jdbi jdbi) {
+        this.jdbi = jdbi;
+    }
 
     public List<Comic> searchCandidate(String keyword) {
 
@@ -418,10 +429,9 @@ public class ComicDAO extends ADao {
                         author,
                         publisher,
                         price,
-                        stock_quantity,
                         thumbnail_url
                     FROM Comics
-                    WHERE id = :id AND is_deleted = 0
+                    WHERE id = :id
                 """;
 
 
@@ -433,6 +443,7 @@ public class ComicDAO extends ADao {
                         .orElse(null)
         );
     }
+
 
     /**
      * Lấy danh sách ảnh của truyện
@@ -461,10 +472,10 @@ public class ComicDAO extends ADao {
 
         Comic current = jdbi.withHandle(h ->
                 h.createQuery("""
-            SELECT id, series_id, volume, category_id
-            FROM Comics
-            WHERE id = :comicId
-        """)
+                                    SELECT id, series_id, volume, category_id
+                                    FROM Comics
+                                    WHERE id = :comicId
+                                """)
                         .bind("comicId", comicId)
                         .mapToBean(Comic.class)
                         .one()
@@ -476,16 +487,16 @@ public class ComicDAO extends ADao {
         if (current.getSeriesId() != null && current.getVolume() != null) {
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                SELECT *
-                FROM Comics
-                WHERE series_id = :seriesId
-                  AND volume > :volume
-                  AND id != :comicId
-                  AND is_deleted = 0
-                  AND status = 'available'
-                ORDER BY volume ASC
-                LIMIT 9
-            """)
+                                        SELECT *
+                                        FROM Comics
+                                        WHERE series_id = :seriesId
+                                          AND volume > :volume
+                                          AND id != :comicId
+                                          AND is_deleted = 0
+                                          AND status = 'available'
+                                        ORDER BY volume ASC
+                                        LIMIT 9
+                                    """)
                             .bind("seriesId", current.getSeriesId())
                             .bind("volume", current.getVolume())
                             .bind("comicId", comicId)
@@ -505,15 +516,15 @@ public class ComicDAO extends ADao {
 
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                SELECT *
-                FROM Comics
-                WHERE category_id = :categoryId
-                  AND id NOT IN (<excludedIds>)
-                  AND is_deleted = 0
-                  AND status = 'available'
-                ORDER BY created_at DESC
-                LIMIT :limit
-            """)
+                                        SELECT *
+                                        FROM Comics
+                                        WHERE category_id = :categoryId
+                                          AND id NOT IN (<excludedIds>)
+                                          AND is_deleted = 0
+                                          AND status = 'available'
+                                        ORDER BY created_at DESC
+                                        LIMIT :limit
+                                    """)
                             .bind("categoryId", current.getCategoryId())
                             .bind("limit", need)
                             .bindList("excludedIds", excludedIds)
@@ -533,14 +544,14 @@ public class ComicDAO extends ADao {
 
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                SELECT *
-                FROM Comics
-                WHERE id NOT IN (<excludedIds>)
-                  AND is_deleted = 0
-                  AND status = 'available'
-                ORDER BY RAND()
-                LIMIT :limit
-            """)
+                                        SELECT *
+                                        FROM Comics
+                                        WHERE id NOT IN (<excludedIds>)
+                                          AND is_deleted = 0
+                                          AND status = 'available'
+                                        ORDER BY RAND()
+                                        LIMIT :limit
+                                    """)
                             .bind("limit", need)
                             .bindList("excludedIds", finalExcludedIds)
                             .mapToBean(Comic.class)
@@ -593,4 +604,186 @@ public class ComicDAO extends ADao {
                         .orElse(0.0)
         );
     }
+
+    /**
+     * Gợi ý comics dựa trên wishlist của user
+     * Ưu tiên:
+     * 1. Tập tiếp theo của series đang có trong wishlist
+     * 2. Comics cùng thể loại với wishlist
+     * 3. Comics phổ biến (fallback nếu wishlist trống)
+     */
+    public List<Comic> getRecommendedComics(int userId, int limit) {
+        String sql = """
+                WITH wishlist_data AS(
+                SELECT DISTINCT
+                    c.series_id,
+                    c.category_id,
+                    c.volume
+                FROM Wishlist w
+                JOIN Comics c ON w.comic_id = c.id
+                WHERE w.user_id = :userId
+                AND c.is_deleted = 0
+                ),
+                next_volumes AS(
+                -- Tập tiếp theo của series trong wishlist
+                SELECT DISTINCT c.*,
+                    1 as priority_score,
+                    'next_volume' as reason
+                FROM Comics c
+                JOIN wishlist_data wd ON c.series_id = wd.series_id
+                WHERE c.volume = wd.volume + 1
+                AND c.is_deleted = 0
+                AND c.stock_quantity > 0
+                AND c.id NOT IN (SELECT comic_id FROM Wishlist WHERE user_id = :userId)
+                ),
+                same_category AS(
+                SELECT DISTINCT c.*,
+                2 as priority_score,
+                'same_category' as reason
+                FROM Comics c
+                JOIN wishlist_data wd ON c.category_id = wd.category_id
+                AND c.stock_quantity > 0
+                AND c.id NOT IN (SELECT comic_id FROM Wishlist WHERE user_id = :userId)
+                AND c.id NOT IN (SELECT id FROM next_volumes)
+                ),
+                popular_comics AS (
+                SELECT DISTINCT c.*,
+                3 as priority_score,
+                'popular' as reason
+                FROM Comics c
+                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                LEFT JOIN Orders o ON oi.order_id = o.id
+                AND o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                WHERE c.is_deleted = 0
+                AND c.stock_quantity > 0
+                AND c.id NOT IN (SELECT comic_id FROM Wishlist WHERE user_id = :userId)
+                AND c.id NOT IN (SELECT id FROM next_volumes)
+                AND c.id NOT IN (SELECT id FROM same_category)
+                GROUP BY c.id
+                ORDER BY COUNT(oi.id) DESC
+                )
+                SELECT * FROM (
+                  SELECT * FROM next_volumes
+                  UNION ALL
+                  SELECT * FROM same_category
+                  UNION ALL
+                  SELECT * FROM popular_comics
+                  ) as recommended
+                  ORDER BY priority_score, RAND()
+                  LIMIT :limit
+                """;
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).bind("userId", userId).bind("limit", limit).mapToBean(Comic.class).list()
+        );
+    }
+
+    /**
+     * Gợi ý cho user chưa đăng nhập hoặc wishlist trống
+     */
+    public List<Comic> getPopularComics(int limit) {
+        String sql = """
+                SELECT c.*
+                FROM Comics c
+                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                LEFT JOIN Orders o ON oi.order_id = o.id\s
+                     AND o.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                WHERE c.is_deleted = 0
+                AND c.stock_quantity > 0
+                GROUP BY c.id
+                ORDER BY COUNT(oi.id) DESC, c.created_at DESC
+                LIMIT :limit
+                """;
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", limit)
+                        .mapToBean(Comic.class).list()
+        );
+    }
+
+    /**
+     * Lấy tập tiếp theo của một series
+     */
+    public Comic getNextVolume(int seriesId, int currentVolume) {
+        String sql = """
+                SELECT * FROM Comics
+                WHERE series_id = :seriesId
+                AND volume = :nextVolume
+                AND is_deleted = 0
+                AND stock_quantity > 0
+                LIMIT 1
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .bind("nextVolume", currentVolume + 1)
+                        .mapToBean(Comic.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    /**
+     * Lấy comics cùng thể loại
+     */
+    public List<Comic> getComicsByCategory(int categoryId, int excludeComicId, int limit) {
+        String sql = """
+                SELECT * FROM Comics
+                WHERE category_id = :categoryId
+                AND id != :excludeId
+                AND is_deleted = 0
+                AND stock_quantity > 0
+                ORDER BY RAND()
+                LIMIT :limit
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .bind("excludeId", excludeComicId)
+                        .bind("limit", limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy top comics bán chạy trong tuần
+     */
+    public List<Comic> getTopSellingComics(int limit) {
+        String sql = """
+                SELECT c.*, 
+                    COALESCE(SUM(oi.quantity), 0) as totalSold
+                FROM Comics c
+                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                LEFT JOIN Orders o ON oi.order_id = o.id
+                    AND o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                    AND o.status != 'cancelled'
+                WHERE c.is_deleted = 0
+                GROUP BY c.id
+                ORDER BY totalSold DESC, c.created_at DESC
+                LIMIT :limit
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy comic theo ID
+     */
+    public Comic getComicById1(int id) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Comics WHERE id = :id AND is_deleted = 0")
+                        .bind("id", id)
+                        .mapToBean(Comic.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
 }
+
