@@ -866,17 +866,32 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> searchComicsAdmin(String keyword, String author, Integer categoryId,
                                          int page, int limit) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String searchTerm = keyword.trim().toLowerCase();
+
         StringBuilder sql = new StringBuilder("""
-                    SELECT c.*, s.series_name, cat.name_categories
+                    SELECT distinct c.*, s.series_name
+                    , cat.name_categories as categoryName
                     FROM Comics c
                     LEFT JOIN Series s ON c.series_id = s.id
                     LEFT JOIN Categories cat ON c.category_id = cat.id
                     WHERE c.is_deleted = 0
+                    AND (
+                         LOWER(c.name_comics) LIKE :keyword
+                         OR LOWER(c.author) LIKE :keyword
+                         OR LOWER(cat.name_categories) LIKE :keyword
+                         OR LOWER(s.series_name) LIKE :keyword
                 """);
 
-        if (keyword != null && !keyword.isEmpty()) {
-            sql.append(" AND LOWER(c.name_comics) LIKE :keyword");
+        // Nếu keyword chứa số → tìm theo volume
+        String numberOnly = keyword.replaceAll("\\D+", "");
+        if (!numberOnly.isEmpty()) {
+            sql.append(" OR c.volume = :volume");
         }
+
+        sql.append(")");
 
         if (author != null && !author.isEmpty()) {
             sql.append(" AND LOWER(c.author) LIKE :author");
@@ -891,11 +906,18 @@ public class ComicDAO extends ADao {
 
         return jdbi.withHandle(handle -> {
             var query = handle.createQuery(sql.toString())
+                    .bind("keyword", "%" + searchTerm + "%")
                     .bind("limit", limit)
                     .bind("offset", (page - 1) * limit);
 
-            if (keyword != null && !keyword.isEmpty()) {
-                query.bind("keyword", "%" + keyword.toLowerCase() + "%");
+            // Bind volume nếu có số
+            if (!numberOnly.isEmpty()) {
+                try {
+                    int volumeNumber = Integer.parseInt(numberOnly);
+                    query.bind("volume", volumeNumber);
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
             }
 
             if (author != null && !author.isEmpty()) {
@@ -914,16 +936,34 @@ public class ComicDAO extends ADao {
      * Đếm số truyện (không dùng SearchFilter)
      */
     public int countComicsAdmin(String keyword, String author, Integer categoryId) {
-        StringBuilder sql = new StringBuilder("""
-                    SELECT COUNT(*) 
-                    FROM Comics c
-                    WHERE c.is_deleted = 0
-                """);
-
-        if (keyword != null && !keyword.isEmpty()) {
-            sql.append(" AND LOWER(c.name_comics) LIKE :keyword");
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return 0;
         }
 
+        String searchTerm = keyword.trim().toLowerCase();
+
+        StringBuilder sql = new StringBuilder("""
+                SELECT COUNT(DISTINCT c.id)
+                FROM Comics c
+                LEFT JOIN Series s ON c.series_id = s.id
+                LEFT JOIN Categories cat ON c.category_id = cat.id
+                WHERE c.is_deleted = 0
+                AND (
+                    LOWER(c.name_comics) LIKE :keyword
+                    OR LOWER(c.author) LIKE :keyword
+                    OR LOWER(cat.name_categories) LIKE :keyword
+                    OR LOWER(s.series_name) LIKE :keyword
+                """);
+
+        // Nếu keyword chứa số → tìm theo volume
+        String numberOnly = keyword.replaceAll("\\D+", "");
+        if (!numberOnly.isEmpty()) {
+            sql.append(" OR c.volume = :volume");
+        }
+
+        sql.append(")");
+
+        // Thêm điều kiện filter nếu có
         if (author != null && !author.isEmpty()) {
             sql.append(" AND LOWER(c.author) LIKE :author");
         }
@@ -933,10 +973,17 @@ public class ComicDAO extends ADao {
         }
 
         return jdbi.withHandle(handle -> {
-            var query = handle.createQuery(sql.toString());
+            var query = handle.createQuery(sql.toString())
+                    .bind("keyword", "%" + searchTerm + "%");
 
-            if (keyword != null && !keyword.isEmpty()) {
-                query.bind("keyword", "%" + keyword.toLowerCase() + "%");
+            // Bind volume nếu có số
+            if (!numberOnly.isEmpty()) {
+                try {
+                    int volumeNumber = Integer.parseInt(numberOnly);
+                    query.bind("volume", volumeNumber);
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
             }
 
             if (author != null && !author.isEmpty()) {
@@ -956,7 +1003,7 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getAllComicsAdmin(int page, int limit) {
         String sql = """
-                SELECT c.*, s.series_name, cat.name_categories
+                SELECT c.*, s.series_name, cat.name_categories AS categoryName
                 FROM Comics c
                 LEFT JOIN Series s ON c.series_id = s.id
                 LEFT JOIN Categories cat ON c.category_id = cat.id

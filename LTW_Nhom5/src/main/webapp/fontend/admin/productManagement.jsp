@@ -138,88 +138,6 @@
                 </tr>
                 </thead>
                 <tbody id="productTableBody">
-                <tr>
-                    <td>TT001</td>
-                    <td>Thám tử lừng danh Conan</td>
-                    <td>-</td>
-                    <td>Trinh thám</td>
-                    <td>Gosho Aoyama</td>
-                    <td>22,500₫</td>
-                    <td>550 quyển</td>
-                    <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT001" title="Xem review">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </td>
-                    <td class="action-cell">
-                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <div class="menu-container">
-                            <button class="more-btn">⋮</button>
-                            <div class="dropdown-menu">
-                                <label><input type="radio" name="display" checked> Hiển thị</label>
-                                <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>TT002</td>
-                    <td>Doraemon</td>
-                    <td>-</td>
-                    <td>Phiêu lưuy</td>
-                    <td>Fujiko F. Fujio</td>
-                    <td>18,000₫</td>
-                    <td>320 quyển</td>
-                    <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT002" title="Xem review"><i
-                                class="fa-solid fa-eye"></i></button>
-                    </td>
-                    <td class="action-cell">
-                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <div class="menu-container">
-                            <button class="more-btn">⋮</button> <!--menu-btn-->
-                            <div class="dropdown-menu"> <!--menu-options-->
-                                <label><input type="radio" name="display" checked> Hiển thị</label>
-                                <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>TT003</td>
-                    <td>One Piece - Tập 3</td>
-                    <td>East Blue Saga</td>
-                    <td>Phiêu lưu</td>
-                    <td>Fujiko F. Fujio</td>
-                    <td>18,000₫</td>
-                    <td>320 quyển</td>
-                    <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT003" title="Xem review"><i
-                                class="fa-solid fa-eye"></i></button>
-                    </td>
-                    <td class="action-cell">
-                        <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <div class="menu-container">
-                            <button class="more-btn">⋮</button> <!--menu-btn-->
-                            <div class="dropdown-menu"> <!--menu-options-->
-                                <label><input type="radio" name="display" checked> Hiển thị</label>
-                                <label><input type="radio" name="display"> Ẩn sản phẩm</label>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr class="pagination-row">
-                    <td colspan="10">
-                        <div class="pagination">
-                            <button class="page-btn product-page" data-page="1">1</button>
-                            <button class="page-btn product-page" data-page="2">2</button>
-                            <button class="page-btn product-page" data-page="3">3</button>
-                        </div>
-                    </td>
-                </tr>
-
                 </tbody>
             </table>
         </div>
@@ -616,6 +534,8 @@
                 currentPage = data.currentPage;
                 updateTable(data.comics);
                 updatePagination(data.currentPage, data.totalPages);
+
+                bindEventListeners();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -628,13 +548,6 @@
     function updateTable(comics) {
         const tbody = document.getElementById('productTableBody');
 
-        // DEBUG: Xem data trả về
-        console.log('📊 Comics data:', comics);
-        if (comics.length > 0) {
-            console.log('📊 First comic:', comics[0]);
-            console.log('📊 seriesName:', comics[0].seriesName);
-            console.log('📊 categoryName:', comics[0].categoryName);
-        }
 
         if (!comics || comics.length === 0) {
             tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #999;">' +
@@ -711,6 +624,53 @@
         return new Intl.NumberFormat('vi-VN').format(price);
     }
 
+    // HÀM BIND LẠI EVENT LISTENERS SAU KHI RENDER
+    function bindEventListeners() {
+        // 1. Bind event cho nút "Xem review"
+        document.querySelectorAll('.view-review-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const comicId = this.dataset.comic;
+                const popup = document.getElementById(`review-${comicId}`);
+                if (popup) {
+                    popup.style.display = 'flex';
+                } else {
+                    alert('Popup review cho truyện ID ' + comicId + ' chưa được tạo!');
+                }
+            });
+        });
+
+        // 2. Bind event cho nút "Sửa"
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const comicId = this.dataset.comicId;
+                console.log('Edit comic ID:', comicId);
+
+                // Mở popup sửa
+                document.getElementById('editModal').style.display = 'flex';
+
+                // TODO: Load dữ liệu truyện vào form
+                // loadComicDataToEditForm(comicId);
+            });
+        });
+
+        // 3. Bind event cho menu "Hiện/Ẩn"
+        document.querySelectorAll('.more-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // Đóng menu khác nếu có
+                document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+
+                const menu = this.nextElementSibling;
+                const rect = this.getBoundingClientRect();
+
+                menu.style.display = 'block';
+                menu.style.top = rect.bottom + 'px';
+                menu.style.left = (rect.right - menu.offsetWidth) + 'px';
+            });
+        });
+    }
+
     // Tìm kiếm khi nhấn Enter
     document.getElementById('mainSearchInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -718,13 +678,9 @@
         }
     });
 
-    // Auto-search sau 500ms
-    let searchTimeout;
-    document.getElementById('mainSearchInput').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(function() {
-            searchProducts(1);
-        }, 500);
+    // BIND EVENT CHO CÁC PHẦN TỬ BAN ĐẦU (TỪ HTML TĨnh)
+    document.addEventListener('DOMContentLoaded', function() {
+        bindEventListeners();
     });
 </script>
 

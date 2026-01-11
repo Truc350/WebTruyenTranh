@@ -52,7 +52,7 @@ public class AdminProductManagementServlet extends HttpServlet {
                 }
             }
 
-            int limit = 10;
+            int limit = 8;
 
             // Tìm kiếm
             List<Comic> comics;
@@ -66,18 +66,12 @@ public class AdminProductManagementServlet extends HttpServlet {
                 totalComics = comicService.countAllComics();
             }
 
-
             // Tính số trang
             int totalPages = (int) Math.ceil((double) totalComics / limit);
-
 
             // CONVERT TO SIMPLE DTO
             List<Map<String, Object>> simplifiedComics = new ArrayList<>();
             for (Comic comic : comics) {
-                System.out.println("🔍 Comic ID: " + comic.getId());
-                System.out.println("   seriesName: " + comic.getSeriesName());
-                System.out.println("   categoryName: " + comic.getCategoryName());
-
                 Map<String, Object> dto = new HashMap<>();
                 dto.put("id", comic.getId());
                 dto.put("nameComics", comic.getNameComics());
@@ -101,8 +95,6 @@ public class AdminProductManagementServlet extends HttpServlet {
 
             response.getWriter().write(jsonResponse);
             response.getWriter().flush();
-
-            System.out.println("✅ Success!");
 
         } catch (Exception e) {
             System.err.println("❌ ERROR:");
