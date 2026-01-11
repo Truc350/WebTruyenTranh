@@ -1,18 +1,28 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 import java.time.LocalDateTime;
 
 public class Series {
     private int id;
+    @ColumnName("series_name")
     private String seriesName;
     private String description;
+    @ColumnName("cover_url")
     private String coverUrl;
+    @ColumnName("total_volumes")
     private int totalVolumes;
     private String status;
+    @ColumnName("is_deleted")
     private boolean isDeleted;
+    @ColumnName("is_hidden")
     private boolean isHidden;
+    @ColumnName("deleted_at")
     private LocalDateTime deletedAt;
+    @ColumnName("created_at")
     private LocalDateTime createdAt;
+    @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
     public Series() {

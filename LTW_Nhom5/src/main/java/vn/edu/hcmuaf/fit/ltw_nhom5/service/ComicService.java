@@ -2,9 +2,11 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.service;
 
 import org.jdbi.v3.core.Jdbi;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
@@ -16,6 +18,7 @@ public class ComicService {
     private final Jdbi jdbi;
     private final ComicDAO comicDAO;
     private SeriesDAO seriesDAO = new SeriesDAO();
+    private CategoriesDao categoriesDao = new CategoriesDao();
 
     public ComicService() {
         this.jdbi = JdbiConnector.get();
@@ -186,5 +189,41 @@ public class ComicService {
     public String getSeriesName(Integer seriesId) {
         if (seriesId == null) return null;
         return seriesDAO.getSeriesNameById(seriesId);
+    }
+
+    /**
+     * Tìm kiếm truyện
+     */
+    public List<Comic> searchComicsAdmin(String keyword, String author, Integer categoryId,
+                                         int page, int limit) {
+        return comicDAO.searchComicsAdmin(keyword, author, categoryId, page, limit);
+    }
+
+    /**
+     * Đếm số truyện theo filter
+     */
+    public int countComicsAdmin(String keyword, String author, Integer categoryId) {
+        return comicDAO.countComicsAdmin(keyword, author, categoryId);
+    }
+
+    /**
+     * Lấy tất cả truyện
+     */
+    public List<Comic> getAllComicsAdmin(int page, int limit) {
+        return comicDAO.getAllComicsAdmin(page, limit);
+    }
+
+    /**
+     * Đếm tổng số truyện
+     */
+    public int countAllComics() {
+        return comicDAO.countAllComics();
+    }
+
+    /**
+     * Lấy danh sách thể loại (cho dropdown)
+     */
+    public List<Category> getAllCategories() {
+        return categoriesDao.listCategories();
     }
 }

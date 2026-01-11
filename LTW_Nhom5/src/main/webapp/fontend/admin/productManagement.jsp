@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,12 +65,12 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-<%--            <li>--%>
-<%--                <a href="promotion.jsp">--%>
-<%--                    <img src="../../img/promo.png" class="icon">--%>
-<%--                    <span>Quản lý khuyến mãi</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
+            <%--            <li>--%>
+            <%--                <a href="promotion.jsp">--%>
+            <%--                    <img src="../../img/promo.png" class="icon">--%>
+            <%--                    <span>Quản lý khuyến mãi</span>--%>
+            <%--                </a>--%>
+            <%--            </li>--%>
             <li>
                 <a href="report.jsp">
                     <img src="../../img/report.png" class="icon">
@@ -103,17 +106,20 @@
         <h2 class="page-title">Quản lý sản phẩm</h2>
 
         <div class="table-container">
-            <div class="search-add">
-                <div class="search-box">
-                    <input type="text" placeholder="Tìm kiếm truyện...">
-                    <i class="fas fa-magnifying-glass"></i>
-                </div>
 
-                <div class="action-buttons">
-                    <button class="add-btn">+ Thêm truyện</button>
-                    <button class="delete-btn">Xóa truyện</button>
+                <div class="search-add">
+                    <div class="search-box">
+                        <input type="text" id="mainSearchInput" name="keyword" placeholder="Tìm kiếm truyện..." value="${param.keyword}">
+                        <button type="submit" onclick="searchProducts()">
+                            <i class="fas fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="add-btn">+ Thêm truyện</button>
+                        <button class="delete-btn">Xóa truyện</button>
+                    </div>
                 </div>
-            </div>
         </div>
 
         <div class="table-wrapper">
@@ -166,7 +172,8 @@
                     <td>18,000₫</td>
                     <td>320 quyển</td>
                     <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT002" title="Xem review"><i class="fa-solid fa-eye"></i></button>
+                        <button class="view-review-btn" data-comic="TT002" title="Xem review"><i
+                                class="fa-solid fa-eye"></i></button>
                     </td>
                     <td class="action-cell">
                         <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -188,7 +195,8 @@
                     <td>18,000₫</td>
                     <td>320 quyển</td>
                     <td class="review-cell">
-                        <button class="view-review-btn" data-comic="TT003" title="Xem review"><i class="fa-solid fa-eye"></i></button>
+                        <button class="view-review-btn" data-comic="TT003" title="Xem review"><i
+                                class="fa-solid fa-eye"></i></button>
                     </td>
                     <td class="action-cell">
                         <button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -577,6 +585,148 @@
 
 </div>
 
+<script>
+    let currentPage = 1;
+
+    function searchProducts(page = 1) {
+        const keyword = document.getElementById('mainSearchInput').value.trim();
+        const tbody = document.getElementById('productTableBody');
+
+        // Hiển thị loading
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">' +
+            '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
+            '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
+
+        // Gọi API
+        const url = '${pageContext.request.contextPath}/admin/products/search?keyword=' +
+            encodeURIComponent(keyword) + '&page=' + page;
+
+        console.log('Calling API:', url); // DEBUG
+
+        fetch(url)
+            .then(response => {
+                console.log('Response status:', response.status); // DEBUG
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data); // DEBUG
+                currentPage = data.currentPage;
+                updateTable(data.comics);
+                updatePagination(data.currentPage, data.totalPages);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
+                    '<i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>' +
+                    '<p style="margin-top: 10px;">Có lỗi xảy ra: ' + error.message + '</p></td></tr>';
+            });
+    }
+
+    function updateTable(comics) {
+        const tbody = document.getElementById('productTableBody');
+
+        // DEBUG: Xem data trả về
+        console.log('📊 Comics data:', comics);
+        if (comics.length > 0) {
+            console.log('📊 First comic:', comics[0]);
+            console.log('📊 seriesName:', comics[0].seriesName);
+            console.log('📊 categoryName:', comics[0].categoryName);
+        }
+
+        if (!comics || comics.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #999;">' +
+                '<i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>' +
+                '<p style="margin: 0; font-size: 16px;">Không tìm thấy truyện nào</p></td></tr>';
+            return;
+        }
+
+        let html = '';
+
+        comics.forEach(function(comic) {
+            console.log('Comic ID:', comic.id, '| seriesName:', comic.seriesName, '| categoryName:', comic.categoryName);
+            html += '<tr>' +
+                '<td>' + comic.id + '</td>' +
+                '<td>' + comic.nameComics + '</td>' +
+                '<td>' + (comic.seriesName || '-') + '</td>' +
+                '<td>' + (comic.categoryName || 'Chưa phân loại') + '</td>' +
+                '<td>' + (comic.author || '-') + '</td>' +
+                '<td>' + formatPrice(comic.price) + ' đ</td>' +
+                '<td>' + comic.stockQuantity + ' quyển</td>' +
+                '<td class="review-cell">' +
+                '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
+                '<i class="fa-solid fa-eye"></i>' +
+                '</button>' +
+                '</td>' +
+                '<td class="action-cell">' +
+                '<button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>' +
+                '<div class="menu-container">' +
+                '<button class="more-btn">⋮</button>' +
+                '<div class="dropdown-menu">' +
+                '<label><input type="radio" name="display-' + comic.id + '" checked> Hiển thị</label>' +
+                '<label><input type="radio" name="display-' + comic.id + '"> Ẩn sản phẩm</label>' +
+                '</div>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    function updatePagination(currentPage, totalPages) {
+        const tbody = document.getElementById('productTableBody');
+
+        if (totalPages <= 1) {
+            return;
+        }
+
+        let paginationHtml = '<tr class="pagination-row"><td colspan="9"><div class="pagination">';
+
+        if (currentPage > 1) {
+            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + (currentPage - 1) + ')">&laquo;</button>';
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                const activeClass = i === currentPage ? 'active' : '';
+                paginationHtml += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
+            } else if (i === currentPage - 3 || i === currentPage + 3) {
+                paginationHtml += '<span>...</span>';
+            }
+        }
+
+        if (currentPage < totalPages) {
+            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + (currentPage + 1) + ')">&raquo;</button>';
+        }
+
+        paginationHtml += '</div></td></tr>';
+
+        tbody.insertAdjacentHTML('beforeend', paginationHtml);
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('vi-VN').format(price);
+    }
+
+    // Tìm kiếm khi nhấn Enter
+    document.getElementById('mainSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchProducts(1);
+        }
+    });
+
+    // Auto-search sau 500ms
+    let searchTimeout;
+    document.getElementById('mainSearchInput').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function() {
+            searchProducts(1);
+        }, 500);
+    });
+</script>
 
 <!--action của hiện/ ẩn sản phẩm-->
 <script>
@@ -725,35 +875,6 @@
 </script>
 
 <script>
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('productTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-        const pageButtons = document.querySelectorAll('.product-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.product-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-    })();
-</script>
-
-<script>
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
@@ -821,24 +942,24 @@
 
 <!--SUA TRUYEN-->
 <script>
-        // Click ảnh trong popup Thêm truyện → mở chọn file
-        document.querySelectorAll(".image-upload .img-box").forEach((box) => {
+    // Click ảnh trong popup Thêm truyện → mở chọn file
+    document.querySelectorAll(".image-upload .img-box").forEach((box) => {
         box.addEventListener("click", () => {
             const input = box.parentElement.querySelector(".imgInput");
             if (input) input.click();
         });
     });
 
-        // Click ảnh trong popup Sửa truyện → mở chọn file
-        document.querySelectorAll("#editModal .image-upload .img-box").forEach((box) => {
+    // Click ảnh trong popup Sửa truyện → mở chọn file
+    document.querySelectorAll("#editModal .image-upload .img-box").forEach((box) => {
         box.addEventListener("click", () => {
             const input = box.parentElement.querySelector(".editImgInput");
             if (input) input.click();
         });
     });
 
-        // Hiển thị ảnh preview cho popup Sửa
-        document.querySelectorAll(".editImgInput").forEach((input) => {
+    // Hiển thị ảnh preview cho popup Sửa
+    document.querySelectorAll(".editImgInput").forEach((input) => {
         input.addEventListener("change", () => {
             const file = input.files[0];
             if (file) {
