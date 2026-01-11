@@ -615,75 +615,75 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getRecommendedComics(int userId, int limit) {
         String sql = """
-        WITH wishlist_series AS (
-            SELECT DISTINCT 
-                c.series_id,
-                MAX(c.volume) as max_volume
-            FROM Wishlist w
-            JOIN Comics c ON w.comic_id = c.id
-            WHERE w.user_id = :userId 
-            AND c.is_deleted = 0
-            AND c.series_id IS NOT NULL
-            GROUP BY c.series_id
-        ),
-        wishlist_categories AS (
-            SELECT DISTINCT c.category_id
-            FROM Wishlist w
-            JOIN Comics c ON w.comic_id = c.id
-            WHERE w.user_id = :userId 
-            AND c.is_deleted = 0
-            AND c.category_id IS NOT NULL
-        ),
-        next_volumes AS (
-            SELECT 
-                c.*,
-                COALESCE(SUM(oi.quantity), 0) as totalSold,
-                1 as priority
-            FROM Comics c
-            INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
-            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-            LEFT JOIN Orders o ON oi.order_id = o.id 
-                AND o.status NOT IN ('cancelled', 'returned')
-                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-            WHERE c.volume = ws.max_volume + 1
-            AND c.is_deleted = 0
-            AND c.stock_quantity > 0
-            AND NOT EXISTS (
-                SELECT 1 FROM Wishlist w2 
-                WHERE w2.user_id = :userId AND w2.comic_id = c.id
-            )
-            GROUP BY c.id
-        ),
-        same_category AS (
-            SELECT 
-                c.*,
-                COALESCE(SUM(oi.quantity), 0) as totalSold,
-                2 as priority
-            FROM Comics c
-            INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
-            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-            LEFT JOIN Orders o ON oi.order_id = o.id 
-                AND o.status NOT IN ('cancelled', 'returned')
-                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-            WHERE c.is_deleted = 0
-            AND c.stock_quantity > 0
-            AND NOT EXISTS (
-                SELECT 1 FROM Wishlist w2 
-                WHERE w2.user_id = :userId AND w2.comic_id = c.id
-            )
-            AND c.id NOT IN (SELECT id FROM next_volumes)
-            GROUP BY c.id
-            ORDER BY RAND()
-            LIMIT :limit
-        )
-        SELECT * FROM (
-            SELECT * FROM next_volumes
-            UNION ALL
-            SELECT * FROM same_category
-        ) as final_result
-        ORDER BY priority, RAND()
-        LIMIT :limit
-        """;
+                WITH wishlist_series AS (
+                    SELECT DISTINCT 
+                        c.series_id,
+                        MAX(c.volume) as max_volume
+                    FROM Wishlist w
+                    JOIN Comics c ON w.comic_id = c.id
+                    WHERE w.user_id = :userId 
+                    AND c.is_deleted = 0
+                    AND c.series_id IS NOT NULL
+                    GROUP BY c.series_id
+                ),
+                wishlist_categories AS (
+                    SELECT DISTINCT c.category_id
+                    FROM Wishlist w
+                    JOIN Comics c ON w.comic_id = c.id
+                    WHERE w.user_id = :userId 
+                    AND c.is_deleted = 0
+                    AND c.category_id IS NOT NULL
+                ),
+                next_volumes AS (
+                    SELECT 
+                        c.*,
+                        COALESCE(SUM(oi.quantity), 0) as totalSold,
+                        1 as priority
+                    FROM Comics c
+                    INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
+                    LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                    LEFT JOIN Orders o ON oi.order_id = o.id 
+                        AND o.status NOT IN ('cancelled', 'returned')
+                        AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    WHERE c.volume = ws.max_volume + 1
+                    AND c.is_deleted = 0
+                    AND c.stock_quantity > 0
+                    AND NOT EXISTS (
+                        SELECT 1 FROM Wishlist w2 
+                        WHERE w2.user_id = :userId AND w2.comic_id = c.id
+                    )
+                    GROUP BY c.id
+                ),
+                same_category AS (
+                    SELECT 
+                        c.*,
+                        COALESCE(SUM(oi.quantity), 0) as totalSold,
+                        2 as priority
+                    FROM Comics c
+                    INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
+                    LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                    LEFT JOIN Orders o ON oi.order_id = o.id 
+                        AND o.status NOT IN ('cancelled', 'returned')
+                        AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    WHERE c.is_deleted = 0
+                    AND c.stock_quantity > 0
+                    AND NOT EXISTS (
+                        SELECT 1 FROM Wishlist w2 
+                        WHERE w2.user_id = :userId AND w2.comic_id = c.id
+                    )
+                    AND c.id NOT IN (SELECT id FROM next_volumes)
+                    GROUP BY c.id
+                    ORDER BY RAND()
+                    LIMIT :limit
+                )
+                SELECT * FROM (
+                    SELECT * FROM next_volumes
+                    UNION ALL
+                    SELECT * FROM same_category
+                ) as final_result
+                ORDER BY priority, RAND()
+                LIMIT :limit
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -693,25 +693,26 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
+
     /**
      * Gợi ý cho user chưa đăng nhập hoặc wishlist trống
      */
     public List<Comic> getPopularComics(int limit) {
         String sql = """
-        SELECT 
-            c.*,
-            COALESCE(SUM(oi.quantity), 0) as totalSold
-        FROM Comics c
-        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-        LEFT JOIN Orders o ON oi.order_id = o.id 
-            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-            AND o.status NOT IN ('cancelled', 'returned')
-        WHERE c.is_deleted = 0
-        AND c.stock_quantity > 0
-        GROUP BY c.id
-        ORDER BY totalSold DESC, c.created_at DESC
-        LIMIT :limit
-        """;
+                SELECT 
+                    c.*,
+                    COALESCE(SUM(oi.quantity), 0) as totalSold
+                FROM Comics c
+                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                LEFT JOIN Orders o ON oi.order_id = o.id 
+                    AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    AND o.status NOT IN ('cancelled', 'returned')
+                WHERE c.is_deleted = 0
+                AND c.stock_quantity > 0
+                GROUP BY c.id
+                ORDER BY totalSold DESC, c.created_at DESC
+                LIMIT :limit
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -726,13 +727,13 @@ public class ComicDAO extends ADao {
      */
     public Comic getNextVolume(int seriesId, int currentVolume) {
         String sql = """
-            SELECT * FROM Comics
-            WHERE series_id = :seriesId
-            AND volume = :nextVolume
-            AND is_deleted = 0
-            AND stock_quantity > 0
-            LIMIT 1
-            """;
+                SELECT * FROM Comics
+                WHERE series_id = :seriesId
+                AND volume = :nextVolume
+                AND is_deleted = 0
+                AND stock_quantity > 0
+                LIMIT 1
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -749,14 +750,14 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getComicsByCategory(int categoryId, int excludeComicId, int limit) {
         String sql = """
-            SELECT * FROM Comics
-            WHERE category_id = :categoryId
-            AND id != :excludeId
-            AND is_deleted = 0
-            AND stock_quantity > 0
-            ORDER BY RAND()
-            LIMIT :limit
-            """;
+                SELECT * FROM Comics
+                WHERE category_id = :categoryId
+                AND id != :excludeId
+                AND is_deleted = 0
+                AND stock_quantity > 0
+                ORDER BY RAND()
+                LIMIT :limit
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -773,18 +774,18 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getTopSellingComics(int limit) {
         String sql = """
-        SELECT c.*, 
-            COALESCE(SUM(oi.quantity), 0) as totalSold
-        FROM Comics c
-        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-        LEFT JOIN Orders o ON oi.order_id = o.id
-            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-            AND o.status NOT IN ('cancelled', 'returned')
-        WHERE c.is_deleted = 0
-        GROUP BY c.id
-        ORDER BY totalSold DESC, c.created_at DESC
-        LIMIT :limit
-        """;
+                SELECT c.*, 
+                    COALESCE(SUM(oi.quantity), 0) as totalSold
+                FROM Comics c
+                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+                LEFT JOIN Orders o ON oi.order_id = o.id
+                    AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                    AND o.status NOT IN ('cancelled', 'returned')
+                WHERE c.is_deleted = 0
+                GROUP BY c.id
+                ORDER BY totalSold DESC, c.created_at DESC
+                LIMIT :limit
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -812,19 +813,19 @@ public class ComicDAO extends ADao {
      */
     public void debugWishlist(int userId) {
         String sql = """
-            SELECT 
-                c.id,
-                c.name_comics,
-                c.series_id,
-                c.volume,
-                c.category_id,
-                cat.name_categories as category_name
-            FROM Wishlist w
-            JOIN Comics c ON w.comic_id = c.id
-            LEFT JOIN Categories cat ON c.category_id = cat.id
-            WHERE w.user_id = :userId
-            ORDER BY w.added_at DESC
-            """;
+                SELECT 
+                    c.id,
+                    c.name_comics,
+                    c.series_id,
+                    c.volume,
+                    c.category_id,
+                    cat.name_categories as category_name
+                FROM Wishlist w
+                JOIN Comics c ON w.comic_id = c.id
+                LEFT JOIN Categories cat ON c.category_id = cat.id
+                WHERE w.user_id = :userId
+                ORDER BY w.added_at DESC
+                """;
 
         jdbi.withHandle(handle -> {
             System.out.println("\n========== WISHLIST DEBUG (User " + userId + ") ==========");
@@ -842,6 +843,7 @@ public class ComicDAO extends ADao {
             return null;
         });
     }
+
     public void debugRecommendations(int userId, int limit) {
         debugWishlist(userId);
 
@@ -857,6 +859,178 @@ public class ComicDAO extends ADao {
             System.out.println("   - Category ID: " + c.getCategoryId());
         }
         System.out.println("==========================================\n");
+    }
+
+    /**
+     * Tìm kiếm truyện với nhiều điều kiện
+     */
+    public List<Comic> searchComicsAdmin(String keyword, String author, Integer categoryId,
+                                         int page, int limit) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        String searchTerm = keyword.trim().toLowerCase();
+
+        StringBuilder sql = new StringBuilder("""
+                    SELECT distinct c.*, s.series_name
+                    , cat.name_categories as categoryName
+                    FROM Comics c
+                    LEFT JOIN Series s ON c.series_id = s.id
+                    LEFT JOIN Categories cat ON c.category_id = cat.id
+                    WHERE c.is_deleted = 0
+                    AND (
+                         LOWER(c.name_comics) LIKE :keyword
+                         OR LOWER(c.author) LIKE :keyword
+                         OR LOWER(cat.name_categories) LIKE :keyword
+                         OR LOWER(s.series_name) LIKE :keyword
+                """);
+
+        // Nếu keyword chứa số → tìm theo volume
+        String numberOnly = keyword.replaceAll("\\D+", "");
+        if (!numberOnly.isEmpty()) {
+            sql.append(" OR c.volume = :volume");
+        }
+
+        sql.append(")");
+
+        if (author != null && !author.isEmpty()) {
+            sql.append(" AND LOWER(c.author) LIKE :author");
+        }
+
+        if (categoryId != null) {
+            sql.append(" AND c.category_id = :categoryId");
+        }
+
+        sql.append(" ORDER BY c.created_at DESC");
+        sql.append(" LIMIT :limit OFFSET :offset");
+
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString())
+                    .bind("keyword", "%" + searchTerm + "%")
+                    .bind("limit", limit)
+                    .bind("offset", (page - 1) * limit);
+
+            // Bind volume nếu có số
+            if (!numberOnly.isEmpty()) {
+                try {
+                    int volumeNumber = Integer.parseInt(numberOnly);
+                    query.bind("volume", volumeNumber);
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
+            }
+
+            if (author != null && !author.isEmpty()) {
+                query.bind("author", "%" + author.toLowerCase() + "%");
+            }
+
+            if (categoryId != null) {
+                query.bind("categoryId", categoryId);
+            }
+
+            return query.mapToBean(Comic.class).list();
+        });
+    }
+
+    /**
+     * Đếm số truyện (không dùng SearchFilter)
+     */
+    public int countComicsAdmin(String keyword, String author, Integer categoryId) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return 0;
+        }
+
+        String searchTerm = keyword.trim().toLowerCase();
+
+        StringBuilder sql = new StringBuilder("""
+                SELECT COUNT(DISTINCT c.id)
+                FROM Comics c
+                LEFT JOIN Series s ON c.series_id = s.id
+                LEFT JOIN Categories cat ON c.category_id = cat.id
+                WHERE c.is_deleted = 0
+                AND (
+                    LOWER(c.name_comics) LIKE :keyword
+                    OR LOWER(c.author) LIKE :keyword
+                    OR LOWER(cat.name_categories) LIKE :keyword
+                    OR LOWER(s.series_name) LIKE :keyword
+                """);
+
+        // Nếu keyword chứa số → tìm theo volume
+        String numberOnly = keyword.replaceAll("\\D+", "");
+        if (!numberOnly.isEmpty()) {
+            sql.append(" OR c.volume = :volume");
+        }
+
+        sql.append(")");
+
+        // Thêm điều kiện filter nếu có
+        if (author != null && !author.isEmpty()) {
+            sql.append(" AND LOWER(c.author) LIKE :author");
+        }
+
+        if (categoryId != null) {
+            sql.append(" AND c.category_id = :categoryId");
+        }
+
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString())
+                    .bind("keyword", "%" + searchTerm + "%");
+
+            // Bind volume nếu có số
+            if (!numberOnly.isEmpty()) {
+                try {
+                    int volumeNumber = Integer.parseInt(numberOnly);
+                    query.bind("volume", volumeNumber);
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
+            }
+
+            if (author != null && !author.isEmpty()) {
+                query.bind("author", "%" + author.toLowerCase() + "%");
+            }
+
+            if (categoryId != null) {
+                query.bind("categoryId", categoryId);
+            }
+
+            return query.mapTo(Integer.class).one();
+        });
+    }
+
+    /**
+     * Lấy tất cả truyện (có phân trang)
+     */
+    public List<Comic> getAllComicsAdmin(int page, int limit) {
+        String sql = """
+                SELECT c.*, s.series_name, cat.name_categories AS categoryName
+                FROM Comics c
+                LEFT JOIN Series s ON c.series_id = s.id
+                LEFT JOIN Categories cat ON c.category_id = cat.id
+                WHERE c.is_deleted = 0
+                ORDER BY c.created_at DESC
+                LIMIT :limit OFFSET :offset
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", limit)
+                        .bind("offset", (page - 1) * limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Đếm tổng số truyện
+     */
+    public int countAllComics() {
+        String sql = "SELECT COUNT(*) FROM Comics WHERE is_deleted = 0";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapTo(Integer.class)
+                        .one()
+        );
     }
 }
 

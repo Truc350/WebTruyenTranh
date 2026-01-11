@@ -1,9 +1,12 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 import java.time.LocalDateTime;
 
 public class Category {
     private int id;
+    @ColumnName("name_categories")
     private String nameCategories;
     private String description;
     private boolean isDeleted;

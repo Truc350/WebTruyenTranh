@@ -64,11 +64,24 @@ body {
     outline: none;
     height: 50px;
     transition: 0.2s;
+    font-size: 18px;
 }
 
 .search-add .search-box input::placeholder {
-    font-size: 16px;
+    font-size: 18px;
     color: #A49F9F;
+}
+
+/* BUTTON SEARCH BÊN TRONG INPUT */
+.search-add .search-box button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
 }
 
 .search-add .search-box .fa-magnifying-glass {
@@ -78,7 +91,6 @@ body {
     transform: translateY(-50%);
     font-size: 20px;
     color: #888;
-    pointer-events: none; /* để click không ảnh hưởng input */
 }
 
 .search-add .add-btn {
@@ -97,7 +109,7 @@ body {
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 10px 10px;
+    padding: 12px 10px;
     cursor: pointer;
     transition: 0.3s;
     font-size: 16px;

@@ -45,6 +45,10 @@ public class Comic {
     private int totalSold; // lượt bán trong tuần
 
     private Double discountPercent;
+    @ColumnName("series_name")
+    private String seriesName;
+    @ColumnName("name_categories")
+    private String categoryName;
 
     public Comic() {}
 
@@ -204,5 +208,19 @@ public class Comic {
         return discountPercent != null && discountPercent > 0;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
 
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSeriesName() {
+        return seriesName;
+    }
+
+    public void setSeriesName(String seriesName) {
+        this.seriesName = seriesName;
+    }
 }
