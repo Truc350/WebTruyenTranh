@@ -9,7 +9,9 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ComicDAO extends ADao {
     public final Jdbi jdbi;
@@ -177,49 +179,126 @@ public class ComicDAO extends ADao {
         return score;
     }
 
+    /**
+     * Tìm theo thể loại
+     */
+    public List<Comic> findByCategory(String categoryName) {
+        if (categoryName == null || categoryName.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
 
-    // Tìm theo tác giả
-    public List<Comic> findByAuthor(String authorName) {
+        String normalized = TextUtils.normalize(categoryName.toLowerCase());
+
         String sql = """
-                SELECT DISTINCT c.* 
+                        SELECT DISTINCT c.*, cat.name_categories as categoryName
                 FROM Comics c
-                INNER JOIN Comic_Authors ca ON c.id = ca.comic_id
-                INNER JOIN Authors a ON ca.author_id = a.id
-                WHERE LOWER(a.name) LIKE :author
-                  AND a.is_deleted = 0
-                  AND c.is_deleted = 0
-                  AND c.status = 'available'
-                ORDER BY c.name_comics
+                JOIN Categories cat ON c.category_id = cat.id
+                WHERE cat.is_deleted = 0
+                AND c.is_deleted = 0
+                AND c.status = 'available'
                 """;
 
-        return jdbi.withHandle(h ->
+        List<Comic> allComics = jdbi.withHandle(h ->
                 h.createQuery(sql)
-                        .bind("author", "%" + authorName.toLowerCase() + "%")
                         .mapToBean(Comic.class)
                         .list()
         );
+
+        // Filter trong Java
+        List<Comic> result = new ArrayList<>();
+        for (Comic c : allComics) {
+            if (c.getCategoryName() != null) {
+                String catName = TextUtils.normalize(c.getCategoryName().toLowerCase());
+                if (catName.contains(normalized)) {
+                    result.add(c);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // Tìm theo tác giả
+    public List<Comic> findByAuthor(String authorName) {
+        if (authorName == null || authorName.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String normalized = TextUtils.normalize(authorName.toLowerCase());
+
+        String sql = """
+                        SELECT DISTINCT c.*, a.name as authorName
+                FROM Comics c
+                INNER JOIN Comic_Authors ca ON c.id = ca.comic_id
+                INNER JOIN Authors a ON ca.author_id = a.id
+                WHERE a.is_deleted = 0
+                AND c.is_deleted = 0
+                AND c.status = 'available'
+                """;
+
+        List<Comic> allComics = jdbi.withHandle(h ->
+                h.createQuery(sql)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+
+        // Filter trong Java
+        List<Comic> result = new ArrayList<>();
+        Set<Integer> addedIds = new HashSet<>();
+
+        for (Comic c : allComics) {
+            if (c.getAuthorName() != null && !addedIds.contains(c.getId())) {
+                String authName = TextUtils.normalize(c.getAuthorName().toLowerCase());
+                if (authName.contains(normalized)) {
+                    result.add(c);
+                    addedIds.add(c.getId());
+                }
+            }
+        }
+
+        return result;
     }
 
     // Tìm theo nhà xuất bản
     public List<Comic> findByPublisher(String publisherName) {
+        if (publisherName == null || publisherName.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+
+        String normalized = TextUtils.normalize(publisherName.toLowerCase());
+
         String sql = """
-                SELECT DISTINCT c.* 
+                        SELECT DISTINCT c.*, p.name as publisherName
                 FROM Comics c
                 INNER JOIN Comic_Publishers cp ON c.id = cp.comic_id
                 INNER JOIN Publishers p ON cp.publisher_id = p.id
-                WHERE LOWER(p.name) LIKE :publisher
-                  AND p.is_deleted = 0
-                  AND c.is_deleted = 0
-                  AND c.status = 'available'
-                ORDER BY c.name_comics
+                WHERE p.is_deleted = 0
+                AND c.is_deleted = 0
+                AND c.status = 'available'
                 """;
 
-        return jdbi.withHandle(h ->
+        List<Comic> allComics = jdbi.withHandle(h ->
                 h.createQuery(sql)
-                        .bind("publisher", "%" + publisherName.toLowerCase() + "%")
                         .mapToBean(Comic.class)
                         .list()
         );
+
+        // ✅ Filter trong Java
+        List<Comic> result = new ArrayList<>();
+        Set<Integer> addedIds = new HashSet<>();
+
+        for (Comic c : allComics) {
+            if (c.getPublisherName() != null && !addedIds.contains(c.getId())) {
+                String pubName = TextUtils.normalize(c.getPublisherName().toLowerCase());
+                if (pubName.contains(normalized)) {
+                    result.add(c);
+                    addedIds.add(c.getId());
+                }
+            }
+        }
+
+        return result;
     }
 
     // Lấy danh sách tác giả của một comic
@@ -286,6 +365,164 @@ public class ComicDAO extends ADao {
         );
     }
 
+
+    /**
+     * Tìm kiếm thông minh - tự động nhận diện keyword thuộc loại nào
+     */
+//    public List<Comic> smartSearchAll(String keyword) {
+//        if (keyword == null || keyword.trim().isEmpty()) {
+//            return new ArrayList<>();
+//        }
+//        System.out.println("\n=== SMART SEARCH DEBUG ===");
+//        System.out.println("Keyword: " + keyword);
+//
+//        String normalized = TextUtils.normalize(keyword.toLowerCase());
+//        Set<Integer> resultIds = new HashSet<>();
+//        List<Comic> allResults = new ArrayList<>();
+//
+//        // 1. Tìm theo tên truyện
+//        List<Comic> nameResults = smartSearch(keyword);
+//        System.out.println("✅ Name search: " + nameResults.size());
+//        for (Comic c : nameResults) {
+//            if (resultIds.add(c.getId())) {
+//                allResults.add(c);
+//            }
+//        }
+//
+//        // 2. Tìm theo tác giả
+//        List<Comic> authorResults = findByAuthor(normalized);
+//        System.out.println("✅ Author search: " + authorResults.size());
+//        for (Comic c : authorResults) {
+//            if (resultIds.add(c.getId())) {
+//                allResults.add(c);
+//            }
+//        }
+//
+//        // 3. Tìm theo nhà xuất bản
+//        List<Comic> publisherResults = findByPublisher(normalized);
+//        System.out.println("✅ Publisher search: " + publisherResults.size());
+//        for (Comic c : publisherResults) {
+//            if (resultIds.add(c.getId())) {
+//                allResults.add(c);
+//            }
+//        }
+//
+//        // 4. Tìm theo thể loại
+//        List<Comic> categoryResults = findByCategory(normalized);
+//        System.out.println("✅ Category search: " + categoryResults.size());
+//        for (Comic c : categoryResults) {
+//            if (resultIds.add(c.getId())) {
+//                allResults.add(c);
+//            }
+//        }
+//
+////        // Loại bỏ trùng lặp dựa trên ID
+////        List<Comic> uniqueResults = new ArrayList<>();
+////        Set<Integer> seenIds = new HashSet<>();
+////
+////        for (Comic comic : allResults) {
+////            if (seenIds.add(comic.getId())) {
+////                uniqueResults.add(comic);
+////            }
+////        }
+//
+//        return allResults;
+//    }
+    public List<Comic> smartSearchAll(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        System.out.println("\n=== SMART SEARCH DEBUG ===");
+        System.out.println("Keyword: " + keyword);
+
+        String normalized = TextUtils.normalize(keyword.toLowerCase());
+        Set<Integer> resultIds = new HashSet<>();
+        List<Comic> allResults = new ArrayList<>();
+
+        // PHÁT HIỆN LOẠI KEYWORD
+        String[] words = normalized.split("\\s+");
+        boolean isShortKeyword = words.length <= 2; // "trinh thám", "kim đồng"
+
+        // 1️⃣ Ưu tiên tìm thể loại/tác giả/NXB cho keyword ngắn
+        if (isShortKeyword) {
+            // Thể loại
+            List<Comic> categoryResults = findByCategory(normalized);
+            System.out.println("✅ Category search: " + categoryResults.size());
+            for (Comic c : categoryResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            // Tác giả
+            List<Comic> authorResults = findByAuthor(normalized);
+            System.out.println("✅ Author search: " + authorResults.size());
+            for (Comic c : authorResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            // Nhà xuất bản
+            List<Comic> publisherResults = findByPublisher(normalized);
+            System.out.println("✅ Publisher search: " + publisherResults.size());
+            for (Comic c : publisherResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            // CHỈ TÌM THEO TÊN NẾU CHƯA CÓ KẾT QUẢ
+            if (allResults.isEmpty()) {
+                List<Comic> nameResults = smartSearch(keyword);
+                System.out.println("✅ Name search (fallback): " + nameResults.size());
+                allResults.addAll(nameResults);
+            } else {
+                System.out.println("⏭️ Skip name search (found in category/author/publisher)");
+            }
+        }
+        // 2️⃣ Tìm theo tên cho keyword dài
+        else {
+            List<Comic> nameResults = smartSearch(keyword);
+            System.out.println("✅ Name search: " + nameResults.size());
+            for (Comic c : nameResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            // Bổ sung thể loại/tác giả/NXB
+            List<Comic> categoryResults = findByCategory(normalized);
+            System.out.println("✅ Category search (supplement): " + categoryResults.size());
+            for (Comic c : categoryResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            List<Comic> authorResults = findByAuthor(normalized);
+            System.out.println("✅ Author search (supplement): " + authorResults.size());
+            for (Comic c : authorResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+
+            List<Comic> publisherResults = findByPublisher(normalized);
+            System.out.println("✅ Publisher search (supplement): " + publisherResults.size());
+            for (Comic c : publisherResults) {
+                if (resultIds.add(c.getId())) {
+                    allResults.add(c);
+                }
+            }
+        }
+
+        System.out.println("📊 Total unique results: " + allResults.size());
+        System.out.println("==========================\n");
+
+        return allResults;
+    }
 
     public List<Comic> getTop5BestSellerThisWeek() {
         String sql = """

@@ -50,6 +50,10 @@ public class Comic {
     @ColumnName("name_categories")
     private String categoryName;
 
+    private String authorName;
+
+    private String publisherName;
+
     public Comic() {}
 
     public String getAuthor() {
@@ -222,5 +226,21 @@ public class Comic {
 
     public void setSeriesName(String seriesName) {
         this.seriesName = seriesName;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getPublisherName() {
+        return publisherName;
+    }
+
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
     }
 }

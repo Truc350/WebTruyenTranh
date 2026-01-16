@@ -9,9 +9,9 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
@@ -45,40 +45,52 @@ public class SearchServlet extends HttpServlet {
         // Kết quả tìm kiếm
         List<Comic> comics = new ArrayList<>();
 
-        if ("author".equals(searchType)) {
-            List<Comic> result = comicDAO.findByAuthor(keyword);
-            if (result != null) comics.addAll(result);
+        // Tìm kiếm theo loại
+        switch (searchType != null ? searchType : "all") {
+            case "author":
+                List<Comic> authorResult = comicDAO.findByAuthor(keyword);
+                if (authorResult != null) comics.addAll(authorResult);
+                break;
 
-        } else if ("publisher".equals(searchType)) {
-            List<Comic> result = comicDAO.findByPublisher(keyword);
-            if (result != null) comics.addAll(result);
+            case "publisher":
+                List<Comic> publisherResult = comicDAO.findByPublisher(keyword);
+                if (publisherResult != null) comics.addAll(publisherResult);
+                break;
 
-        } else {
-            List<Comic> result = comicDAO.smartSearch(keyword);
-            if (result != null) comics.addAll(result);
+            case "category":
+                List<Comic> categoryResult = comicDAO.findByCategory(keyword);
+                if (categoryResult != null) comics.addAll(categoryResult);
+                break;
+
+            case "name":
+                List<Comic> nameResult = comicDAO.smartSearch(keyword);
+                if (nameResult != null) comics.addAll(nameResult);
+                break;
+
+            default: // "all" - tìm tất cả
+                List<Comic> allResults = comicDAO.smartSearchAll(keyword);
+                if (allResults != null) comics.addAll(allResults);
+                break;
         }
 
-        // Thêm các tập cùng series
+
+        // Thêm các tập cùng series (nếu có kết quả)
         if (!comics.isEmpty()) {
+            Set<Integer> addedIds = new HashSet<>();
+            comics.forEach(c -> addedIds.add(c.getId()));
+
             Comic first = comics.get(0);
 
             if (first.getSeriesId() != null) {
-                List<Comic> sameSeries =
-                        comicDAO.findBySeriesId(first.getSeriesId(), first.getId());
+                List<Comic> sameSeries = comicDAO.findBySeriesId(
+                        first.getSeriesId(),
+                        first.getId()
+                );
 
                 if (sameSeries != null) {
                     for (Comic c : sameSeries) {
-                        boolean existed = false;
-
-                        // kiểm tra trùng ID
-                        for (Comic existedComic : comics) {
-                            if (existedComic.getId() == c.getId()) {
-                                existed = true;
-                                break;
-                            }
-                        }
-
-                        if (!existed) {
+                        // Chỉ thêm nếu chưa tồn tại
+                        if (addedIds.add(c.getId())) {
                             comics.add(c);
                         }
                     }

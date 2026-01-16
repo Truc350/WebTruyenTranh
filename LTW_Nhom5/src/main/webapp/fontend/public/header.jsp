@@ -48,7 +48,7 @@
     </nav>
     <div class="search-bar">
         <div class="search-box">
-            <form action="${pageContext.request.contextPath}/search" method="get">
+            <form action="${pageContext.request.contextPath}/search" method="get" accept-charset="UTF-8">
                 <input type="text"
                        id="searchInput"
                        name="keyword"
@@ -226,9 +226,18 @@
     // window.addEventListener('resize', hideDropdown);
     window.addEventListener('scroll', hideDropdown);
 
-    searchInput.form.addEventListener('submit', () => {
+    searchInput.form.addEventListener('submit', (e) => {
         const term = searchInput.value.trim();
-        if (!term) return;
+        if (!term) {
+            e.preventDefault();
+            return;
+        }
+
+        // ✅ Lấy button element trước khi dùng
+        const searchButton = document.querySelector('.search-button');
+        if (searchButton) {
+            searchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        }
 
         // Xóa term cũ nếu đã tồn tại
         searchHistory = searchHistory.filter(t => t !== term);
