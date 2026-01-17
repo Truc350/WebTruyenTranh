@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ===== LEFT 2/3 ===== */
+.login-section {
+    width: 66.666%;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 520px;
+    padding: 40px 45px;
+    border-radius: 12px;
+    background: #fff;
+
+}
+
+.login-box h2 {
+    color: #0276DA;
+    margin-bottom: 35px;
+    font-size: 30px;
+    text-align: center;
+
+}
+
+
+.login-box label {
+    font-size: 15px;
+    display: block;
+    margin: 18px 0 6px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.password-box {
+    position: relative;
+}
+
+.password-box .eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin: 18px 0;
+}
+
+.links a {
+    font-size: 14px;
+    color: #0276DA;
+    font-style: italic;
+    text-decoration: underline;
+}
+
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: #0276DA;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+.or {
+    text-align: center;
+    margin: 25px 0 18px;
+    font-size: 14px;
+    font-style: italic;
+    /*font-weight: bold;*/
+}
+
+.social {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.social div {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.google {
+    border: 1px solid #ddd;
+}
+
+.facebook {
+    background: #0276DA;
+    color: #fff;
+}
+
+/* ===== RIGHT 1/3 ===== */
+.image-section {
+    width: 33.333%;
+}
+
+.image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.social img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+.eye img {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .image-section {
+        display: none;
+    }
+
+    .login-section {
+        width: 100%;
+    }
+
+    .login-box {
+        width: 92%;
+        padding: 35px 25px;
+    }
+}
