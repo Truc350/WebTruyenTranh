@@ -4,6 +4,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.User" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <header class="navbar">
     <a href="${pageContext.request.contextPath}/home">
         <div class="logo">
@@ -111,8 +113,8 @@
         <div class="actions cart-icon-wrapper">
             <a href="${pageContext.request.contextPath}/cart" class="cart-icon">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <c:if test="${not empty sessionScope.cart && sessionScope.cart.totalQuantity() > 0}">
-                    <span class="cart-badge">${sessionScope.cart.totalQuantity()}</span>
+                <c:if test="${not empty sessionScope.cart && fn:length(sessionScope.cart.items) > 0}">
+                    <span class="cart-badge">${fn:length(sessionScope.cart.items)}</span>
                 </c:if>
             </a>
         </div>
