@@ -1,11 +1,19 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import java.util.List;
+
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Series;
 
 public class SeriesDAO extends ADao {
-    public String getSeriesNameById(int seriesId) {
-        String sql = "SELECT series_name FROM series WHERE id = :id";
+    public String getSeriesNameById(Integer seriesId) {
+        if (seriesId == null || seriesId <= 0) {
+            return null;
+        }
+
+        String sql = "SELECT series_name FROM series " +
+                "WHERE id = :id " +
+                "AND is_deleted = 0 " +
+                "AND is_hidden = 0";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
