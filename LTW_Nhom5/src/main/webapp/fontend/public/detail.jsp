@@ -425,282 +425,66 @@
 </div>
 
 <!-- phần này gợi ý cho bạn -->
+<!-- phần này gợi ý cho bạn -->
 <div class="container-slider">
-    <div id="slider">
+    <div id="slider-suggestions">
         <div class="suggest">
-            <h2>Gợi ý cho bạn</h2>
+            <h2>
+                Gợi ý cho bạn
+            </h2>
         </div>
 
-        <!-- slider 1 -->
-        <div class="product-slider">
+        <c:choose>
+            <c:when test="${not empty suggestedComics}">
+                <%-- Chia thành 3 hàng, mỗi hàng có thể scroll --%>
+                <c:forEach var="row" begin="0" end="2" step="1">
+                    <c:set var="startIndex" value="${row * 8}"/>
+                    <c:set var="endIndex" value="${row * 8 + 7}"/>
 
-            <!-- mũi tên trái -->
-            <div class="arrow prev">&#10094;</div>
+                    <%-- Chỉ hiển thị hàng nếu có items --%>
+                    <c:if test="${startIndex < suggestedComics.size()}">
+                        <div class="product-slider" data-row="${row}">
+                            <!-- Mũi tên trái -->
+                            <button class="arrow prev" type="button" aria-label="Previous">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
 
-            <div class="slider-track">
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.vD8jLn7dqAK9Wuz_D0iCeAHaLz?rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Doraemon Tập 23</p>
-                    <p class="product-price">₫18,000</p>
-                    <p class="sold">Đã bán: <strong>196</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://product.hstatic.net/200000343865/product/1_9544a3ba5bd64806ab59f7fd9fafcf13_ea18ba498dbf48458655f34dd7c049e8_master.jpg"
-                         alt="">
-                    <p class="product-name">Doraemon Tập 1</p>
-                    <p class="product-price">₫27,000</p>
-                    <p class="sold">Đã bán: <strong>185</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://online.pubhtml5.com/wdykl/gqwi/files/large/1.jpg" alt="">
-                    <p class="product-name">Doraemon Tập 11</p>
-                    <p class="product-price">₫16,000</p>
-                    <p class="sold">Đã bán: <strong>128</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse1.mm.bing.net/th/id/OIP.WKmbCVIbTS0Oct_J65DYjAHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Doraemon Tập 6</p>
-                    <p class="product-price">₫19,000</p>
-                    <p class="sold">Đã bán: <strong>96</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.EYeZC0QXNbZJ9uKUFqejCQHaMT?w=1083&h=1800&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Doraemon Tập 3</p>
-                    <p class="product-price">₫22,000</p>
-                    <p class="sold">Đã bán: <strong>46</strong></p>
-                </div>
+                            <div class="slider-viewport">
+                                <div class="slider-track">
+                                    <c:forEach var="suggested" items="${suggestedComics}"
+                                               begin="${startIndex}"
+                                               end="${endIndex > suggestedComics.size() - 1 ? suggestedComics.size() - 1 : endIndex}">
+                                        <div class="product-item">
+                                            <a href="${pageContext.request.contextPath}/comic-detail?id=${suggested.id}">
+                                                <img src="${suggested.thumbnailUrl}"
+                                                     alt="${suggested.nameComics}">
+                                                <p class="product-name">${suggested.nameComics}</p>
+                                                <fmt:formatNumber value="${suggested.discountPrice}" type="number"
+                                                                  groupingUsed="true" var="suggestedPrice"/>
+                                                <p class="product-price">${suggestedPrice} đ</p>
+                                                <p class="sold">Đã bán: <strong>${suggested.totalSold}</strong></p>
+                                            </a>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
 
-                <div class="product-item">
-                    <img src="https://tse3.mm.bing.net/th/id/OIP.7x-q72jnW1WndxyDjThCZgHaMT?rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Doraemon Tập 15</p>
-                    <p class="product-price">₫19,000</p>
-                    <p class="sold">Đã bán: <strong>135</strong></p>
+                            <!-- Mũi tên phải -->
+                            <button class="arrow next" type="button" aria-label="Next">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </c:if>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div style="text-align: center; padding: 40px; color: white;">
+                    <i class="fas fa-book" style="font-size: 48px; margin-bottom: 10px;"></i>
+                    <p>Chưa có gợi ý phù hợp</p>
                 </div>
-                <div class="product-item">
-                    <img src="https://online.pubhtml5.com/anvq/nwha/files/large/1.jpg" alt="">
-                    <p class="product-name">Doraemon Tập 13</p>
-                    <p class="product-price">₫21,000</p>
-                    <p class="sold">Đã bán: <strong>296</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg" alt="">
-                    <p class="product-name">Doraemon Tập 6</p>
-                    <p class="product-price">₫17,000</p>
-                    <p class="sold">Đã bán: <strong>186</strong></p>
-                </div>
-
-
-            </div>
-
-            <!-- mũi tên phải -->
-            <div class="arrow next">&#10095;</div>
-        </div>
-
-        <!-- slider 2 -->
-        <div class="product-slider">
-
-            <!-- mũi tên trái -->
-            <div class="arrow prev">&#10094;</div>
-
-            <div class="slider-track">
-                <div class="product-item">
-                    <a href="detail.html">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                             alt="">
-                        <p class="product-name">Thám tử lừng danh Conan tập 100</p>
-                        <p class="product-price">₫18,000</p>
-                        <p class="sold">Đã bán: <strong>196</strong></p>
-                    </a>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse1.mm.bing.net/th/id/OIP.P5rFWcOxdjC4jsCK2hMfvwAAAA?w=275&h=431&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 36</p>
-                    <p class="product-price">₫27,000</p>
-                    <p class="sold">Đã bán: <strong>108</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 98</p>
-                    <p class="product-price">₫18,000</p>
-                    <p class="sold">Đã bán: <strong>120</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 28</p>
-                    <p class="product-price">₫18,000</p>
-                    <p class="sold">Đã bán: <strong>130</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 86</p>
-                    <p class="product-price">₫22,000</p>
-                    <p class="sold">Đã bán: <strong>99</strong></p>
-                </div>
-
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 75</p>
-                    <p class="product-price">₫19,000</p>
-                    <p class="sold">Đã bán: <strong>82</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 72</p>
-                    <p class="product-price">₫21,000</p>
-                    <p class="sold">Đã bán: <strong>36</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.TkZ31P2gB7dWazJNWUyV0AAAAA?w=300&h=470&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Thám tử lừng danh Conan tập 76</p>
-                    <p class="product-price">₫17,000</p>
-                    <p class="sold">Đã bán: <strong>83</strong></p>
-                </div>
-
-
-            </div>
-
-            <!-- mũi tên phải -->
-            <div class="arrow next">&#10095;</div>
-        </div>
-
-        <!-- slider 3 -->
-        <div class="product-slider">
-
-            <!-- mũi tên trái -->
-            <div class="arrow prev">&#10094;</div>
-
-            <div class="slider-track">
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/61E6Vvsc6pL.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 24</p>
-                    <p class="product-price">₫35,000</p>
-                    <p class="sold">Đã bán: <strong>93</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 45</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>38</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/818RM6H2oHL._SL1500_.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 160</p>
-                    <p class="product-price">₫39,000</p>
-                    <p class="sold">Đã bán: <strong>79</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/81W0jEvdO9L.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 62</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>72</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 208</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>58</strong></p>
-                </div>
-
-                <div class="product-item">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.9v3RcOMUqWTRHXD8RwdBqwHaK0?cb=ucfimg2ucfimg=1&w=876&h=1280&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Naruto Tâp 187</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>17</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://cdn0.fahasa.com/media/catalog/product/n/a/naruto1-2-page-001.jpg" alt="">
-                    <p class="product-name">Naruto Tâp 1</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>49</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Naruto Tâp 123</p>
-                    <p class="product-price">₫25,000</p>
-                    <p class="sold">Đã bán: <strong>76</strong></p>
-                </div>
-
-
-            </div>
-
-            <!-- mũi tên phải -->
-            <div class="arrow next">&#10095;</div>
-        </div>
-
-        <!-- slider-popup -->
-        <div id="product-slider-popup" class="product-slider" style="display: none;">
-
-            <!-- mũi tên trái -->
-            <div class="arrow prev">&#10094;</div>
-
-            <div class="slider-track">
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
-                    <p class="product-name">Onepiece Tâp 8</p>
-                    <p class="product-price">₫35,000</p>
-                    <p class="sold">Đã bán: <strong>103</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Onepiece Tâp 7</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>138</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Onepiece Tâp 75</p>
-                    <p class="product-price">₫39,000</p>
-                    <p class="sold">Đã bán: <strong>109</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-                         alt="">
-                    <p class="product-name">Onepiece Tâp 22</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>72</strong></p>
-                </div>
-                <div class="product-item">
-                    <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-                    <p class="product-name">Opiece Tâp 21</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>58</strong></p>
-                </div>
-
-                <div class="product-item">
-                    <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-                    <p class="product-name">Onepiece Tâp 52</p>
-                    <p class="product-price">₫40,000</p>
-                    <p class="sold">Đã bán: <strong>17</strong></p>
-                </div>
-
-
-            </div>
-
-            <!-- mũi tên phải -->
-            <div class="arrow next">&#10095;</div>
-        </div>
-
-        <div id="more-btn-popup-slider" class="more-btn">
-            <button>Xem thêm</button>
-        </div>
-
+            </c:otherwise>
+        </c:choose>
     </div>
-
 </div>
 
 
@@ -712,7 +496,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const quantityDisplay = document.getElementById('quantity-display');
         const minusBtn = document.querySelector('.minus-btn');
         const plusBtn = document.querySelector('.plus-btn');
@@ -750,21 +534,21 @@
             }
         }
 
-        minusBtn.addEventListener('click', function(e) {
+        minusBtn.addEventListener('click', function (e) {
             e.preventDefault();
             if (currentQuantity > 1) {
                 updateQuantity(currentQuantity - 1);
             }
         });
 
-        plusBtn.addEventListener('click', function(e) {
+        plusBtn.addEventListener('click', function (e) {
             e.preventDefault();
             if (currentQuantity < maxStock) {
                 updateQuantity(currentQuantity + 1);
             }
         });
 
-        quantityDisplay.addEventListener('click', function() {
+        quantityDisplay.addEventListener('click', function () {
             const input = document.createElement('input');
             input.type = 'number';
             input.min = '1';
@@ -796,7 +580,7 @@
             }
 
             input.addEventListener('blur', handleInput);
-            input.addEventListener('keypress', function(e) {
+            input.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     handleInput();
                 }
@@ -843,47 +627,6 @@
             }
         });
     });
-
-
-    // slider
-    function initSlider(slider) {
-        const track = slider.querySelector('.slider-track');
-        const prevBtn = slider.querySelector('.arrow.prev');
-        const nextBtn = slider.querySelector('.arrow.next');
-        const items = slider.querySelectorAll('.product-item');
-
-        let currentPosition = 0;
-
-        function recalc() {
-            const itemWidth = items[0].offsetWidth + 10; // gap
-            const totalItems = items.length;
-            const trackWidth = totalItems * itemWidth;
-            const containerWidth = slider.offsetWidth;
-            const maxPosition = containerWidth - trackWidth;
-            return {itemWidth, maxPosition};
-        }
-
-        prevBtn.addEventListener('click', () => {
-            const {itemWidth} = recalc();
-            if (currentPosition < 0) {
-                currentPosition += itemWidth;
-                if (currentPosition > 0) currentPosition = 0;
-                track.style.transform = `translateX(${currentPosition}px)`;
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            const {itemWidth, maxPosition} = recalc();
-            if (currentPosition > maxPosition) {
-                currentPosition -= itemWidth;
-                if (currentPosition < maxPosition) currentPosition = maxPosition;
-                track.style.transform = `translateX(${currentPosition}px)`;
-            }
-        });
-    }
-
-    // Khi popup mở thì gọi lại initSlider
-    document.querySelectorAll('.product-slider').forEach(initSlider);
 
     // cái này cho trái tim đổi màu
     const heart = document.getElementById("heart");
@@ -932,61 +675,6 @@
     }
 </script>
 
-
-<%--<script>--%>
-<%--    document.addEventListener('DOMContentLoaded', function () {--%>
-<%--        const heartCheckbox = document.querySelector('.heart-toggle input[type="checkbox"]');--%>
-<%--        if (!heartCheckbox) return;--%>
-
-<%--        // Lấy comicId từ URL: /comic-detail?id=15 → lấy 'id'--%>
-<%--        const urlParams = new URLSearchParams(window.location.search);--%>
-<%--        const comicId = urlParams.get('id'); // nếu URL dùng ?comicId= thì đổi thành get('comicId')--%>
-<%--        if (!comicId) {--%>
-<%--            console.error('Không tìm thấy ID truyện');--%>
-<%--            return;--%>
-<%--        }--%>
-
-<%--        // Hàm cập nhật trạng thái trái tim--%>
-<%--        function setHeartChecked(checked) {--%>
-<%--            heartCheckbox.checked = checked;--%>
-<%--        }--%>
-
-<%--        // Kiểm tra trạng thái yêu thích khi load trang (nếu đã login)--%>
-<%--        fetch('${pageContext.request.contextPath}/wishlist?action=check&comic_id=' + comicId, {--%>
-<%--            credentials: 'include'--%>
-<%--        })--%>
-<%--            .then(res => res.json())--%>
-<%--            .then(data => setHeartChecked(data.inWishlist || false))--%>
-<%--            .catch(() => setHeartChecked(false));--%>
-
-<%--        // Khi click trái tim--%>
-<%--        heartCheckbox.addEventListener('change', function () {--%>
-<%--            const action = this.checked ? 'add' : 'remove';--%>
-
-<%--            fetch('${pageContext.request.contextPath}/wishlist', {--%>
-<%--                method: 'POST',--%>
-<%--                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },--%>
-<%--                credentials: 'include',--%>
-<%--                body: 'action=' + action + '&comic_id=' + comicId--%>
-<%--            })--%>
-<%--                .then(res => res.json())--%>
-<%--                .then(data => {--%>
-<%--                    if (!data.success) {--%>
-<%--                        alert(data.message);--%>
-<%--                        this.checked = !this.checked; // trả về trạng thái cũ nếu lỗi--%>
-<%--                    } else {--%>
-<%--                        // Có thể thêm toast nhẹ thay alert nếu muốn đẹp hơn--%>
-<%--                        // alert(data.message);--%>
-<%--                    }--%>
-<%--                })--%>
-<%--                .catch(err => {--%>
-<%--                    console.error(err);--%>
-<%--                    alert('Lỗi kết nối server');--%>
-<%--                    this.checked = !this.checked;--%>
-<%--                });--%>
-<%--        });--%>
-<%--    });--%>
-<%--</script>--%>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const heartLabel = document.querySelector('.heart-toggle');
@@ -1046,6 +734,125 @@
         });
     });
 </script>
+
+<script>
+    // ========== FIX: Slider cho suggestion - 3 hàng độc lập ==========
+    (function() {
+        'use strict';
+
+        const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
+
+        if (sliders.length === 0) {
+            console.warn('No sliders found');
+            return;
+        }
+
+        sliders.forEach((slider, sliderIndex) => {
+            const track = slider.querySelector('.slider-track');
+            const items = slider.querySelectorAll('.product-item');
+            const prevBtn = slider.querySelector('.arrow.prev');
+            const nextBtn = slider.querySelector('.arrow.next');
+            const viewport = slider.querySelector('.slider-viewport');
+
+            if (!track || !items || items.length === 0 || !prevBtn || !nextBtn || !viewport) {
+                console.warn(`Slider ${sliderIndex}: Missing elements`);
+                return;
+            }
+
+            let currentIndex = 0;
+
+            function getVisibleItems() {
+                // Tính số items hiển thị dựa trên viewport width
+                const viewportWidth = viewport.offsetWidth;
+                const itemWidth = items[0].offsetWidth;
+                const gap = 20;
+
+                // Số items có thể hiển thị = viewport / (itemWidth + gap)
+                const visibleCount = Math.floor(viewportWidth / (itemWidth + gap));
+
+                console.log(`Slider ${sliderIndex}: viewportWidth=${viewportWidth}, itemWidth=${itemWidth}, visible=${visibleCount}`);
+
+                return Math.max(1, visibleCount); // Tối thiểu 1 item
+            }
+
+            function updateSlider() {
+                const itemWidth = items[0].offsetWidth;
+                const gap = 20;
+                const scrollDistance = itemWidth + gap;
+                const visibleItems = getVisibleItems();
+
+                // Di chuyển track
+                const translateX = currentIndex * scrollDistance;
+                track.style.transform = `translateX(-${translateX}px)`;
+
+                // Update buttons state
+                const maxIndex = Math.max(0, items.length - visibleItems);
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= maxIndex;
+
+                console.log(`Slider ${sliderIndex}: index=${currentIndex}/${maxIndex}, translateX=${translateX}px, visible=${visibleItems}`);
+            }
+
+            function scrollNext(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const visibleItems = getVisibleItems();
+                const maxIndex = Math.max(0, items.length - visibleItems);
+
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                    updateSlider();
+                    console.log(`→ Next: currentIndex=${currentIndex}`);
+                } else {
+                    console.log('→ Next: Already at end');
+                }
+            }
+
+            function scrollPrev(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateSlider();
+                    console.log(`← Prev: currentIndex=${currentIndex}`);
+                } else {
+                    console.log('← Prev: Already at start');
+                }
+            }
+
+            // Remove old listeners (if any)
+            const newNextBtn = nextBtn.cloneNode(true);
+            const newPrevBtn = prevBtn.cloneNode(true);
+            nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+            prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+
+            // Attach events to NEW buttons
+            newNextBtn.addEventListener('click', scrollNext);
+            newPrevBtn.addEventListener('click', scrollPrev);
+
+            // Init
+            updateSlider();
+
+            // Resize handler
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    currentIndex = 0;
+                    updateSlider();
+                }, 250);
+            });
+
+            console.log(`✅ Slider ${sliderIndex} initialized with ${items.length} items`);
+        });
+
+        console.log(`Total sliders ready: ${sliders.length}`);
+    })();
+</script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const heartLabel = document.querySelector('.heart-toggle');
