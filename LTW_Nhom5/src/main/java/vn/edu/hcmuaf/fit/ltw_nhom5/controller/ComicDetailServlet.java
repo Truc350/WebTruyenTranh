@@ -15,7 +15,6 @@ public class ComicDetailServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         comicService = new ComicService();
-        System.out.println("🔥 ComicDetailServlet INIT 🔥");
     }
 
     @Override
@@ -58,7 +57,15 @@ public class ComicDetailServlet extends HttpServlet {
             // Tính điểm trung bình
             double avgRating = comicService.getAverageRating(comicId);
 
-            String seriesName = comicService.getSeriesName(comic.getSeriesId());
+//            String seriesName = comicService.getSeriesName(comic.getSeriesId());
+            // ========== LẤY TÊN SERIES ==========
+            String seriesName = null;
+            if (comic.getSeriesId() != null && comic.getSeriesId() > 0) {
+                seriesName = comicService.getSeriesName(comic.getSeriesId());
+            } else {
+                System.out.println("⚠️ Comic has no series_id or series_id <= 0, skipping getSeriesName");
+            }
+
 
             request.setAttribute("seriesName", seriesName);
 

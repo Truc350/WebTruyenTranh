@@ -17,6 +17,7 @@ import java.util.Set;
 public class SearchServlet extends HttpServlet {
 
     private ComicDAO comicDAO;
+    private static final int ITEMS_PER_PAGE = 20;
 
     @Override
     public void init() {
@@ -33,10 +34,27 @@ public class SearchServlet extends HttpServlet {
         String keyword = request.getParameter("keyword");
         String searchType = request.getParameter("type");
 
+        // Lấy trang hiện tại (mặc định là trang 1)
+        int currentPage = 1;
+        String pageParam = request.getParameter("page");
+        if (pageParam != null && !pageParam.trim().isEmpty()) {
+            try {
+                currentPage = Integer.parseInt(pageParam);
+                if (currentPage < 1) {
+                    currentPage = 1;
+                }
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+
         // Keyword rỗng
         if (keyword == null || keyword.trim().isEmpty()) {
             request.setAttribute("comics", new ArrayList<>());
             request.setAttribute("resultCount", 0);
+            request.setAttribute("currentPage", 1);
+            request.setAttribute("totalPages", 0);
+            request.setAttribute("totalComics", 0);
             request.getRequestDispatcher("/fontend/public/searchResult.jsp")
                     .forward(request, response);
             return;
@@ -98,10 +116,32 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
+        // ========== PHÂN TRANG ==========
+        int totalComics = comics.size();
+        int totalPages = (int) Math.ceil((double) totalComics / ITEMS_PER_PAGE);
+
+        // Đảm bảo trang hiện tại không vượt quá tổng số trang
+        if (currentPage > totalPages && totalPages > 0) {
+            currentPage = totalPages;
+        }
+
+        // Lấy danh sách truyện cho trang hiện tại
+        List<Comic> comicsForPage;
+        if (totalComics > 0) {
+            int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalComics);
+            comicsForPage = comics.subList(startIndex, endIndex);
+        } else {
+            comicsForPage = new ArrayList<>();
+        }
+
         request.setAttribute("keyword", keyword);
         request.setAttribute("searchType", searchType != null ? searchType : "all");
-        request.setAttribute("comics", comics);
-        request.setAttribute("resultCount", comics.size());
+        request.setAttribute("comics", comicsForPage); // Chỉ truyền truyện của trang hiện tại
+        request.setAttribute("resultCount", comicsForPage.size()); // Số truyện hiện tại
+        request.setAttribute("totalComics", totalComics); // Tổng số truyện tìm thấy
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
 
         request.getRequestDispatcher("/fontend/public/searchResult.jsp")
                 .forward(request, response);

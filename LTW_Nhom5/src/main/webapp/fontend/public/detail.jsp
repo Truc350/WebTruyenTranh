@@ -24,6 +24,7 @@
 
 <!-- Hidden field để JavaScript kiểm tra tồn kho -->
 <input type="hidden" id="stockQuantity" value="${comic.stockQuantity}">
+<input type="hidden" id="comicId" value="${comic.id}">
 
 <!-- Hiển thị thông báo -->
 <c:if test="${not empty sessionScope.successMsg}">
@@ -187,9 +188,13 @@
             <div class="voucherbutton">
                 <p>Số lượng: </p>
                 <div class="quantity-control">
-                    <button><i class="fas fa-minus" id="btn-vol"></i></button>
-                    <span>1</span>
-                    <button><i class="fas fa-plus" id="btn-vol"></i></button>
+                    <button type="button" class="quantity-btn minus-btn">
+                        <i class="fas fa-minus" id="btn-vol"></i>
+                    </button>
+                    <span id="quantity-display">1</span>
+                    <button type="button" class="quantity-btn plus-btn">
+                        <i class="fas fa-plus" id="btn-vol"></i>
+                    </button>
                 </div>
             </div>
 
@@ -706,6 +711,101 @@
     window.contextPath = '${pageContext.request.contextPath}';
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const quantityDisplay = document.getElementById('quantity-display');
+        const minusBtn = document.querySelector('.minus-btn');
+        const plusBtn = document.querySelector('.plus-btn');
+
+        const stockInput = document.getElementById('stockQuantity');
+        const comicIdInput = document.getElementById('comicId');
+        const maxStock = stockInput ? parseInt(stockInput.value) : 999;
+        const comicId = comicIdInput ? comicIdInput.value : '';
+
+        let currentQuantity = 1;
+
+        function updateQuantity(newQuantity) {
+            currentQuantity = newQuantity;
+            quantityDisplay.textContent = currentQuantity;
+
+            minusBtn.disabled = currentQuantity <= 1;
+            plusBtn.disabled = currentQuantity >= maxStock;
+
+            updateCartLinks();
+        }
+
+        function updateCartLinks() {
+            const contextPath = window.contextPath || '';
+
+            const addToCartLink = document.querySelector('a[href*="action=add"]:not([href*="buyNow"])');
+            if (addToCartLink) {
+                addToCartLink.setAttribute('href',
+                    contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity);
+            }
+
+            const buyNowLink = document.querySelector('a[href*="buyNow=true"]');
+            if (buyNowLink) {
+                buyNowLink.setAttribute('href',
+                    contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity + '&buyNow=true');
+            }
+        }
+
+        minusBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentQuantity > 1) {
+                updateQuantity(currentQuantity - 1);
+            }
+        });
+
+        plusBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentQuantity < maxStock) {
+                updateQuantity(currentQuantity + 1);
+            }
+        });
+
+        quantityDisplay.addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '1';
+            input.max = maxStock;
+            input.value = currentQuantity;
+            input.style.width = '60px';
+            input.style.textAlign = 'center';
+            input.style.border = '1px solid #ddd';
+            input.style.borderRadius = '4px';
+            input.style.padding = '4px';
+            input.style.fontSize = '16px';
+
+            this.replaceWith(input);
+            input.focus();
+            input.select();
+
+            function handleInput() {
+                let newValue = parseInt(input.value);
+
+                if (isNaN(newValue) || newValue < 1) {
+                    newValue = 1;
+                } else if (newValue > maxStock) {
+                    newValue = maxStock;
+                    alert('Số lượng tồn kho chỉ còn ' + maxStock + ' sản phẩm!');
+                }
+
+                input.replaceWith(quantityDisplay);
+                updateQuantity(newValue);
+            }
+
+            input.addEventListener('blur', handleInput);
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleInput();
+                }
+            });
+        });
+
+        updateQuantity(1);
+    });
+</script>
 
 <script>
 

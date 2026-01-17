@@ -658,20 +658,7 @@ public class ComicDAO extends ADao {
      * Lấy thông tin chi tiết truyện theo ID
      */
     public Comic getComicById(int id) {
-        String sql = """
-                    SELECT
-                        id,
-                        name_comics,
-                        description,
-                        author,
-                        publisher,
-                        price,
-                        thumbnail_url,
-                        stock_quantity as stockQuantity
-                    FROM comics
-                    WHERE id = :id and is_deleted = 0
-                """;
-
+        String sql = "SELECT * FROM comics WHERE id = :id AND is_deleted = 0";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
