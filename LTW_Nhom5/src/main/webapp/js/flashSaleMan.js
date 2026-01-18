@@ -125,9 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                 border: 1px solid #eee; margin-bottom: 10px; gap: 12px;`;
 
         item.innerHTML = `
-            <input type="checkbox" checked>
+  
             <span style="flex:1; font-weight:500;">${name}</span>
-            <input type="number" class="percent-input" min="1" max="90" placeholder="Giảm %" value="30" style="width:100px;">
             <button type="button" style="background:#ff4c4c; color:white; border:none; width:30px; height:30px; border-radius:50%; 
                     font-size:18px; cursor:pointer;">×</button>
         `;
@@ -146,23 +145,30 @@ document.addEventListener("DOMContentLoaded", () => {
         comicSearchInput.value = '';
     }
 
-    // ================== PHẦN MỚI: GỬI DỮ LIỆU TẠO FLASH SALE LÊN SERVER ==================
+    // GỬI DỮ LIỆU TẠO FLASH SALE LÊN SERVER
     // Nút Tạo Flash Sale
-    // THAY TOÀN BỘ ĐOẠN NÀY TRONG NÚT createFlashSaleBtn
+
     document.getElementById('createFlashSaleBtn')?.addEventListener('click', function () {
-        // === SỬA MỚI: Lấy dữ liệu trực tiếp từ form (ổn định nhất) ===
         const form = document.getElementById('addFlashSaleForm');
         const name = form.querySelector('input[name="flashSaleName"]')?.value.trim();
+        const discountPercent = form.querySelector('input[name="discountPercent"]')?.value.trim(); // ← THÊM MỚI
         const startTime = form.querySelector('input[name="startTime"]')?.value;
         const endTime = form.querySelector('input[name="endTime"]')?.value;
 
         // Kiểm tra
-        if (!name || !startTime || !endTime) {
-            alert('Vui lòng nhập đầy đủ tên Flash Sale và thời gian!');
+        if (!name || !discountPercent || !startTime || !endTime) {
+            alert('Vui lòng nhập đầy đủ thông tin!');
             return;
         }
 
-        // Lấy danh sách truyện (giữ nguyên)
+        // Validate discount percent
+        const discount = parseFloat(discountPercent);
+        if (isNaN(discount) || discount < 1 || discount > 90) {
+            alert('Phần trăm giảm phải từ 1% đến 90%!');
+            return;
+        }
+
+        // Lấy danh sách truyện
         const selectedItems = document.querySelectorAll('#selectedProductList > div[id^="comic-"]');
         if (selectedItems.length === 0) {
             alert('Vui lòng chọn ít nhất một truyện!');
@@ -170,27 +176,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const comicIds = [];
-        const percents = [];
-
         selectedItems.forEach(item => {
             const comicId = item.id.split('-')[1];
-            const percentInput = item.querySelector('.percent-input');
-            const percent = percentInput?.value.trim() || '30';
             comicIds.push(comicId);
-            percents.push(percent);
         });
 
-        // Gửi dữ liệu (giữ nguyên)
+        // Gửi dữ liệu
         const formData = new FormData();
         formData.append('flashSaleName', name);
+        formData.append('discountPercent', discountPercent);
         formData.append('startTime', startTime);
         formData.append('endTime', endTime);
         comicIds.forEach(id => formData.append('comicIds', id));
-        percents.forEach(p => formData.append('percents', p));
 
         fetch(contextPath + '/admin/create-flashsale', {
             method: 'POST',
-
             body: formData
         })
             .then(response => response.json())
@@ -198,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (result.success) {
                     alert('Tạo Flash Sale thành công!');
                     document.getElementById('addFlashSaleModal').classList.remove('show');
-                    // Optional: reset form hoặc reload
                     location.reload();
                 } else {
                     alert('Lỗi từ server: ' + result.message);

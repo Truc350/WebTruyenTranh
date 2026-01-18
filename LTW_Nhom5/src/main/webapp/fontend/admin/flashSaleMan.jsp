@@ -69,12 +69,7 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <%--      <li>--%>
-            <%--        <a href="promotion.jsp">--%>
-            <%--          <img src="../../img/promo.png" class="icon">--%>
-            <%--          <span>Quản lý khuyến mãi</span>--%>
-            <%--        </a>--%>
-            <%--      </li>--%>
+
             <li>
                 <a href="report.jsp">
                     <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
@@ -227,7 +222,12 @@
                     <label>Tên Flash Sale:</label>
                     <input type="text" name="flashSaleName" placeholder="Nhập tên Flash Sale" required>
                 </div>
-
+                <div>
+                    <label>Phần trăm giảm:</label>
+                    <input class="qty-input" type="number" name="discountPercent" value="30" min="1" max="90" required>
+                </div>
+            </div>
+            <div class="form-row">
                 <div>
                     <label>Giờ bắt đầu:</label>
                     <input type="datetime-local" name="startTime" required>
@@ -276,7 +276,13 @@
                     <label>Tên Flash Sale:</label>
                     <input type="text" value="Flash Sale 10:00 - Mừng Noel">
                 </div>
+                <div>
+                    <label>Phần trăm giảm:</label>
+                    <input class="qty-input" type="number" value="100" min="1">
+                </div>
+            </div>
 
+            <div class="form-row">
                 <div>
                     <label>Giờ bắt đầu:</label>
                     <input type="datetime-local" value="2024-12-24T10:00">
@@ -288,33 +294,18 @@
                 </div>
             </div>
 
-            <h4>Áp dụng cho thể loại:</h4>
-            <div class="category-select-list">
-                <label><input type="checkbox"> Hành động</label>
-                <label><input type="checkbox"> Phiêu lưu</label>
-                <label><input type="checkbox"> Lãng mạn</label>
-                <label><input type="checkbox"> Học đường</label>
-                <label><input type="checkbox"> Kinh dị</label>
-                <label><input type="checkbox"> Hài hước</label>
-                <label><input type="checkbox"> Giả tưởng</label>
-                <label><input type="checkbox"> Trinh thám</label>
-            </div>
 
-            <h4>Sản phẩm áp dụng:</h4>
+            <h4>Sản phẩm đã áp dụng:</h4>
 
             <div class="product-select-list">
                 <label>
                     <input type="checkbox" checked>
                     Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama
-                    <input class="percent-input" type="number" value="40" min="1" max="90">
-                    <input class="qty-input" type="number" value="100" min="1">
                 </label>
 
                 <label>
                     <input type="checkbox" checked>
                     One Piece – Tập 100 – Eiichiro Oda
-                    <input class="percent-input" type="number" value="50" min="1" max="90">
-                    <input class="qty-input" type="number" value="50" min="1">
                 </label>
             </div>
 
@@ -375,3 +366,15 @@
 
 </body>
 </html>
+
+<%--            <h4>Áp dụng cho thể loại:</h4>--%>
+<%--            <div class="category-select-list">--%>
+<%--                <label><input type="checkbox"> Hành động</label>--%>
+<%--                <label><input type="checkbox"> Phiêu lưu</label>--%>
+<%--                <label><input type="checkbox"> Lãng mạn</label>--%>
+<%--                <label><input type="checkbox"> Học đường</label>--%>
+<%--                <label><input type="checkbox"> Kinh dị</label>--%>
+<%--                <label><input type="checkbox"> Hài hước</label>--%>
+<%--                <label><input type="checkbox"> Giả tưởng</label>--%>
+<%--                <label><input type="checkbox"> Trinh thám</label>--%>
+<%--            </div>--%>
