@@ -5,17 +5,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.CloudinaryService;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @WebServlet("/admin/products/add")
@@ -27,15 +24,15 @@ import java.util.*;
 public class AddComicServlet extends HttpServlet {
 
     private ComicDAO comicDAO;
+    private CategoriesDao categoriesDao;
+    private SeriesDAO seriesDAO;
     private Gson gson;
-
-    // Đường dẫn lưu ảnh (relative to webapp root)
-    private static final String UPLOAD_DIR = "uploads" + File.separator + "comics";
-    private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "webp");
 
     @Override
     public void init() throws ServletException {
         comicDAO = new ComicDAO();
+        categoriesDao = new CategoriesDao();
+        seriesDAO = new SeriesDAO();
         gson = new Gson();
     }
 
@@ -50,10 +47,19 @@ public class AddComicServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
+            System.out.println("========== ADD COMIC REQUEST ==========");
+
             // 1. Lấy dữ liệu từ form
             Comic comic = extractComicFromRequest(request);
+            String authorName = request.getParameter("author");
+            String publisherName = request.getParameter("publisher");
 
-            // 2. Validate dữ liệu
+            System.out.println("Comic Name: " + comic.getNameComics());
+            System.out.println("Author: " + authorName);
+            System.out.println("Category ID: " + comic.getCategoryId());
+            System.out.println("Series ID: " + comic.getSeriesId());
+
+            // 2. Validate
             List<String> errors = validateComic(comic);
             if (!errors.isEmpty()) {
                 result.put("success", false);
@@ -63,85 +69,170 @@ public class AddComicServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Kiểm tra trùng tên
+            // 3. Kiểm tra trùng
             if (comicDAO.isComicNameExist(comic.getNameComics(), comic.getSeriesId(), comic.getVolume())) {
                 result.put("success", false);
-                result.put("message", "Truyện này đã tồn tại trong hệ thống");
+                result.put("message", "Truyện này đã tồn tại");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
-            // 4. Upload ảnh bìa
-            Part coverImagePart = request.getPart("coverImage");
-            if (coverImagePart != null && coverImagePart.getSize() > 0) {
-                String coverImageUrl = uploadFile(coverImagePart, request);
-                if (coverImageUrl != null) {
-                    comic.setThumbnailUrl(coverImageUrl);
+            // 4. UPLOAD ẢNH BÌA LÊN CLOUDINARY
+            Part coverPart = request.getPart("coverImage");
+            if (coverPart != null && coverPart.getSize() > 0) {
+                try {
+                    String coverUrl = CloudinaryService.uploadImage(coverPart, "comics/covers");
+                    if (coverUrl != null) {
+                        comic.setThumbnailUrl(coverUrl);
+                        System.out.println("✅ Cover uploaded: " + coverUrl);
+                    }
+                } catch (IOException e) {
+                    System.err.println("❌ Error uploading cover: " + e.getMessage());
+                    result.put("success", false);
+                    result.put("message", "Lỗi upload ảnh bìa: " + e.getMessage());
+                    response.getWriter().write(gson.toJson(result));
+                    return;
                 }
             }
 
-            // 5. Thêm truyện vào DB
+            // 5. Xử lý Author & Publisher
+            int authorId = -1;
+            int publisherId = -1;
+
+            if (authorName != null && !authorName.trim().isEmpty()) {
+                authorId = comicDAO.findOrCreateAuthor(authorName.trim());
+            }
+
+            if (publisherName != null && !publisherName.trim().isEmpty()) {
+                publisherId = comicDAO.findOrCreatePublisher(publisherName.trim());
+            }
+
+            // 6. Gán tên vào Comic
+            comic.setAuthor(authorName != null ? authorName.trim() : null);
+            comic.setPublisher(publisherName != null ? publisherName.trim() : null);
+
+            // 7. Insert Comic vào DB
             int comicId = comicDAO.insertComic(comic);
 
             if (comicId <= 0) {
                 result.put("success", false);
-                result.put("message", "Không thể thêm truyện vào cơ sở dữ liệu");
+                result.put("message", "Không thể thêm truyện");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
-            // 6. Upload các ảnh chi tiết
+            System.out.println("✅ Comic created with ID: " + comicId);
+
+            // 8. Link với Author
+            if (authorId > 0) {
+                comicDAO.linkComicAuthor(comicId, authorId);
+            }
+
+            // 9. Link với Publisher
+            if (publisherId > 0) {
+                comicDAO.linkComicPublisher(comicId, publisherId);
+            }
+
+            // 10. UPLOAD ẢNH CHI TIẾT LÊN CLOUDINARY
             List<ComicImage> detailImages = new ArrayList<>();
+
             for (int i = 1; i <= 3; i++) {
                 Part imagePart = request.getPart("detailImage" + i);
                 if (imagePart != null && imagePart.getSize() > 0) {
-                    String imageUrl = uploadFile(imagePart, request);
-                    if (imageUrl != null) {
-                        ComicImage comicImage = new ComicImage();
-                        comicImage.setComicId(comicId);
-                        comicImage.setImageUrl(imageUrl);
-                        comicImage.setImageType("detail");
-                        comicImage.setSortOrder(i);
-                        detailImages.add(comicImage);
+                    try {
+                        String imageUrl = CloudinaryService.uploadImage(imagePart, "comics/details");
+                        if (imageUrl != null) {
+                            ComicImage img = new ComicImage();
+                            img.setComicId(comicId);
+                            img.setImageUrl(imageUrl);
+                            img.setImageType("detail");
+                            img.setSortOrder(i);
+                            detailImages.add(img);
+
+                            System.out.println("✅ Detail image " + i + " uploaded: " + imageUrl);
+                        }
+                    } catch (IOException e) {
+                        System.err.println("⚠️ Warning: Could not upload detail image " + i + ": " + e.getMessage());
                     }
                 }
             }
 
-            // 7. Lưu ảnh chi tiết vào DB
             if (!detailImages.isEmpty()) {
                 comicDAO.insertComicImages(detailImages);
             }
 
-            // 8. Trả kết quả thành công
+            // ✅ 11. TẠO RESPONSE VỚI THÔNG TIN ĐẦY ĐỦ
+            Map<String, Object> comicData = new HashMap<>();
+            comicData.put("id", comicId);
+            comicData.put("nameComics", comic.getNameComics());
+            comicData.put("author", comic.getAuthor());
+            comicData.put("publisher", comic.getPublisher());
+            comicData.put("price", comic.getPrice());
+            comicData.put("stockQuantity", comic.getStockQuantity());
+            comicData.put("thumbnailUrl", comic.getThumbnailUrl());
+
+            // ✅ Lấy tên category
+            String categoryName = "Chưa phân loại";
+            if (comic.getCategoryId() != null) {
+                try {
+                    List<Category> categories = categoriesDao.getAllCategories();
+                    for (Category cat : categories) {
+                        if (cat.getId() == comic.getCategoryId()) {
+                            categoryName = cat.getNameCategories();
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("⚠️ Could not load category name: " + e.getMessage());
+                }
+            }
+            comicData.put("categoryName", categoryName);
+
+            // ✅ Lấy tên series bằng hàm getSeriesNameById()
+            String seriesName = "-";
+            if (comic.getSeriesId() != null) {
+                try {
+                    String name = seriesDAO.getSeriesNameById(comic.getSeriesId());
+                    if (name != null && !name.isEmpty()) {
+                        seriesName = name;
+                    }
+                } catch (Exception e) {
+                    System.err.println("⚠️ Could not load series name: " + e.getMessage());
+                }
+            }
+            comicData.put("seriesName", seriesName);
+
+            // 12. Thành công
             result.put("success", true);
             result.put("message", "Thêm truyện thành công");
             result.put("comicId", comicId);
+            result.put("comic", comicData);
+
+            System.out.println("✅ Response: " + gson.toJson(result));
+            System.out.println("======================================");
 
         } catch (Exception e) {
-            System.err.println("Error in AddComicServlet: " + e.getMessage());
+            System.err.println("❌ Error in AddComicServlet: " + e.getMessage());
             e.printStackTrace();
-
             result.put("success", false);
-            result.put("message", "Lỗi hệ thống: " + e.getMessage());
+            result.put("message", "Lỗi: " + e.getMessage());
         }
 
         response.getWriter().write(gson.toJson(result));
     }
 
-    /**
-     * Trích xuất thông tin Comic từ request
-     */
-    private Comic extractComicFromRequest(HttpServletRequest request) throws ServletException, IOException {
+    private Comic extractComicFromRequest(HttpServletRequest request) {
         Comic comic = new Comic();
 
         comic.setNameComics(request.getParameter("nameComics"));
-        comic.setAuthor(request.getParameter("author"));
-        comic.setPublisher(request.getParameter("publisher"));
         comic.setDescription(request.getParameter("description"));
 
-        // Parse số
         try {
-            comic.setPrice(Double.parseDouble(request.getParameter("price")));
+            String priceStr = request.getParameter("price");
+            if (priceStr != null) {
+                priceStr = priceStr.replace(",", "");
+                comic.setPrice(Double.parseDouble(priceStr));
+            }
         } catch (NumberFormatException e) {
             comic.setPrice(0);
         }
@@ -152,7 +243,6 @@ public class AddComicServlet extends HttpServlet {
             comic.setStockQuantity(0);
         }
 
-        // Category và Series
         String categoryIdStr = request.getParameter("categoryId");
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             comic.setCategoryId(Integer.parseInt(categoryIdStr));
@@ -173,18 +263,11 @@ public class AddComicServlet extends HttpServlet {
         return comic;
     }
 
-    /**
-     * Validate dữ liệu Comic
-     */
     private List<String> validateComic(Comic comic) {
         List<String> errors = new ArrayList<>();
 
         if (comic.getNameComics() == null || comic.getNameComics().trim().isEmpty()) {
             errors.add("Tên truyện không được để trống");
-        }
-
-        if (comic.getAuthor() == null || comic.getAuthor().trim().isEmpty()) {
-            errors.add("Tên tác giả không được để trống");
         }
 
         if (comic.getPrice() <= 0) {
@@ -200,65 +283,5 @@ public class AddComicServlet extends HttpServlet {
         }
 
         return errors;
-    }
-
-    /**
-     * Upload file và trả về đường dẫn tương đối
-     */
-    private String uploadFile(Part filePart, HttpServletRequest request) throws IOException {
-        String fileName = getFileName(filePart);
-        if (fileName == null || fileName.isEmpty()) {
-            return null;
-        }
-
-        // Kiểm tra extension
-        String extension = getFileExtension(fileName);
-        if (!ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {
-            System.err.println("Invalid file extension: " + extension);
-            return null;
-        }
-
-        // Tạo tên file unique
-        String uniqueFileName = System.currentTimeMillis() + "_" + UUID.randomUUID().toString().substring(0, 8) + "." + extension;
-
-        // Đường dẫn tuyệt đối trên server
-        String uploadPath = request.getServletContext().getRealPath("") + File.separator + UPLOAD_DIR;
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-
-        // Lưu file
-        Path filePath = Paths.get(uploadPath, uniqueFileName);
-        Files.copy(filePart.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        // Trả về đường dẫn tương đối (để lưu vào DB)
-        return UPLOAD_DIR.replace(File.separator, "/") + "/" + uniqueFileName;
-    }
-
-    /**
-     * Lấy tên file từ Part
-     */
-    private String getFileName(Part part) {
-        String contentDisposition = part.getHeader("content-disposition");
-        if (contentDisposition != null) {
-            for (String content : contentDisposition.split(";")) {
-                if (content.trim().startsWith("filename")) {
-                    return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Lấy extension của file
-     */
-    private String getFileExtension(String fileName) {
-        int lastIndexOf = fileName.lastIndexOf(".");
-        if (lastIndexOf == -1) {
-            return "";
-        }
-        return fileName.substring(lastIndexOf + 1);
     }
 }

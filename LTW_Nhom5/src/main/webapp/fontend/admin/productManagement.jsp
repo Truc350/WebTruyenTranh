@@ -2,6 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<%-- Load danh sách thể loại và bộ truyện --%>
+<jsp:useBean id="categoryDAO" class="vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao"/>
+<jsp:useBean id="seriesDAO" class="vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO"/>
+
+<c:set var="categories" value="${categoryDAO.allCategories}"/>
+<c:set var="seriesList" value="${seriesDAO.allSeries}"/>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,19 +115,20 @@
 
         <div class="table-container">
 
-                <div class="search-add">
-                    <div class="search-box">
-                        <input type="text" id="mainSearchInput" name="keyword" placeholder="Tìm kiếm truyện..." value="${param.keyword}">
-                        <button type="submit" onclick="searchProducts()">
-                            <i class="fas fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button class="add-btn">+ Thêm truyện</button>
-                        <button class="delete-btn">Xóa truyện</button>
-                    </div>
+            <div class="search-add">
+                <div class="search-box">
+                    <input type="text" id="mainSearchInput" name="keyword" placeholder="Tìm kiếm truyện..."
+                           value="${param.keyword}">
+                    <button type="submit" onclick="searchProducts()">
+                        <i class="fas fa-magnifying-glass"></i>
+                    </button>
                 </div>
+
+                <div class="action-buttons">
+                    <button class="add-btn">+ Thêm truyện</button>
+                    <button class="delete-btn">Xóa truyện</button>
+                </div>
+            </div>
         </div>
 
         <div class="table-wrapper">
@@ -142,80 +151,73 @@
             </table>
         </div>
 
+
         <!-- POPUP THÊM TRUYỆN -->
         <div class="modal-overlay" id="addModal">
             <div class="modal-rectangle">
                 <h3>Thêm truyện mới</h3>
-                <form id="addForm" class="form-horizontal">
+                <form id="addForm" class="form-horizontal" enctype="multipart/form-data">
                     <div class="form-left">
 
-                        <!-- HÀNG MÃ TRUYỆN + SỐ LƯỢNG -->
                         <div class="form-group">
-                            <label>Tên truyện:</label>
-                            <input type="text">
+                            <label>Tên truyện: <span style="color: red;">*</span></label>
+                            <input type="text" name="nameComics" required>
                         </div>
 
                         <div class="form-group">
                             <label>Bộ truyện:</label>
-                            <select>
-                                <option selected disabled>-- Chọn bộ truyện --</option>
-                                <option>One Piece</option>
-                                <option>Conan</option>
-                                <option>Naruto</option>
-                                <option>Attack on Titan</option>
-                                <option>Doraemon</option>
+                            <select name="seriesId">
+                                <option value="" selected>-- Chọn bộ truyện --</option>
+                                <c:forEach var="series" items="${seriesList}">
+                                    <option value="${series.id}">${series.seriesName}</option>
+                                </c:forEach>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Thể loại:</label>
-                            <select>
-                                <option>Trinh thám</option>
-                                <option>Hài hước</option>
-                                <option>Ngôn tình</option>
-                                <option>Hành động</option>
-                                <option>Kinh dị</option>
-                                <option>Phiêu lưu</option>
-                                <option>Học đường</option>
-                                <option>Giả tưởng</option>
+                            <label>Thể loại: <span style="color: red;">*</span></label>
+                            <select name="categoryId" required>
+                                <option value="" selected disabled>-- Chọn thể loại --</option>
+                                <c:forEach var="category" items="${categories}">
+                                    <option value="${category.id}">${category.nameCategories}</option>
+                                </c:forEach>
                             </select>
                         </div>
 
                         <div class="form-group two-columns">
                             <div>
-                                <label>Số lượng:</label>
-                                <input type="number" min="1">
+                                <label>Số lượng: <span style="color: red;">*</span></label>
+                                <input type="number" name="stockQuantity" min="0" value="0" required>
                             </div>
 
                             <div>
-                                <label>Giá:</label>
-                                <input type="text">
+                                <label>Giá: <span style="color: red;">*</span></label>
+                                <input type="text" name="price" placeholder="VD: 25,000" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Tác giả:</label>
-                            <input type="text">
+                            <label>Tác giả: <span style="color: red;">*</span></label>
+                            <input type="text" name="author" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Nhà xuất bản :</label>
-                            <input type="text">
+                            <label>Nhà xuất bản:</label>
+                            <input type="text" name="publisher">
                         </div>
 
                         <div class="form-group">
                             <label>Ngày đăng:</label>
-                            <input type="date">
+                            <input type="date" name="publishDate">
                         </div>
                     </div>
 
                     <div class="form-right">
-                        <!-- 4 ảnh truyện -->
                         <div class="images-grid">
 
                             <!-- ẢNH BÌA -->
                             <div class="image-upload">
-                                <input type="file" class="imgInput" accept="image/*" hidden>
+                                <input type="file" class="imgInput" name="coverImage" accept="image/*" hidden>
                                 <div class="img-box">
                                     <i class="icon">+</i>
                                     <span class="label">Ảnh bìa</span>
@@ -225,7 +227,7 @@
 
                             <!-- ẢNH TRANG 1 -->
                             <div class="image-upload">
-                                <input type="file" class="imgInput" accept="image/*" hidden>
+                                <input type="file" class="imgInput" name="detailImage1" accept="image/*" hidden>
                                 <div class="img-box">
                                     <i class="icon">+</i>
                                     <span class="label">Trang chi tiết 1</span>
@@ -235,8 +237,7 @@
 
                             <!-- ẢNH TRANG 2 -->
                             <div class="image-upload">
-                                <input type="file" class="imgInput" accept="image/*" hidden
-                                       placeholder="Trang chi tiết 2">
+                                <input type="file" class="imgInput" name="detailImage2" accept="image/*" hidden>
                                 <div class="img-box">
                                     <i class="icon">+</i>
                                     <span class="label">Trang chi tiết 2</span>
@@ -246,8 +247,7 @@
 
                             <!-- ẢNH TRANG 3 -->
                             <div class="image-upload">
-                                <input type="file" class="imgInput" accept="image/*" hidden
-                                       placeholder="Trang chi tiết 3">
+                                <input type="file" class="imgInput" name="detailImage3" accept="image/*" hidden>
                                 <div class="img-box">
                                     <i class="icon">+</i>
                                     <span class="label">Trang chi tiết 3</span>
@@ -259,13 +259,13 @@
 
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
-                            <textarea rows="6" placeholder="Nhập mô tả ngắn..."></textarea>
+                            <textarea name="description" rows="6" placeholder="Nhập mô tả ngắn..."></textarea>
                         </div>
                     </div>
                 </form>
 
                 <div class="form-buttons">
-                    <button type="submit" class="save-btn">Lưu</button>
+                    <button type="button" class="save-btn">Lưu</button>
                     <button type="button" class="cancel-btn">Hủy</button>
                 </div>
             </div>
@@ -286,11 +286,11 @@
 
                         <div class="form-group">
                             <label>Bộ truyện:</label>
-                            <select>
-                                <option>Conan</option>
-                                <option>Doraemon</option>
-                                <option>One Piece</option>
-                                <option selected>Conan</option> <!-- Ví dụ truyện thuộc bộ Conan -->
+                            <select name="seriesId">
+                                <option value="">-- Chọn bộ truyện --</option>
+                                <c:forEach var="series" items="${seriesList}">
+                                    <option value="${series.id}">${series.seriesName}</option>
+                                </c:forEach>
                             </select>
                         </div>
 
@@ -498,11 +498,14 @@
                 </div>
             </div>
         </div>
-
+        <div id="paginationContainer" class="pagination-container"></div>
     </main>
 
-</div>
 
+
+
+</div>
+<%--ti kiem tram--%>
 <script>
     let currentPage = 1;
 
@@ -558,7 +561,7 @@
 
         let html = '';
 
-        comics.forEach(function(comic) {
+        comics.forEach(function (comic) {
             console.log('Comic ID:', comic.id, '| seriesName:', comic.seriesName, '| categoryName:', comic.categoryName);
             html += '<tr>' +
                 '<td>' + comic.id + '</td>' +
@@ -589,35 +592,60 @@
         tbody.innerHTML = html;
     }
 
-    function updatePagination(currentPage, totalPages) {
-        const tbody = document.getElementById('productTableBody');
+    function updatePagination(currentPage, totalPages, totalComics) {
+        const paginationContainer = document.getElementById('paginationContainer');
 
         if (totalPages <= 1) {
+            paginationContainer.style.display = 'none';
             return;
         }
 
-        let paginationHtml = '<tr class="pagination-row"><td colspan="9"><div class="pagination">';
+        paginationContainer.style.display = 'block';
+
+        // BỎ phần pagination-wrapper và pagination-info
+        let paginationHtml = '<div class="pagination">';
 
         if (currentPage > 1) {
-            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + (currentPage - 1) + ')">&laquo;</button>';
+            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(1)">⏮</button>';
+            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + (currentPage - 1) + ')">◀</button>';
+        } else {
+            paginationHtml += '<button class="page-btn nav-btn" disabled>⏮</button>';
+            paginationHtml += '<button class="page-btn nav-btn" disabled>◀</button>';
         }
 
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-                const activeClass = i === currentPage ? 'active' : '';
-                paginationHtml += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
-            } else if (i === currentPage - 3 || i === currentPage + 3) {
-                paginationHtml += '<span>...</span>';
-            }
+        const maxVisible = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+        if (endPage - startPage < maxVisible - 1) {
+            startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+            paginationHtml += '<button class="page-btn" onclick="searchProducts(1)">1</button>';
+            if (startPage > 2) paginationHtml += '<span>...</span>';
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === currentPage ? 'active' : '';
+            paginationHtml += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) paginationHtml += '<span>...</span>';
+            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + totalPages + ')">' + totalPages + '</button>';
         }
 
         if (currentPage < totalPages) {
-            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + (currentPage + 1) + ')">&raquo;</button>';
+            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + (currentPage + 1) + ')">▶</button>';
+            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + totalPages + ')">⏭</button>';
+        } else {
+            paginationHtml += '<button class="page-btn nav-btn" disabled>▶</button>';
+            paginationHtml += '<button class="page-btn nav-btn" disabled>⏭</button>';
         }
 
-        paginationHtml += '</div></td></tr>';
+        paginationHtml += '</div>';
 
-        tbody.insertAdjacentHTML('beforeend', paginationHtml);
+        paginationContainer.innerHTML = paginationHtml;
     }
 
     function formatPrice(price) {
@@ -628,7 +656,7 @@
     function bindEventListeners() {
         // 1. Bind event cho nút "Xem review"
         document.querySelectorAll('.view-review-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const comicId = this.dataset.comic;
                 const popup = document.getElementById(`review-${comicId}`);
                 if (popup) {
@@ -641,7 +669,7 @@
 
         // 2. Bind event cho nút "Sửa"
         document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const comicId = this.dataset.comicId;
                 console.log('Edit comic ID:', comicId);
 
@@ -672,14 +700,14 @@
     }
 
     // Tìm kiếm khi nhấn Enter
-    document.getElementById('mainSearchInput').addEventListener('keypress', function(e) {
+    document.getElementById('mainSearchInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             searchProducts(1);
         }
     });
 
     // BIND EVENT CHO CÁC PHẦN TỬ BAN ĐẦU (TỪ HTML TĨnh)
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         bindEventListeners();
     });
 </script>
@@ -689,21 +717,17 @@
     document.querySelectorAll('.more-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
-
-            // Đóng menu khác nếu có
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
 
-            const menu = this.nextElementSibling; // menu nằm ngay sau nút 3 chấm
-            const rect = this.getBoundingClientRect(); // tọa độ nút 3 chấm
+            const menu = this.nextElementSibling;
+            const rect = this.getBoundingClientRect();
 
-            // Đặt vị trí menu ngay dưới nút 3 chấm
             menu.style.display = 'block';
             menu.style.top = rect.bottom + 'px';
             menu.style.left = (rect.right - menu.offsetWidth) + 'px';
         });
     });
 
-    // Ẩn menu khi click ra ngoài
     document.addEventListener('click', () => {
         document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
     });
@@ -714,44 +738,20 @@
     const addBtn = document.querySelector('.add-btn');
     const modal = document.getElementById('addModal');
     const cancelBtn = document.querySelector('.cancel-btn');
-    const imageBox = document.getElementById('imageBox');
-    const imageInput = document.getElementById('imageInput');
-    const previewImg = document.getElementById('previewImg');
-    const imagePlaceholder = document.getElementById('imagePreview');
 
-    addBtn.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    }
 
-    cancelBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-        imageInput.value = "";
-        previewImg.style.display = "none";
-    });
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // Khi click vào khung ảnh thì mở chọn file
-    imageBox.addEventListener('click', () => {
-        imageInput.click();
-    });
-
-    // Khi chọn file xong thì hiển thị preview
-    imageInput.addEventListener('change', () => {
-        const file = imageInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                previewImg.style.display = "block";
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 </script>
 
 <script>
@@ -763,9 +763,12 @@
     });
 
     // === MỞ POPUP XÓA ===
-    document.querySelector('.delete-btn').addEventListener('click', () => {
-        document.getElementById('deleteModal').style.display = 'flex';
-    });
+    const deleteBtnMain = document.querySelector('.delete-btn');
+    if (deleteBtnMain) {
+        deleteBtnMain.addEventListener('click', () => {
+            document.getElementById('deleteModal').style.display = 'flex';
+        });
+    }
 
     // === ĐÓNG POPUP KHI NHẤN HỦY ===
     document.querySelectorAll('.cancel-btn').forEach(btn => {
@@ -799,35 +802,10 @@
             });
         });
 
-        // Nhấn Enter để tìm
         searchInput.addEventListener('keypress', e => {
             if (e.key === 'Enter') searchBtn.click();
         });
     }
-
-
-    // === XỬ LÝ ẢNH TRONG POPUP SỬA ===
-    const editImageBox = document.getElementById('editImageBox');
-    const editImageInput = document.getElementById('editImageInput');
-    const editPreviewImg = document.getElementById('editPreviewImg');
-
-    // Nhấn vào khung để mở chọn ảnh
-    editImageBox.addEventListener('click', () => {
-        editImageInput.click();
-    });
-
-    // Hiển thị ảnh xem trước
-    editImageInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                editPreviewImg.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
 </script>
 
 <script>
@@ -837,7 +815,6 @@
 
         links.forEach(link => {
             const linkPage = link.getAttribute("href");
-
             if (linkPage === current) {
                 link.classList.add("active");
             }
@@ -854,14 +831,12 @@
         });
     });
 
-    // Đóng popup
     document.querySelectorAll('.close-review-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             btn.closest('.review-popup').style.display = 'none';
         });
     });
 
-    // Click ngoài popup cũng đóng
     document.querySelectorAll('.review-popup').forEach(popup => {
         popup.addEventListener('click', (e) => {
             if (e.target === popup) popup.style.display = 'none';
@@ -878,35 +853,28 @@
         const icon = box.querySelector(".icon");
         const imgBox = box.querySelector(".img-box");
 
-        imgBox.addEventListener("click", () => input.click());
+        if (imgBox && input) {
+            imgBox.addEventListener("click", () => input.click());
 
-        input.addEventListener("change", () => {
-            const file = input.files[0];
-            if (!file) return;
+            input.addEventListener("change", () => {
+                const file = input.files[0];
+                if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = e => {
-                preview.src = e.target.result;
-                preview.style.display = "block";
-                icon.style.display = "none";
-                label.style.display = "none";
-            };
-            reader.readAsDataURL(file);
-        });
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                    if (icon) icon.style.display = "none";
+                    if (label) label.style.display = "none";
+                };
+                reader.readAsDataURL(file);
+            });
+        }
     });
 </script>
 
 <!--SUA TRUYEN-->
 <script>
-    // Click ảnh trong popup Thêm truyện → mở chọn file
-    document.querySelectorAll(".image-upload .img-box").forEach((box) => {
-        box.addEventListener("click", () => {
-            const input = box.parentElement.querySelector(".imgInput");
-            if (input) input.click();
-        });
-    });
-
-    // Click ảnh trong popup Sửa truyện → mở chọn file
     document.querySelectorAll("#editModal .image-upload .img-box").forEach((box) => {
         box.addEventListener("click", () => {
             const input = box.parentElement.querySelector(".editImgInput");
@@ -914,20 +882,70 @@
         });
     });
 
-    // Hiển thị ảnh preview cho popup Sửa
     document.querySelectorAll(".editImgInput").forEach((input) => {
         input.addEventListener("change", () => {
             const file = input.files[0];
             if (file) {
                 const img = input.parentElement.querySelector(".imgPreview");
-                img.src = URL.createObjectURL(file);
+                if (img) img.src = URL.createObjectURL(file);
             }
         });
     });
-
 </script>
 
-<script src="${pageContext.request.contextPath}/js/productManagement.js?v=${System.currentTimeMillis()}"></script>
+<!-- ===== DEFINE CONTEXT PATH ===== -->
+<script>
+    const contextPath = '${pageContext.request.contextPath}';
+</script>
+
+
+<!-- ===== LOAD DANH SÁCH BAN ĐẦU ===== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('🔄 Loading initial comics list...');
+        loadInitialComicsList();
+    });
+
+    async function loadInitialComicsList() {
+        const tbody = document.getElementById('productTableBody');
+
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">' +
+            '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
+            '<p style="margin-top: 10px;">Đang tải danh sách truyện...</p></td></tr>';
+
+        try {
+            const url = contextPath + '/admin/products/list?page=1';
+            console.log('📥 Fetching from:', url);
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
+
+            const data = await response.json();
+            console.log('📦 Data received:', data);
+
+            if (data.success && data.comics) {
+                console.log('✅ Comics count:', data.comics.length);
+                updateTable(data.comics);
+                updatePagination(1, data.totalPages || 1, data.totalComics || data.comics.length);
+                bindEventListeners();
+            } else {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
+                    '<p>Không thể tải dữ liệu</p></td></tr>';
+            }
+        } catch (error) {
+            console.error('❌ Error:', error);
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
+                '<i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>' +
+                '<p style="margin-top: 10px;">Lỗi: ' + error.message + '</p></td></tr>';
+        }
+    }
+</script>
+
+<!-- Script thêm truyện mới -->
+<script src="${pageContext.request.contextPath}/js/addComic.js"></script>
+
+</body>
+</html>
 
 
 </body>
