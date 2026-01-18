@@ -73,4 +73,15 @@ public class FlashSaleDAO extends ADao{
             return rows > 0;
         });
     }
+
+    public FlashSale getById(int id) {
+        String sql = "SELECT * FROM FlashSale WHERE id = ?";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, id)
+                        .mapToBean(FlashSale.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
 }

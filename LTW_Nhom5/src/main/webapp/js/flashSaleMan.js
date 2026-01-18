@@ -284,3 +284,106 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+
+//  xem chi tiết
+// Xử lý nút xem chi tiết
+// Thêm đoạn code này vào file flashSaleMan.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Xử lý nút xem chi tiết
+    const viewButtons = document.querySelectorAll('.btn-view');
+    const viewModal = document.getElementById('viewFlashSaleModal');
+
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const flashSaleId = btn.dataset.id?.trim();
+
+            if (!flashSaleId) {
+                alert('Không tìm thấy ID Flash Sale!');
+                return;
+            }
+
+            // Gọi API để lấy chi tiết
+            fetch(`${contextPath}/admin/manage-flashsale?action=detail&id=${flashSaleId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=detail&id=${encodeURIComponent(flashSaleId)}`
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.json();
+                })
+                .then(result => {
+                    if (result.success && result.data) {
+                        displayFlashSaleDetail(result.data);
+                        viewModal.classList.add('show');
+                    } else {
+                        alert(result.message || 'Không thể tải thông tin Flash Sale!');
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                    alert('Có lỗi khi tải thông tin Flash Sale!');
+                });
+        });
+    });
+
+    // Đóng popup xem chi tiết
+    document.getElementById('closeViewFlashSale')?.addEventListener('click', () => {
+        viewModal.classList.remove('show');
+    });
+});
+
+// Hàm hiển thị chi tiết Flash Sale lên popup
+function displayFlashSaleDetail(data) {
+    const viewInfoBox = document.querySelector('#viewFlashSaleModal .view-info-box');
+
+    if (!viewInfoBox) return;
+
+    // Chuyển đổi trạng thái sang tiếng Việt
+    const statusText = {
+        'active': 'Đang diễn ra',
+        'scheduled': 'Sắp diễn ra',
+        'ended': 'Đã diễn ra'
+    };
+
+    // Tạo HTML cho danh sách sản phẩm
+    let productsHtml = '';
+    if (data.comics && data.comics.length > 0) {
+        data.comics.forEach(comic => {
+            productsHtml += `
+                <div class="item">
+                    <span>${comic.name}</span>
+                    <span>Giảm: ${comic.discount}%</span>
+                </div>
+            `;
+        });
+    } else {
+        productsHtml = '<p style="text-align:center; color:#888;">Không có sản phẩm nào</p>';
+    }
+
+    // Cập nhật nội dung popup
+    viewInfoBox.innerHTML = `
+        <p><strong>Mã Flash Sale:</strong> ${data.id}</p>
+        <p><strong>Tên Flash Sale:</strong> ${data.name}</p>
+        <p><strong>Thời gian:</strong> ${data.startTime} → ${data.endTime}</p>
+        <p><strong>Trạng thái:</strong> <span class="status ${data.status}">${statusText[data.status] || data.status}</span></p>
+        
+        <h4>Sản phẩm áp dụng:</h4>
+        <div class="view-product-list">
+            ${productsHtml}
+        </div>
+        
+        <div class="flashsale-buttons">
+            <button type="button" class="cancel-btn" id="closeViewFlashSale">Đóng</button>
+        </div>
+    `;
+
+    // Gắn lại sự kiện đóng cho nút mới tạo
+    document.getElementById('closeViewFlashSale').addEventListener('click', () => {
+        document.getElementById('viewFlashSaleModal').classList.remove('show');
+    });
+}

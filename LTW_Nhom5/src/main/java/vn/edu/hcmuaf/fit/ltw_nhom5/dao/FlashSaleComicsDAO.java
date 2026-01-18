@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import java.util.List;
+import java.util.Map;
 
 public class FlashSaleComicsDAO extends ADao {
 
@@ -20,5 +21,26 @@ public class FlashSaleComicsDAO extends ADao {
                 batch.execute();
             }
         });
+    }
+
+    public List<Map<String, Object>> getComicsByFlashSaleId(int flashSaleId) {
+        String sql = """
+        SELECT 
+            c.id, 
+            c.name_comics AS name,
+            fs.discount_percent
+        FROM FlashSale_Comics fsc
+        JOIN Comics c ON fsc.comic_id = c.id
+        JOIN FlashSale fs ON fsc.flashsale_id = fs.id
+        WHERE fsc.flashsale_id = ?
+        ORDER BY c.name_comics
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, flashSaleId)
+                        .mapToMap()
+                        .list()
+        );
     }
 }
