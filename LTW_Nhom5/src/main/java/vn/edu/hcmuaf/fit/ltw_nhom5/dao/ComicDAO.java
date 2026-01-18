@@ -1326,5 +1326,136 @@ public class ComicDAO extends ADao {
                         .mapToBean(Comic.class)
                         .findFirst());
     }
+    public int findOrCreateAuthor(String authorName) {
+        // Tìm author hiện có
+        String findSql = "SELECT id FROM authors WHERE LOWER(name) = LOWER(:name) AND is_deleted = 0 LIMIT 1";
+        Optional<Integer> existingId = jdbi.withHandle(handle ->
+                handle.createQuery(findSql)
+                        .bind("name", authorName.trim())
+                        .mapTo(Integer.class)
+                        .findFirst()
+        );
+
+        if (existingId.isPresent()) {
+            return existingId.get();
+        }
+
+        // Tạo mới author
+        String insertSql = "INSERT INTO authors (name, is_deleted) VALUES (:name, :isDeleted)";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(insertSql)
+                        .bind("name", authorName.trim())
+                        .bind("isDeleted", false)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(-1)
+        );
+    }
+
+    /**
+     * tim hoac tao publisher moi
+     */
+    public int findOrCreatePublisher(String publisherName) {
+        // Tìm publisher hiện có
+        String findSql = "SELECT id FROM publishers WHERE LOWER(name) = LOWER(:name) AND is_deleted = 0 LIMIT 1";
+        Optional<Integer> existingId = jdbi.withHandle(handle ->
+                handle.createQuery(findSql)
+                        .bind("name", publisherName.trim())
+                        .mapTo(Integer.class)
+                        .findFirst()
+        );
+
+        if (existingId.isPresent()) {
+            return existingId.get();
+        }
+
+        // Tạo mới publisher
+        String insertSql = "INSERT INTO publishers (name, is_deleted) VALUES (:name, :isDeleted)";
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(insertSql)
+                        .bind("name", publisherName.trim())
+                        .bind("isDeleted", false)
+                        .executeAndReturnGeneratedKeys("id")
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(-1)
+        );
+    }
+
+    //    Lien ket comic va au thor
+    public boolean linkComicAuthor(int comicId, int authorId) {
+        String sql = "INSERT INTO comic_authors (comic_id, author_id) VALUES (:comicId, :authorId)";
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createUpdate(sql)
+                            .bind("comicId", comicId)
+                            .bind("authorId", authorId)
+                            .execute() > 0
+            );
+        } catch (Exception e) {
+            System.err.println("Error linking comic-author: " + e.getMessage());
+            return false;
+        }
+    }
+
+    //lien ket comic voi publisher
+    public boolean linkComicPublisher(int comicId, int publisherId) {
+        String sql = "INSERT INTO comic_publishers (comic_id,publisher_id) values (:comicId, :publisherId)";
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createUpdate(sql)
+                            .bind("comicId", comicId)
+                            .bind("publisherId", publisherId)
+                            .execute() > 0
+            );
+        } catch (Exception e) {
+            System.err.println("Error linking comic-publisher: " + e.getMessage());
+            return false;
+        }
+    }
+// ✅ THÊM METHOD NÀY VÀO ComicDAO.java
+
+    /**
+     * Lấy thông tin chi tiết của comic bao gồm seriesName và categoryName
+     * Dùng sau khi insert để trả về frontend
+     */
+    public Comic getComicWithDetails(int comicId) {
+        String sql = """
+    SELECT 
+        c.id,
+        c.name_comics,
+        c.author,
+        c.publisher,
+        c.description,
+        c.price,
+        c.stock_quantity,
+        c.thumbnail_url,
+        c.category_id,
+        c.series_id,
+        c.volume,
+        c.status,
+        c.created_at,
+        c.updated_at,
+        s.series_name AS seriesName,
+        cat.name_categories AS categoryName
+    FROM Comics c
+    LEFT JOIN Series s ON c.series_id = s.id
+    LEFT JOIN Categories cat ON c.category_id = cat.id
+    WHERE c.id = :comicId
+    AND c.is_deleted = 0
+    LIMIT 1
+""";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("comicId", comicId)
+                        .mapToBean(Comic.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
 }
 

@@ -23,4 +23,7 @@ public class CategoriesDao {
                         .list()
         );
     }
+    public List<Category> getAllCategories() {
+        return listCategories();
+    }
 }
