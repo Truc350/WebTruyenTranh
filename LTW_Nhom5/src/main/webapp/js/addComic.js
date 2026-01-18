@@ -1,5 +1,3 @@
-// File: webapp/js/addComic.js
-
 let isInitialized = false;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -53,6 +51,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const formData = new FormData(addForm);
+
+        // ✅ Thêm volume vào formData
+        const volumeInput = document.querySelector('[name="volume"]');
+        if (volumeInput && volumeInput.value) {
+            formData.set('volume', volumeInput.value);
+            console.log('📖 Volume:', volumeInput.value);
+        }
 
         // Hiển thị loading
         saveBtn.disabled = true;
@@ -130,11 +135,15 @@ async function refreshComicsTable() {
             // ✅ CẬP NHẬT BẢNG
             updateTableWithNewData(data.comics);
 
+            // ✅ CẬP NHẬT PHÂN TRANG
+            if (typeof updatePagination === 'function') {
+                updatePagination(data.currentPage, data.totalPages, data.totalComics);
+            }
+
             // ✅ BIND LẠI EVENT LISTENERS
             bindEventListeners();
 
             console.log('✅ Table refreshed successfully!');
-            await loadComicsList(1);
         } else {
             tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #f44336;">Không thể tải dữ liệu</td></tr>';
         }
@@ -232,13 +241,14 @@ function bindEventListeners() {
     });
 }
 
-// Validate form
+// ✅ Validate form - CẬP NHẬT ĐỂ KIỂM TRA VOLUME
 function validateForm() {
     const nameComics = document.querySelector('[name="nameComics"]').value.trim();
     const author = document.querySelector('[name="author"]').value.trim();
     const categoryId = document.querySelector('[name="categoryId"]').value;
     const priceInput = document.querySelector('[name="price"]').value.trim();
     const stockQuantity = document.querySelector('[name="stockQuantity"]').value;
+    const volumeInput = document.querySelector('[name="volume"]').value;
 
     const errors = [];
 
@@ -261,6 +271,14 @@ function validateForm() {
 
     if (!stockQuantity || parseInt(stockQuantity) < 0) {
         errors.push('Số lượng không được âm');
+    }
+
+    // ✅ Validate volume (không bắt buộc, nhưng nếu có thì phải > 0)
+    if (volumeInput && volumeInput.trim() !== '') {
+        const volume = parseInt(volumeInput);
+        if (isNaN(volume) || volume < 1) {
+            errors.push('Số tập phải là số nguyên dương (từ 1 trở lên)');
+        }
     }
 
     if (errors.length > 0) {

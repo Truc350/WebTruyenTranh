@@ -214,7 +214,7 @@
 
                             <div style="flex: 1">
                                 <label>Tập:</label>
-                                <input type="number" min="1">
+                                <input type="number" name="volume" min="1" placeholder="VD: 1">
                             </div>
                         </div>
                     </div>
