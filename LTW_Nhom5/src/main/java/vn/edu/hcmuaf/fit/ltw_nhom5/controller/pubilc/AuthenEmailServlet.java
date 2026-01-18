@@ -39,11 +39,12 @@ public class AuthenEmailServlet extends HttpServlet {
         // Lưu OTP vào session
         request.getSession().setAttribute("otp", code);
         request.getSession().setAttribute("otpEmail", email);
+        request.getSession().setAttribute("otpSent", true); // DÙNG SESSION thay vì request
 
         // Gửi email
         EmailUtils.sendEmail(email, "Mã xác thực quên mật khẩu", "Mã OTP của bạn là: " + code);
 
-        // Chuyển sang trang reset-password.jsp
-        response.sendRedirect(request.getContextPath() + "/fontend/public/reset-password.jsp");
+        // Quay lại ForgotPass.jsp và bật popup
+        request.getRequestDispatcher("/fontend/public/ForgotPass.jsp").forward(request, response);
     }
 }

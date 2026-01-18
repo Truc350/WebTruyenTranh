@@ -8,7 +8,6 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.PasswordUtils;
 
 import java.io.IOException;
-
 @WebServlet(name = "ResetPassServlet", value = "/ResetPassServlet")
 public class ResetPassServlet extends HttpServlet {
     private UserDao userDao;
@@ -58,7 +57,8 @@ public class ResetPassServlet extends HttpServlet {
         request.getSession().removeAttribute("otp");
         request.getSession().removeAttribute("otpEmail");
 
-        // Sau khi đổi mật khẩu thành công → về login
-        response.sendRedirect(request.getContextPath() + "/login");
+        // CHỈ SET success = true KHI ĐÃ UPDATE THÀNH CÔNG
+        request.setAttribute("success", true);
+        request.getRequestDispatcher("/fontend/public/reset-password.jsp").forward(request, response);
     }
 }

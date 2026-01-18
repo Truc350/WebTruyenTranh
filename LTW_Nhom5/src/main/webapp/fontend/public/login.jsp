@@ -31,10 +31,10 @@
 
 
 
-                <div class="links">
-                    <a href="${pageContext.request.contextPath}/fontend/public/Register.jsp">Đăng ký tài khoản</a>
-                    <a href="${pageContext.request.contextPath}/fontend/public/ForgotPass.jsp">Quên mật khẩu</a>
-                </div>
+               <div class="links">
+                   <a href="${pageContext.request.contextPath}/fontend/public/Register.jsp">Đăng ký tài khoản</a>
+                   <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu</a>
+               </div>
 
                 <button type="submit" value="Đăng nhập">Đăng nhập</button>
 
