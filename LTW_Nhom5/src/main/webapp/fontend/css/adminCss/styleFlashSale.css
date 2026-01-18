@@ -98,7 +98,7 @@ body {
     font-size: 12px;
 }
 .status.active { background: #28a745; }
-.status.upcoming { background: #ff9800; }
+.status.scheduled { background: #ff9800; }
 .status.end { background: #777; }
 
 .action{

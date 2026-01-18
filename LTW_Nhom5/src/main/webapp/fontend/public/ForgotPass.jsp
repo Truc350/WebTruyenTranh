@@ -1,91 +1,92 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/style.css">
-<%--    <link rel="stylesheet" href="fonts/icomoon/style.css">--%>
-<%--    <link rel="stylesheet" href="css/owl.carousel.min.css">--%>
-
-    <title>Forgot Password </title>
+    <meta charset="UTF-8">
+    <title>Quên mật khẩu</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/ForgotPassword.css">
 </head>
 <body>
 
-    <div class="d-lg-flex half">
-        <div class="bg order-1 order-md-2"
-             style="background-image: url(${pageContext.request.contextPath}/img/anhLogin.png);"></div>
+<div class="container">
+    <!-- LEFT -->
+    <div class="left">
+        <div class="box">
+            <img src="${pageContext.request.contextPath}/img/logo.png" class="logo">
 
+            <form action="${pageContext.request.contextPath}/AuthenEmailServlet" method="post">
+                <h2>Quên mật khẩu</h2>
+                <p>Hãy nhập email của bạn để nhận mã xác thực</p>
 
-        <div class="container">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-md-7">
-                        <h3><strong>Xác thực email</strong></h3>
-                        <p class="mb-4">Nhập email để lấy mã xác thực và đặt lại mật khẩu mới.</p>
+                <c:if test="${not empty error}">
+                    <div style="color: red; margin-bottom: 10px;">${error}</div>
+                </c:if>
 
-                        <form action="${pageContext.request.contextPath}/ForgotPasswordServlet" method="post">
-                            <!-- Email -->
-                            <div class="form-group first">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" placeholder="Địa chỉ gmail" id="email" name="email"
-                                       value="${enteredEmail}" required>
-                            </div>
+                <label>Email:</label>
+                <input type="email" placeholder="Nhập email" name="email" required>
 
-                            <!-- Mã xác thực -->
-                            <div class="form-group">
-                                <label for="code">Mã xác thực</label>
-                                <input type="text" class="form-control" placeholder="Nhập mã xác thực đã gửi" id="code" name="code">
-                            </div>
+                <div class="buttons">
+                    <button class="back"
+                            type="button"
+                            onclick="window.location.href='${pageContext.request.contextPath}/login'"
+                            style="color: black;">
+                        ← Quay lại đăng nhập
+                    </button>
 
-                            <!-- Mật khẩu mới -->
-                            <div class="form-group last mb-3">
-                                <label for="newPassword">Mật khẩu mới</label>
-                                <input type="password" class="form-control" placeholder="Nhập mật khẩu mới" id="newPassword" name="newPassword">
-                            </div>
-
-                            <!-- Buttons -->
-                            <div class="d-flex mb-4 align-items-center">
-                                <button type="submit" name="action" value="getCode" class="btn btn-secondary mr-2">Lấy mã xác thực</button>
-                                <button type="submit" name="action" value="resetPassword" class="btn btn-primary">Xác nhận</button>
-                            </div>
-                        </form>
-                    </div>
+                    <button class="send" type="submit" id="openPopup">Lấy mã xác thực</button>
                 </div>
-            </div>
+            </form>
+        </div>
     </div>
 
+    <!-- RIGHT -->
+    <div class="image-section">
+        <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
+    </div>
+</div>
+
+<!-- POPUP OTP -->
+<div class="popup" id="otpPopup" style="display:none;">
+    <div class="popup-content">
+        <span class="close" id="closePopup">&times;</span>
+        <h2>Nhập mã xác thực</h2>
+
+        <c:if test="${not empty sessionScope.otpError}">
+            <div style="color: red; margin-top: 8px;">${sessionScope.otpError}</div>
+        </c:if>
+
+        <form action="${pageContext.request.contextPath}/VerifyOtpServlet" method="post">
+            <label>Nhập mã xác thực:</label>
+            <input type="text" placeholder="Nhập mã" name="code" required>
+            <button type="submit">Xác nhận</button>
+        </form>
+    </div>
+</div>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-        const newPasswordInput = document.getElementById("newPassword");
+    const popup = document.getElementById("otpPopup");
+    const closeBtn = document.getElementById("closePopup");
 
-        form.addEventListener("submit", function (event) {
-            // chỉ kiểm tra khi action là resetPassword
-            const action = event.submitter ? event.submitter.value : null;
-            if (action === "resetPassword") {
-                const password = newPasswordInput.value;
+    // Đóng popup khi click X
+    closeBtn.onclick = () => {
+        popup.style.display = "none";
+    }
 
-                // Regex kiểm tra: ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
-                const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // Đóng popup khi click ra ngoài
+    window.onclick = (e) => {
+        if (e.target === popup) {
+            popup.style.display = "none";
+        }
+    }
 
-                if (!regex.test(password)) {
-                    event.preventDefault(); // chặn submit
-                    alert("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
-                    newPasswordInput.value = ""; // reset ô nhập mật khẩu
-                }
-            }
-        });
-    });
+    // MỞ POPUP KHI có otpSent trong session
+    <c:if test="${sessionScope.otpSent eq true}">
+    window.onload = () => {
+        popup.style.display = "flex";
+    }
+    </c:if>
 </script>
 
-
-
-<%--<script src="js/jquery-3.3.1.min.js"></script>--%>
-<%--<script src="js/popper.min.js"></script>--%>
-<%--<script src="js/bootstrap.min.js"></script>--%>
-<%--<script src="js/main.js"></script>--%>
 </body>
 </html>
