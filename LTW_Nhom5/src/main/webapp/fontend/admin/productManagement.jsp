@@ -206,9 +206,16 @@
                             <input type="text" name="publisher">
                         </div>
 
-                        <div class="form-group">
-                            <label>Ngày đăng:</label>
-                            <input type="date" name="publishDate">
+                        <div class="form-group two-columns">
+                            <div style="flex: 0.9">
+                                <label>Ngày đăng:</label>
+                                <input type="date">
+                            </div>
+
+                            <div style="flex: 1">
+                                <label>Tập:</label>
+                                <input type="number" min="1">
+                            </div>
                         </div>
                     </div>
 
@@ -330,9 +337,16 @@
                             <input type="text" value="Kim Đồng">
                         </div>
 
-                        <div class="form-group">
-                            <label>Ngày đăng:</label>
-                            <input type="date" value="2024-12-01">
+                        <div class="form-group two-columns">
+                            <div style="flex: 0.9">
+                                <label>Ngày đăng:</label>
+                                <input type="date" value="2024-12-01">
+                            </div>
+
+                            <div style="flex: 1">
+                                <label>Tập:</label>
+                                <input type="number" min="1" value="103">
+                            </div>
                         </div>
                     </div>
 
