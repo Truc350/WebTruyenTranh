@@ -2,6 +2,8 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
 
+import java.util.List;
+
 public class FlashSaleDAO extends ADao{
     public FlashSale getActiveFlashSaleEndingSoon() {
         String sql = """
@@ -38,6 +40,18 @@ public class FlashSaleDAO extends ADao{
         );
     }
 
+    public List<FlashSale> getAllFlashSales() {
+        String sql = """
+            SELECT id, name, discount_percent, start_time, end_time, status, created_at
+            FROM FlashSale
+            ORDER BY created_at ASC
+        """;
 
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapToBean(FlashSale.class)
+                        .list()
+        );
+    }
 
 }

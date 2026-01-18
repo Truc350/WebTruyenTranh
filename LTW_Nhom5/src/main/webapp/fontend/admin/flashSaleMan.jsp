@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,50 +22,50 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
+            <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo">
             <h2>Comic Store</h2>
         </div>
 
         <ul>
             <li>
                 <a href="dashboard.jsp">
-                    <img src="../../img/home.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
             </li>
             <li>
                 <a href="seriesManagement.jsp">
-                    <img src="../../img/series.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
                 <a href="productManagement.jsp">
-                    <img src="../../img/product.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
                     <span>Quản lý series</span>
                 </a>
             </li>
             <li>
                 <a href="category.jsp">
-                    <img src="../../img/category.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
                     <span>Quản lý thể loại</span>
                 </a>
             </li>
             <li>
                 <a href="order.jsp">
-                    <img src="../../img/order.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/order.png" class="icon">
                     <span>Quản lý đơn hàng</span>
                 </a>
             </li>
             <li>
                 <a href="userManagement.jsp">
-                    <img src="../../img/user.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
                     <span>Quản lý người dùng</span>
                 </a>
             </li>
             <li>
                 <a href="flashSaleMan.html">
-                    <img src="../../img/flashSale.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon">
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
@@ -74,7 +77,7 @@
             <%--      </li>--%>
             <li>
                 <a href="report.jsp">
-                    <img src="../../img/report.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
                     <span>Thống kê</span>
                 </a>
             </li>
@@ -90,7 +93,7 @@
 
                 <div class="admin-profile">
                     <a href="profileAdmin.jsp">
-                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
+                        <img src="${pageContext.request.contextPath}/img/admin.png" class="admin-avatar" alt="Admin">
                     </a>
                     <span class="admin-name">Admin</span>
                 </div>
@@ -117,9 +120,8 @@
                 </button>
             </div>
 
-            <!-- Danh sách Flash Sale -->
-            <div class="flashSale-list">
 
+            <div class="flashSale-list">
                 <table class="flashSale-table">
                     <thead>
                     <tr>
@@ -132,47 +134,116 @@
                     </thead>
 
                     <tbody id="flashSaleTableBody">
-                    <!-- Demo -->
-                    <tr>
-                        <td>1</td>
-                        <td>Flash Sale 10:00 - Mừng Noel</td>
-                        <td>10:00 24/12/2024 → 12:00 24/12/2024</td>
-                        <td><span class="status active">Đang diễn ra</span></td>
-                        <td class="action">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Flash Sale 00:00 - New Year</td>
-                        <td>00:00 01/01/2025 → 02:00 01/01/2025</td>
-                        <td><span class="status upcoming">Sắp diễn ra</span></td>
-                        <td class="action">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Flash Sale Giữa Tháng</td>
-                        <td>08:00 10/12/2024 → 09:00 10/12/2024</td>
-                        <td><span class="status end">Đã diễn ra</span></td>
-                        <td class="action">
-                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>
-                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
+                    <c:choose>
+                        <c:when test="${empty flashSales}">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #888;">
+                                    Chưa có Flash Sale nào được tạo
+                                </td>
+
+
+                            </tr>
+                        </c:when>
+
+                        <c:otherwise>
+
+                            <c:forEach var="fs" items="${flashSales}">
+                                <tr data-id="${fs.id}">
+                                    <td>${fs.id}</td>
+                                    <td>${fs.name}</td>
+                                    <td>
+                                            ${fs.startTimeFormatted} → ${fs.endTimeFormatted}
+                                    </td>
+                                    <td>
+                                <span class="status ${fs.status}">
+                                    <c:choose>
+                                        <c:when test="${fs.status == 'active'}">Đang diễn ra</c:when>
+
+                                        <c:when test="${fs.status == 'scheduled'}">Sắp diễn ra</c:when>
+                                        <c:when test="${fs.status == 'ended'}">Đã diễn ra</c:when>
+                                        <c:otherwise>${fs.status}</c:otherwise>
+                                    </c:choose>
+                                </span>
+                                    </td>
+                                    <td class="action">
+                                        <button class="btn-view" data-id="${fs.id}">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </button>
+                                        <button class="btn-edit openEditFlashSale" data-id="${fs.id}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button class="btn-delete" data-id="${fs.id}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                     </tbody>
                 </table>
-
             </div>
+
+
+
+            <!-- Danh sách Flash Sale -->
+<%--            <div class="flashSale-list">--%>
+
+<%--                <table class="flashSale-table">--%>
+<%--                    <thead>--%>
+<%--                    <tr>--%>
+<%--                        <th>Mã Flash Sale</th>--%>
+<%--                        <th>Tên Flash Sale</th>--%>
+<%--                        <th>Thời gian</th>--%>
+<%--                        <th>Trạng thái</th>--%>
+<%--                        <th>Thao tác</th>--%>
+<%--                    </tr>--%>
+<%--                    </thead>--%>
+
+<%--                    <tbody id="flashSaleTableBody">--%>
+<%--                    <!-- Demo -->--%>
+<%--                    <tr>--%>
+<%--                        <td>1</td>--%>
+<%--                        <td>Flash Sale 10:00 - Mừng Noel</td>--%>
+<%--                        <td>10:00 24/12/2024 → 12:00 24/12/2024</td>--%>
+<%--                        <td><span class="status active">Đang diễn ra</span></td>--%>
+<%--                        <td class="action">--%>
+<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
+<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
+<%--                            </button>--%>
+<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr>--%>
+<%--                        <td>2</td>--%>
+<%--                        <td>Flash Sale 00:00 - New Year</td>--%>
+<%--                        <td>00:00 01/01/2025 → 02:00 01/01/2025</td>--%>
+<%--                        <td><span class="status upcoming">Sắp diễn ra</span></td>--%>
+<%--                        <td class="action">--%>
+<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
+<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
+<%--                            </button>--%>
+<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr>--%>
+<%--                        <td>3</td>--%>
+<%--                        <td>Flash Sale Giữa Tháng</td>--%>
+<%--                        <td>08:00 10/12/2024 → 09:00 10/12/2024</td>--%>
+<%--                        <td><span class="status end">Đã diễn ra</span></td>--%>
+<%--                        <td class="action">--%>
+<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
+<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
+<%--                            </button>--%>
+<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    </tbody>--%>
+<%--                </table>--%>
+
+<%--            </div>--%>
+
+
         </div>
     </div>
 </div>

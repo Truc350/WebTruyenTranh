@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FlashSale {
     private int id;
@@ -78,5 +79,17 @@ public class FlashSale {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+
+    // Getter cho String đã format
+    public String getStartTimeFormatted() {
+        return startTime != null ? startTime.format(FORMATTER) : "";
+    }
+
+    public String getEndTimeFormatted() {
+        return endTime != null ? endTime.format(FORMATTER) : "";
     }
 }
