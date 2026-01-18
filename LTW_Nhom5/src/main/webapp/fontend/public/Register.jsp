@@ -1,121 +1,117 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
-    <title>Register</title>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng ký</title>
+<!--  <link rel="stylesheet" href="../css/publicCss/register.css">-->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/signIn.css">
 </head>
 <body>
-<div class="d-lg-flex half">
-    <div class="bg order-1 order-md-2"
-         style="background-image: url(${pageContext.request.contextPath}/img/anhLogin.png);"></div>
 
-    <div class="contents order-2 order-md-1">
+<div class="container">
 
-        <div class="container">
-            <div class="row align-items-center justify-content-center">
-                <div class="col-md-7">
-                    <h3> <strong>Tạo tài khoản</strong></h3>
-                    <p class="mb-4">Điền thông tin để đăng ký.</p>
+  <!-- LEFT -->
+  <div class="left">
+    <div class="box">
 
-                    <c:if test="${not empty error}">
-                        <p class="text-danger">${error}</p>
-                    </c:if>
+      <h2>Đăng ký</h2>
 
-                    <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
-                        <!-- Username -->
-                        <div class="form-group first">
-                            <label for="username">Tên đăng nhập</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
-                        </div>
+        <c:if test="${not empty error}">
+            <p class="text-danger">${error}</p>
+        </c:if>
 
-                        <!-- Email -->
-                        <div class="form-group">
-                            <label for="email">Địa chỉ Email</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Địa chỉ gmail" required>
-                        </div>
+      <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
+        <label>Nhập tên đăng nhập:</label>
+        <input type="text" placeholder="" name="username">
 
-                        <!-- Password -->
-                        <div class="form-group">
-                            <label for="password">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
-                        </div>
+        <label>Nhập email:</label>
+        <input type="email" placeholder="" name="email">
 
-                        <!-- Confirm Password -->
-                        <div class="form-group last mb-3">
-                            <label for="confirmPassword">Xác nhận mật khẩu</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
-                        </div>
-
-                        <!-- Checkbox -->
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" id="agree" name="agree" required>
-                            <label class="form-check-label" for="agree">
-                                Tôi đồng ý với các chính sách và điều khoản
-                            </label>
-                        </div>
-
-
-                        <!-- Submit -->
-                        <input type="submit" value="Đăng ký" class="btn btn-block btn-primary">
-
-                        <!-- Link to login -->
-                        <p class="mt-3 text-center">
-                            <a href="login_bo.jsp">Đăng nhập tài khoản</a>
-                        </p>
-                    </form>
-
-                </div>
-            </div>
+        <label>Nhập mật khẩu:</label>
+        <div class="password-box">
+          <input type="password" placeholder="" name="password">
+          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle1">
         </div>
+
+        <label>Xác nhận lại mật khẩu:</label>
+        <div class="password-box">
+          <input type="password" placeholder="" name="confirmPassword">
+          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle2">
+        </div>
+
+        <button type="submit" value="Đăng ký" id="registerBtn">Đăng ký</button>
+      </form>
+
     </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
+  </div>
+
 </div>
 
+<!-- POPUP SUCCESS -->
+<div class="popup-success" id="successPopup">
+  <div class="success-box">
+    <h2>Đăng ký thành công</h2>
+    <div class="check-icon"></div>
+  </div>
+</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.querySelector("form");
-        const passwordInput = document.getElementById("password");
-        const confirmPasswordInput = document.getElementById("confirmPassword");
+  function togglePassword(eyeClass){
+    const eye = document.querySelector("." + eyeClass);
+    const input = eye.previousElementSibling;
 
-        form.addEventListener("submit", function (event) {
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            // Regex kiểm tra: ít nhất 8 ký tự, có chữ hoa, chữ thường, số và ký tự đặc biệt
-            const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-            // Kiểm tra format mật khẩu
-            if (!regex.test(password)) {
-                event.preventDefault(); // chặn submit
-                alert("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
-
-                // Reset cả 2 ô mật khẩu
-                passwordInput.value = "";
-                confirmPasswordInput.value = "";
-                return;
-            }
-
-            // Kiểm tra xác nhận mật khẩu
-            if (password !== confirmPassword) {
-                event.preventDefault(); // chặn submit
-                alert("Mật khẩu xác nhận không khớp!");
-
-                // Reset cả 2 ô mật khẩu
-                passwordInput.value = "";
-                confirmPasswordInput.value = "";
-                return;
-            }
-        });
+    eye.addEventListener("click", () => {
+      if(input.type === "password"){
+        input.type = "text";
+        eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
+      }else{
+        input.type = "password";
+        eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
+      }
     });
+  }
+
+  togglePassword("toggle1");
+  togglePassword("toggle2");
 </script>
 
+<c:if test="${not empty success}">
+    <script>
+        const successPopup = document.getElementById("successPopup");
+        successPopup.style.display = "flex";
+        setTimeout(() => {
+            window.location.href = "${pageContext.request.contextPath}/login";
+        }, 2000);
+    </script>
+</c:if>
 
-<%--<script src="js/bootstrap.min.js"></script>--%>
+<%--<script>--%>
+<%--    const registerBtn = document.getElementById("registerBtn");--%>
+<%--    const successPopup = document.getElementById("successPopup");--%>
+
+<%--    // Lấy biến error từ server (JSP sẽ thay thế giá trị thực tế)--%>
+<%--    const error = "${error}";--%>
+
+<%--    registerBtn.onclick = () => {--%>
+<%--        // Chỉ hiện popup nếu không có lỗi--%>
+<%--        if (!error || error.trim() === "") {--%>
+<%--            successPopup.style.display = "flex";--%>
+
+<%--            // Sau 2 giây, chuyển sang trang login.html--%>
+<%--            setTimeout(() => {--%>
+<%--                window.location.href = "${pageContext.request.contextPath}/login";--%>
+<%--            }, 2000);--%>
+<%--        }--%>
+<%--    }--%>
+<%--</script>--%>
 </body>
 </html>
