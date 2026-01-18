@@ -34,13 +34,13 @@
         <label>Nhập mật khẩu:</label>
         <div class="password-box">
           <input type="password" placeholder="" name="password">
-          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle1">
+<%--          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle1">--%>
         </div>
 
         <label>Xác nhận lại mật khẩu:</label>
         <div class="password-box">
           <input type="password" placeholder="" name="confirmPassword">
-          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle2">
+<%--          <img src="${pageContext.request.contextPath}/img/eyePassword.png" class="eye toggle2">--%>
         </div>
 
         <button type="submit" value="Đăng ký" id="registerBtn">Đăng ký</button>
@@ -65,23 +65,23 @@
 </div>
 
 <script>
-  function togglePassword(eyeClass){
-    const eye = document.querySelector("." + eyeClass);
-    const input = eye.previousElementSibling;
+  <%--function togglePassword(eyeClass){--%>
+  <%--  const eye = document.querySelector("." + eyeClass);--%>
+  <%--  const input = eye.previousElementSibling;--%>
 
-    eye.addEventListener("click", () => {
-      if(input.type === "password"){
-        input.type = "text";
-        eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
-      }else{
-        input.type = "password";
-        eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
-      }
-    });
-  }
+  <%--  eye.addEventListener("click", () => {--%>
+  <%--    if(input.type === "password"){--%>
+  <%--      input.type = "text";--%>
+  <%--      eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";--%>
+  <%--    }else{--%>
+  <%--      input.type = "password";--%>
+  <%--      eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";--%>
+  <%--    }--%>
+  <%--  });--%>
+  <%--}--%>
 
-  togglePassword("toggle1");
-  togglePassword("toggle2");
+  <%--togglePassword("toggle1");--%>
+  <%--togglePassword("toggle2");--%>
 </script>
 
 <c:if test="${not empty success}">
@@ -94,24 +94,6 @@
     </script>
 </c:if>
 
-<%--<script>--%>
-<%--    const registerBtn = document.getElementById("registerBtn");--%>
-<%--    const successPopup = document.getElementById("successPopup");--%>
 
-<%--    // Lấy biến error từ server (JSP sẽ thay thế giá trị thực tế)--%>
-<%--    const error = "${error}";--%>
-
-<%--    registerBtn.onclick = () => {--%>
-<%--        // Chỉ hiện popup nếu không có lỗi--%>
-<%--        if (!error || error.trim() === "") {--%>
-<%--            successPopup.style.display = "flex";--%>
-
-<%--            // Sau 2 giây, chuyển sang trang login.html--%>
-<%--            setTimeout(() => {--%>
-<%--                window.location.href = "${pageContext.request.contextPath}/login";--%>
-<%--            }, 2000);--%>
-<%--        }--%>
-<%--    }--%>
-<%--</script>--%>
 </body>
 </html>

@@ -25,7 +25,7 @@
                <div class="password-box">
                    <input type="password" placeholder="Mật khẩu" name="password">
                    <span class="eye">
-                    <img src="${pageContext.request.contextPath}/img/eyePassword.png" id="toggleEye" alt="eye">
+<%--                    <img src="${pageContext.request.contextPath}/img/eyePassword.png" id="toggleEye" alt="eye">--%>
                 </span>
                </div>
 
@@ -60,18 +60,21 @@
     </div>
 </div>
 <script>
-    const eye = document.getElementById("toggleEye");
-    const passwordInput = document.querySelector(".password-box input");
+    <%--const eye = document.getElementById("toggleEye");--%>
+    <%--const passwordInput = document.querySelector(".password-box input");--%>
 
-    eye.addEventListener("click", () => {
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
-        } else {
-            passwordInput.type = "password";
-            eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
-        }
-    });
+    <%--eye.addEventListener("click", () => {--%>
+    <%--    if (passwordInput.type === "password") {--%>
+    <%--        passwordInput.type = "text";--%>
+    <%--        eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";--%>
+    <%--    } else {--%>
+    <%--        passwordInput.type = "password";--%>
+    <%--        eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";--%>
+    <%--    }--%>
+    <%--});--%>
+
+
+
     <%--<img src="../../img/anhLogin.png" height="1200" width="676"/><img src="../../img/eyePasswordHide.png" height="512"--%>
     <%--                                                                  width="512"/><img--%>
     <%--    src="../../img/eyePasswordHide.png" height="512" width="512"/></script><script>--%>
