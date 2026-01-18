@@ -54,4 +54,23 @@ public class FlashSaleDAO extends ADao{
         );
     }
 
+    public boolean deleteById(int id) {
+        String sql = "DELETE FROM FlashSale WHERE id = ?";
+
+        // Xóa liên kết trong bảng trung gian FlashSale_Comics (nếu có ràng buộc foreign key)
+        String deleteLinksSql = "DELETE FROM FlashSale_Comics WHERE flashsale_id = ?";
+
+        return jdbi.withHandle(handle -> {
+            // Xóa liên kết trước (nếu bảng trung gian có foreign key)
+            handle.createUpdate(deleteLinksSql)
+                    .bind(0, id)
+                    .execute();
+
+            // Xóa FlashSale chính
+            int rows = handle.createUpdate(sql)
+                    .bind(0, id)
+                    .execute();
+            return rows > 0;
+        });
+    }
 }
