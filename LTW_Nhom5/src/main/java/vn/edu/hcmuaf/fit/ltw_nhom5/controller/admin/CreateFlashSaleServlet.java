@@ -23,6 +23,7 @@ public class CreateFlashSaleServlet extends HttpServlet {
     private final FlashSaleDAO flashSaleDAO = new FlashSaleDAO();
     private final FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -34,9 +35,8 @@ public class CreateFlashSaleServlet extends HttpServlet {
         JsonObject responseJson = new JsonObject();
 
         try {
-            // Lấy dữ liệu từ form
             String name = req.getParameter("flashSaleName");
-            String discountPercentStr = req.getParameter("discountPercent"); // ← THÊM MỚI
+            String discountPercentStr = req.getParameter("discountPercent");
             String startTimeStr = req.getParameter("startTime");
             String endTimeStr = req.getParameter("endTime");
             String[] comicIdArray = req.getParameterValues("comicIds");
@@ -45,7 +45,7 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 comicIdArray = new String[0];
             }
 
-            // Validate tên Flash Sale
+            // Validate...
             if (name == null || name.trim().isEmpty()) {
                 responseJson.addProperty("success", false);
                 responseJson.addProperty("message", "Tên Flash Sale không được để trống");
@@ -53,7 +53,6 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
-            // ← THÊM: Validate phần trăm giảm
             if (discountPercentStr == null || discountPercentStr.trim().isEmpty()) {
                 responseJson.addProperty("success", false);
                 responseJson.addProperty("message", "Vui lòng nhập phần trăm giảm giá");
@@ -77,7 +76,6 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
-            // Validate thời gian
             if (startTimeStr == null || startTimeStr.isEmpty() ||
                     endTimeStr == null || endTimeStr.isEmpty()) {
                 responseJson.addProperty("success", false);
@@ -86,7 +84,6 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
-            // Validate danh sách truyện
             if (comicIdArray.length == 0) {
                 responseJson.addProperty("success", false);
                 responseJson.addProperty("message", "Vui lòng chọn ít nhất một truyện");
@@ -96,6 +93,7 @@ public class CreateFlashSaleServlet extends HttpServlet {
 
             LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
             LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
+            LocalDateTime now = LocalDateTime.now();
 
             if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
                 responseJson.addProperty("success", false);
@@ -104,22 +102,31 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
-            // Tạo FlashSale object
+            // ← TỰ ĐỘNG XÁC ĐỊNH TRẠNG THÁI DựA TRÊN THỜI GIAN
+            String status;
+            if (now.isBefore(startTime)) {
+                status = "scheduled";  // Sắp diễn ra
+            } else if (now.isAfter(endTime)) {
+                status = "ended";      // Đã kết thúc
+            } else {
+                status = "active";     // Đang diễn ra
+            }
+
             FlashSale flashSale = new FlashSale();
             flashSale.setName(name.trim());
-            flashSale.setDiscountPercent(discountPercent); // ← THÊM MỚI: Set discount percent
+            flashSale.setDiscountPercent(discountPercent);
             flashSale.setStartTime(startTime);
             flashSale.setEndTime(endTime);
+            flashSale.setStatus(status);  // ← SET STATUS TỰ ĐỘNG
 
-            // Lưu vào database
             int flashSaleId = flashSaleDAO.insert(flashSale);
 
-            // Thêm liên kết với comics
             List<Integer> comicIdList = new ArrayList<>();
             for (String idStr : comicIdArray) {
                 try {
                     comicIdList.add(Integer.parseInt(idStr.trim()));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             flashSaleComicsDAO.insertLinks(flashSaleId, comicIdList);

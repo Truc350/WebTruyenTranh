@@ -29,7 +29,7 @@ public class FlashSaleDAO extends ADao{
     public int insert(FlashSale flashSale) {
         String sql = """
             INSERT INTO FlashSale (name, discount_percent, start_time, end_time, status)
-            VALUES (:name, :discountPercent, :startTime, :endTime, 'scheduled')
+            VALUES (:name, :discountPercent, :startTime, :endTime, :status)
         """;
 
         return jdbi.withHandle(handle ->
@@ -42,6 +42,9 @@ public class FlashSaleDAO extends ADao{
     }
 
     public List<FlashSale> getAllFlashSales() {
+
+        updateStatuses();
+
         String sql = """
             SELECT id, name, discount_percent, start_time, end_time, status, created_at
             FROM FlashSale
@@ -76,6 +79,9 @@ public class FlashSaleDAO extends ADao{
     }
 
     public FlashSale getById(int id) {
+
+        updateStatuses();
+
         String sql = "SELECT * FROM FlashSale WHERE id = ?";
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -105,5 +111,23 @@ public class FlashSaleDAO extends ADao{
                         .bind("id", id)
                         .execute() > 0
         );
+    }
+
+    public void updateStatuses() {
+        String sql = """
+        UPDATE FlashSale
+        SET status = CASE
+            WHEN NOW() < start_time THEN 'scheduled'
+            WHEN NOW() >= start_time AND NOW() <= end_time THEN 'active'
+            WHEN NOW() > end_time THEN 'ended'
+        END
+        WHERE status != CASE
+            WHEN NOW() < start_time THEN 'scheduled'
+            WHEN NOW() >= start_time AND NOW() <= end_time THEN 'active'
+            WHEN NOW() > end_time THEN 'ended'
+        END
+    """;
+
+        jdbi.useHandle(handle -> handle.createUpdate(sql).execute());
     }
 }

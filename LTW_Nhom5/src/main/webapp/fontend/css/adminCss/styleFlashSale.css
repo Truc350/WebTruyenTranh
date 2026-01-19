@@ -99,7 +99,7 @@ body {
 }
 .status.active { background: #28a745; }
 .status.scheduled { background: #ff9800; }
-.status.end { background: #777; }
+.status.ended { background: #777; }
 
 .action{
     gap: 10px;
