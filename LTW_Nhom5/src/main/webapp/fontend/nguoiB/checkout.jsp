@@ -33,6 +33,12 @@
         <main>
             <form id="orderForm" action="${pageContext.request.contextPath}/order" method="post">
                 <section class="address">
+                    <!-- Thông báo cập nhật cơ cấu hành chính -->
+                    <div class="address-update-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Dữ liệu địa chỉ đã cập nhật theo cơ cấu hành chính mới (34 tỉnh - 01/07/2025)</span>
+                    </div>
+
                     <div class="form-group">
                         <label>Họ và tên người nhận: *</label>
                         <input type="text" name="receiverName" value="" placeholder="Nhập họ tên" required>
@@ -48,26 +54,35 @@
                         <select name="province" id="province" required>
                             <option value="">-- Chọn Tỉnh/Thành phố --</option>
                         </select>
+                        <div id="provinceLoading" class="loading-indicator">
+                            <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách tỉnh/thành phố...
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Quận/Huyện: *</label>
-                        <select name="district" id="district" required disabled>
-                            <option value="">-- Chọn Quận/Huyện --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phường/Xã:</label>
+                        <label>Phường/Xã: *</label>
                         <select name="ward" id="ward" required disabled>
                             <option value="">-- Chọn Phường/Xã --</option>
                         </select>
+                        <div id="wardLoading" class="loading-indicator">
+                            <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách phường/xã...
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label>Địa chỉ nhận hàng: *</label>
-                        <input type="text" name="address" value="" placeholder="Nhập địa chỉ cụ thể" required>
+                        <input type="text" name="address" value="" placeholder="Nhập địa chỉ cụ thể (số nhà, tên đường)"
+                               required>
                     </div>
+
+
+                    <!-- Hidden inputs để lưu code -->
+
+
+                    <input type="hidden" name="provinceCode" id="provinceCodeInput">
+                    <input type="hidden" name="wardCode" id="wardCodeInput">
+                    <input type="hidden" name="provinceName" id="provinceName">
+                    <input type="hidden" name="wardName" id="wardName">
                 </section>
 
 
@@ -202,344 +217,302 @@
 <!-- ===================== FOOTER ===================== -->
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
+<!-- ===================== SCRIPT API TỈNH THÀNH ===================== -->
 
 <script>
-    const contextPath = '${pageContext.request.contextPath}';
+    // ================ SỬ DỤNG API V2 - LOAD TỈNH/PHƯỜNG XÃ ================
+    const API_BASE = "${pageContext.request.contextPath}/api/provinces";
 
-    // Giá trị từ server
-    let subtotal = <c:out value="${checkoutSubtotal}" default="0"/>;
-    let shippingFee = <c:out value="${shippingFee}" default="25000"/>;
-    let userPoints = <c:out value="${currentUser.points}" default="0"/>;
-    let pointsDiscount = 0;
+    const provinceSelect = document.getElementById("province");
+    const wardSelect = document.getElementById("ward");
+    const provinceCodeInput = document.getElementById("provinceCodeInput");
+    const wardCodeInput = document.getElementById("wardCodeInput");
+    const provinceNameInput = document.getElementById("provinceName");
+    const wardNameInput = document.getElementById("wardName");
+    const provinceLoading = document.getElementById("provinceLoading");
+    const wardLoading = document.getElementById("wardLoading");
 
-    // Elements
-    const shippingRadios = document.querySelectorAll('input[name="shipping"]');
-    const usePointsCheckbox = document.getElementById('usePoints');
-    const shippingFeeElement = document.getElementById('shippingFee');
-    const pointsDiscountElement = document.getElementById('pointsDiscount');
-    const pointsDiscountRow = document.getElementById('pointsDiscountRow');
-    const totalAmountElement = document.getElementById('totalAmount');
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const orderForm = document.getElementById('orderForm');
-    const provinceSelect = document.getElementById('province');
-    const districtSelect = document.getElementById('district');
-    const wardSelect = document.getElementById('ward');
+    let provincesLoaded = false;
 
-    // Popup elements
-    const momoPopup = document.querySelector('.container-qr-popup');
-    const momoClose = document.getElementById('momoClose');
-    const confirmPaymentBtn = document.getElementById('confirmPayment');
-    const qrAmountElement = document.getElementById('qrAmount');
+    // 1️⃣ Load danh sách Tỉnh/Thành phố khi trang load
+    console.log("🔄 Loading provinces from:", API_BASE);
 
-    // Tính tổng tiền
-    function calculateTotal() {
-        let total = subtotal + shippingFee - pointsDiscount;
-        if (total < 0) total = 0;
-        totalAmountElement.textContent = total.toLocaleString('vi-VN') + 'đ';
+    // Hiện loading indicator
+    if (provinceLoading) provinceLoading.style.display = "block";
 
-        // Cập nhật số tiền trên QR
-        if (qrAmountElement) {
-            qrAmountElement.textContent = total.toLocaleString('vi-VN') + 'đ';
+    fetch(API_BASE)
+        .then(res => {
+            console.log("📥 Province response status:", res.status);
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            return res.json();
+        })
+        .then(provinces => {
+            console.log("✅ Loaded provinces:", provinces.length);
+            console.log("📋 First province sample:", provinces[0]); // Debug
+
+            // Xóa option cũ (trừ option mặc định)
+            provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành phố --</option>';
+
+            provinces.forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p.name;
+                opt.textContent = p.name;
+                opt.dataset.code = p.code;
+                provinceSelect.appendChild(opt);
+            });
+
+            provincesLoaded = true;
+            console.log("✅ Provinces loaded successfully");
+
+            // Ẩn loading indicator
+            if (provinceLoading) provinceLoading.style.display = "none";
+        })
+        .catch(err => {
+            console.error("❌ Lỗi load tỉnh:", err);
+            alert("Không thể tải danh sách tỉnh/thành phố. Vui lòng thử lại sau.");
+            if (provinceLoading) {
+                provinceLoading.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Lỗi tải dữ liệu';
+                provinceLoading.style.color = "red";
+            }
+        });
+
+    // 2️⃣ Khi chọn Tỉnh → load Phường/Xã
+    provinceSelect.addEventListener("change", function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const code = selectedOption.dataset.code;
+        const provinceName = selectedOption.value;
+
+        console.log("🔍 Selected province:", provinceName, "Code:", code);
+
+        // Lưu province code và name vào hidden input
+        provinceCodeInput.value = code || '';
+        provinceNameInput.value = provinceName || '';
+
+        // Reset ward select
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+        wardSelect.disabled = true;
+        wardCodeInput.value = '';
+        wardNameInput.value = '';
+
+        if (!code) {
+            console.log("⚠️ No province selected");
+            return;
         }
 
-        return total;
-    }
+        // Hiện loading indicator
+        if (wardLoading) wardLoading.style.display = "block";
 
-    // Xử lý thay đổi phương thức vận chuyển
-    shippingRadios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            shippingFee = parseInt(this.dataset.fee);
-            shippingFeeElement.textContent = shippingFee.toLocaleString('vi-VN') + 'đ';
-            calculateTotal();
-        });
+        const wardsUrl = API_BASE + "/p/" + code + "?depth=2";
+        console.log("🔄 Loading wards from:", wardsUrl);
+
+        fetch(wardsUrl)
+            .then(res => {
+                console.log("📥 Wards response status:", res.status);
+                if (!res.ok) {
+                    return res.text().then(text => {
+                        console.error("❌ Error response:", text);
+                        throw new Error("HTTP " + res.status + ": " + text);
+                    });
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log("✅ Full wards response:", data);
+                console.log("📋 Response structure:", {
+                    hasWards: !!data.wards,
+                    isArray: Array.isArray(data.wards),
+                    length: data.wards ? data.wards.length : 0
+                });
+
+                // ⚠️ QUAN TRỌNG: Kiểm tra cấu trúc dữ liệu
+                let wards = [];
+
+                if (data.wards && Array.isArray(data.wards)) {
+                    // Cấu trúc: { wards: [...] }
+                    wards = data.wards;
+                } else if (Array.isArray(data)) {
+                    // Cấu trúc: [...]
+                    wards = data;
+                } else if (data.districts && Array.isArray(data.districts)) {
+                    // Có thể API trả về districts thay vì wards
+                    console.warn("⚠️ API returned 'districts' instead of 'wards'");
+                    wards = data.districts;
+                } else {
+                    console.error("❌ Unexpected data structure:", data);
+                }
+
+                console.log("📊 Total wards found:", wards.length);
+
+                if (wards.length > 0) {
+                    console.log("📋 First ward sample:", wards[0]); // Debug
+
+                    // Xóa option cũ
+                    wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+
+                    wards.forEach(w => {
+                        const opt = document.createElement("option");
+                        opt.value = w.name;
+                        opt.textContent = w.name;
+                        opt.dataset.code = w.code;
+                        wardSelect.appendChild(opt);
+                    });
+
+                    wardSelect.disabled = false;
+                    console.log("✅ Successfully loaded " + wards.length + " wards");
+
+                    // Ẩn loading indicator
+                    if (wardLoading) wardLoading.style.display = "none";
+                } else {
+                    console.warn("⚠️ No wards found in response");
+                    if (wardLoading) {
+                        wardLoading.innerHTML = '<i class="fas fa-info-circle"></i> Không có dữ liệu phường/xã';
+                        wardLoading.style.color = "orange";
+                    }
+                }
+            })
+            .catch(err => {
+                console.error("❌ Lỗi load phường/xã:", err);
+                alert("Không thể tải danh sách phường/xã. Vui lòng thử lại.");
+                if (wardLoading) {
+                    wardLoading.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Lỗi tải dữ liệu';
+                    wardLoading.style.color = "red";
+                }
+            });
     });
 
-    // Xử lý sử dụng xu
-    if (usePointsCheckbox) {
-        usePointsCheckbox.addEventListener('change', function () {
-            if (this.checked) {
-                pointsDiscount = userPoints * 1000; // 1 xu = 1.000đ
-                pointsDiscountRow.style.display = 'flex';
-                pointsDiscountElement.textContent = '-' + pointsDiscount.toLocaleString('vi-VN') + 'đ';
-            } else {
-                pointsDiscount = 0;
-                pointsDiscountRow.style.display = 'none';
-                pointsDiscountElement.textContent = '0đ';
-            }
-            calculateTotal();
-        });
+    // 3️⃣ Cập nhật ward code và name khi chọn phường/xã
+    wardSelect.addEventListener("change", function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const code = selectedOption.dataset.code;
+        const wardName = selectedOption.value;
+
+        console.log("🔍 Selected ward:", wardName, "Code:", code);
+
+        wardCodeInput.value = code || '';
+        wardNameInput.value = wardName || '';
+    });
+
+    // ========================================
+    // XỬ LÝ SHIPPING FEE VÀ POINTS
+    // ========================================
+    const shippingRadios = document.querySelectorAll('input[name="shipping"]');
+    const usePointsCheckbox = document.getElementById('usePoints');
+    const checkoutBtn = document.getElementById('checkout-qr');
+    const orderForm = document.getElementById('orderForm');
+
+    // Lấy giá trị từ server
+    const subtotal = ${checkoutSubtotal};
+    const userPoints = ${user.points != null ? user.points : 0};
+
+    // Elements hiển thị
+    const shippingFeeSpan = document.getElementById('shippingFee');
+    const pointsDiscountRow = document.getElementById('pointsDiscountRow');
+    const pointsDiscountSpan = document.getElementById('pointsDiscount');
+    const totalAmountSpan = document.getElementById('totalAmount');
+
+    // Hàm format số
+    function formatNumber(num) {
+        return Math.round(num).toLocaleString('vi-VN');
     }
 
-    // Xử lý nút đặt hàng
-    const checkoutQrBtn = document.getElementById('checkout-qr');
-    if (checkoutQrBtn) {
-        checkoutQrBtn.addEventListener('click', function () {
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+    // Hàm tính toán và cập nhật tổng tiền
+    function updateTotal() {
+        // Lấy phí ship hiện tại
+        const selectedShipping = document.querySelector('input[name="shipping"]:checked');
+        const shippingFee = parseInt(selectedShipping.dataset.fee) || 0;
 
+        // Tính giảm giá từ xu
+        let pointsDiscount = 0;
+        if (usePointsCheckbox.checked) {
+            pointsDiscount = userPoints * 1000; // 1 xu = 1000đ
+        }
+
+        // Tính tổng
+        const total = subtotal + shippingFee - pointsDiscount;
+
+        // Cập nhật UI
+        shippingFeeSpan.textContent = formatNumber(shippingFee) + 'đ';
+
+        if (usePointsCheckbox.checked) {
+            pointsDiscountRow.style.display = 'flex';
+            pointsDiscountSpan.textContent = '-' + formatNumber(pointsDiscount) + 'đ';
+        } else {
+            pointsDiscountRow.style.display = 'none';
+        }
+
+        totalAmountSpan.textContent = formatNumber(total) + 'đ';
+    }
+
+    // Lắng nghe thay đổi shipping
+    shippingRadios.forEach(radio => {
+        radio.addEventListener('change', updateTotal);
+    });
+
+    // Lắng nghe thay đổi points
+    if (usePointsCheckbox) {
+        usePointsCheckbox.addEventListener('change', updateTotal);
+    }
+
+    // Xử lý nút Đặt hàng
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function() {
             // Validate form
             if (!orderForm.checkValidity()) {
                 orderForm.reportValidity();
                 return;
             }
 
-            addLocationNamesToForm();
+            // Kiểm tra phương thức thanh toán
+            const selectedPayment = document.querySelector('input[name="payment"]:checked');
 
-            // Nếu chọn ví điện tử, hiện popup QR
-            if (paymentMethod === 'ewallet') {
-                momoPopup.style.display = 'block';
+            if (selectedPayment && selectedPayment.value === 'ewallet') {
+                // Hiển thị popup QR
+                const momoModal = document.getElementById('momoModal');
+                const backdrop = document.querySelector('.qr-backdrop');
+                const qrAmountSpan = document.getElementById('qrAmount');
+
+                // Lấy tổng tiền
+                const totalText = totalAmountSpan.textContent.replace(/[^\d]/g, '');
+                qrAmountSpan.textContent = formatNumber(totalText) + 'đ';
+
+                // Hiện popup
+                if (momoModal) momoModal.style.display = 'block';
+                if (backdrop) backdrop.style.display = 'block';
+
             } else {
-                // COD - submit form trực tiếp
+                // COD - submit form ngay
                 orderForm.submit();
             }
         });
     }
-    // Đóng popup QR
+
+    // Xử lý đóng popup MoMo
+    const momoClose = document.getElementById('momoClose');
+    const confirmPayment = document.getElementById('confirmPayment');
+
     if (momoClose) {
-        momoClose.addEventListener('click', function () {
-            momoPopup.style.display = 'none';
+        momoClose.addEventListener('click', function() {
+            document.getElementById('momoModal').style.display = 'none';
+            document.querySelector('.qr-backdrop').style.display = 'none';
         });
     }
 
-    // Click outside popup
-    if (momoPopup) {
-        momoPopup.addEventListener('click', function (e) {
-            if (e.target === momoPopup || e.target.classList.contains('momo-modal')) {
-                momoPopup.style.display = 'none';
-            }
-        });
-    }
-
-    // Xác nhận đã thanh toán
-    if (confirmPaymentBtn) {
-        confirmPaymentBtn.addEventListener('click', function () {
-            addLocationNamesToForm();
-            // Đóng popup
-            momoPopup.style.display = 'none';
-
-            // Submit form
+    if (confirmPayment) {
+        confirmPayment.addEventListener('click', function() {
+            // Submit form sau khi xác nhận thanh toán
             orderForm.submit();
         });
     }
 
-    // Tính tổng ban đầu
-    calculateTotal();
+    // Khởi tạo tính toán ban đầu
+    updateTotal();
 
-    function addLocationNamesToForm() {
-        const selectedProvince = provinceSelect.options[provinceSelect.selectedIndex];
-        if (selectedProvince?.dataset.name) {
-            let input = document.querySelector('input[name="provinceName"]');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'provinceName';
-                orderForm.appendChild(input);
-            }
-            input.value = selectedProvince.dataset.name;
-        }
-
-        const selectedDistrict = districtSelect.options[districtSelect.selectedIndex];
-        if (selectedDistrict?.dataset.name) {
-            let input = document.querySelector('input[name="districtName"]');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'districtName';
-                orderForm.appendChild(input);
-            }
-            input.value = selectedDistrict.dataset.name;
-        }
-
-        const selectedWard = wardSelect.options[wardSelect.selectedIndex];
-        if (selectedWard?.dataset.name) {
-            let input = document.querySelector('input[name="wardName"]');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'wardName';
-                orderForm.appendChild(input);
-            }
-            input.value = selectedWard.dataset.name;
-        }
-    }
-
-    // ==================== API ĐỊA CHỈ VIỆT NAM ====================
-    // ==================== LOAD TỈNH ====================
-    // ==================== LOAD TỈNH (ALTERNATIVE API) ====================
-    async function loadProvinces() {
-        try {
-            console.log('🔄 Loading provinces...');
-            const res = await fetch('https://vapi.vnappmob.com/api/province/');
-
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-
-            const data = await res.json();
-            const provinces = data.results || [];
-            console.log('✅ Provinces loaded:', provinces.length);
-
-            provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành phố --</option>';
-
-            provinces.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.province_id;
-                opt.textContent = p.province_name;
-                opt.dataset.name = p.province_name;
-                provinceSelect.appendChild(opt);
-            });
-
-        } catch (e) {
-            console.error('❌ Load provinces error:', e);
-            alert('Không thể tải danh sách tỉnh/thành phố. Vui lòng thử lại!');
-        }
-    }
-
-    // ==================== LOAD HUYỆN ====================
-    async function loadDistricts(provinceCode) {
-        try {
-            console.log('🔄 Loading districts for province code:', provinceCode);
-
-            districtSelect.disabled = true;
-            wardSelect.disabled = true;
-            districtSelect.innerHTML = '<option value="">Đang tải...</option>';
-
-            // ✅ SỬA LẠI URL - dùng endpoint mới
-            const url = `https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`;
-            console.log('📡 Fetching URL:', url);
-
-            const res = await fetch(url);
-
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-
-            const data = await res.json();
-            console.log('📦 Full API Response:', data);
-
-            // ✅ KIỂM TRA CẤU TRÚC DATA
-            const districts = data.districts || [];
-            console.log('🔍 Found districts:', districts.length);
-            console.log('🔍 Districts array:', districts);
-
-            districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-
-            if (districts.length === 0) {
-                console.warn('⚠️ No districts returned from API');
-                districtSelect.innerHTML = '<option value="">Không có dữ liệu quận/huyện</option>';
-                districtSelect.disabled = false;
-                return;
-            }
-
-            districts.forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d.code;
-                opt.textContent = d.name;
-                opt.dataset.name = d.name;
-                districtSelect.appendChild(opt);
-                console.log('➕ Added district:', d.name, '| Code:', d.code);
-            });
-
-            districtSelect.disabled = false;
-            console.log('✅ Districts loaded successfully:', districts.length, 'items');
-
-        } catch (e) {
-            console.error('❌ Load districts error:', e);
-            districtSelect.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
-            alert('Không thể tải danh sách quận/huyện. Vui lòng thử lại!');
-        }
-    }
-
-    // ==================== LOAD PHƯỜNG ====================
-    // ==================== LOAD PHƯỜNG (ALTERNATIVE API) ====================
-    async function loadWards(districtCode) {
-        try {
-            console.log('🔄 Loading wards for district code:', districtCode);
-
-            wardSelect.disabled = true;
-            wardSelect.innerHTML = '<option value="">Đang tải...</option>';
-
-            const url = `https://vapi.vnappmob.com/api/province/ward/${districtCode}`;
-            console.log('📡 Fetching URL:', url);
-
-            const res = await fetch(url);
-
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
-            }
-
-            const data = await res.json();
-            const wards = data.results || [];
-            console.log('✅ Found wards:', wards.length);
-
-            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-
-            if (wards.length === 0) {
-                wardSelect.innerHTML = '<option value="">Không có dữ liệu</option>';
-                wardSelect.disabled = false;
-                return;
-            }
-
-            wards.forEach(w => {
-                const opt = document.createElement('option');
-                opt.value = w.ward_id;
-                opt.textContent = w.ward_name;
-                opt.dataset.name = w.ward_name;
-                wardSelect.appendChild(opt);
-            });
-
-            wardSelect.disabled = false;
-            console.log('✅ Ward select enabled with', wards.length, 'options');
-
-        } catch (e) {
-            console.error('❌ Load wards error:', e);
-            wardSelect.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
-            alert('Không thể tải danh sách phường/xã!');
-        }
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    provinceSelect.addEventListener('change', function () {
-        const selectedValue = this.value;
-        const selectedText = this.options[this.selectedIndex].text;
-        console.log('🏙️ Province changed:', selectedText, '| Code:', selectedValue);
-
-        // Reset district và ward
-        districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-        districtSelect.disabled = true;
-        wardSelect.disabled = true;
-
-        if (selectedValue) {
-            loadDistricts(selectedValue);
-        }
-    });
-
-    districtSelect.addEventListener('change', function () {
-        const selectedValue = this.value;
-        const selectedText = this.options[this.selectedIndex].text;
-        console.log('🏘️ District changed:', selectedText, '| Code:', selectedValue);
-
-        // Reset ward
-        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
-        wardSelect.disabled = true;
-
-        if (selectedValue) {
-            loadWards(selectedValue);
-        }
-    });
-
-    wardSelect.addEventListener('change', function () {
-        const selectedValue = this.value;
-        const selectedText = this.options[this.selectedIndex].text;
-        console.log('🏠 Ward changed:', selectedText, '| Code:', selectedValue);
-    });
-
-    // ==================== INIT ====================
-    window.addEventListener('DOMContentLoaded', function () {
-        console.log('🚀 Page loaded, initializing address selects...');
-        loadProvinces();
-    });
+    console.log("🚀 Checkout page initialized");
 </script>
+
+
+
+
 
 </body>
 
