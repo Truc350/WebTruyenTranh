@@ -43,4 +43,14 @@ public class FlashSaleComicsDAO extends ADao {
                         .list()
         );
     }
+
+    public void deleteLinksByFlashSaleId(int flashSaleId) {
+        String sql = "DELETE FROM FlashSale_Comics WHERE flashsale_id = ?";
+        jdbi.useHandle(handle -> {
+            handle.createUpdate(sql)
+                    .bind(0, flashSaleId)
+                    .execute();
+
+        });
+    }
 }

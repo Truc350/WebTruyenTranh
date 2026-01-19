@@ -386,3 +386,175 @@ function displayFlashSaleDetail(data) {
         document.getElementById('viewFlashSaleModal').classList.remove('show');
     });
 }
+
+//edit cho từng cái flash sale
+// ========== SỬA JAVASCRIPT - Edit Flash Sale ==========
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editModal = document.getElementById('editFlashSaleModal');
+    const editProductList = document.querySelector('#editFlashSaleModal .product-select-list'); // ← SỬA SELECTOR
+    const updateBtn = document.querySelector('#editFlashSaleModal .save-btn'); // ← SỬA SELECTOR
+    const closeEditBtn = document.getElementById('closeEditFlashSale');
+
+    let currentEditId = null;
+
+    // Mở popup + load dữ liệu từ API detail
+    document.querySelectorAll('.openEditFlashSale').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentEditId = btn.dataset.id?.trim();
+            if (!currentEditId) {
+                alert('Không tìm thấy ID Flash Sale!');
+                return;
+            }
+
+            editProductList.innerHTML = '<p style="text-align:center; color:#888;">Đang tải...</p>';
+
+            fetch(`${contextPath}/admin/manage-flashsale`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `action=detail&id=${encodeURIComponent(currentEditId)}`
+            })
+                .then(res => res.json())
+                .then(result => {
+                    console.log('Data nhận được:', result);
+                    if (result.success && result.data) {
+                        fillEditForm(result.data);
+                        editModal.classList.add('show');
+                    } else {
+                        alert(result.message || 'Không thể tải thông tin!');
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                    alert('Lỗi khi tải dữ liệu Flash Sale!');
+                });
+        });
+    });
+
+    // Đóng popup
+    closeEditBtn?.addEventListener('click', () => {
+        editModal.classList.remove('show');
+        currentEditId = null;
+    });
+
+    // Hàm điền dữ liệu vào form
+    function fillEditForm(data) {
+        // ← SỬA: Lấy đúng input từ form edit
+        const form = document.getElementById('editFlashSaleForm');
+
+        // Thông tin cơ bản
+        form.querySelector('input[type="text"]').value = data.name || '';
+        form.querySelector('input[type="number"]').value = data.discountPercent || 30; // ← SỬA: discountPercent thay vì discount
+
+        // Thời gian (chuyển định dạng từ "HH:mm dd/MM/yyyy" sang ISO)
+        try {
+            const start = convertToISO(data.startTime);
+            const end = convertToISO(data.endTime);
+            const timeInputs = form.querySelectorAll('input[type="datetime-local"]');
+            timeInputs[0].value = start;
+            timeInputs[1].value = end;
+        } catch (e) {
+            console.warn('Không parse được thời gian', e);
+        }
+
+        // Danh sách comics đang áp dụng
+        editProductList.innerHTML = '';
+        if (data.comics && data.comics.length > 0) {
+            data.comics.forEach(comic => {
+                const label = document.createElement('label');
+                label.innerHTML = `
+                    <input type="checkbox" data-comic-id="${comic.id}" checked>
+                    ${comic.name}
+                `;
+                editProductList.appendChild(label);
+            });
+        } else {
+            editProductList.innerHTML = '<p style="color:#888; text-align:center;">Chưa áp dụng cho truyện nào</p>';
+        }
+    }
+
+    // Submit cập nhật
+    updateBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (!currentEditId) return alert('Không có ID để cập nhật!');
+
+        const form = document.getElementById('editFlashSaleForm');
+        const name = form.querySelector('input[type="text"]').value.trim();
+        const discountPercent = form.querySelector('input[type="number"]').value.trim();
+        const timeInputs = form.querySelectorAll('input[type="datetime-local"]');
+        const startTime = timeInputs[0].value;
+        const endTime = timeInputs[1].value;
+
+        if (!name || !discountPercent || !startTime || !endTime) {
+            alert('Vui lòng điền đầy đủ thông tin!');
+            return;
+        }
+
+        // Validate discount percent
+        const discount = parseFloat(discountPercent);
+        if (isNaN(discount) || discount < 1 || discount > 90) {
+            alert('Phần trăm giảm phải từ 1% đến 90%!');
+            return;
+        }
+
+        // Lấy danh sách comicIds còn lại (chỉ những cái vẫn được tick)
+        const selectedComicIds = [];
+        editProductList.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+            const comicId = cb.getAttribute('data-comic-id');
+            if (comicId) selectedComicIds.push(comicId);
+        });
+
+        const formData = new FormData();
+        formData.append('action', 'update');
+        formData.append('id', currentEditId);
+        formData.append('name', name);
+        formData.append('discountPercent', discountPercent);
+        formData.append('startTime', startTime);
+        formData.append('endTime', endTime);
+        selectedComicIds.forEach(id => formData.append('comicIds', id));
+
+        // ← THÊM LOG ĐỂ DEBUG
+        console.log('=== FormData gửi đi ===');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+
+        console.log('Gửi update với data:', {
+            id: currentEditId,
+            name,
+            discountPercent,
+            startTime,
+            endTime,
+            comicIds: selectedComicIds
+        });
+
+        fetch(`${contextPath}/admin/manage-flashsale`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Cập nhật thành công!');
+                    editModal.classList.remove('show');
+                    location.reload();
+                } else {
+                    alert('Cập nhật thất bại: ' + (result.message || 'Lỗi không xác định'));
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi update:', err);
+                alert('Lỗi kết nối server!');
+            });
+    });
+});
+
+// Hàm chuyển đổi thời gian từ "HH:mm dd/MM/yyyy" sang ISO format
+function convertToISO(formattedTime) {
+    if (!formattedTime) return '';
+    const [time, date] = formattedTime.split(' ');
+    const [hour, min] = time.split(':');
+    const [day, month, year] = date.split('/');
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${min.padStart(2, '0')}`;
+}

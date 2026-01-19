@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FlashSaleDAO extends ADao{
@@ -82,6 +83,27 @@ public class FlashSaleDAO extends ADao{
                         .mapToBean(FlashSale.class)
                         .findOne()
                         .orElse(null)
+        );
+    }
+
+    public boolean updateFlashSale(int id, String name, double discountPercent, LocalDateTime startTime, LocalDateTime endTime) {
+        String sql = """
+        UPDATE FlashSale 
+        SET name = :name,
+            discount_percent = :discountPercent,
+            start_time = :startTime,
+            end_time = :endTime
+        WHERE id = :id
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("name", name)
+                        .bind("discountPercent", discountPercent)
+                        .bind("startTime", startTime)
+                        .bind("endTime", endTime)
+                        .bind("id", id)
+                        .execute() > 0
         );
     }
 }

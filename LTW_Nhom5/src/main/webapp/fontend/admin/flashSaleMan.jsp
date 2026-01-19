@@ -278,7 +278,7 @@
                 </div>
                 <div>
                     <label>Phần trăm giảm:</label>
-                    <input class="qty-input" type="number" value="100" min="1">
+                    <input type="number" name="discountPercent" min="1" max="90">
                 </div>
             </div>
 
@@ -316,6 +316,7 @@
         </form>
     </div>
 </div>
+
 
 <!-- POPUP XEM CHI TIẾT FLASH SALE -->
 <div class="modal-overlay" id="viewFlashSaleModal">

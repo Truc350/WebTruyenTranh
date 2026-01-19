@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.controller.admin;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,10 +11,14 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@MultipartConfig
 @WebServlet("/admin/manage-flashsale")
 public class ManageFlashSaleServlet extends HttpServlet {
 
@@ -39,16 +44,60 @@ public class ManageFlashSaleServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        // ===== XÓA FLASH SALE =====
+
         if ("delete".equals(action)) {
             handleDelete(request, response);
         }
-        // ===== XEM CHI TIẾT FLASH SALE =====
         else if ("detail".equals(action)) {
             handleDetail(request, response);
         }
+        else if ("update".equals(action)) {
+            handleUpdate(request, response);
+        }
         else {
             sendJsonResponse(response, false, "Action không hợp lệ!");
+        }
+    }
+
+    /**
+     * Xử lý update Flash Sale
+     */
+    private void handleUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String name = request.getParameter("name");
+            double discountPercent = Double.parseDouble(request.getParameter("discountPercent"));
+            String startTimeStr = request.getParameter("startTime");
+            String endTimeStr = request.getParameter("endTime");
+
+            LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
+            LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
+
+            String[] comicIdsArr = request.getParameterValues("comicIds");
+            List<Integer> newComicIds = new ArrayList<>();
+            if (comicIdsArr != null) {
+                for (String cid : comicIdsArr) {
+                    newComicIds.add(Integer.parseInt(cid));
+                }
+            }
+
+            boolean updated = flashSaleDAO.updateFlashSale(id, name, discountPercent, startTime, endTime);
+
+            if (!updated) {
+                sendJsonResponse(response, false, "Không tìm thấy Flash Sale để cập nhật!");
+                return;
+            }
+
+            flashSaleComicsDAO.deleteLinksByFlashSaleId(id);
+            if (!newComicIds.isEmpty()) {
+                flashSaleComicsDAO.insertLinks(id, newComicIds);
+            }
+
+            sendJsonResponse(response, true, "Cập nhật Flash Sale thành công!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendJsonResponse(response, false, "Lỗi server: " + e.getMessage());
         }
     }
 
@@ -108,6 +157,7 @@ public class ManageFlashSaleServlet extends HttpServlet {
             json.append("{\"success\":true,\"data\":{");
             json.append("\"id\":").append(fs.getId()).append(",");
             json.append("\"name\":\"").append(escapeJson(fs.getName())).append("\",");
+            json.append("\"discountPercent\":").append(fs.getDiscountPercent()).append(",");
             json.append("\"startTime\":\"").append(fs.getStartTime().format(TIME_FORMATTER)).append("\",");
             json.append("\"endTime\":\"").append(fs.getEndTime().format(TIME_FORMATTER)).append("\",");
             json.append("\"status\":\"").append(fs.getStatus()).append("\",");
@@ -118,6 +168,7 @@ public class ManageFlashSaleServlet extends HttpServlet {
                 Map<String, Object> comic = comics.get(i);
                 if (i > 0) json.append(",");
                 json.append("{");
+                json.append("\"id\":").append(comic.get("id")).append(",");
                 json.append("\"name\":\"").append(escapeJson((String) comic.get("name"))).append("\",");
                 json.append("\"discount\":").append(comic.get("discount_percent"));
                 json.append("}");
