@@ -98,6 +98,70 @@ public class UserDao {
             );
         }
 
+    /**
+     * Cap nhat diem thuong cua user
+     * @param userId
+     * @param newPoints
+     */
+    public boolean updateUserPoints(int userId, int newPoints) {
+        return jdbi.withHandle(handle -> {
+            int updated = handle.createUpdate(
+                            "UPDATE users SET points = ? WHERE id = ?")
+                    .bind(0, newPoints)
+                    .bind(1, userId)
+                    .execute();
+            return updated > 0;
+        });
+    }
+
+    /**
+     * Thêm điểm cho user (tích lũy)
+     * @param userId ID của user
+     * @param pointsToAdd Số điểm cần thêm
+     * @return true nếu thành công
+     */
+    public boolean addUserPoints(int userId, int pointsToAdd) {
+        return jdbi.withHandle(handle -> {
+            int updated = handle.createUpdate(
+                            "UPDATE users SET points = points + ? WHERE id = ?")
+                    .bind(0, pointsToAdd)
+                    .bind(1, userId)
+                    .execute();
+            return updated > 0;
+        });
+    }
+
+    /**
+     * Trừ điểm của user
+     * @param userId ID của user
+     * @param pointsToSubtract Số điểm cần trừ
+     * @return true nếu thành công
+     */
+    public boolean subtractUserPoints(int userId, int pointsToSubtract) {
+        return jdbi.withHandle(handle -> {
+            int updated = handle.createUpdate(
+                            "UPDATE users SET points = GREATEST(points - ?, 0) WHERE id = ?")
+                    .bind(0, pointsToSubtract)
+                    .bind(1, userId)
+                    .execute();
+            return updated > 0;
+        });
+    }
+
+    /**
+     * Lấy số điểm hiện tại của user
+     * @param userId ID của user
+     * @return Số điểm của user
+     */
+    public int getUserPoints(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT points FROM users WHERE id = ?")
+                        .bind(0, userId)
+                        .mapTo(Integer.class)
+                        .findOne()
+                        .orElse(0)
+        );
+    }
 
 
 

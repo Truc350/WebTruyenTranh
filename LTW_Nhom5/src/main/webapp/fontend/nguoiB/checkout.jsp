@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html lang="en">
 
@@ -18,7 +20,7 @@
 
 <body>
 
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <!-- Main Content -->
 <div class="titleCheckout">
@@ -29,106 +31,124 @@
 <div class="mainContainer" style="display: flex">
     <div class="container">
         <main>
-            <section class="address">
-                <div class="form-group">
-                    <label>Họ và tên người nhận: *</label>
-                    <input type="text" value="" placeholder="Nhập họ tên">
-                </div>
-
-                <div class="form-group">
-                    <label>Số điện thoại: *</label>
-                    <input type="text" value="" placeholder="Nhập số điện thoại">
-                </div>
-
-                <div class="form-group">
-                    <label>Quốc gia: *</label>
-                    <select>
-                        <option selected>Việt Nam</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Tỉnh/Thành Phố: *</label>
-                    <select>
-                        <option selected>Hồ Chí Minh</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Địa chỉ nhận hàng: *</label>
-                    <input type="text" value="" placeholder="Nhập địa chỉ cụ thể">
-                </div>
-            </section>
-
-
-
-            <section class="shipping">
-                <h2>Phương thức Vận chuyển: *</h2>
-                <label><input type="radio" name="shipping" checked> Giao hàng Tiêu Chuẩn - 25.000đ</label><br>
-                <label><input type="radio" name="shipping"> Giao hàng Hỏa Tốc - 50.000đ</label>
-            </section>
-            <section class="payment">
-                <h2>Phương thức Thanh toán: *</h2>
-                <label><input type="radio" name="payment" checked> Thanh toán khi nhận hàng (COD)</label><br>
-                <!-- <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br> -->
-                <label><input type="radio" name="payment"> Ví điện tử (MoMo, ZaloPay,...)</label><br>
-            </section>
-            <section class="promotion">
-                <h2>Mã giảm giá:</h2>
-                <div class="promos">
-                    <input type="text" id="promo" placeholder="Nhập mã giảm giá">
-                    <button class="apply-btn">Áp dụng</button>
-                </div>
-                <div class="voucher-row">
-                    <div class="voucher-left">
-                        <span class="voucher-icon">🎫</span>
-                        <span class="voucher-title">Chọn voucher</span>
+            <form id="orderForm" action="${pageContext.request.contextPath}/order" method="post">
+                <section class="address">
+                    <div class="form-group">
+                        <label>Họ và tên người nhận: *</label>
+                        <input type="text" name="receiverName" value="" placeholder="Nhập họ tên" required>
                     </div>
-                    <a href="#" class="voucher-select" id="voucher-select"> <i class="fa-solid fa-chevron-right"></i></a>
-                </div>
 
-                <div class="usePoint">
-                    <p>Sử dụng 200 xu:</p>
-                    <input type="checkbox">
-                </div>
+                    <div class="form-group">
+                        <label>Số điện thoại: *</label>
+                        <input type="text" name="receiverPhone" value="" placeholder="Nhập số điện thoại" required>
+                    </div>
 
-            </section>
+                    <div class="form-group">
+                        <label>Tỉnh/Thành Phố: *</label>
+                        <select name="province" id="province" required>
+                            <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                        </select>
+                    </div>
 
+                    <div class="form-group">
+                        <label>Quận/Huyện: *</label>
+                        <select name="district" id="district" required disabled>
+                            <option value="">-- Chọn Quận/Huyện --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phường/Xã:</label>
+                        <select name="ward" id="ward" required disabled>
+                            <option value="">-- Chọn Phường/Xã --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Địa chỉ nhận hàng: *</label>
+                        <input type="text" name="address" value="" placeholder="Nhập địa chỉ cụ thể" required>
+                    </div>
+                </section>
+
+
+                <section class="shipping">
+                    <h2>Phương thức Vận chuyển: *</h2>
+                    <label><input type="radio" name="shipping" value="standard" data-fee="25000" checked> Giao hàng Tiêu
+                        Chuẩn - 25.000đ</label><br>
+                    <label><input type="radio" name="shipping" value="express" data-fee="50000"> Giao hàng Hỏa Tốc -
+                        50.000đ</label>
+                </section>
+
+                <section class="payment">
+                    <h2>Phương thức Thanh toán: *</h2>
+                    <label>
+                        <input type="radio" name="payment" value="COD" checked> Thanh toán khi nhận hàng
+                        (COD)</label><br>
+                    <!-- <label><input type="radio" name="payment"> Chuyển khoản ngân hàng (QR Code)</label><br> -->
+                    <label><input type="radio" name="payment" value="ewallet"> Ví điện tử (MoMo,
+                        ZaloPay,...)</label><br>
+                </section>
+                <section class="promotion">
+                    <h2>Điểm thưởng:</h2>
+                    <div class="usePoint">
+                        <p>Sử dụng <strong>${user.points != null ? user.points : 0}</strong> xu (1 xu = 1.000đ)</p>
+                        <input type="checkbox" name="usePoints" id="usePoints">
+                    </div>
+                </section>
+            </form>
         </main>
     </div>
     <div class="totalCost">
         <section class="order-summary">
             <h2>Tổng đơn đặt hàng</h2>
             <div class="items">
-                <div class="itemSummary">
-                    <div class="item">
-                        <img src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/thien_quan_tu_phuc___tap_1_tai_ban_2024___tang_kem_bookmark/2024_12_12_11_48_28_1-390x510.jpg"
-                             alt="">
-                        <p>Thiên quan từ phúc </p>
+                <c:forEach var="item" items="${selectedItems}">
+                    <div class="itemSummary">
+                        <div class="item">
+                            <img src="${item.comic.thumbnailUrl}" alt="${item.comic.nameComics}">
+                            <div class="item-details">
+                                <p>${item.comic.nameComics}</p>
+                                <span class="item-quantity">x${item.quantity}</span>
+                            </div>
+                        </div>
+                        <span class="item-price">
+                            <fmt:formatNumber value="${item.comic.discountPrice * item.quantity}" type="number"
+                                              groupingUsed="true"/>đ
+                        </span>
                     </div>
-                    <span>162.000đ</span>
-                </div>
-
-
-                <div class="itemSummary">
-                    <div class="item">
-                        <img src="https://bloganchoi.com/wp-content/uploads/2023/06/truyen-tranh-ngon-tinh-hay-2023-12-696x1392.jpg"
-                             alt="">
-                        <p>Bộ Bài Nhật Ký Tarot - Kèm Sách Hướng Dẫn</p>
-                    </div>
-                    <span>205.000đ</span>
-                </div>
+                </c:forEach>
             </div>
 
-            <p>Phí vận chuyển: <span>25.000đ</span></p>
-            <p>Mã giảm giá: <span>-50.000đ</span></p>
-            <p><strong>TỔNG THANH TOÁN:</strong><span>403.000đ</span></p>
-            <button id="checkout-qr">ĐẶT HÀNG</button>
+            <div class="summary-row">
+                <p>Tạm tính:</p>
+                <span id="subtotal">
+                    <fmt:formatNumber value="${checkoutSubtotal}" type="number" groupingUsed="true"/>đ
+                </span>
+            </div>
+
+            <div class="summary-row">
+                <p>Phí vận chuyển:</p>
+                <span id="shippingFee">
+                    <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/>đ
+                </span>
+            </div>
+
+            <div class="summary-row" id="pointsDiscountRow" style="display: none;">
+                <p>Giảm giá từ xu:</p>
+                <span id="pointsDiscount">0đ</span>
+            </div>
+
+            <div class="summary-row total-row">
+                <p><strong>TỔNG THANH TOÁN:</strong></p>
+                <span id="totalAmount">
+                    <fmt:formatNumber value="${checkoutTotal}" type="number" groupingUsed="true"/>đ
+                </span>
+            </div>
+            <button type="button" id="checkout-qr">ĐẶT HÀNG</button>
         </section>
     </div>
 </div>
 
-</div>
 <!--Popup mã QR-->
 <div class="container-qr-popup" style="display: none;">
     <div class="momo-modal" id="momoModal" aria-hidden="true">
@@ -140,19 +160,20 @@
             <div class="momo-content">
                 <!-- Ảnh QR: thay bằng QR của bạn -->
                 <img src="https://tse3.mm.bing.net/th/id/OIP.IHv3sMp_4T18cEr7RTAdgQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
-                     alt="Mã QR MoMo" class="momo-qr" />
+                     alt="Mã QR MoMo" class="momo-qr"/>
 
                 <!-- Thông tin người nhận: thay bằng của bạn -->
                 <div class="momo-info">
-                    <p><strong>Người nhận:</strong> Nguyễn Văn A</p>
+                    <p><strong>Người nhận:</strong> Comic Store</p>
                     <p><strong>SĐT MoMo:</strong> 0901234567</p>
-                    <p><strong>Nội dung chuyển khoản:</strong>Thanh toán đơn hàng Thiên quan từ phúc và bộ bài nhật ký Tarot</p>
+                    <p><strong>Số tiền:</strong> <span id="qrAmount"></span></p>
+                    <p><strong>Nội dung chuyển khoản:</strong>Thanh toán đơn hàng</p>
                 </div>
+                <button type="button" id="confirmPayment" class="btn-confirm-payment">Xác nhận đã thanh toán</button>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <!-- BACKDROP LÀM MỜ -->
@@ -163,7 +184,8 @@
     <div class="qr-content">
         <button class="qr-close-btn">×</button>
         <h3>Quét mã QR để thanh toán</h3>
-        <img src="https://vaynhanhonline.com.vn/wp-content/uploads/2024/01/cach-tao-ma-qr-ngan-hang-bidv-5-e1704968301891.jpg" alt="QR Code Thanh toán">
+        <img src="https://vaynhanhonline.com.vn/wp-content/uploads/2024/01/cach-tao-ma-qr-ngan-hang-bidv-5-e1704968301891.jpg"
+             alt="QR Code Thanh toán">
         <div class="qr-info">
             <p><strong>Ngân hàng:</strong> BIDV</p>
             <p><strong>Số tài khoản:</strong> 1234567890</p>
@@ -177,375 +199,348 @@
 <!-- BACKDROP -->
 <div class="voucher-backdrop" id="voucherBackdrop" style="display:none;"></div>
 
-<!-- POPUP VOUCHER -->
-<div class="voucher-popup" id="voucherPopup" style="display:none;">
-    <div class="voucher-header-drag">
-
-        <h2 class="voucher-title-popup">Ví Voucher</h2>
-        <button class="close-popup-btn">&times;</button>
-    </div>
-
-    <!-- Danh sách voucher -->
-    <div class="vouchers-grid">
-        <!-- Voucher 1 -->
-        <div class="voucher-card">
-            <div class="voucher-header">
-                <span class="voucher-type">Voucher chưa sử dụng</span>
-                <span class="voucher-status unused">Chưa sử dụng</span>
-            </div>
-            <div class="voucher-body">
-                <div class="voucher-title">Mã Giảm 10K - Toàn Sàn</div>
-                <div class="voucher-desc">
-                    Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
-                </div>
-                <div class="voucher-code">FHS10KT11</div>
-                <button class="voucher-detail-btn">Chi tiết</button>
-            </div>
-            <div class="voucher-footer">
-                <span class="voucher-expiry">HSD: 30/11/2025</span>
-<!--                <button class="copy-code-btn">Copy mã</button>-->
-                <button class="copy-code-btn">Sử dụng</button>
-            </div>
-        </div>
-
-        <!-- Voucher 2 -->
-        <div class="voucher-card">
-            <div class="voucher-header">
-                <span class="voucher-type">Voucher chưa sử dụng</span>
-                <span class="voucher-status unused">Chưa sử dụng</span>
-            </div>
-            <div class="voucher-body">
-                <div class="voucher-title">Mã Giảm 20K - Toàn Sàn</div>
-                <div class="voucher-desc">
-                    Đơn hàng từ 240k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
-                </div>
-                <div class="voucher-code">FHS20KT11</div>
-                <button class="voucher-detail-btn">Chi tiết</button>
-            </div>
-            <div class="voucher-footer">
-                <span class="voucher-expiry">HSD: 30/11/2025</span>
-                <button class="copy-code-btn">Sử dụng</button>
-            </div>
-        </div>
-
-        <!-- Voucher 3 -->
-        <div class="voucher-card">
-            <div class="voucher-header">
-                <span class="voucher-type">Voucher chưa sử dụng</span>
-                <span class="voucher-status unused">Chưa sử dụng</span>
-            </div>
-            <div class="voucher-body">
-                <div class="voucher-title">Mã Giảm 40K - Toàn Sàn</div>
-                <div class="voucher-desc">
-                    Đơn hàng từ 490k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
-                </div>
-                <div class="voucher-code">FHS40KT11</div>
-                <button class="voucher-detail-btn">Chi tiết</button>
-            </div>
-            <div class="voucher-footer">
-                <span class="voucher-expiry">HSD: 30/11/2025</span>
-                <button class="copy-code-btn">Sử dụng</button>
-            </div>
-        </div>
-
-        <!-- Voucher 4 -->
-        <div class="voucher-card">
-            <div class="voucher-header">
-                <span class="voucher-type">Voucher chưa sử dụng</span>
-                <span class="voucher-status unused">Chưa sử dụng</span>
-            </div>
-            <div class="voucher-body">
-                <div class="voucher-title">Mã Giảm 80K - Toàn Sàn</div>
-                <div class="voucher-desc">
-                    Đơn hàng từ 990k - Không bao gồm giá trị của các sản phẩm sau: Manga, Ngoại văn...
-                </div>
-                <div class="voucher-code">FHS80KT11</div>
-                <button class="voucher-detail-btn">Chi tiết</button>
-            </div>
-            <div class="voucher-footer">
-                <span class="voucher-expiry">HSD: 30/11/2025</span>
-                <button class="copy-code-btn">Sử dụng</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <!-- ===================== FOOTER ===================== -->
-<jsp:include page="/fontend/public/Footer.jsp" />
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 
 <script>
+    const contextPath = '${pageContext.request.contextPath}';
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Chọn các phần tử cần thiết
-        const voucherContainer = document.querySelector('.voucher-container');
-        const popupBackdrop = document.querySelector('.popup-backdrop');
-        const voucherSelect = document.querySelector('.voucher-select');
-        const closePopupBtn = document.querySelector('.close-popup-btn');
+    // Giá trị từ server
+    let subtotal = <c:out value="${checkoutSubtotal}" default="0"/>;
+    let shippingFee = <c:out value="${shippingFee}" default="25000"/>;
+    let userPoints = <c:out value="${currentUser.points}" default="0"/>;
+    let pointsDiscount = 0;
 
+    // Elements
+    const shippingRadios = document.querySelectorAll('input[name="shipping"]');
+    const usePointsCheckbox = document.getElementById('usePoints');
+    const shippingFeeElement = document.getElementById('shippingFee');
+    const pointsDiscountElement = document.getElementById('pointsDiscount');
+    const pointsDiscountRow = document.getElementById('pointsDiscountRow');
+    const totalAmountElement = document.getElementById('totalAmount');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const orderForm = document.getElementById('orderForm');
+    const provinceSelect = document.getElementById('province');
+    const districtSelect = document.getElementById('district');
+    const wardSelect = document.getElementById('ward');
 
-        // Hàm đóng popup
-        function closePopup() {
-            if (voucherContainer) {
-                voucherContainer.classList.remove('popup-active');
-                voucherContainer.style.display = 'none';
-            }
-            if (popupBackdrop) {
-                popupBackdrop.classList.remove('active');
-            }
+    // Popup elements
+    const momoPopup = document.querySelector('.container-qr-popup');
+    const momoClose = document.getElementById('momoClose');
+    const confirmPaymentBtn = document.getElementById('confirmPayment');
+    const qrAmountElement = document.getElementById('qrAmount');
+
+    // Tính tổng tiền
+    function calculateTotal() {
+        let total = subtotal + shippingFee - pointsDiscount;
+        if (total < 0) total = 0;
+        totalAmountElement.textContent = total.toLocaleString('vi-VN') + 'đ';
+
+        // Cập nhật số tiền trên QR
+        if (qrAmountElement) {
+            qrAmountElement.textContent = total.toLocaleString('vi-VN') + 'đ';
         }
 
-        // Xử lý sự kiện nhấn vào voucher-select để hiển thị/ẩn popup
-        if (voucherSelect) {
-            voucherSelect.addEventListener('click', function (e) {
-                e.preventDefault(); // Ngăn hành vi mặc định của thẻ a
-                if (voucherContainer && popupBackdrop) {
-                    if (voucherContainer.classList.contains('popup-active')) {
-                        // Nếu popup đang hiển thị, ẩn nó
-                        closePopup();
-                    } else {
-                        // Hiển thị popup
-                        voucherContainer.style.display = 'block';
-                        voucherContainer.classList.add('popup-active');
-                        popupBackdrop.classList.add('active');
-                        // Ẩn các voucher đã sử dụng
-                        const allVouchers = voucherContainer.querySelectorAll('.voucher-card');
-                        allVouchers.forEach(v => {
-                            v.style.display = v.classList.contains('used') ? 'none' : 'block';
-                        });
-                    }
-                }
-            });
-        }
-
-        // Đóng popup khi nhấn vào nền mờ
-        if (popupBackdrop) {
-            popupBackdrop.addEventListener('click', function (e) {
-                // Chỉ đóng nếu nhấn trực tiếp vào backdrop
-                if (e.target === popupBackdrop) {
-                    closePopup();
-                }
-            });
-        }
-
-        // Đóng popup khi nhấn nút đóng
-        if (closePopupBtn) {
-            closePopupBtn.addEventListener('click', function (e) {
-                e.preventDefault(); // Ngăn hành vi mặc định
-                closePopup();
-            });
-        }
-
-        // Ngăn sự kiện click bên trong voucher-container lan ra ngoài
-        if (voucherContainer) {
-            voucherContainer.addEventListener('click', function (e) {
-                e.stopPropagation(); // Ngăn sự kiện click lan ra backdrop
-            });
-        }
-
-        // Xử lý nút Copy mã
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
-                const code = e.target.closest('.voucher-card')?.querySelector('.voucher-code')?.textContent;
-                if (code) {
-                    navigator.clipboard.writeText(code).then(() => {
-                        alert('Đã copy mã: ' + code);
-                    }).catch(() => {
-                        alert('Không thể copy mã. Vui lòng copy thủ công.');
-                    });
-                }
-            }
-        });
-
-        // Xử lý nút Chi tiết
-        // Nút mở popup
-        const voucherSelectBtn = document.querySelector('.voucher-select');
-
-        // Popup + backdrop
-        const voucherPopup = document.querySelector('.voucher-container');
-        const voucherBackdrop = document.querySelector('.voucher-backdrop');
-
-        // Nút đóng
-        const closeVoucherBtn = document.querySelector('.close-popup-btn');
-
-        // 👉 Mở popup voucher
-        voucherSelectBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            voucherPopup.style.display = 'block';
-            voucherBackdrop.classList.add('active');
-
-            setTimeout(() => {
-                voucherPopup.classList.add('popup-active');
-            }, 10);
-        });
-
-        // 👉 Đóng popup
-        function closeVoucherPopup() {
-            voucherPopup.classList.remove('popup-active');
-            voucherBackdrop.classList.remove('active');
-
-            setTimeout(() => {
-                voucherPopup.style.display = 'none';
-            }, 250);
-        }
-
-        closeVoucherBtn.addEventListener('click', closeVoucherPopup);
-
-        // 👉 Click nền mờ để đóng
-        voucherBackdrop.addEventListener('click', closeVoucherPopup);
-
-
-
-
-
-
-        document.getElementById("voucher-select").addEventListener("click", function(e) {
-            e.preventDefault();
-            document.getElementById("voucherPopup").style.display = "block";
-            document.getElementById("voucherBackdrop").style.display = "block";
-        });
-
-// Nút đóng popup
-        document.querySelector(".close-popup-btn").addEventListener("click", function() {
-            document.getElementById("voucherPopup").style.display = "none";
-            document.getElementById("voucherBackdrop").style.display = "none";
-        });
-
-// Click ra ngoài popup để tắt
-        document.getElementById("voucherBackdrop").addEventListener("click", function() {
-            document.getElementById("voucherPopup").style.display = "none";
-            document.getElementById("voucherBackdrop").style.display = "none";
-        });
-
-
-
-
-
-
-    });
-    const popup = document.querySelector('.voucher-container');
-    const dragHeader = document.querySelector('.voucher-header-drag');
-
-    let isDragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
-
-    dragHeader.addEventListener('mousedown', (e) => {
-        isDragging = true;
-
-        // Tính khoảng cách từ chuột đến góc popup
-        offsetX = e.clientX - popup.offsetLeft;
-        offsetY = e.clientY - popup.offsetTop;
-
-        popup.style.transition = "none"; // tắt animation để kéo mượt hơn
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            popup.style.left = (e.clientX - offsetX) + "px";
-            popup.style.top = (e.clientY - offsetY) + "px";
-        }
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-    });
-
-
-    //chỗ này xử lí check out
-    document.getElementById("checkout-qr").addEventListener("click", function (event) {
-        event.preventDefault();
-        document.querySelector(".popup-qr").style.display = "flex";
-    });
-
-    // Lấy các phần tử
-    const openVoucherBtn = document.querySelector('.voucher-select');
-    const voucherPopup = document.querySelector('.voucher-container');
-    const closeVoucherBtn = document.querySelector('.close-popup-btn');
-
-    // Khi nhấn nút chọn voucher → mở popup
-    openVoucherBtn.addEventListener('click', function (e) {
-        e.preventDefault(); // chặn nhảy trang
-        voucherPopup.style.display = 'block';
-    });
-
-    // Khi nhấn nút X → đóng popup
-    closeVoucherBtn.addEventListener('click', function () {
-        voucherPopup.style.display = 'none';
-    });
-
-    // // Nếu muốn click ra ngoài để đóng (tùy chọn)
-    // voucherPopup.addEventListener('click', function (e) {
-    //     if (e.target === voucherPopup) {
-    //         voucherPopup.style.display = 'none';
-    //     }
-    // });
-
-    //popup qr
-    const btnCheckout = document.getElementById('checkout-qr');
-    const popupqr = document.querySelector('.container-qr-popup');
-    const btnClose = document.getElementById('momoClose');
-
-    // Mở popup khi bấm "ĐẶT HÀNG"
-    btnCheckout.addEventListener('click', () => {
-        popupqr.style.display = 'block';
-    });
-
-    // Đóng popup khi bấm nút ✕
-    btnClose.addEventListener('click', () => {
-        popupqr.style.display = 'none';
-    });
-
-    // Đóng popup khi bấm ra ngoài (nếu muốn)
-    popupqr.addEventListener('click', (e) => {
-        if (e.target.classList.contains('momo-modal')) {
-            popupqr.style.display = 'none';
-        }
-    });
-
-
-    //voucher-select
-
-
-    const btnCheckoutqr = document.getElementById('checkout-qr');           // Nút "ĐẶT HÀNG"
-    const momoPopup   = document.querySelector('.container-qr-popup');   // Popup QR
-    const closeBtn    = document.getElementById('momoClose');             // Nút X
-
-    // Kiểm tra xem người dùng có chọn "Ví điện tử" không
-    function isMomoSelected() {
-        const selectedPayment = document.querySelector('input[name="payment"]:checked');
-        if (!selectedPayment) return false;
-        const labelText = selectedPayment.parentElement.textContent || '';
-        return labelText.includes('Ví điện tử') || labelText.includes('MoMo') || labelText.includes('ZaloPay');
+        return total;
     }
 
-    // Khi nhấn nút "ĐẶT HÀNG"
-    btnCheckoutqr.addEventListener('click', function (e) {
-        if (isMomoSelected()) {
-            e.preventDefault();           // Ngăn submit form (nếu có)
-            momoPopup.style.display = 'block';  // Hiện popup QR
-        }
-        // Nếu chọn COD thì để form submit bình thường (hoặc xử lý sau)
+    // Xử lý thay đổi phương thức vận chuyển
+    shippingRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            shippingFee = parseInt(this.dataset.fee);
+            shippingFeeElement.textContent = shippingFee.toLocaleString('vi-VN') + 'đ';
+            calculateTotal();
+        });
     });
 
-    // Đóng popup khi nhấn nút X
-    closeBtn.addEventListener('click', function () {
-        momoPopup.style.display = 'none';
-    });
+    // Xử lý sử dụng xu
+    if (usePointsCheckbox) {
+        usePointsCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                pointsDiscount = userPoints * 1000; // 1 xu = 1.000đ
+                pointsDiscountRow.style.display = 'flex';
+                pointsDiscountElement.textContent = '-' + pointsDiscount.toLocaleString('vi-VN') + 'đ';
+            } else {
+                pointsDiscount = 0;
+                pointsDiscountRow.style.display = 'none';
+                pointsDiscountElement.textContent = '0đ';
+            }
+            calculateTotal();
+        });
+    }
 
-    // Đóng popup khi click ra ngoài vùng nội dung
-    momoPopup.addEventListener('click', function (e) {
-        if (e.target === momoPopup || e.target.classList.contains('momo-modal')) {
+    // Xử lý nút đặt hàng
+    const checkoutQrBtn = document.getElementById('checkout-qr');
+    if (checkoutQrBtn) {
+        checkoutQrBtn.addEventListener('click', function () {
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+            // Validate form
+            if (!orderForm.checkValidity()) {
+                orderForm.reportValidity();
+                return;
+            }
+
+            addLocationNamesToForm();
+
+            // Nếu chọn ví điện tử, hiện popup QR
+            if (paymentMethod === 'ewallet') {
+                momoPopup.style.display = 'block';
+            } else {
+                // COD - submit form trực tiếp
+                orderForm.submit();
+            }
+        });
+    }
+    // Đóng popup QR
+    if (momoClose) {
+        momoClose.addEventListener('click', function () {
             momoPopup.style.display = 'none';
+        });
+    }
+
+    // Click outside popup
+    if (momoPopup) {
+        momoPopup.addEventListener('click', function (e) {
+            if (e.target === momoPopup || e.target.classList.contains('momo-modal')) {
+                momoPopup.style.display = 'none';
+            }
+        });
+    }
+
+    // Xác nhận đã thanh toán
+    if (confirmPaymentBtn) {
+        confirmPaymentBtn.addEventListener('click', function () {
+            addLocationNamesToForm();
+            // Đóng popup
+            momoPopup.style.display = 'none';
+
+            // Submit form
+            orderForm.submit();
+        });
+    }
+
+    // Tính tổng ban đầu
+    calculateTotal();
+
+    function addLocationNamesToForm() {
+        const selectedProvince = provinceSelect.options[provinceSelect.selectedIndex];
+        if (selectedProvince?.dataset.name) {
+            let input = document.querySelector('input[name="provinceName"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'provinceName';
+                orderForm.appendChild(input);
+            }
+            input.value = selectedProvince.dataset.name;
+        }
+
+        const selectedDistrict = districtSelect.options[districtSelect.selectedIndex];
+        if (selectedDistrict?.dataset.name) {
+            let input = document.querySelector('input[name="districtName"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'districtName';
+                orderForm.appendChild(input);
+            }
+            input.value = selectedDistrict.dataset.name;
+        }
+
+        const selectedWard = wardSelect.options[wardSelect.selectedIndex];
+        if (selectedWard?.dataset.name) {
+            let input = document.querySelector('input[name="wardName"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'wardName';
+                orderForm.appendChild(input);
+            }
+            input.value = selectedWard.dataset.name;
+        }
+    }
+
+    // ==================== API ĐỊA CHỈ VIỆT NAM ====================
+    // ==================== LOAD TỈNH ====================
+    // ==================== LOAD TỈNH (ALTERNATIVE API) ====================
+    async function loadProvinces() {
+        try {
+            console.log('🔄 Loading provinces...');
+            const res = await fetch('https://vapi.vnappmob.com/api/province/');
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            const provinces = data.results || [];
+            console.log('✅ Provinces loaded:', provinces.length);
+
+            provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành phố --</option>';
+
+            provinces.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.province_id;
+                opt.textContent = p.province_name;
+                opt.dataset.name = p.province_name;
+                provinceSelect.appendChild(opt);
+            });
+
+        } catch (e) {
+            console.error('❌ Load provinces error:', e);
+            alert('Không thể tải danh sách tỉnh/thành phố. Vui lòng thử lại!');
+        }
+    }
+
+    // ==================== LOAD HUYỆN ====================
+    async function loadDistricts(provinceCode) {
+        try {
+            console.log('🔄 Loading districts for province code:', provinceCode);
+
+            districtSelect.disabled = true;
+            wardSelect.disabled = true;
+            districtSelect.innerHTML = '<option value="">Đang tải...</option>';
+
+            // ✅ SỬA LẠI URL - dùng endpoint mới
+            const url = `https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`;
+            console.log('📡 Fetching URL:', url);
+
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log('📦 Full API Response:', data);
+
+            // ✅ KIỂM TRA CẤU TRÚC DATA
+            const districts = data.districts || [];
+            console.log('🔍 Found districts:', districts.length);
+            console.log('🔍 Districts array:', districts);
+
+            districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+
+            if (districts.length === 0) {
+                console.warn('⚠️ No districts returned from API');
+                districtSelect.innerHTML = '<option value="">Không có dữ liệu quận/huyện</option>';
+                districtSelect.disabled = false;
+                return;
+            }
+
+            districts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.code;
+                opt.textContent = d.name;
+                opt.dataset.name = d.name;
+                districtSelect.appendChild(opt);
+                console.log('➕ Added district:', d.name, '| Code:', d.code);
+            });
+
+            districtSelect.disabled = false;
+            console.log('✅ Districts loaded successfully:', districts.length, 'items');
+
+        } catch (e) {
+            console.error('❌ Load districts error:', e);
+            districtSelect.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+            alert('Không thể tải danh sách quận/huyện. Vui lòng thử lại!');
+        }
+    }
+
+    // ==================== LOAD PHƯỜNG ====================
+    // ==================== LOAD PHƯỜNG (ALTERNATIVE API) ====================
+    async function loadWards(districtCode) {
+        try {
+            console.log('🔄 Loading wards for district code:', districtCode);
+
+            wardSelect.disabled = true;
+            wardSelect.innerHTML = '<option value="">Đang tải...</option>';
+
+            const url = `https://vapi.vnappmob.com/api/province/ward/${districtCode}`;
+            console.log('📡 Fetching URL:', url);
+
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+
+            const data = await res.json();
+            const wards = data.results || [];
+            console.log('✅ Found wards:', wards.length);
+
+            wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+
+            if (wards.length === 0) {
+                wardSelect.innerHTML = '<option value="">Không có dữ liệu</option>';
+                wardSelect.disabled = false;
+                return;
+            }
+
+            wards.forEach(w => {
+                const opt = document.createElement('option');
+                opt.value = w.ward_id;
+                opt.textContent = w.ward_name;
+                opt.dataset.name = w.ward_name;
+                wardSelect.appendChild(opt);
+            });
+
+            wardSelect.disabled = false;
+            console.log('✅ Ward select enabled with', wards.length, 'options');
+
+        } catch (e) {
+            console.error('❌ Load wards error:', e);
+            wardSelect.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+            alert('Không thể tải danh sách phường/xã!');
+        }
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    provinceSelect.addEventListener('change', function () {
+        const selectedValue = this.value;
+        const selectedText = this.options[this.selectedIndex].text;
+        console.log('🏙️ Province changed:', selectedText, '| Code:', selectedValue);
+
+        // Reset district và ward
+        districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+        districtSelect.disabled = true;
+        wardSelect.disabled = true;
+
+        if (selectedValue) {
+            loadDistricts(selectedValue);
         }
     });
 
+    districtSelect.addEventListener('change', function () {
+        const selectedValue = this.value;
+        const selectedText = this.options[this.selectedIndex].text;
+        console.log('🏘️ District changed:', selectedText, '| Code:', selectedValue);
 
+        // Reset ward
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+        wardSelect.disabled = true;
+
+        if (selectedValue) {
+            loadWards(selectedValue);
+        }
+    });
+
+    wardSelect.addEventListener('change', function () {
+        const selectedValue = this.value;
+        const selectedText = this.options[this.selectedIndex].text;
+        console.log('🏠 Ward changed:', selectedText, '| Code:', selectedValue);
+    });
+
+    // ==================== INIT ====================
+    window.addEventListener('DOMContentLoaded', function () {
+        console.log('🚀 Page loaded, initializing address selects...');
+        loadProvinces();
+    });
 </script>
 
 </body>
-
 
 </html>
