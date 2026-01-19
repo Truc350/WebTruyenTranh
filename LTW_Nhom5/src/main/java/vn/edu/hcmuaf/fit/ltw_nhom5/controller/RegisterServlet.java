@@ -63,9 +63,14 @@ public class RegisterServlet extends HttpServlet {
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
         user.setFullName(username);
-        request.getSession().setAttribute("currentUser", user);
+//        request.getSession().setAttribute("currentUser", user);
 
+//        userDao.insert(user);
+//        response.sendRedirect(request.getContextPath() + "/login");
+        // Sau khi insert user thành công
         userDao.insert(user);
-        response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
+        request.setAttribute("success", true);
+        request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+
     }
 }

@@ -76,8 +76,8 @@ public class SearchServlet extends HttpServlet {
                 break;
 
             case "category":
-//                List<Comic> categoryResult = comicDAO.findByCategory(keyword);
-//                if (categoryResult != null) comics.addAll(categoryResult);
+                List<Comic> categoryResult = comicDAO.findByCategory(keyword);
+                if (categoryResult != null) comics.addAll(categoryResult);
                 break;
 
             case "name":
@@ -86,8 +86,8 @@ public class SearchServlet extends HttpServlet {
                 break;
 
             default: // "all" - tìm tất cả
-//                List<Comic> allResults = comicDAO.smartSearchAll(keyword);
-//                if (allResults != null) comics.addAll(allResults);
+                List<Comic> allResults = comicDAO.smartSearchAll(keyword);
+                if (allResults != null) comics.addAll(allResults);
                 break;
         }
 
