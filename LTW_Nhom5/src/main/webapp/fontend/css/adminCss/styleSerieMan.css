@@ -97,7 +97,7 @@ body {
 }
 
 .table-wrapper td {
-    padding: 16px 10px;
+    padding: 8px 10px;
     border-bottom: 1px solid #ddd;
     text-align: left;
 }
@@ -655,27 +655,21 @@ body {
 
 /* Nút xóa series */
 .delete-series-btn {
-    background: #ef4444;
-    color: white;
+    background-color: transparent;
     border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 12px 10px;
     cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    transition: 0.3s;
+    font-size: 15px;
 }
 
 .delete-series-btn:hover {
-    background: #dc2626;
-    transform: scale(1.05);
+    color: #ff4c4c;
 }
 
-.delete-series-btn i {
-    font-size: 14px;
-}
+/*.delete-series-btn i {*/
+/*    font-size: 14px;*/
+/*}*/
 
 /* Popup xác nhận xóa */
 .confirm-dialog {
@@ -743,13 +737,11 @@ body {
 }
 
 .edit-series-btn {
-    background: #3b82f6;
-    color: white;
+    background: transparent;
     border: none;
-    padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
@@ -757,8 +749,7 @@ body {
 }
 
 .edit-series-btn:hover {
-    background: #2563eb;
-    transform: scale(1.05);
+    color: #0056b3;
 }
 
 /* Styles cho image upload box */
@@ -901,67 +892,64 @@ body {
 .filter-container {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background-color: #ff4c4c;
-    color: white;
+    gap: 10px;
+    background-color: transparent;
     border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 16px;
+    padding: 0;
 }
 
 .filter-container:hover {
-    background-color: #ff6a6a;
+    background-color:transparent;
 }
 
 .filter-label {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-weight: 600;
-    color: #ffffff;
+    color:black;
     font-size: 16px;
-    white-space: nowrap;
 }
 
 .filter-label i {
-    font-size: 16px;
-    color: #ffffff;
+    font-size: 20px;
+    color: black;
 }
 
 .filter-select {
-    padding: 6px 12px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.15);
+    padding: 8px 14px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 150px;
+    min-width: 160px;
     outline: none;
+    height: 40px;
 }
 
 .filter-select:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+    border-color: #ff4c4c; /* Viền đỏ đậm hơn khi hover */
+    background-color: #fff5f5; /* Background hồng nhạt khi hover */
 }
 
 .filter-select:focus {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-color: #ffffff;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    border-color: #ff4c4c;
+    box-shadow: 0 0 0 2px rgba(255, 76, 76, 0.1);
 }
 
 /* Style cho options trong dropdown */
 .filter-select option {
     background-color: #ff4c4c;
-    color: #ffffff;
+    color: #fff;
     font-weight: 500;
     padding: 10px;
+}
+
+.filter-select option:hover {
+    background-color: #fff !important; /* Background trắng khi được chọn */
+    color: #ff4c4c !important; /* Chữ đỏ khi được chọn */
 }
 
 /* ========== RESPONSIVE ========== */

@@ -82,7 +82,6 @@
             <div class="filter-container">
                 <label for="visibilityFilter" class="filter-label">
                     <i class="fas fa-filter"></i>
-                    <span>Trạng thái:</span>
                 </label>
                 <select id="visibilityFilter" class="filter-select">
                     <option value="all" ${empty param.filter || param.filter == 'all' ? 'selected' : ''}>
