@@ -135,8 +135,6 @@
                                 <td colspan="5" style="text-align: center; color: #888;">
                                     Chưa có Flash Sale nào được tạo
                                 </td>
-
-
                             </tr>
                         </c:when>
 
@@ -178,34 +176,6 @@
                     </tbody>
                 </table>
             </div>
-
-<%--                        <td>2</td>--%>
-<%--                        <td>Flash Sale 00:00 - New Year</td>--%>
-<%--                        <td>00:00 01/01/2025 → 02:00 01/01/2025</td>--%>
-<%--                        <td><span class="status upcoming">Sắp diễn ra</span></td>--%>
-<%--                        <td class="action">--%>
-<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
-<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
-<%--                            </button>--%>
-<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                    <tr>--%>
-<%--                        <td>3</td>--%>
-<%--                        <td>Flash Sale Giữa Tháng</td>--%>
-<%--                        <td>08:00 10/12/2024 → 09:00 10/12/2024</td>--%>
-<%--                        <td><span class="status end">Đã diễn ra</span></td>--%>
-<%--                        <td class="action">--%>
-<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
-<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
-<%--                            </button>--%>
-<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                    </tbody>--%>
-<%--                </table>--%>
-<%--            </div>--%>
-
 
         </div>
     </div>
@@ -317,7 +287,6 @@
     </div>
 </div>
 
-
 <!-- POPUP XEM CHI TIẾT FLASH SALE -->
 <div class="modal-overlay" id="viewFlashSaleModal">
     <div class="modal-flashsale">
@@ -372,10 +341,4 @@
 <%--            <div class="category-select-list">--%>
 <%--                <label><input type="checkbox"> Hành động</label>--%>
 <%--                <label><input type="checkbox"> Phiêu lưu</label>--%>
-<%--                <label><input type="checkbox"> Lãng mạn</label>--%>
-<%--                <label><input type="checkbox"> Học đường</label>--%>
-<%--                <label><input type="checkbox"> Kinh dị</label>--%>
-<%--                <label><input type="checkbox"> Hài hước</label>--%>
-<%--                <label><input type="checkbox"> Giả tưởng</label>--%>
-<%--                <label><input type="checkbox"> Trinh thám</label>--%>
 <%--            </div>--%>

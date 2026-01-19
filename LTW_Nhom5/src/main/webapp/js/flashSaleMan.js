@@ -10,16 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("addFlashSaleModal").classList.remove("show");
     };
 
-    // Popup sửa
-    document.querySelectorAll(".openEditFlashSale").forEach(btn => {
-        btn.onclick = () => {
-            document.getElementById("editFlashSaleModal").classList.add("show");
-        };
-    });
-    document.getElementById("closeEditFlashSale").onclick = () => {
-        document.getElementById("editFlashSaleModal").classList.remove("show");
-    };
-
     // Popup xem
     document.querySelectorAll(".btn-view").forEach(btn => {
         btn.onclick = () => {
@@ -31,11 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Popup xóa
-    // document.querySelectorAll(".btn-delete").forEach(btn => {
-    //     btn.onclick = () => {
-    //         document.getElementById("deleteFlashSaleModal").classList.add("show");
-    //     };
-    // });
     document.getElementById("closeDeleteFlashSale").onclick = () => {
         document.getElementById("deleteFlashSaleModal").classList.remove("show");
     };
@@ -50,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ===== TÌM KIẾM VÀ THÊM TRUYỆN VÀO FLASH SALE (giữ nguyên như bạn đã làm) =====
+    // ===== TÌM KIẾM VÀ THÊM TRUYỆN VÀO FLASH SALE =====
     const comicSearchInput = document.getElementById('comicSearchInput');
     const searchResults = document.getElementById('searchResults');
     const selectedProductList = document.getElementById('selectedProductList');
@@ -125,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
                                 border: 1px solid #eee; margin-bottom: 10px; gap: 12px;`;
 
         item.innerHTML = `
-  
             <span style="flex:1; font-weight:500;">${name}</span>
             <button type="button" style="background:#ff4c4c; color:white; border:none; width:30px; height:30px; border-radius:50%; 
                     font-size:18px; cursor:pointer;">×</button>
@@ -146,29 +130,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // GỬI DỮ LIỆU TẠO FLASH SALE LÊN SERVER
-    // Nút Tạo Flash Sale
-
     document.getElementById('createFlashSaleBtn')?.addEventListener('click', function () {
         const form = document.getElementById('addFlashSaleForm');
         const name = form.querySelector('input[name="flashSaleName"]')?.value.trim();
-        const discountPercent = form.querySelector('input[name="discountPercent"]')?.value.trim(); // ← THÊM MỚI
+        const discountPercent = form.querySelector('input[name="discountPercent"]')?.value.trim();
         const startTime = form.querySelector('input[name="startTime"]')?.value;
         const endTime = form.querySelector('input[name="endTime"]')?.value;
 
-        // Kiểm tra
         if (!name || !discountPercent || !startTime || !endTime) {
             alert('Vui lòng nhập đầy đủ thông tin!');
             return;
         }
 
-        // Validate discount percent
         const discount = parseFloat(discountPercent);
         if (isNaN(discount) || discount < 1 || discount > 90) {
             alert('Phần trăm giảm phải từ 1% đến 90%!');
             return;
         }
 
-        // Lấy danh sách truyện
         const selectedItems = document.querySelectorAll('#selectedProductList > div[id^="comic-"]');
         if (selectedItems.length === 0) {
             alert('Vui lòng chọn ít nhất một truyện!');
@@ -181,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             comicIds.push(comicId);
         });
 
-        // Gửi dữ liệu
         const formData = new FormData();
         formData.append('flashSaleName', name);
         formData.append('discountPercent', discountPercent);
@@ -212,9 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// cái này delete flash sale
-
-// flashSaleMan.js
+// ========== XÓA FLASH SALE ==========
 document.addEventListener('DOMContentLoaded', () => {
     const deleteButtons = document.querySelectorAll('.btn-delete');
     const deleteModal = document.getElementById('deleteFlashSaleModal');
@@ -223,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let deleteId = null;
 
-    // Mở modal xóa
     deleteButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -239,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Đóng modal
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             if (deleteModal) deleteModal.style.display = 'none';
@@ -247,7 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Xác nhận xóa
     if (confirmBtn) {
         confirmBtn.addEventListener('click', () => {
             if (!deleteId) {
@@ -285,13 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-//  xem chi tiết
-// Xử lý nút xem chi tiết
-// Thêm đoạn code này vào file flashSaleMan.js
-
+// ========== XEM CHI TIẾT FLASH SALE ==========
 document.addEventListener('DOMContentLoaded', () => {
-    // Xử lý nút xem chi tiết
     const viewButtons = document.querySelectorAll('.btn-view');
     const viewModal = document.getElementById('viewFlashSaleModal');
 
@@ -305,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Gọi API để lấy chi tiết
             fetch(`${contextPath}/admin/manage-flashsale?action=detail&id=${flashSaleId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -330,26 +297,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Đóng popup xem chi tiết
     document.getElementById('closeViewFlashSale')?.addEventListener('click', () => {
         viewModal.classList.remove('show');
     });
 });
 
-// Hàm hiển thị chi tiết Flash Sale lên popup
+// Hàm hiển thị chi tiết Flash Sale (GLOBAL - đặt ngoài để có thể gọi từ mọi nơi)
 function displayFlashSaleDetail(data) {
     const viewInfoBox = document.querySelector('#viewFlashSaleModal .view-info-box');
 
     if (!viewInfoBox) return;
 
-    // Chuyển đổi trạng thái sang tiếng Việt
     const statusText = {
         'active': 'Đang diễn ra',
         'scheduled': 'Sắp diễn ra',
         'ended': 'Đã diễn ra'
     };
 
-    // Tạo HTML cho danh sách sản phẩm
     let productsHtml = '';
     if (data.comics && data.comics.length > 0) {
         data.comics.forEach(comic => {
@@ -364,7 +328,6 @@ function displayFlashSaleDetail(data) {
         productsHtml = '<p style="text-align:center; color:#888;">Không có sản phẩm nào</p>';
     }
 
-    // Cập nhật nội dung popup
     viewInfoBox.innerHTML = `
         <p><strong>Mã Flash Sale:</strong> ${data.id}</p>
         <p><strong>Tên Flash Sale:</strong> ${data.name}</p>
@@ -381,24 +344,21 @@ function displayFlashSaleDetail(data) {
         </div>
     `;
 
-    // Gắn lại sự kiện đóng cho nút mới tạo
     document.getElementById('closeViewFlashSale').addEventListener('click', () => {
         document.getElementById('viewFlashSaleModal').classList.remove('show');
     });
 }
 
-//edit cho từng cái flash sale
-// ========== SỬA JAVASCRIPT - Edit Flash Sale ==========
 
+// ========== CHỈNH SỬA FLASH SALE ==========
 document.addEventListener('DOMContentLoaded', () => {
     const editModal = document.getElementById('editFlashSaleModal');
-    const editProductList = document.querySelector('#editFlashSaleModal .product-select-list'); // ← SỬA SELECTOR
-    const updateBtn = document.querySelector('#editFlashSaleModal .save-btn'); // ← SỬA SELECTOR
+    const editProductList = document.querySelector('#editFlashSaleModal .product-select-list');
+    const updateBtn = document.querySelector('#editFlashSaleModal .save-btn');
     const closeEditBtn = document.getElementById('closeEditFlashSale');
 
     let currentEditId = null;
 
-    // Mở popup + load dữ liệu từ API detail
     document.querySelectorAll('.openEditFlashSale').forEach(btn => {
         btn.addEventListener('click', () => {
             currentEditId = btn.dataset.id?.trim();
@@ -431,22 +391,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Đóng popup
     closeEditBtn?.addEventListener('click', () => {
         editModal.classList.remove('show');
         currentEditId = null;
     });
 
-    // Hàm điền dữ liệu vào form
+    // Hàm điền dữ liệu vào form (LOCAL trong scope này)
     function fillEditForm(data) {
-        // ← SỬA: Lấy đúng input từ form edit
         const form = document.getElementById('editFlashSaleForm');
 
-        // Thông tin cơ bản
         form.querySelector('input[type="text"]').value = data.name || '';
-        form.querySelector('input[type="number"]').value = data.discountPercent || 30; // ← SỬA: discountPercent thay vì discount
+        form.querySelector('input[type="number"]').value = data.discountPercent || 30;
 
-        // Thời gian (chuyển định dạng từ "HH:mm dd/MM/yyyy" sang ISO)
         try {
             const start = convertToISO(data.startTime);
             const end = convertToISO(data.endTime);
@@ -457,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('Không parse được thời gian', e);
         }
 
-        // Danh sách comics đang áp dụng
         editProductList.innerHTML = '';
         if (data.comics && data.comics.length > 0) {
             data.comics.forEach(comic => {
@@ -473,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Submit cập nhật
     updateBtn?.addEventListener('click', (e) => {
         e.preventDefault();
 
@@ -491,14 +445,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Validate discount percent
         const discount = parseFloat(discountPercent);
         if (isNaN(discount) || discount < 1 || discount > 90) {
             alert('Phần trăm giảm phải từ 1% đến 90%!');
             return;
         }
 
-        // Lấy danh sách comicIds còn lại (chỉ những cái vẫn được tick)
         const selectedComicIds = [];
         editProductList.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
             const comicId = cb.getAttribute('data-comic-id');
@@ -514,20 +466,10 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('endTime', endTime);
         selectedComicIds.forEach(id => formData.append('comicIds', id));
 
-        // ← THÊM LOG ĐỂ DEBUG
         console.log('=== FormData gửi đi ===');
         for (let [key, value] of formData.entries()) {
             console.log(key + ': ' + value);
         }
-
-        console.log('Gửi update với data:', {
-            id: currentEditId,
-            name,
-            discountPercent,
-            startTime,
-            endTime,
-            comicIds: selectedComicIds
-        });
 
         fetch(`${contextPath}/admin/manage-flashsale`, {
             method: 'POST',
@@ -550,11 +492,260 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Hàm chuyển đổi thời gian từ "HH:mm dd/MM/yyyy" sang ISO format
+// Hàm chuyển đổi thời gian (GLOBAL - đặt ngoài để có thể gọi từ mọi nơi)
 function convertToISO(formattedTime) {
     if (!formattedTime) return '';
     const [time, date] = formattedTime.split(' ');
     const [hour, min] = time.split(':');
     const [day, month, year] = date.split('/');
     return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hour.padStart(2, '0')}:${min.padStart(2, '0')}`;
+}
+
+
+// ========== TÌM KIẾM FLASH SALE ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const flashSaleTableBody = document.getElementById('flashSaleTableBody');
+
+    let originalTableContent = flashSaleTableBody.innerHTML;
+    let allFlashSaleRows = [];
+
+    function saveOriginalData() {
+        allFlashSaleRows = Array.from(flashSaleTableBody.querySelectorAll('tr')).map(row => {
+            return {
+                element: row.cloneNode(true),
+                id: row.dataset.id || '',
+                name: row.querySelector('td:nth-child(2)')?.textContent.trim().toLowerCase() || '',
+                time: row.querySelector('td:nth-child(3)')?.textContent.trim() || '',
+                status: row.querySelector('td:nth-child(4)')?.textContent.trim() || ''
+            };
+        });
+    }
+
+    saveOriginalData();
+
+    searchInput?.addEventListener('input', function() {
+        const keyword = this.value.trim().toLowerCase();
+
+        if (keyword === '') {
+            flashSaleTableBody.innerHTML = originalTableContent;
+            reattachEventListeners();
+            return;
+        }
+
+        const filteredRows = allFlashSaleRows.filter(row => {
+            return row.name.includes(keyword);
+        });
+
+        if (filteredRows.length === 0) {
+            flashSaleTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #888; padding: 30px;">
+                        Không tìm thấy Flash Sale nào phù hợp với từ khóa "${searchInput.value}"
+                    </td>
+                </tr>
+            `;
+        } else {
+            flashSaleTableBody.innerHTML = '';
+            filteredRows.forEach(row => {
+                const clonedRow = row.element.cloneNode(true);
+                flashSaleTableBody.appendChild(clonedRow);
+            });
+
+            reattachEventListeners();
+        }
+    });
+
+    function reattachEventListeners() {
+        // Gắn lại event cho nút xóa
+        document.querySelectorAll('.btn-delete').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const deleteId = btn.dataset.id?.trim() || '';
+
+                if (!deleteId) {
+                    alert('Không tìm thấy ID để xóa!');
+                    return;
+                }
+
+                const deleteModal = document.getElementById('deleteFlashSaleModal');
+                if (deleteModal) {
+                    deleteModal.style.display = 'flex';
+
+                    const confirmBtn = document.getElementById('confirmDeleteFlashSale');
+                    if (confirmBtn) {
+                        const newConfirmBtn = confirmBtn.cloneNode(true);
+                        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+                        newConfirmBtn.addEventListener('click', () => {
+                            handleDelete(deleteId, deleteModal);
+                        });
+                    }
+                }
+            });
+        });
+
+        // Gắn lại event cho nút xem
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const flashSaleId = btn.dataset.id?.trim();
+
+                if (!flashSaleId) {
+                    alert('Không tìm thấy ID Flash Sale!');
+                    return;
+                }
+
+                handleViewDetail(flashSaleId);
+            });
+        });
+
+        // Gắn lại event cho nút sửa
+        document.querySelectorAll('.openEditFlashSale').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const flashSaleId = btn.dataset.id?.trim();
+
+                if (!flashSaleId) {
+                    alert('Không tìm thấy ID Flash Sale!');
+                    return;
+                }
+
+                handleEdit(flashSaleId);
+            });
+        });
+    }
+
+    function handleDelete(deleteId, deleteModal) {
+        fetch(`${contextPath}/admin/manage-flashsale`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `action=delete&id=${encodeURIComponent(deleteId)}`
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`Lỗi ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                if (deleteModal) deleteModal.style.display = 'none';
+                alert(data.message || (data.success ? 'Xóa thành công!' : 'Xóa thất bại!'));
+
+                if (data.success) {
+                    allFlashSaleRows = allFlashSaleRows.filter(row => row.id !== deleteId);
+
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = originalTableContent;
+                    const rowToRemove = tempDiv.querySelector(`tr[data-id="${deleteId}"]`);
+                    if (rowToRemove) rowToRemove.remove();
+                    originalTableContent = tempDiv.innerHTML;
+
+                    const row = document.querySelector(`tr[data-id="${deleteId}"]`);
+                    if (row) row.remove();
+
+                    if (flashSaleTableBody.querySelectorAll('tr').length === 0) {
+                        flashSaleTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #888;">
+                                Chưa có Flash Sale nào được tạo
+                            </td>
+                        </tr>
+                    `;
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi xóa:', err);
+                alert('Có lỗi khi xóa, kiểm tra console!');
+            });
+    }
+
+    function handleViewDetail(flashSaleId) {
+        const viewModal = document.getElementById('viewFlashSaleModal');
+
+        fetch(`${contextPath}/admin/manage-flashsale`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `action=detail&id=${encodeURIComponent(flashSaleId)}`
+        })
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(result => {
+                if (result.success && result.data) {
+                    displayFlashSaleDetail(result.data);
+                    viewModal.classList.add('show');
+                } else {
+                    alert(result.message || 'Không thể tải thông tin Flash Sale!');
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi:', err);
+                alert('Có lỗi khi tải thông tin Flash Sale!');
+            });
+    }
+
+    function handleEdit(flashSaleId) {
+        const editModal = document.getElementById('editFlashSaleModal');
+        const editProductList = document.querySelector('#editFlashSaleModal .product-select-list');
+
+        editProductList.innerHTML = '<p style="text-align:center; color:#888;">Đang tải...</p>';
+
+        fetch(`${contextPath}/admin/manage-flashsale`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `action=detail&id=${encodeURIComponent(flashSaleId)}`
+        })
+            .then(res => res.json())
+            .then(result => {
+                console.log('Edit data received:', result);
+                if (result.success && result.data) {
+                    // Gọi hàm fillEditForm GLOBAL
+                    fillEditFormGlobal(result.data);
+                    editModal.classList.add('show');
+
+                    // Lưu ID để dùng cho update button
+                    window.currentEditId = flashSaleId;
+                } else {
+                    alert(result.message || 'Không thể tải thông tin!');
+                }
+            })
+            .catch(err => {
+                console.error('Lỗi:', err);
+                alert('Lỗi khi tải dữ liệu Flash Sale!');
+            });
+    }
+});
+
+// Hàm điền form edit GLOBAL (để gọi từ cả phần search và phần edit ban đầu)
+function fillEditFormGlobal(data) {
+    const form = document.getElementById('editFlashSaleForm');
+    const editProductList = document.querySelector('#editFlashSaleModal .product-select-list');
+
+    form.querySelector('input[type="text"]').value = data.name || '';
+    form.querySelector('input[type="number"]').value = data.discountPercent || 30;
+
+    try {
+        const start = convertToISO(data.startTime);
+        const end = convertToISO(data.endTime);
+        const timeInputs = form.querySelectorAll('input[type="datetime-local"]');
+        timeInputs[0].value = start;
+        timeInputs[1].value = end;
+    } catch (e) {
+        console.warn('Không parse được thời gian', e);
+    }
+
+    editProductList.innerHTML = '';
+    if (data.comics && data.comics.length > 0) {
+        data.comics.forEach(comic => {
+            const label = document.createElement('label');
+            label.innerHTML = `
+                <input type="checkbox" data-comic-id="${comic.id}" checked>
+                ${comic.name}
+            `;
+            editProductList.appendChild(label);
+        });
+    } else {
+        editProductList.innerHTML = '<p style="color:#888; text-align:center;">Chưa áp dụng cho truyện nào</p>';
+    }
 }
