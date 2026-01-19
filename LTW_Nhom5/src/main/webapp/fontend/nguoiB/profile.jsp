@@ -148,7 +148,42 @@
     </div>
     <div class="change-password-container" style="display: none;">
         <h2>Đổi Mật Khẩu</h2>
-        <form>
+
+        <%-- Thông báo lỗi (màu đỏ) --%>
+        <% if (request.getAttribute("error") != null) { %>
+        <div class="alert" style="
+    background-color: #ffebee;          /* Nền đỏ rất nhạt */
+    color: #b71c1c;                     /* Chữ đỏ đậm nhưng không chói */
+    border: 1px solid #ef9a9a;          /* Viền đỏ nhạt */
+    border-left: 5px solid #d32f2f;     /* Thanh trái nổi bật */
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    opacity: 0.92;                      /* Làm mờ nhẹ để chữ lợt hơn */
+    font-size: 1rem;
+">
+            <strong>Lỗi:</strong> <%= request.getAttribute("error") %>
+        </div>
+        <% } %>
+
+        <%-- Thông báo thành công (cũng dùng tông đỏ nhạt như yêu cầu) --%>
+        <% if (request.getAttribute("success") != null) { %>
+        <div class="alert" style="
+    background-color: #ffebee;
+    color: #b71c1c;
+    border: 1px solid #ef9a9a;
+    border-left: 5px solid #d32f2f;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    opacity: 0.92;
+    font-size: 1rem;
+">
+            <strong>Thành công:</strong> <%= request.getAttribute("success") %>
+        </div>
+        <% } %>
+
+        <form action="${pageContext.request.contextPath}/change-password" method="post">
             <div class="form-group">
                 <label for="current-password">Mật khẩu hiện tại*:</label>
                 <input type="password" id="current-password" name="current-password" required>
@@ -158,7 +193,7 @@
                 <label for="new-password">Mật khẩu mới*:</label>
                 <input type="password" id="new-password" name="new-password" required>
 
-                <p class="password-requirement">Yêu cầu: Tối thiểu 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt.</p>
+                <p class="password-requirement">Yêu cầu: Tối thiểu 8 ký tự, bao gồm chữ hoa và thường, số và ký tự đặc biệt.</p>
             </div>
             <div class="form-group">
                 <label for="confirm-password">Xác nhận mật khẩu mới*:</label>
@@ -167,7 +202,7 @@
             </div>
             <div class="form-group">
                 <p class="security-note">Lưu ý: Để bảo mật, không chia sẻ mật khẩu với bất kỳ ai. Nếu quên mật khẩu, hãy
-                    liên hệ hỗ trợ qua email support@comicstore.vn.</p>
+                    liên hệ hỗ trợ qua email comicstore365@gmail.com.</p>
             </div>
             <button type="submit" class="save-btn">Lưu thay đổi</button>
         </form>
@@ -632,7 +667,7 @@
                 <p class="label">Số xu hiện có</p>
                 <h1>2,500</h1>
             </div>
-            <img src="../../img/dollar.png" class="xu-icon">
+            <img src="${pageContext.request.contextPath}/img/dollar.png" class="xu-icon">
         </div>
 
 

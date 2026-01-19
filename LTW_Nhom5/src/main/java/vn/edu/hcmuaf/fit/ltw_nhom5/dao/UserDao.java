@@ -162,7 +162,24 @@ public class UserDao {
                         .orElse(0)
         );
     }
+    // Trong UserDao.java
+    public boolean updatePassword(int userId, String newPasswordHash) {
+        return JdbiConnector.get().withHandle(handle ->
+                handle.createUpdate("UPDATE users SET password_hash = :hash, updated_at = NOW() WHERE id = :id")
+                        .bind("hash", newPasswordHash)
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
 
+    public Optional<User> findById(int id) {
+        return JdbiConnector.get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE id = :id AND is_deleted = false")
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findOne()
+        );
+    }
 
 
 }
