@@ -45,37 +45,10 @@ public class CartSevlet extends HttpServlet {
             // Xóa toàn bộ giỏ hàng
             clearCart(request, response, cart, session);
 
-        } else if (action.equals("checkout")) {
-            // Thanh toán phải đăng nhập
-            checkout(request, response, session);
         } else {
             // Action không hợp lệ
             response.sendRedirect(request.getContextPath() + "/cart");
         }
-    }
-
-    private void checkout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-        User currentUser = (User) session.getAttribute("currentUser");
-
-        if (currentUser == null) {
-            // Chưa đăng nhập -> chuyển đến trang login
-            session.setAttribute("errorMsg", "Vui lòng đăng nhập để thanh toán!");
-            session.setAttribute("redirectAfterLogin", request.getContextPath() + "/cart");
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-
-        // Kiểm tra giỏ hàng có sản phẩm không
-        Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null || cart.getItems().isEmpty()) {
-            session.setAttribute("errorMsg", "Giỏ hàng trống!");
-            response.sendRedirect(request.getContextPath() + "/cart");
-            return;
-        }
-
-        // Đã đăng nhập và có sản phẩm -> chuyển đến trang thanh toán
-        response.sendRedirect(request.getContextPath() + "/checkout");
-
     }
 
     private void clearCart(HttpServletRequest request, HttpServletResponse response, Cart cart, HttpSession session) throws ServletException, IOException {
@@ -153,8 +126,11 @@ public class CartSevlet extends HttpServlet {
         double totalAmount = cart.total();
         int totalQuantity = cart.totalQuantity();
 
-        request.setAttribute("cart", cart);
-        request.setAttribute("cartItems", cartItems);
+        // LƯU VÀO SESSION thay vì request
+        HttpSession session = request.getSession();
+        session.setAttribute("cart", cart);
+        session.setAttribute("cartItems", cartItems);
+
         request.setAttribute("totalAmount", totalAmount);
         request.setAttribute("totalQuantity", totalQuantity);
 
