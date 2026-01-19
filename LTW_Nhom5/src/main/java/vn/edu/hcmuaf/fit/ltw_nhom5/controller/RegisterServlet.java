@@ -37,7 +37,7 @@ public class RegisterServlet extends HttpServlet {
 
         // Kiểm tra format mật khẩu
         if (!PasswordUtils.isValidPasswordFormat(password)) {
-            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            request.setAttribute("error", "Mật khẩu phải ít nhất 8 ký tự, chữ hoa, thường, số và ký tự đặc biệt!");
             request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
             return;
         }
