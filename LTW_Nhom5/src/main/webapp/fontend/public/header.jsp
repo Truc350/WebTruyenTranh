@@ -126,14 +126,14 @@
 
                 <%
                     User curnentUser = (User) session.getAttribute("currentUser");
-                    if (curnentUser != null){
+                    if (curnentUser != null) {
                 %>
-                    <a href="<%= request.getContextPath() %>/logout">Đăng xuất</a>
+                <a href="<%= request.getContextPath() %>/logout">Đăng xuất</a>
                 <%
-                    } else {
+                } else {
 
                 %>
-                    <a href="<%= request.getContextPath() %>/login">Đăng nhập</a>
+                <a href="<%= request.getContextPath() %>/login">Đăng nhập</a>
                 <%
                     }
                 %>

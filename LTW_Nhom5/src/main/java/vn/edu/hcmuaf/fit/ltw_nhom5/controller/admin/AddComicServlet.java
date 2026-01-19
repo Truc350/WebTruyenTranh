@@ -192,7 +192,7 @@ public class AddComicServlet extends HttpServlet {
             String seriesName = "-";
             if (comic.getSeriesId() != null) {
                 try {
-                    String name = seriesDAO.getSeriesNameById(comic.getSeriesId());
+                    String name = seriesDAO.getSeriesNameById1(comic.getSeriesId());
                     if (name != null && !name.isEmpty()) {
                         seriesName = name;
                     }

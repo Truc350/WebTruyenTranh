@@ -445,14 +445,16 @@ body {
     font-size: 16px;
     font-weight: 700;
     border-radius: 8px;
-    cursor: not-allowed;
     margin-bottom: 8px;
+    cursor: pointer;
+    opacity: 0.6;
 }
 
 .btn-checkout.active {
     background: #ff4c4c;
     color: white;
     cursor: pointer;
+    opacity: 1;
 }
 
 .btn-checkout.active:hover {
@@ -811,4 +813,229 @@ body {
     .message-box .close-msg:hover {
         color: #000;
     }
+}
+
+/* Style cho modal đăng nhập */
+.login-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s;
+}
+
+.login-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.login-modal h3 {
+    color: black;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.login-modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.login-modal-btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.login-modal-btn-primary {
+    background: #e74c3c;
+    color: white;
+}
+
+.login-modal-btn-primary:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-modal-btn-secondary {
+    background: white;
+    color: #333;
+    border: 2px solid #ddd;
+}
+
+.login-modal-btn-secondary:hover {
+    background: #f8f9fa;
+    border-color: #adb5bd;
+}
+
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .cart-summary {
+        width: 100%;
+        position: static;
+        margin-top: 20px;
+    }
+
+    .cart-items-container {
+        max-height: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .cart-item {
+        flex-wrap: wrap;
+        padding: 12px 0;
+    }
+
+    .item-image {
+        margin: 0 12px;
+    }
+
+    .quantity-control,
+    .item-total,
+    .delete-btn {
+        margin-top: 8px;
+    }
+
+    .quantity-header,
+    .price-header {
+        display: none;
+    }
+
+    .quantity-control {
+        order: 1;
+    }
+
+    .item-total {
+        order: 2;
+        text-align: left;
+        margin-left: 76px;
+    }
+
+    .delete-btn {
+        order: 3;
+        margin-left: auto;
+    }
+
+    .quantity-control,
+    .item-total {
+        width: 90px;
+    }
+
+    .promo-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn-buy-more {
+        margin-top: 12px;
+        align-self: flex-end;
+    }
+
+    .promoItem.hidden {
+        display: none;
+    }
+
+    /* Popup và modalContent */
+    .promoPopup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+
+    .modalContent {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+
+    /* Message Box */
+    .message-box {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 10001; /* Cao hơn popup */
+        text-align: center;
+        max-width: 300px;
+        width: 90%;
+    }
+
+    .message-box .close-msg {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        color: #888;
+    }
+
+    .message-box .close-msg:hover {
+        color: #000;
+    }
+}
+
+#checkoutForm {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.cart-items-container {
+    flex: 1;
+}
+
+.cart-summary {
+    width: 400px; /* hoặc kích thước phù hợp */
 }

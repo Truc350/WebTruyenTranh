@@ -188,7 +188,7 @@ public class ComicService {
 
     public String getSeriesName(Integer seriesId) {
         if (seriesId == null) return null;
-        return seriesDAO.getSeriesNameById(seriesId);
+        return seriesDAO.getSeriesNameById1(seriesId);
     }
 
     /**

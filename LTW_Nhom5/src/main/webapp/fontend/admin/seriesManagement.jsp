@@ -11,67 +11,29 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar -->
+    <!-- Sidebar (giữ nguyên) -->
     <aside class="sidebar">
         <div class="sidebar-header">
             <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo">
             <h2>Comic Store</h2>
         </div>
-
         <ul>
-            <li>
-                <a href="dashboard.jsp">
-                    <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
-                    <span>Trang chủ</span>
-                </a>
+            <li><a href="dashboard.jsp"><img src="${pageContext.request.contextPath}/img/home.png" class="icon"><span>Trang chủ</span></a>
             </li>
-            <li>
-                <a href="seriesManagement.jsp">
-                    <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
-                    <span>Quản lý series</span>
-                </a>
+            <li><a href="${pageContext.request.contextPath}/SeriesManagement"><img
+                    src="${pageContext.request.contextPath}/img/series.png" class="icon"><span>Quản lý series</span></a>
             </li>
-            <li>
-                <a href="productManagement.jsp">
-                    <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
+            <li><a href="productManagement.jsp"><img src="${pageContext.request.contextPath}/img/product.png"
+                                                     class="icon"><span>Quản lý sản phẩm</span></a></li>
+            <li><a href="category.jsp"><img src="${pageContext.request.contextPath}/img/category.png"
+                                            class="icon"><span>Quản lý thể loại</span></a></li>
+            <li><a href="order.jsp"><img src="${pageContext.request.contextPath}/img/order.png" class="icon"><span>Quản lý đơn hàng</span></a>
             </li>
-            <li>
-                <a href="category.jsp">
-                    <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
-                    <span>Quản lý thể loại</span>
-                </a>
+            <li><a href="userManagement.html"><img src="${pageContext.request.contextPath}/img/user.png"
+                                                   class="icon"><span>Quản lý người dùng</span></a></li>
+            <li><a href="flashSaleMan.jsp"><img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon"><span>Quản lý Flash Sale</span></a>
             </li>
-            <li>
-                <a href="order.jsp">
-                    <img src="${pageContext.request.contextPath}/img/order.png" class="icon">
-                    <span>Quản lý đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="userManagement.html">
-                    <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="flashSaleMan.jsp">
-                    <img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon">
-                    <span>Quản lý Flash Sale</span>
-                </a>
-            </li>
-            <%--            <li>--%>
-            <%--                <a href="promotion.jsp">--%>
-            <%--                    <img src="../../img/promo.png" class="icon">--%>
-            <%--                    <span>Quản lý khuyến mãi</span>--%>
-            <%--                </a>--%>
-            <%--            </li>--%>
-            <li>
-                <a href="report.jsp">
-                    <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
-                    <span>Thống kê</span>
-                </a>
+            <li><a href="report.jsp"><img src="${pageContext.request.contextPath}/img/report.png" class="icon"><span>Thống kê</span></a>
             </li>
         </ul>
     </aside>
@@ -79,34 +41,62 @@
     <div class="main-content">
         <header class="admin-header">
             <div class="header-right">
-                <a href="chatWithCus.jsp">
-                    <i class="fa-solid fa-comment"></i>
-                </a>
-
+                <a href="chatWithCus.jsp"><i class="fa-solid fa-comment"></i></a>
                 <div class="admin-profile">
-                    <a href="profileAdmin.jsp">
-                        <img src="${pageContext.request.contextPath}/img/admin.png" class="admin-avatar" alt="Admin">
-                    </a>
+                    <a href="profileAdmin.jsp"><img src="${pageContext.request.contextPath}/img/admin.png"
+                                                    class="admin-avatar" alt="Admin"></a>
                     <span class="admin-name">Admin</span>
                 </div>
-
-                <!-- Nút đăng xuất -->
                 <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login_bo.jsp">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
+                    <a href="../public/login_bo.jsp"><i class="fa-solid fa-right-from-bracket"></i></a>
                 </button>
             </div>
         </header>
+
         <h2 class="page-title">Quản lý series</h2>
 
+        <!-- Toast Notification -->
+        <c:if test="${not empty successMessage}">
+            <div class="toast-notification success" id="toastNotification">
+                <i class="fas fa-check-circle"></i>
+                <span>${successMessage}</span>
+                <button class="toast-close" onclick="closeToast()">&times;</button>
+            </div>
+        </c:if>
+        <c:if test="${not empty errorMessage}">
+            <div class="toast-notification error" id="toastNotification">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>${errorMessage}</span>
+                <button class="toast-close" onclick="closeToast()">&times;</button>
+            </div>
+        </c:if>
+
         <div class="search-add-container">
-            <div class="search-box">
-                <input type="text" placeholder="Tìm kiếm series..." class="search-input">
-                <i class="fas fa-magnifying-glass"></i>
+            <form action="${pageContext.request.contextPath}/SeriesManagement" method="get" class="search-box">
+                <input type="text" name="keyword" placeholder="Tìm kiếm series..." class="search-input"
+                       value="${keyword}">
+                <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
+            </form>
+            <%--            Loc trang thai an hien--%>
+            <%-- Lọc trạng thái ẩn hiện --%>
+            <div class="filter-container">
+                <label for="visibilityFilter" class="filter-label">
+                    <i class="fas fa-filter"></i>
+                </label>
+                <select id="visibilityFilter" class="filter-select">
+                    <option value="all" ${empty param.filter || param.filter == 'all' ? 'selected' : ''}>
+                        🌐 Tất cả
+                    </option>
+                    <option value="visible" ${param.filter == 'visible' ? 'selected' : ''}>
+                        👁️ Đang hiển thị
+                    </option>
+                    <option value="hidden" ${param.filter == 'hidden' ? 'selected' : ''}>
+                        🔒 Đang ẩn
+                    </option>
+                </select>
             </div>
 
-            <button class="add-btn">
+            <button class="add-btn" id="openAddModal">
                 <i class="fa-solid fa-plus"></i> Thêm series mới
             </button>
         </div>
@@ -124,7 +114,6 @@
                 </thead>
 
                 <tbody id="seriesTableBody">
-                <%-- Lặp qua danh sách series --%>
                 <c:forEach var="s" items="${seriesList}">
                     <tr>
                         <td>${s.id}</td>
@@ -137,220 +126,282 @@
                                         data-id="${s.id}"
                                         data-name="${s.seriesName}"
                                         data-vol="${s.totalVolumes}"
-                                        data-status="${s.status}">
+                                        data-status="${s.status}"
+                                        data-desc="${s.description}"
+                                        data-cover="${s.coverUrl}">
                                     <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+
+                                <button class="delete-series-btn"
+                                        data-id="${s.id}"
+                                        data-name="${s.seriesName}"
+                                        title="Xóa series">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
 
                                 <div class="menu-container">
                                     <button class="more-btn">⋮</button>
-
                                     <div class="dropdown-menu">
                                         <input type="hidden" class="series-id" value="${s.id}">
                                         <label>
-                                            <input type="radio" name="display_S${s.id}" value="show" ${!s.hidden ? 'checked' : ''}> Hiển thị
+                                            <input type="radio" name="display_S${s.id}"
+                                                   value="show" ${!s.hidden ? 'checked' : ''}> Hiển thị
                                         </label>
                                         <label>
-                                            <input type="radio" name="display_S${s.id}" value="hide" ${s.hidden ? 'checked' : ''}> Ẩn đi
+                                            <input type="radio" name="display_S${s.id}"
+                                                   value="hide" ${s.hidden ? 'checked' : ''}> Ẩn đi
                                         </label>
                                     </div>
-
-
                                 </div>
                             </div>
                         </td>
                     </tr>
                 </c:forEach>
 
-
+                <%--                <tr class="pagination-row">--%>
+                <%--                    <td colspan="10">--%>
+                <%--                        <div class="pagination">--%>
+                <%--                            <c:forEach var="i" begin="1" end="${totalPages}">--%>
+                <%--                                <button class="page-btn ${i == currentPage ? 'active' : ''}"--%>
+                <%--                                        onclick="window.location.href='${pageContext.request.contextPath}/SeriesManagement?page=${i}'">--%>
+                <%--                                        ${i}--%>
+                <%--                                </button>--%>
+                <%--                            </c:forEach>--%>
+                <%--                        </div>--%>
+                <%--                    </td>--%>
+                <%--                </tr>--%>
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination">
                             <c:forEach var="i" begin="1" end="${totalPages}">
-                                <button class="page-btn product-page ${i == currentPage ? 'active' : ''}"
-                                        onclick="window.location.href='${pageContext.request.contextPath}/SeriesManagement?page=${i}'">
+                                <c:set var="pageUrl"
+                                       value="${pageContext.request.contextPath}/SeriesManagement?page=${i}"/>
+                                <c:if test="${not empty param.filter}">
+                                    <c:set var="pageUrl" value="${pageUrl}&filter=${param.filter}"/>
+                                </c:if>
+                                <c:if test="${not empty keyword}">
+                                    <c:set var="pageUrl" value="${pageUrl}&keyword=${keyword}"/>
+                                </c:if>
+
+                                <button class="page-btn ${i == currentPage ? 'active' : ''}"
+                                        onclick="window.location.href='${pageUrl}'">
                                         ${i}
                                 </button>
                             </c:forEach>
                         </div>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
         </div>
-
     </div>
 
-        <!-- POPUP THÊM SERIES -->
-        <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data">
-            <div class="modal-overlay" id="addSeriesModal">
-                <div class="modal-box two-column">
-
-                    <h3>Thêm series</h3>
-
-                    <div class="popup-content">
-
-                        <!-- Cột trái -->
-                        <div class="left-col">
-
-                            <div class="form-group">
-                                <label>Tên series</label>
-                                <input type="text" id="newSeriesName" name="seriesName" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Số tập</label>
-                                <input type="number" id="newSeriesVolumes" name="seriesVolumes" required min="1">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Tình trạng</label>
-                                <select id="newSeriesStatus" name="seriesStatus">
-                                    <option>Đang phát hành</option>
-                                    <option>Đã hoàn thành</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group" >
-                                <label>Ngày đăng</label>
-                                <input type="date">
-                            </div>
-
+    <!-- POPUP THÊM SERIES -->
+    <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data"
+          id="addSeriesForm">
+        <div class="modal-overlay" id="addSeriesModal">
+            <div class="modal-box two-column">
+                <h3>Thêm series</h3>
+                <div class="popup-content">
+                    <div class="left-col">
+                        <div class="form-group">
+                            <label>Tên series *</label>
+                            <input type="text" name="seriesName" required>
                         </div>
-
-                        <!-- Cột phải -->
-                        <div class="right-col">
-
-                            <div class="form-group">
-                                <label>Ảnh bìa</label>
-                                <div class="image-upload-box" id="newSeriesImageBox">
-                                    <span>+</span>
-                                    <img id="newSeriesPreview" class="preview-img" style="display:none;">
-                                </div>
-                                <input type="file" id="newSeriesCoverFile" name="seriesCover" accept="image/*" style="display:none;">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mô tả</label>
-                                <textarea id="newSeriesDescription" name="seriesDescription" rows="6"
-                                          placeholder="Nhập mô tả..."></textarea>
-                            </div>
-
+                        <div class="form-group">
+                            <label>Số tập *</label>
+                            <input type="number" name="seriesVolumes" required min="1">
                         </div>
-
+                        <div class="form-group">
+                            <label>Tình trạng *</label>
+                            <select name="seriesStatus" required>
+                                <option>Đang phát hành</option>
+                                <option>Đã hoàn thành</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="button-wrap">
-                        <button class="save-btn" id="saveNewSeries">Lưu</button>
-                        <button class="cancel-btn close-add-series">Hủy</button>
+                    <div class="right-col">
+                        <div class="form-group">
+                            <label>Ảnh bìa</label>
+                            <div class="image-upload-box" id="newSeriesImageBox">
+                                <span>+</span>
+                                <img id="newSeriesPreview" class="preview-img" style="display:none;">
+                            </div>
+                            <input type="file" id="newSeriesCoverFile" name="seriesCover" accept="image/*"
+                                   style="display:none;">
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả</label>
+                            <textarea name="seriesDescription" rows="6" placeholder="Nhập mô tả..."></textarea>
+                        </div>
                     </div>
+                </div>
 
+                <div class="button-wrap">
+                    <button type="submit" class="save-btn">Lưu</button>
+                    <button type="button" class="cancel-btn close-add-series">Hủy</button>
                 </div>
             </div>
-        </form>
+        </div>
+    </form>
 
-
-
-        <!-- POPUP SỬA SERIES -->
+    <!-- POPUP SỬA SERIES -->
+    <form action="${pageContext.request.contextPath}/EditSeriesServlet" method="post" enctype="multipart/form-data"
+          id="editSeriesForm">
         <div class="modal-overlay" id="editSeriesModal">
             <div class="modal-box two-column">
-
                 <h3>Chỉnh sửa series</h3>
+                <input type="hidden" id="editSeriesId" name="seriesId">
 
                 <div class="popup-content">
-
-                    <!-- Cột trái -->
                     <div class="left-col">
-
                         <div class="form-group">
-                            <label>Tên series</label>
-                            <input type="text" id="editSeriesName">
+                            <label>Tên series *</label>
+                            <input type="text" id="editSeriesName" name="seriesName" required>
                         </div>
-
                         <div class="form-group">
-                            <label>Số tập</label>
-                            <input type="number" id="editSeriesVolumes">
+                            <label>Số tập *</label>
+                            <input type="number" id="editSeriesVolumes" name="seriesVolumes" required min="1">
                         </div>
-
                         <div class="form-group">
-                            <label>Tình trạng</label>
-                            <select id="editSeriesStatus">
+                            <label>Tình trạng *</label>
+                            <select id="editSeriesStatus" name="seriesStatus" required>
                                 <option>Đang phát hành</option>
                                 <option>Đã hoàn thành</option>
                                 <option>Tạm dừng</option>
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label>Ngày đăng</label>
-                            <input type="date">
-                        </div>
-
                     </div>
 
-                    <!-- Cột phải -->
                     <div class="right-col">
-
                         <div class="form-group">
                             <label>Ảnh bìa</label>
                             <div class="image-upload-box" id="editSeriesImageBox">
                                 <span>+</span>
-                                <img src="https://cdn1.fahasa.com/media/catalog/product/t/h/tham-tu-lung-danh-conan_bia_tap-103.jpg">
+                                <img id="editSeriesPreview" class="preview-img" style="display:none;">
                             </div>
+                            <input type="file" id="editSeriesCoverFile" name="seriesCover" accept="image/*"
+                                   style="display:none;">
                         </div>
-
                         <div class="form-group">
                             <label>Mô tả</label>
-                            <textarea id="editSeriesDescription" rows="6">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
+                            <textarea id="editSeriesDescription" name="seriesDescription" rows="6"></textarea>
                         </div>
-
                     </div>
-
                 </div>
 
                 <div class="button-wrap">
-                    <button class="save-btn" id="saveEditSeries">Cập nhật</button>
-                    <button class="cancel-btn close-edit-series">Hủy</button>
+                    <button type="submit" class="save-btn">Cập nhật</button>
+                    <button type="button" class="cancel-btn close-edit-series">Hủy</button>
                 </div>
-
             </div>
         </div>
+    </form>
 
+    <!-- POPUP XÁC NHẬN XÓA -->
+    <div class="modal-overlay" id="deleteConfirmModal">
+        <div class="modal-box confirm-dialog">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3>Xác nhận xóa series</h3>
+            <p>Bạn có chắc chắn muốn xóa series "<span id="deleteSeriesName"></span>" không?</p>
+            <p class="warning-text">Hành động này không thể hoàn tác!</p>
 
+            <div class="button-wrap">
+                <button class="delete-confirm-btn" id="confirmDeleteBtn">Xóa</button>
+                <button class="cancel-btn" id="cancelDeleteBtn">Hủy</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    /* ================= MỞ POPUP THÊM SERIES ================= */
-    document.querySelector(".add-btn").addEventListener("click", () => {
+    // Biến toàn cục để lưu ID series cần xóa
+    // Mở popup thêm series
+    document.getElementById("openAddModal").addEventListener("click", () => {
         document.getElementById("addSeriesModal").style.display = "flex";
     });
 
+    // Đóng popup thêm
     document.querySelectorAll(".close-add-series").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
             document.getElementById("addSeriesModal").style.display = "none";
         });
     });
 
-    /* ================= MỞ POPUP SỬA SERIES ================= */
-    document.querySelectorAll(".edit-series-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
+    // Upload ảnh cho popup THÊM
+    const addBox = document.getElementById("newSeriesImageBox");
+    const addInput = document.getElementById("newSeriesCoverFile");
+    const addPreview = document.getElementById("newSeriesPreview");
 
+    addBox.addEventListener("click", () => addInput.click());
+    addInput.addEventListener("change", () => {
+        if (addInput.files && addInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                addPreview.src = e.target.result;
+                addPreview.style.display = "block";
+                addBox.querySelector("span").style.display = "none";
+            };
+            reader.readAsDataURL(addInput.files[0]);
+        }
+    });
+
+    // Mở popup sửa series
+    document.querySelectorAll(".edit-series-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.getElementById("editSeriesId").value = btn.dataset.id;
             document.getElementById("editSeriesName").value = btn.dataset.name;
             document.getElementById("editSeriesVolumes").value = btn.dataset.vol;
             document.getElementById("editSeriesStatus").value = btn.dataset.status;
+            document.getElementById("editSeriesDescription").value = btn.dataset.desc || "";
+
+            // Hiển thị ảnh cũ
+            const editPreview = document.getElementById("editSeriesPreview");
+            const editBox = document.getElementById("editSeriesImageBox");
+            if (btn.dataset.cover) {
+                editPreview.src = btn.dataset.cover;
+                editPreview.style.display = "block";
+                editBox.querySelector("span").style.display = "none";
+            } else {
+                editPreview.style.display = "none";
+                editBox.querySelector("span").style.display = "block";
+            }
 
             document.getElementById("editSeriesModal").style.display = "flex";
         });
     });
 
+    // Đóng popup sửa
     document.querySelectorAll(".close-edit-series").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
             document.getElementById("editSeriesModal").style.display = "none";
         });
     });
 
-    /* ================= ĐÓNG POPUP KHI CLICK NỀN ================= */
+    // Upload ảnh cho popup SỬA
+    const editBox = document.getElementById("editSeriesImageBox");
+    const editInput = document.getElementById("editSeriesCoverFile");
+    const editPreview = document.getElementById("editSeriesPreview");
+
+    editBox.addEventListener("click", () => editInput.click());
+    editInput.addEventListener("change", () => {
+        if (editInput.files && editInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                editPreview.src = e.target.result;
+                editPreview.style.display = "block";
+                editBox.querySelector("span").style.display = "none";
+            };
+            reader.readAsDataURL(editInput.files[0]);
+        }
+    });
+
+    // Đóng popup khi click nền
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) {
@@ -359,150 +410,148 @@
         });
     });
 
-    /* ================= ACTIVE SIDEBAR ================= */
-    document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".sidebar li a");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-            if (linkPage === current) link.classList.add("active");
-        });
-    });
-
+    // Menu hiển thị/ẩn series
     document.querySelectorAll(".more-btn").forEach(btn => {
         btn.addEventListener("click", function (e) {
             e.stopPropagation();
-
             const container = this.parentElement;
-
-            // Đóng tất cả menu khác
             document.querySelectorAll(".menu-container").forEach(m => {
                 if (m !== container) m.classList.remove("active");
             });
-
-            // Toggle menu hiện tại
             container.classList.toggle("active");
         });
     });
 
-    // Đóng menu khi click ra ngoài
     document.addEventListener("click", () => {
         document.querySelectorAll(".menu-container").forEach(m => m.classList.remove("active"));
     });
 
-</script>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".sidebar li a");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-
-            if (linkPage === current) {
-                link.classList.add("active");
-            }
-        });
-    });
-</script>
-
-
-<script>
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('seriesTableBody');
-        // const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-        const pageButtons = document.querySelectorAll('.product-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            // rows.forEach((r, idx) => {
-            //     r.style.display = (idx >= start && idx < end) ? "" : "none";
-            // });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.product-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-    })();
-</script>
-
-
-<script>
-    // ===== POPUP THÊM SERIES =====
-    const addBox = document.getElementById("newSeriesImageBox");
-    const addInput = document.getElementById("newSeriesCoverFile");
-    const addPreview = document.getElementById("newSeriesPreview");
-
-    addBox.addEventListener("click", () => addInput.click());
-
-    addInput.addEventListener("change", () => {
-        if (addInput.files && addInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                addPreview.src = e.target.result;
-                addPreview.style.display = "block";
-            };
-            reader.readAsDataURL(addInput.files[0]);
-        }
-    });
-
-    // ===== POPUP SỬA SERIES =====
-    const editBox = document.getElementById("editSeriesImageBox");
-    const editInput = document.getElementById("editSeriesCoverFile");
-    const editPreview = document.getElementById("editSeriesPreview");
-
-    editBox.addEventListener("click", () => editInput.click());
-
-    // editInput.addEventListener("change", () => {
-    //     if (editInput.files && editInput.files[0]) {
-    //         const reader = new FileReader();
-    //         reader.onload = e => {
-    //             editPreview.src = e.target.result;
-    //             editPreview.style.display = "block";
-    //         };
-    //         reader.readAsDataURL(editInput.files[0]);
-    //     }
-    // });
-</script>
-
-
-
-<script>
+    // Xử lý hiển thị/ẩn series
     document.querySelectorAll('.dropdown-menu input[type=radio]').forEach(radio => {
-        radio.addEventListener('change', function() {
+        radio.addEventListener('change', function () {
             const seriesId = this.closest('.dropdown-menu').querySelector('.series-id').value;
             const action = this.value;
 
             fetch('${pageContext.request.contextPath}/SeriesManagement', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id: seriesId, action: action })
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams({id: seriesId, action: action})
             })
                 .then(res => {
                     if (res.ok) {
-                        console.log("Cập nhật thành công series " + seriesId + " → " + action);
-                        // Nếu muốn, bạn có thể cập nhật UI ngay tại đây
+                        console.log("✅ Cập nhật thành công series " + seriesId + " → " + action);
                     } else {
-                        console.error("Có lỗi khi cập nhật");
+                        console.error("❌ Có lỗi khi cập nhật");
                     }
                 })
                 .catch(err => console.error("Fetch error:", err));
         });
     });
-</script>
 
+    // Active sidebar
+    document.addEventListener("DOMContentLoaded", function () {
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll(".sidebar li a");
+        links.forEach(link => {
+            const linkPage = link.getAttribute("href");
+            if (linkPage === current) link.classList.add("active");
+        });
+    });
+</script>
+<%--xoa seri--%>
+<script>
+    let deleteSeriesId = null;
+
+    document.querySelectorAll(".delete-series-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            deleteSeriesId = this.getAttribute("data-id");
+            const seriesName = this.getAttribute("data-name");
+
+            console.log("✅ Delete button clicked");
+            console.log("📝 Series ID:", deleteSeriesId);
+            console.log("📝 Series Name:", seriesName);
+
+            // Hiển thị tên series trong popup
+            document.getElementById("deleteSeriesName").textContent = seriesName;
+
+            // Mở popup xác nhận
+            document.getElementById("deleteConfirmModal").style.display = "flex";
+        });
+    });
+
+    // Xử lý khi click nút XÁC NHẬN XÓA trong popup
+    document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+        if (!deleteSeriesId) {
+            alert("❌ Không tìm thấy ID series cần xóa!");
+            return;
+        }
+
+        console.log("🗑️ Confirming delete for ID:", deleteSeriesId);
+
+        // Hiển thị loading
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
+
+        // Tạo URL xóa
+        const deleteUrl = '${pageContext.request.contextPath}/DeleteSeriesServlet?id=' + deleteSeriesId;
+        console.log("🔗 Redirecting to:", deleteUrl);
+
+        // Chuyển hướng
+        window.location.href = deleteUrl;
+    });
+
+    // Xử lý khi click nút HÙY XÓA
+    document.getElementById("cancelDeleteBtn").addEventListener("click", function () {
+        console.log("❌ Delete cancelled");
+        document.getElementById("deleteConfirmModal").style.display = "none";
+        deleteSeriesId = null;
+    });
+
+    // Đóng popup khi click ra ngoài
+    document.getElementById("deleteConfirmModal").addEventListener("click", function (e) {
+        if (e.target === this) {
+            this.style.display = "none";
+            deleteSeriesId = null;
+        }
+    });
+
+    // Đóng popup khi click nền
+    document.querySelectorAll(".modal-overlay").forEach(overlay => {
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                overlay.style.display = "none";
+            }
+        });
+    });
+</script>
+<%--xu ly loc--%>
+<script>
+    // ========== XỬ LÝ BỘ LỌC ==========
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterSelect = document.getElementById('visibilityFilter');
+
+        if (filterSelect) {
+            filterSelect.addEventListener('change', function () {
+                const filterValue = this.value;
+                const urlParams = new URLSearchParams(window.location.search);
+
+                // Giữ keyword nếu có
+                const keyword = urlParams.get('keyword');
+
+                // Tạo URL mới
+                let newUrl = '${pageContext.request.contextPath}/SeriesManagement?filter=' + filterValue;
+
+                if (keyword) {
+                    newUrl += '&keyword=' + encodeURIComponent(keyword);
+                }
+
+                console.log('🔍 Applying filter:', filterValue);
+                console.log('🔗 Redirecting to:', newUrl);
+
+                window.location.href = newUrl;
+            });
+        }
+    });
+</script>
 </body>
 </html>
