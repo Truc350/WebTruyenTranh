@@ -23,13 +23,11 @@ public class CreateFlashSaleServlet extends HttpServlet {
     private final FlashSaleDAO flashSaleDAO = new FlashSaleDAO();
     private final FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        System.out.println("=== CREATE FLASHSALE ĐÃ CHẠY PHIÊN BẢN MỚI ===");
-        System.out.println("Tên nhận được: '" + req.getParameter("flashSaleName") + "'");
-
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -37,21 +35,43 @@ public class CreateFlashSaleServlet extends HttpServlet {
         JsonObject responseJson = new JsonObject();
 
         try {
-            // SỬA CHÍNH TẠI ĐÂY: Lấy đúng tên parameter từ HTML (flashSaleName)
             String name = req.getParameter("flashSaleName");
+            String discountPercentStr = req.getParameter("discountPercent");
             String startTimeStr = req.getParameter("startTime");
             String endTimeStr = req.getParameter("endTime");
-
-            // Xử lý comicIds null
             String[] comicIdArray = req.getParameterValues("comicIds");
+
             if (comicIdArray == null) {
                 comicIdArray = new String[0];
             }
 
-            // Validate
+            // Validate...
             if (name == null || name.trim().isEmpty()) {
                 responseJson.addProperty("success", false);
                 responseJson.addProperty("message", "Tên Flash Sale không được để trống");
+                resp.getWriter().write(responseJson.toString());
+                return;
+            }
+
+            if (discountPercentStr == null || discountPercentStr.trim().isEmpty()) {
+                responseJson.addProperty("success", false);
+                responseJson.addProperty("message", "Vui lòng nhập phần trăm giảm giá");
+                resp.getWriter().write(responseJson.toString());
+                return;
+            }
+
+            double discountPercent;
+            try {
+                discountPercent = Double.parseDouble(discountPercentStr.trim());
+                if (discountPercent < 1 || discountPercent > 90) {
+                    responseJson.addProperty("success", false);
+                    responseJson.addProperty("message", "Phần trăm giảm phải từ 1% đến 90%");
+                    resp.getWriter().write(responseJson.toString());
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                responseJson.addProperty("success", false);
+                responseJson.addProperty("message", "Phần trăm giảm không hợp lệ");
                 resp.getWriter().write(responseJson.toString());
                 return;
             }
@@ -73,6 +93,7 @@ public class CreateFlashSaleServlet extends HttpServlet {
 
             LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
             LocalDateTime endTime = LocalDateTime.parse(endTimeStr);
+            LocalDateTime now = LocalDateTime.now();
 
             if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
                 responseJson.addProperty("success", false);
@@ -81,11 +102,22 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
+            // ← TỰ ĐỘNG XÁC ĐỊNH TRẠNG THÁI DựA TRÊN THỜI GIAN
+            String status;
+            if (now.isBefore(startTime)) {
+                status = "scheduled";  // Sắp diễn ra
+            } else if (now.isAfter(endTime)) {
+                status = "ended";      // Đã kết thúc
+            } else {
+                status = "active";     // Đang diễn ra
+            }
+
             FlashSale flashSale = new FlashSale();
             flashSale.setName(name.trim());
-            flashSale.setDiscountPercent(null);
+            flashSale.setDiscountPercent(discountPercent);
             flashSale.setStartTime(startTime);
             flashSale.setEndTime(endTime);
+            flashSale.setStatus(status);  // ← SET STATUS TỰ ĐỘNG
 
             int flashSaleId = flashSaleDAO.insert(flashSale);
 
@@ -93,7 +125,8 @@ public class CreateFlashSaleServlet extends HttpServlet {
             for (String idStr : comicIdArray) {
                 try {
                     comicIdList.add(Integer.parseInt(idStr.trim()));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
 
             flashSaleComicsDAO.insertLinks(flashSaleId, comicIdList);

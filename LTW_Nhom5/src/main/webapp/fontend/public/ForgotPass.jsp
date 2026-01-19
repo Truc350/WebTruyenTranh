@@ -20,7 +20,7 @@
                 <p>Hãy nhập email của bạn để nhận mã xác thực</p>
 
                 <c:if test="${not empty error}">
-                    <div style="color: red; margin-bottom: 10px;">${error}</div>
+                    <div style="color : red; font-size: 14px; display: flex;font-weight: bold; justify-content: center;">${error}</div>
                 </c:if>
 
                 <label>Email:</label>

@@ -15,7 +15,7 @@
            <form action="${pageContext.request.contextPath}/login" method="post">
                <h2>Đăng nhập</h2>
                <c:if test="${not empty error}">
-               <h3>${error}</h3>
+               <h3 style="color : red; font-size: 14px; display: flex; justify-content: center; ">${error}</h3>
                </c:if>
 
                <label>Nhập Email hoặc Tên đăng nhập:</label>
@@ -28,8 +28,6 @@
 <%--                    <img src="${pageContext.request.contextPath}/img/eyePassword.png" id="toggleEye" alt="eye">--%>
                 </span>
                </div>
-
-
 
                <div class="links">
                    <a href="${pageContext.request.contextPath}/fontend/public/Register.jsp">Đăng ký tài khoản</a>

@@ -69,12 +69,7 @@
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
-            <%--      <li>--%>
-            <%--        <a href="promotion.jsp">--%>
-            <%--          <img src="../../img/promo.png" class="icon">--%>
-            <%--          <span>Quản lý khuyến mãi</span>--%>
-            <%--        </a>--%>
-            <%--      </li>--%>
+
             <li>
                 <a href="report.jsp">
                     <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
@@ -140,8 +135,6 @@
                                 <td colspan="5" style="text-align: center; color: #888;">
                                     Chưa có Flash Sale nào được tạo
                                 </td>
-
-
                             </tr>
                         </c:when>
 
@@ -184,66 +177,6 @@
                 </table>
             </div>
 
-
-
-            <!-- Danh sách Flash Sale -->
-<%--            <div class="flashSale-list">--%>
-
-<%--                <table class="flashSale-table">--%>
-<%--                    <thead>--%>
-<%--                    <tr>--%>
-<%--                        <th>Mã Flash Sale</th>--%>
-<%--                        <th>Tên Flash Sale</th>--%>
-<%--                        <th>Thời gian</th>--%>
-<%--                        <th>Trạng thái</th>--%>
-<%--                        <th>Thao tác</th>--%>
-<%--                    </tr>--%>
-<%--                    </thead>--%>
-
-<%--                    <tbody id="flashSaleTableBody">--%>
-<%--                    <!-- Demo -->--%>
-<%--                    <tr>--%>
-<%--                        <td>1</td>--%>
-<%--                        <td>Flash Sale 10:00 - Mừng Noel</td>--%>
-<%--                        <td>10:00 24/12/2024 → 12:00 24/12/2024</td>--%>
-<%--                        <td><span class="status active">Đang diễn ra</span></td>--%>
-<%--                        <td class="action">--%>
-<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
-<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
-<%--                            </button>--%>
-<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                    <tr>--%>
-<%--                        <td>2</td>--%>
-<%--                        <td>Flash Sale 00:00 - New Year</td>--%>
-<%--                        <td>00:00 01/01/2025 → 02:00 01/01/2025</td>--%>
-<%--                        <td><span class="status upcoming">Sắp diễn ra</span></td>--%>
-<%--                        <td class="action">--%>
-<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
-<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
-<%--                            </button>--%>
-<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                    <tr>--%>
-<%--                        <td>3</td>--%>
-<%--                        <td>Flash Sale Giữa Tháng</td>--%>
-<%--                        <td>08:00 10/12/2024 → 09:00 10/12/2024</td>--%>
-<%--                        <td><span class="status end">Đã diễn ra</span></td>--%>
-<%--                        <td class="action">--%>
-<%--                            <button class="btn-view"><i class="fa-solid fa-eye"></i></button>--%>
-<%--                            <button class="btn-edit openEditFlashSale"><i class="fa-solid fa-pen-to-square"></i>--%>
-<%--                            </button>--%>
-<%--                            <button class="btn-delete"><i class="fa-solid fa-trash"></i></button>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                    </tbody>--%>
-<%--                </table>--%>
-
-<%--            </div>--%>
-
-
         </div>
     </div>
 </div>
@@ -259,7 +192,12 @@
                     <label>Tên Flash Sale:</label>
                     <input type="text" name="flashSaleName" placeholder="Nhập tên Flash Sale" required>
                 </div>
-
+                <div>
+                    <label>Phần trăm giảm:</label>
+                    <input class="qty-input" type="number" name="discountPercent" value="30" min="1" max="90" required>
+                </div>
+            </div>
+            <div class="form-row">
                 <div>
                     <label>Giờ bắt đầu:</label>
                     <input type="datetime-local" name="startTime" required>
@@ -308,7 +246,13 @@
                     <label>Tên Flash Sale:</label>
                     <input type="text" value="Flash Sale 10:00 - Mừng Noel">
                 </div>
+                <div>
+                    <label>Phần trăm giảm:</label>
+                    <input type="number" name="discountPercent" min="1" max="90">
+                </div>
+            </div>
 
+            <div class="form-row">
                 <div>
                     <label>Giờ bắt đầu:</label>
                     <input type="datetime-local" value="2024-12-24T10:00">
@@ -320,33 +264,18 @@
                 </div>
             </div>
 
-            <h4>Áp dụng cho thể loại:</h4>
-            <div class="category-select-list">
-                <label><input type="checkbox"> Hành động</label>
-                <label><input type="checkbox"> Phiêu lưu</label>
-                <label><input type="checkbox"> Lãng mạn</label>
-                <label><input type="checkbox"> Học đường</label>
-                <label><input type="checkbox"> Kinh dị</label>
-                <label><input type="checkbox"> Hài hước</label>
-                <label><input type="checkbox"> Giả tưởng</label>
-                <label><input type="checkbox"> Trinh thám</label>
-            </div>
 
-            <h4>Sản phẩm áp dụng:</h4>
+            <h4>Sản phẩm đã áp dụng:</h4>
 
             <div class="product-select-list">
                 <label>
                     <input type="checkbox" checked>
                     Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama
-                    <input class="percent-input" type="number" value="40" min="1" max="90">
-                    <input class="qty-input" type="number" value="100" min="1">
                 </label>
 
                 <label>
                     <input type="checkbox" checked>
                     One Piece – Tập 100 – Eiichiro Oda
-                    <input class="percent-input" type="number" value="50" min="1" max="90">
-                    <input class="qty-input" type="number" value="50" min="1">
                 </label>
             </div>
 
@@ -370,25 +299,17 @@
             <p><strong>Thời gian:</strong> 10:00 24/12/2024 → 12:00 24/12/2024</p>
             <p><strong>Trạng thái:</strong> <span class="status active">Đang diễn ra</span></p>
 
-            <h4>Thể loại áp dụng:</h4>
-            <ul class="view-category-list">
-                <li>Hành động</li>
-                <li>Phiêu lưu</li>
-                <li>Học đường</li>
-            </ul>
 
             <h4>Sản phẩm áp dụng:</h4>
             <div class="view-product-list">
                 <div class="item">
                     <span>Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama</span>
                     <span>Giảm: 40%</span>
-                    <span>Số lượng: 100</span>
                 </div>
 
                 <div class="item">
                     <span>One Piece – Tập 100 – Eiichiro Oda</span>
                     <span>Giảm: 50%</span>
-                    <span>Số lượng: 50</span>
                 </div>
             </div>
 
@@ -415,3 +336,9 @@
 
 </body>
 </html>
+
+<%--            <h4>Áp dụng cho thể loại:</h4>--%>
+<%--            <div class="category-select-list">--%>
+<%--                <label><input type="checkbox"> Hành động</label>--%>
+<%--                <label><input type="checkbox"> Phiêu lưu</label>--%>
+<%--            </div>--%>

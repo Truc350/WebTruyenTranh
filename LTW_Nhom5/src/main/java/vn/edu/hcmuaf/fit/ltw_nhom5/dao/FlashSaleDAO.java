@@ -2,6 +2,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FlashSaleDAO extends ADao{
@@ -28,7 +29,7 @@ public class FlashSaleDAO extends ADao{
     public int insert(FlashSale flashSale) {
         String sql = """
             INSERT INTO FlashSale (name, discount_percent, start_time, end_time, status)
-            VALUES (:name, :discountPercent, :startTime, :endTime, 'scheduled')
+            VALUES (:name, :discountPercent, :startTime, :endTime, :status)
         """;
 
         return jdbi.withHandle(handle ->
@@ -41,6 +42,9 @@ public class FlashSaleDAO extends ADao{
     }
 
     public List<FlashSale> getAllFlashSales() {
+
+        updateStatuses();
+
         String sql = """
             SELECT id, name, discount_percent, start_time, end_time, status, created_at
             FROM FlashSale
@@ -72,5 +76,58 @@ public class FlashSaleDAO extends ADao{
                     .execute();
             return rows > 0;
         });
+    }
+
+    public FlashSale getById(int id) {
+
+        updateStatuses();
+
+        String sql = "SELECT * FROM FlashSale WHERE id = ?";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, id)
+                        .mapToBean(FlashSale.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    public boolean updateFlashSale(int id, String name, double discountPercent, LocalDateTime startTime, LocalDateTime endTime) {
+        String sql = """
+        UPDATE FlashSale 
+        SET name = :name,
+            discount_percent = :discountPercent,
+            start_time = :startTime,
+            end_time = :endTime
+        WHERE id = :id
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("name", name)
+                        .bind("discountPercent", discountPercent)
+                        .bind("startTime", startTime)
+                        .bind("endTime", endTime)
+                        .bind("id", id)
+                        .execute() > 0
+        );
+    }
+
+    public void updateStatuses() {
+        String sql = """
+        UPDATE FlashSale
+        SET status = CASE
+            WHEN NOW() < start_time THEN 'scheduled'
+            WHEN NOW() >= start_time AND NOW() <= end_time THEN 'active'
+            WHEN NOW() > end_time THEN 'ended'
+        END
+        WHERE status != CASE
+            WHEN NOW() < start_time THEN 'scheduled'
+            WHEN NOW() >= start_time AND NOW() <= end_time THEN 'active'
+            WHEN NOW() > end_time THEN 'ended'
+        END
+    """;
+
+        jdbi.useHandle(handle -> handle.createUpdate(sql).execute());
     }
 }

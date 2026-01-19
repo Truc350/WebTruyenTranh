@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
 
         // Kiểm tra format mật khẩu trước
         if (!PasswordUtils.isValidPasswordFormat(password)) {
-            request.setAttribute("error", "Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+            request.setAttribute("error", "Mật khẩu ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
             return;
         }

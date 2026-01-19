@@ -21,7 +21,7 @@
       <h2>Đăng ký</h2>
 
         <c:if test="${not empty error}">
-            <p class="text-danger">${error}</p>
+            <p class="" style="color : red; font-size: 14px; display: flex;font-weight: bold; justify-content: center;margin-bottom: 5px">${error}</p>
         </c:if>
 
       <form action="${pageContext.request.contextPath}/RegisterServlet" method="post">
