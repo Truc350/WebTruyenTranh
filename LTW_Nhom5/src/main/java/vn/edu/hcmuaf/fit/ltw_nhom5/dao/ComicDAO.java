@@ -219,6 +219,7 @@ public class ComicDAO extends ADao {
 
         return result;
     }
+
     /**
      * Tìm theo thể loại
      */
@@ -606,13 +607,34 @@ public class ComicDAO extends ADao {
         );
     }
 
+    /**
+     * Lấy thông tin chi tiết một truyện theo ID
+     */
+    public Comic getComicById2(int comicId) {
+        String sql = "SELECT c.*, " +
+                "cat.name_categories AS categoryName, " +
+                "s.series_name AS seriesName " +
+                "FROM comics c " +
+                "LEFT JOIN categories cat ON c.category_id = cat.id " +
+                "LEFT JOIN series s ON c.series_id = s.id " +
+                "WHERE c.id = ? AND c.is_deleted = 0";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, comicId)
+                        .mapToBean(Comic.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
 
     /**
      * Lấy danh sách ảnh của truyện
      */
     public List<ComicImage> getComicImages(int comicId) {
         String sql = """
-                SELECT * FROM Comic_Images 
+                SELECT * FROM comic_images
                 WHERE comic_id = :comicId 
                 ORDER BY sort_order ASC
                 """;
@@ -1160,23 +1182,25 @@ public class ComicDAO extends ADao {
     }
 
     /**
-     * Lấy tất cả truyện (có phân trang)
+     * Lấy danh sách tất cả truyện cho admin với phân trang
      */
     public List<Comic> getAllComicsAdmin(int page, int limit) {
-        String sql = """
-                SELECT c.*, s.series_name, cat.name_categories AS categoryName
-                FROM Comics c
-                LEFT JOIN Series s ON c.series_id = s.id
-                LEFT JOIN Categories cat ON c.category_id = cat.id
-                WHERE c.is_deleted = 0
-                ORDER BY c.created_at DESC
-                LIMIT :limit OFFSET :offset
-                """;
+        int offset = (page - 1) * limit;
+
+        String sql = "SELECT c.*, " +
+                "cat.name_categories AS categoryName, " +
+                "s.series_name AS seriesName " +
+                "FROM comics c " +
+                "LEFT JOIN categories cat ON c.category_id = cat.id " +
+                "LEFT JOIN series s ON c.series_id = s.id " +
+                "WHERE c.is_deleted = 0 " +
+                "ORDER BY c.created_at DESC " +
+                "LIMIT ? OFFSET ?";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
-                        .bind("limit", limit)
-                        .bind("offset", (page - 1) * limit)
+                        .bind(0, limit)
+                        .bind(1, offset)
                         .mapToBean(Comic.class)
                         .list()
         );
@@ -1326,6 +1350,7 @@ public class ComicDAO extends ADao {
                         .mapToBean(Comic.class)
                         .findFirst());
     }
+
     public int findOrCreateAuthor(String authorName) {
         // Tìm author hiện có
         String findSql = "SELECT id FROM authors WHERE LOWER(name) = LOWER(:name) AND is_deleted = 0 LIMIT 1";
@@ -1423,30 +1448,30 @@ public class ComicDAO extends ADao {
      */
     public Comic getComicWithDetails(int comicId) {
         String sql = """
-    SELECT 
-        c.id,
-        c.name_comics,
-        c.author,
-        c.publisher,
-        c.description,
-        c.price,
-        c.stock_quantity,
-        c.thumbnail_url,
-        c.category_id,
-        c.series_id,
-        c.volume,
-        c.status,
-        c.created_at,
-        c.updated_at,
-        s.series_name AS seriesName,
-        cat.name_categories AS categoryName
-    FROM Comics c
-    LEFT JOIN Series s ON c.series_id = s.id
-    LEFT JOIN Categories cat ON c.category_id = cat.id
-    WHERE c.id = :comicId
-    AND c.is_deleted = 0
-    LIMIT 1
-""";
+                    SELECT 
+                        c.id,
+                        c.name_comics,
+                        c.author,
+                        c.publisher,
+                        c.description,
+                        c.price,
+                        c.stock_quantity,
+                        c.thumbnail_url,
+                        c.category_id,
+                        c.series_id,
+                        c.volume,
+                        c.status,
+                        c.created_at,
+                        c.updated_at,
+                        s.series_name AS seriesName,
+                        cat.name_categories AS categoryName
+                    FROM Comics c
+                    LEFT JOIN Series s ON c.series_id = s.id
+                    LEFT JOIN Categories cat ON c.category_id = cat.id
+                    WHERE c.id = :comicId
+                    AND c.is_deleted = 0
+                    LIMIT 1
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -1456,6 +1481,98 @@ public class ComicDAO extends ADao {
                         .orElse(null)
         );
     }
+
+
+    /**
+     * cap nhat thon tin truyen
+     *
+     * @param comic
+     * @return
+     */
+    public boolean updateComic(Comic comic) {
+        String sql = "UPDATE comics SET " +
+                "name_comics = ?, " +
+                "description = ?, " +
+                "price = ?, " +
+                "stock_quantity = ?, " +
+                "category_id = ?, " +
+                "series_id = ?, " +
+                "volume = ?, " +
+                "thumbnail_url = ?, " +
+                "status = ?, " +
+                "updated_at = NOW() " +
+                "WHERE id = ?";
+
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind(0, comic.getNameComics())
+                        .bind(1, comic.getDescription())
+                        .bind(2, comic.getPrice())
+                        .bind(3, comic.getStockQuantity())
+                        .bind(4, comic.getCategoryId())
+                        .bind(5, comic.getSeriesId())
+                        .bind(6, comic.getVolume())
+                        .bind(7, comic.getThumbnailUrl())
+                        .bind(8, comic.getStatus())
+                        .bind(9, comic.getId())
+                        .execute()
+        ) > 0;
+    }
+
+    /**
+     * Cập nhật tác giả của truyện
+     */
+    public void updateComicAuthor(int comicId, int authorId) {
+        String deleteSql = "DELETE FROM comic_authors WHERE comic_id = ?";
+        String insertSql = "INSERT INTO comic_authors (comic_id, author_id) VALUES (?, ?)";
+
+        jdbi.useHandle(handle -> {
+            handle.createUpdate(deleteSql).bind(0, comicId).execute();
+            handle.createUpdate(insertSql).bind(0, comicId).bind(1, authorId).execute();
+        });
+    }
+
+    /**
+     * Cập nhật nhà xuất bản của truyện
+     */
+    public void updateComicPublisher(int comicId, int publisherId) {
+        String deleteSql = "DELETE FROM comic_publishers WHERE comic_id = ?";
+        String insertSql = "INSERT INTO comic_publishers (comic_id, publisher_id) VALUES (?, ?)";
+
+        jdbi.useHandle(handle -> {
+            handle.createUpdate(deleteSql).bind(0, comicId).execute();
+            handle.createUpdate(insertSql).bind(0, comicId).bind(1, publisherId).execute();
+        });
+    }
+
+    /**
+     * Xóa tất cả ảnh của một truyện
+     */
+    public void deleteComicImages(int comicId) {
+        String sql = "DELETE FROM comic_images WHERE comic_id = ?";
+
+        jdbi.useHandle(handle ->
+                handle.createUpdate(sql).bind(0, comicId).execute()
+        );
+    }
+
+    /**
+     * Soft delete một truyện
+     */
+    public boolean softDeleteComic(int comicId) {
+        String sql = "UPDATE comics SET " +
+                "is_deleted = 1, " +
+                "deleted_at = NOW() " +
+                "WHERE id = ?";
+
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind(0, comicId)
+                        .execute()
+        ) > 0;
+    }
+
+
 
 }
 

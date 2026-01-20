@@ -149,7 +149,7 @@ async function openEditModal(comicId) {
         console.log('📦 Comic Data:', result.comic);
 
         if (result.success && result.comic) {
-            populateEditForm(result.comic);
+            await populateEditForm(result.comic);
         } else {
             throw new Error(result.message || 'Không thể tải dữ liệu truyện');
         }
@@ -162,7 +162,7 @@ async function openEditModal(comicId) {
 
 // ✅ ĐIỀN DỮ LIỆU VÀO FORM
 async function populateEditForm(comic) {
-    console.log(' Populating form with data:', comic);
+    console.log('📝 Populating form with data:', comic);
 
     const formLeft = document.getElementById('editForm').querySelector('.form-left');
 
@@ -230,23 +230,8 @@ async function populateEditForm(comic) {
     // ✅ CHỜ DOM CẬP NHẬT
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    // ✅ KIỂM TRA SELECT ĐÃ TỒN TẠI
-    const categorySelect = document.querySelector('#editForm [name="categoryId"]');
-    const seriesSelect = document.querySelector('#editForm [name="seriesId"]');
-
-    console.log('🔍 Category select found?', !!categorySelect);
-    console.log('🔍 Series select found?', !!seriesSelect);
-
-    if (!categorySelect || !seriesSelect) {
-        console.error('❌ CRITICAL: Selects not found in DOM!');
-        return;
-    }
-
     // ✅ LOAD CATEGORIES VÀ SERIES
-    console.log('📥 Loading categories with selected:', comic.categoryId);
     await loadCategoriesForEdit(comic.categoryId);
-
-    console.log('📥 Loading series with selected:', comic.seriesId);
     await loadSeriesForEdit(comic.seriesId);
 
     // ✅ LOAD DESCRIPTION
@@ -256,11 +241,177 @@ async function populateEditForm(comic) {
         console.log('✅ Description loaded');
     }
 
-    // ✅ LOAD IMAGES
-    console.log('🖼️ Loading images for comic:', comic.id);
-    await loadComicImages(comic.id);
+    // ✅ LOAD ẢNH BÌA (THUMBNAIL) - TỪ COMIC.THUMBNAILURL
+    await loadThumbnailImage(comic.thumbnailUrl);
+
+    // ✅ LOAD 3 ẢNH CHI TIẾT - TỪ COMIC_IMAGES
+    await loadDetailImages(comic.id);
 
     console.log('🎉 Form population complete!');
+}
+
+// ✅ HÀM LOAD ẢNH BÌA (BOX ĐẦU TIÊN)
+async function loadThumbnailImage(thumbnailUrl) {
+    console.log('🖼️ Loading thumbnail:', thumbnailUrl);
+
+    if (!thumbnailUrl) {
+        console.warn('⚠️ No thumbnail URL');
+        return;
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    const imageBoxes = document.querySelectorAll('#editModal .image-upload');
+    if (imageBoxes.length === 0) {
+        console.error('❌ No image boxes found!');
+        return;
+    }
+
+    // ✅ BOX ĐẦU TIÊN = ẢNH BÌA
+    const thumbnailBox = imageBoxes[0];
+    const preview = thumbnailBox.querySelector('.imgPreview');
+    const icon = thumbnailBox.querySelector('.icon');
+    const label = thumbnailBox.querySelector('.label');
+
+    if (!preview) {
+        console.error('❌ No preview element in thumbnail box');
+        return;
+    }
+
+    // ✅ XỬ LÝ ĐƯỜNG DẪN ẢNH
+    let fullImageUrl = thumbnailUrl;
+
+    if (!fullImageUrl.startsWith('http') &&
+        !fullImageUrl.startsWith(contextPath) &&
+        !fullImageUrl.startsWith('/')) {
+        fullImageUrl = contextPath + '/' + fullImageUrl;
+    } else if (fullImageUrl.startsWith('/') && !fullImageUrl.startsWith(contextPath)) {
+        fullImageUrl = contextPath + fullImageUrl;
+    }
+
+    console.log('🔗 Final thumbnail URL:', fullImageUrl);
+
+    // ✅ XỬ LÝ LỖI KHI LOAD ẢNH
+    preview.onerror = function () {
+        console.error('❌ Failed to load thumbnail:', fullImageUrl);
+        preview.style.display = 'none';
+        if (icon) icon.style.display = 'block';
+        if (label) label.style.display = 'block';
+    };
+
+    preview.onload = function () {
+        console.log('✅ Thumbnail loaded successfully');
+        preview.style.display = 'block';
+        if (icon) icon.style.display = 'none';
+        if (label) label.style.display = 'none';
+    };
+
+    preview.src = fullImageUrl;
+    preview.style.position = 'absolute';
+    preview.style.top = '0';
+    preview.style.left = '0';
+    preview.style.width = '100%';
+    preview.style.height = '100%';
+    preview.style.objectFit = 'cover';
+    preview.style.zIndex = '10';
+}
+
+// ✅ HÀM LOAD 3 ẢNH CHI TIẾT (BOX 2, 3, 4)
+async function loadDetailImages(comicId) {
+    console.log('🖼️ Loading detail images for comic:', comicId);
+
+    try {
+        const url = contextPath + '/admin/products/images?comicId=' + comicId;
+        console.log('📥 Fetching images from:', url);
+
+        const response = await fetch(url);
+        const result = await response.json();
+
+        console.log('📦 Images response:', result);
+
+        if (result.success && result.images && result.images.length > 0) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            const imageBoxes = document.querySelectorAll('#editModal .image-upload');
+
+            console.log('📸 Images from DB:', result.images.length);
+            console.log('🖼️ Image boxes in DOM:', imageBoxes.length);
+
+            if (imageBoxes.length < 2) {
+                console.error('❌ Not enough image boxes!');
+                return;
+            }
+
+            // ✅ BOX 1 = THUMBNAIL (ĐÃ LOAD Ở TRÊN)
+            // ✅ BOX 2, 3, 4 = DETAIL IMAGES
+
+            const maxImages = Math.min(result.images.length, 3);
+
+            for (let i = 0; i < maxImages; i++) {
+                const img = result.images[i];
+                const boxIndex = i + 1; // Box 2, 3, 4
+                const box = imageBoxes[boxIndex];
+
+                if (!box) continue;
+
+                const preview = box.querySelector('.imgPreview');
+                const icon = box.querySelector('.icon');
+                const label = box.querySelector('.label');
+
+                console.log(`📷 Processing detail image ${i + 1}:`, {
+                    url: img.imageUrl,
+                    type: img.imageType,
+                    hasPreview: !!preview
+                });
+
+                if (preview && img.imageUrl) {
+                    let fullImageUrl = img.imageUrl;
+
+                    if (!fullImageUrl.startsWith('http') &&
+                        !fullImageUrl.startsWith(contextPath) &&
+                        !fullImageUrl.startsWith('/')) {
+                        fullImageUrl = contextPath + '/' + fullImageUrl;
+                    } else if (fullImageUrl.startsWith('/') && !fullImageUrl.startsWith(contextPath)) {
+                        fullImageUrl = contextPath + fullImageUrl;
+                    }
+
+                    console.log(`🔗 Final detail image ${i + 1} URL:`, fullImageUrl);
+
+                    preview.onerror = function () {
+                        console.error(`❌ Failed to load detail image ${i + 1}:`, fullImageUrl);
+                        preview.style.display = 'none';
+                        if (icon) icon.style.display = 'block';
+                        if (label) label.style.display = 'block';
+                    };
+
+                    preview.onload = function () {
+                        console.log(`✅ Detail image ${i + 1} loaded successfully`);
+                        preview.style.display = 'block';
+                        if (icon) icon.style.display = 'none';
+                        if (label) label.style.display = 'none';
+                    };
+
+                    preview.src = fullImageUrl;
+                    preview.style.position = 'absolute';
+                    preview.style.top = '0';
+                    preview.style.left = '0';
+                    preview.style.width = '100%';
+                    preview.style.height = '100%';
+                    preview.style.objectFit = 'cover';
+                    preview.style.zIndex = '10';
+                } else {
+                    console.error(`❌ Failed to load detail image ${i + 1}:`, {
+                        hasPreview: !!preview,
+                        imageUrl: img.imageUrl
+                    });
+                }
+            }
+        } else {
+            console.warn('⚠️ No detail images found');
+        }
+    } catch (error) {
+        console.error('❌ Error loading detail images:', error);
+    }
 }
 
 // LOAD CATEGORIES
@@ -348,108 +499,6 @@ async function loadSeriesForEdit(selectedSeriesId) {
         }
     } catch (error) {
         console.error('❌ Error loading series:', error);
-    }
-}
-
-async function loadComicImages(comicId) {
-    console.log('🖼️ loadComicImages called with:', comicId);
-
-    try {
-        const url = contextPath + '/admin/products/images?comicId=' + comicId;
-        console.log('📥 Fetching images from:', url);
-
-        const response = await fetch(url);
-        const result = await response.json();
-
-        console.log('📦 Images response:', result);
-
-        if (result.success && result.images && result.images.length > 0) {
-            // ✅ CHỜ DOM RENDER
-            await new Promise(resolve => setTimeout(resolve, 200));
-
-            const imageBoxes = document.querySelectorAll('#editModal .image-upload');
-
-            console.log('📸 Images from DB:', result.images.length);
-            console.log('🖼️ Image boxes in DOM:', imageBoxes.length);
-
-            if (imageBoxes.length === 0) {
-                console.error('❌ No image boxes found!');
-                return;
-            }
-
-            // ✅ IN RA IMAGEURL ĐỂ DEBUG
-            result.images.forEach((img, idx) => {
-                console.log(`🔍 Image ${idx + 1} URL:`, img.imageUrl);
-            });
-
-            const maxImages = Math.min(result.images.length, imageBoxes.length, 4);
-
-            for (let i = 0; i < maxImages; i++) {
-                const img = result.images[i];
-                const box = imageBoxes[i];
-
-                if (!box) continue;
-
-                const preview = box.querySelector('.imgPreview');
-                const icon = box.querySelector('.icon');
-                const label = box.querySelector('.label');
-
-                console.log(`📷 Processing image ${i + 1}:`, {
-                    url: img.imageUrl,
-                    type: img.imageType,
-                    hasPreview: !!preview
-                });
-
-                if (preview && img.imageUrl) {
-                    // ✅ XỬ LÝ ĐƯỜNG DẪN ẢNH
-                    let fullImageUrl = img.imageUrl;
-
-                    // Nếu URL không bắt đầu bằng http/https hoặc contextPath
-                    if (!fullImageUrl.startsWith('http') &&
-                        !fullImageUrl.startsWith(contextPath) &&
-                        !fullImageUrl.startsWith('/')) {
-                        fullImageUrl = contextPath + '/' + fullImageUrl;
-                    } else if (fullImageUrl.startsWith('/') && !fullImageUrl.startsWith(contextPath)) {
-                        fullImageUrl = contextPath + fullImageUrl;
-                    }
-
-                    console.log(`🔗 Final image URL ${i + 1}:`, fullImageUrl);
-
-                    // ✅ XỬ LÝ LỖI KHI LOAD ẢNH
-                    preview.onerror = function() {
-                        console.error(`❌ Failed to load image ${i + 1}:`, fullImageUrl);
-                        preview.style.display = 'none';
-                        if (icon) icon.style.display = 'block';
-                        if (label) label.style.display = 'block';
-                    };
-
-                    preview.onload = function() {
-                        console.log(`✅ Image ${i + 1} loaded successfully:`, fullImageUrl);
-                        preview.style.display = 'block';
-                        if (icon) icon.style.display = 'none';
-                        if (label) label.style.display = 'none';
-                    };
-
-                    preview.src = fullImageUrl;
-                    preview.style.position = 'absolute';
-                    preview.style.top = '0';
-                    preview.style.left = '0';
-                    preview.style.width = '100%';
-                    preview.style.height = '100%';
-                    preview.style.objectFit = 'cover';
-                    preview.style.zIndex = '10';
-                } else {
-                    console.error(`❌ Failed to load image ${i + 1}:`, {
-                        hasPreview: !!preview,
-                        imageUrl: img.imageUrl
-                    });
-                }
-            }
-        } else {
-            console.warn('⚠️ No images or error:', result.message);
-        }
-    } catch (error) {
-        console.error('❌ Error loading images:', error);
     }
 }
 

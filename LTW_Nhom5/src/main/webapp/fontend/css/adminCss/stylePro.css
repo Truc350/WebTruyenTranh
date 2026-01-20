@@ -869,3 +869,24 @@ th, td {
 .main-content::-webkit-scrollbar-thumb:hover {
     background: #ff4c4c;
 }
+
+/* Nút thùng rác */
+.trash-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #666;
+    padding: 4px 8px;
+}
+
+.trash-btn:hover {
+    color: #ff4c4c;
+    background-color: #fff0f0;
+}
+
+.trash-btn i {
+    pointer-events: none;
+}
