@@ -126,7 +126,7 @@
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
-                    <button class="delete-btn">Xóa truyện</button>
+                    <%--                    <button class="delete-btn">Xóa truyện</button>--%>
                 </div>
             </div>
         </div>
@@ -285,158 +285,100 @@
 
                 <form id="editForm" class="form-horizontal">
                     <div class="form-left">
-
-                        <div class="form-group">
-                            <label>Tên truyện:</label>
-                            <input type="text" value="Thám tử lừng danh Conan">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Bộ truyện:</label>
-                            <select name="seriesId">
-                                <option value="">-- Chọn bộ truyện --</option>
-                                <c:forEach var="series" items="${seriesList}">
-                                    <option value="${series.id}">${series.seriesName}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Thể loại:</label>
-                            <select>
-                                <option selected>Trinh thám</option>
-                                <option>Hài hước</option>
-                                <option>Ngôn tình</option>
-                                <option>Hành động</option>
-                                <option>Kinh dị</option>
-                                <option>Phiêu lưu</option>
-                                <option>Học đường</option>
-                                <option>Giả tưởng</option>
-                            </select>
-                        </div>
-
-                        <!-- HÀNG GIÁ + SỐ LƯỢNG -->
-                        <div class="form-group two-columns">
-                            <div>
-                                <label>Số lượng:</label>
-                                <input type="number" min="1" value="550">
-                            </div>
-                            <div class="form-group">
-                                <label>Giá:</label>
-                                <input type="text" value="22,500₫">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tác giả:</label>
-                            <input type="text" value="Gosho Aoyama">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Nhà xuất bản:</label>
-                            <input type="text" value="Kim Đồng">
-                        </div>
-
-                        <div class="form-group two-columns">
-                            <div style="flex: 0.9">
-                                <label>Ngày đăng:</label>
-                                <input type="date" value="2024-12-01">
-                            </div>
-
-                            <div style="flex: 1">
-                                <label>Tập:</label>
-                                <input type="number" min="1" value="103">
-                            </div>
-                        </div>
+                        <!-- Sẽ được populate bởi JavaScript -->
                     </div>
 
                     <div class="form-right">
                         <div class="images-grid">
                             <!-- ẢNH BÌA -->
                             <div class="image-upload">
-                                <input type="file" class="editImgInput" accept="image/*" hidden>
+                                <input type="file" class="editImgInput" name="coverImage" accept="image/*" hidden>
                                 <div class="img-box">
-                                    <img class="imgPreview"
-                                         src="https://cdn1.fahasa.com/media/catalog/product/t/h/tham-tu-lung-danh-conan_bia_tap-103.jpg">
+                                    <i class="icon">+</i>
+                                    <span class="label">Ảnh bìa</span>
+                                    <img class="imgPreview">
                                 </div>
                             </div>
 
-                            <!-- CHI TIẾT 1 -->
+                            <!-- ẢNH CHI TIẾT 1 -->
                             <div class="image-upload">
-                                <input type="file" class="editImgInput" accept="image/*" hidden>
+                                <input type="file" class="editImgInput" name="detailImage1" accept="image/*" hidden>
                                 <div class="img-box">
-                                    <img class="imgPreview"
-                                         src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/tham_tu_lung_danh_conan___tap_103/2025_09_27_11_17_18_2-390x510.jpg?_gl=1*ccghen*_gcl_aw*R0NMLjE3NjMwMzkxNzkuQ2p3S0NBaUFvTmJJQmhCNUVpd0FaRmJZR0QxQWR2SEhkaVgyTlo3SHdjRU9qM0ZzN0dMektZblVial9UZ1YzOHBlbDliR1dfYzE4dVpob0NaMUFRQXZEX0J3RQ..*_gcl_au*MjEzOTI1MDc4Ny4xNzYxNzE0NzM3*_ga*MTM4NTc5MjQ5OC4xNzYxNzE0NzM3*_ga_D3YYPWQ9LN*czE3NjUwMjk1NjIkbzE5JGcxJHQxNzY1MDMxMDM0JGo2MCRsMCRoMA..*_ga_460L9JMC2G*czE3NjUwMjk1NjIkbzIwJGcxJHQxNzY1MDMxMDcxJGoyMyRsMCRoNDMyNzI1MDM2">
+                                    <i class="icon">+</i>
+                                    <span class="label">Trang 1</span>
+                                    <img class="imgPreview">
                                 </div>
                             </div>
 
-                            <!-- CHI TIẾT 2 -->
+                            <!-- ẢNH CHI TIẾT 2 -->
                             <div class="image-upload">
-                                <input type="file" class="editImgInput" accept="image/*" hidden>
+                                <input type="file" class="editImgInput" name="detailImage2" accept="image/*" hidden>
                                 <div class="img-box">
-                                    <img class="imgPreview"
-                                         src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/tham_tu_lung_danh_conan___tap_103/2025_09_27_11_17_18_3-390x510.jpg">
+                                    <i class="icon">+</i>
+                                    <span class="label">Trang 2</span>
+                                    <img class="imgPreview">
                                 </div>
                             </div>
 
-                            <!-- CHI TIẾT 3 -->
+                            <!-- ẢNH CHI TIẾT 3 -->
                             <div class="image-upload">
-                                <input type="file" class="editImgInput" accept="image/*" hidden>
+                                <input type="file" class="editImgInput" name="detailImage3" accept="image/*" hidden>
                                 <div class="img-box">
-                                    <img class="imgPreview"
-                                         src="https://cdn1.fahasa.com/media/flashmagazine/images/page_images/tham_tu_lung_danh_conan___tap_103/2025_09_27_11_17_18_4-390x510.jpg">
+                                    <i class="icon">+</i>
+                                    <span class="label">Trang 3</span>
+                                    <img class="imgPreview">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label>Mô tả ngắn:</label>
-                            <textarea rows="6">Bộ truyện trinh thám nổi tiếng của Gosho Aoyama.</textarea>
+                            <textarea name="description" rows="6" placeholder="Nhập mô tả..."></textarea>
                         </div>
                     </div>
                 </form>
 
                 <div class="form-buttons">
                     <button type="button" class="cancel-btn">Hủy</button>
-                    <button type="submit" class="save-btn">Cập nhật</button>
+                    <button type="button" class="save-btn">Cập nhật</button>
                 </div>
             </div>
         </div>
 
 
         <!-- POPUP XÓA TRUYỆN -->
-        <div class="modal-overlay" id="deleteModal">
-            <div class="delete-modal">
-                <h3>Xóa truyện</h3>
+<%--        <div class="modal-overlay" id="deleteModal">--%>
+<%--            <div class="delete-modal">--%>
+<%--                <h3>Xóa truyện</h3>--%>
 
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">
-                    <button id="searchBtn" class="search-icon">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
-                </div>
+<%--                <div class="search-bar">--%>
+<%--                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">--%>
+<%--                    <button id="searchBtn" class="search-icon">--%>
+<%--                        <i class="fa-solid fa-magnifying-glass"></i>--%>
+<%--                    </button>--%>
+<%--                </div>--%>
 
-                <div class="delete-list">
-                    <label><input type="checkbox"> Thám tử lừng danh Conan – Tập 15 – Gosho Aoyama</label>
-                    <label><input type="checkbox"> Doraemon – Tập 30 – Fujiko F. Fujio</label>
-                    <label><input type="checkbox"> One Piece – Tập 100 – Eiichiro Oda</label>
-                    <label><input type="checkbox"> Attack on Titan – Tập 17 – Hajime Isayama</label>
-                    <label><input type="checkbox"> Naruto – Tập 300 – Masashi Kishimoto</label>
-                    <label><input type="checkbox"> Bleach – Tập 70 – Tite Kubo</label>
-                    <label><input type="checkbox"> Spy x Family – Tập 12 – Tatsuya Endo</label>
-                    <label><input type="checkbox"> Bleach – Tập 40 – Tite Kubo</label>
-                    <label><input type="checkbox"> Spy x Family– Tập 45 – Tatsuya Endo</label>
-                    <label><input type="checkbox"> Bleach– Tập 80 – Tite Kubo</label>
-                    <label><input type="checkbox"> Spy x Family– Tập 50 – Tatsuya Endo</label>
-                </div>
+<%--                <div class="delete-list">--%>
+<%--                    <label><input type="checkbox"> Thám tử lừng danh Conan – Tập 15 – Gosho Aoyama</label>--%>
+<%--                    <label><input type="checkbox"> Doraemon – Tập 30 – Fujiko F. Fujio</label>--%>
+<%--                    <label><input type="checkbox"> One Piece – Tập 100 – Eiichiro Oda</label>--%>
+<%--                    <label><input type="checkbox"> Attack on Titan – Tập 17 – Hajime Isayama</label>--%>
+<%--                    <label><input type="checkbox"> Naruto – Tập 300 – Masashi Kishimoto</label>--%>
+<%--                    <label><input type="checkbox"> Bleach – Tập 70 – Tite Kubo</label>--%>
+<%--                    <label><input type="checkbox"> Spy x Family – Tập 12 – Tatsuya Endo</label>--%>
+<%--                    <label><input type="checkbox"> Bleach – Tập 40 – Tite Kubo</label>--%>
+<%--                    <label><input type="checkbox"> Spy x Family– Tập 45 – Tatsuya Endo</label>--%>
+<%--                    <label><input type="checkbox"> Bleach– Tập 80 – Tite Kubo</label>--%>
+<%--                    <label><input type="checkbox"> Spy x Family– Tập 50 – Tatsuya Endo</label>--%>
+<%--                </div>--%>
 
-                <div class="delete-buttons">
-                    <button class="cancel-btn">Hủy</button>
-                    <button class="delete-confirm-btn">Xóa</button>
-                </div>
-            </div>
-        </div>
-
+<%--                <div class="delete-buttons">--%>
+<%--                    <button class="cancel-btn">Hủy</button>--%>
+<%--                    <button class="delete-confirm-btn">Xóa</button>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+        deleteBtnMain
 
         <!-- POPUP XÁC NHẬN XÓA -->
         <div class="modal-overlay" id="confirmDeleteModal">
@@ -516,8 +458,6 @@
     </main>
 
 
-
-
 </div>
 <%--ti kiem tram--%>
 <script>
@@ -565,7 +505,6 @@
     function updateTable(comics) {
         const tbody = document.getElementById('productTableBody');
 
-
         if (!comics || comics.length === 0) {
             tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #999;">' +
                 '<i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>' +
@@ -576,7 +515,6 @@
         let html = '';
 
         comics.forEach(function (comic) {
-            console.log('Comic ID:', comic.id, '| seriesName:', comic.seriesName, '| categoryName:', comic.categoryName);
             html += '<tr>' +
                 '<td>' + comic.id + '</td>' +
                 '<td>' + comic.nameComics + '</td>' +
@@ -591,7 +529,12 @@
                 '</button>' +
                 '</td>' +
                 '<td class="action-cell">' +
-                '<button class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></button>' +
+                '<button class="edit-btn" data-comic-id="' + comic.id + '" title="Chỉnh sửa">' +
+                '<i class="fa-solid fa-pen-to-square"></i>' +
+                '</button>' +
+                '<button class="trash-btn" data-comic-id="' + comic.id + '" title="Xóa truyện">' +
+                '<i class="fa-solid fa-trash"></i>' +
+                '</button>' +
                 '<div class="menu-container">' +
                 '<button class="more-btn">⋮</button>' +
                 '<div class="dropdown-menu">' +
@@ -686,21 +629,40 @@
             btn.addEventListener('click', function () {
                 const comicId = this.dataset.comicId;
                 console.log('Edit comic ID:', comicId);
-
-                // Mở popup sửa
                 document.getElementById('editModal').style.display = 'flex';
-
-                // TODO: Load dữ liệu truyện vào form
-                // loadComicDataToEditForm(comicId);
             });
         });
 
-        // 3. Bind event cho menu "Hiện/Ẩn"
+        // 3. Bind event cho nút "Xóa" - ĐOẠN MỚI
+        document.querySelectorAll('.trash-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const comicId = this.dataset.comicId;
+                const comicRow = this.closest('tr');
+                const comicName = comicRow.querySelector('td:nth-child(2)').textContent;
+
+                console.log('🗑️ Delete button clicked for comic ID:', comicId, 'Name:', comicName);
+
+                // Gọi hàm từ deleteComic.js
+                if (typeof window.showDeleteConfirmation === 'function') {
+                    window.showDeleteConfirmation(comicId, comicName);
+                } else {
+                    console.error('❌ showDeleteConfirmation not found!');
+                    // Fallback nếu script chưa load
+                    const confirmDelete = confirm('Bạn có chắc muốn xóa truyện "' + comicName + '" không?');
+                    if (confirmDelete) {
+                        window.deleteComicDirect(comicId);
+                    }
+                }
+            });
+        });
+
+        // 4. Bind event cho menu "Hiện/Ẩn"
         document.querySelectorAll('.more-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.stopPropagation();
-
-                // Đóng menu khác nếu có
                 document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
 
                 const menu = this.nextElementSibling;
@@ -724,6 +686,33 @@
     document.addEventListener('DOMContentLoaded', function () {
         bindEventListeners();
     });
+
+
+    async function deleteComic(comicId) {
+        try {
+            const response = await fetch(contextPath + '/admin/products/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({id: comicId})
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Xóa truyện thành công!');
+                // Reload lại danh sách
+                searchProducts(currentPage);
+            } else {
+                alert('Lỗi: ' + (result.message || 'Không thể xóa truyện'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi xóa truyện');
+        }
+    }
+
 </script>
 
 <!--action của hiện/ ẩn sản phẩm-->
@@ -777,12 +766,12 @@
     });
 
     // === MỞ POPUP XÓA ===
-    const deleteBtnMain = document.querySelector('.delete-btn');
-    if (deleteBtnMain) {
-        deleteBtnMain.addEventListener('click', () => {
-            document.getElementById('deleteModal').style.display = 'flex';
-        });
-    }
+    // const deleteBtnMain = document.querySelector('.delete-btn');
+    // if (deleteBtnMain) {
+    //     deleteBtnMain.addEventListener('click', () => {
+    //         document.getElementById('deleteModal').style.display = 'flex';
+    //     });
+    // }
 
     // === ĐÓNG POPUP KHI NHẤN HỦY ===
     document.querySelectorAll('.cancel-btn').forEach(btn => {
@@ -795,31 +784,31 @@
     });
 
     // === KHI NHẤN XÓA TRONG POPUP DANH SÁCH ===
-    document.querySelectorAll('.delete-confirm-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('confirmDeleteModal').style.display = 'flex';
-        });
-    });
+    // document.querySelectorAll('.delete-confirm-btn').forEach(btn => {
+    //     btn.addEventListener('click', () => {
+    //         document.getElementById('confirmDeleteModal').style.display = 'flex';
+    //     });
+    // });
 
     // === TÌM KIẾM TRUYỆN TRONG POPUP XÓA ===
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const deleteList = document.querySelector('.delete-list');
-
-    if (searchBtn && searchInput && deleteList) {
-        searchBtn.addEventListener('click', () => {
-            const keyword = searchInput.value.toLowerCase().trim();
-            const labels = deleteList.querySelectorAll('label');
-            labels.forEach(label => {
-                const text = label.textContent.toLowerCase();
-                label.style.display = text.includes(keyword) ? 'block' : 'none';
-            });
-        });
-
-        searchInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') searchBtn.click();
-        });
-    }
+    // const searchInput = document.getElementById('searchInput');
+    // const searchBtn = document.getElementById('searchBtn');
+    // const deleteList = document.querySelector('.delete-list');
+    //
+    // if (searchBtn && searchInput && deleteList) {
+    //     searchBtn.addEventListener('click', () => {
+    //         const keyword = searchInput.value.toLowerCase().trim();
+    //         const labels = deleteList.querySelectorAll('label');
+    //         labels.forEach(label => {
+    //             const text = label.textContent.toLowerCase();
+    //             label.style.display = text.includes(keyword) ? 'block' : 'none';
+    //         });
+    //     });
+    //
+    //     searchInput.addEventListener('keypress', e => {
+    //         if (e.key === 'Enter') searchBtn.click();
+    //     });
+    // }
 </script>
 
 <script>
@@ -913,12 +902,17 @@
 </script>
 
 
+
+
 <!-- ===== LOAD DANH SÁCH BAN ĐẦU ===== -->
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
+
         console.log('🔄 Loading initial comics list...');
         loadInitialComicsList();
     });
+
 
     async function loadInitialComicsList() {
         const tbody = document.getElementById('productTableBody');
@@ -957,7 +951,10 @@
 
 <!-- Script thêm truyện mới -->
 <script src="${pageContext.request.contextPath}/js/addComic.js"></script>
-
+<!-- Script chỉnh sửa truyện -->
+<script src="${pageContext.request.contextPath}/js/editComic.js"></script>
+<!-- Script xóa truyện -->
+<script src="${pageContext.request.contextPath}/js/deleteComic.js"></script>
 </body>
 </html>
 

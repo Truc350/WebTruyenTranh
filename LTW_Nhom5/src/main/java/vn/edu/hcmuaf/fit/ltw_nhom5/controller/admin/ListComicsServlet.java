@@ -40,7 +40,6 @@ public class ListComicsServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // Lấy trang hiện tại
             int page = 1;
             String pageParam = request.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
@@ -48,21 +47,21 @@ public class ListComicsServlet extends HttpServlet {
                 if (page < 1) page = 1;
             }
 
-            // ✅ GIỚI HẠN 8 TRUYỆN MỖI TRANG
-            int limit = 8;
+            // ✅ HỖ TRỢ CUSTOM LIMIT
+            int limit = 8; // Default
+            String limitParam = request.getParameter("limit");
+            if (limitParam != null && !limitParam.isEmpty()) {
+                limit = Integer.parseInt(limitParam);
+                if (limit < 1) limit = 8;
+                if (limit > 1000) limit = 1000; // Max 1000
+            }
 
-            // Lấy danh sách truyện
             List<Comic> comics = comicDAO.getAllComicsAdmin(page, limit);
-
-            // Đếm tổng số truyện
             int totalComics = comicDAO.countAllComics();
-
-            // Tính tổng số trang
             int totalPages = (int) Math.ceil((double) totalComics / limit);
 
             System.out.println("✅ Page: " + page + "/" + totalPages + " - Loaded " + comics.size() + " comics");
 
-            // Chuyển đổi sang DTO đơn giản
             List<Map<String, Object>> simplifiedComics = new ArrayList<>();
             for (Comic comic : comics) {
                 Map<String, Object> dto = new HashMap<>();
@@ -73,6 +72,7 @@ public class ListComicsServlet extends HttpServlet {
                 dto.put("author", comic.getAuthor());
                 dto.put("price", comic.getPrice());
                 dto.put("stockQuantity", comic.getStockQuantity());
+                dto.put("volume", comic.getVolume());
                 simplifiedComics.add(dto);
             }
 
@@ -85,10 +85,8 @@ public class ListComicsServlet extends HttpServlet {
         } catch (Exception e) {
             System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
-
             result.put("success", false);
             result.put("message", "Server error: " + e.getMessage());
-
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 
