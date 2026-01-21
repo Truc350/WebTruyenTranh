@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Order {
     private int id;
@@ -28,15 +29,15 @@ public class Order {
     @ColumnName("points_used")
     private int pointUsed;
     @ColumnName("created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     public Order() {}
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

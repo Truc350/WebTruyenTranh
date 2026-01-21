@@ -13,6 +13,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -182,7 +183,7 @@ public class OrderServlet extends HttpServlet {
             order.setShippingProvider(shippingMethod); // standard hoặc express
             order.setShippingFee(shippingFee);
             order.setPointUsed(pointsToUse);
-            order.setCreatedAt(LocalDate.now());
+            order.setCreatedAt(LocalDateTime.now());
 
             // Tạo danh sách OrderItem
             List<OrderItem> orderItems = new ArrayList<>();
