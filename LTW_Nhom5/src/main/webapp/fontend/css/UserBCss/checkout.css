@@ -776,20 +776,6 @@ main {
     backdrop-filter: blur(2px);
 }
 
-/* Hộp thoại */
-.momo-dialog {
-    position: fixed;
-    inset: 0;
-    top: 200px;
-    left: 600px;
-    width: 400px;
-    height: 450px;
-    background: var(--momo-bg);
-    border-radius: 14px;
-    /*box-shadow: var(--shadow);*/
-    padding: 20px;
-}
-
 /* Nút đóng */
 .momo-close {
     position: absolute;
@@ -985,4 +971,206 @@ main {
 
 .loading-indicator i {
     margin-right: 5px;
+}
+
+.btn-confirm-payment.success {
+    background-color: #27ae60 !important;
+    cursor: default;
+}
+
+.btn-confirm-payment:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ========== POPUP QR CODE MoMo ========== */
+.container-qr-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Backdrop */
+.container-qr-popup .qr-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.momo-modal {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.momo-dialog {
+    position: relative;
+    background: white;
+    border-radius: 14px;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s ease-out;
+    z-index: 3;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ✅ NÚT ĐÓNG (X) - QUAN TRỌNG */
+.momo-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    z-index: 4;
+    line-height: 1;
+}
+
+.momo-close:hover {
+    background-color: #ff5252;
+    color: white;
+    transform: rotate(90deg);
+}
+
+.momo-title {
+    text-align: center;
+    color: #d82d8b;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-weight: 600;
+    padding-right: 30px; /* Để tránh chồng lên nút X */
+}
+
+.momo-content {
+    text-align: center;
+}
+
+.momo-qr {
+    width: 100%;
+    max-width: 280px;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.momo-info {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.momo-info p {
+    margin: 10px 0;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.momo-info strong {
+    color: #d82d8b;
+    font-weight: 600;
+}
+
+/* ✅ NÚT XÁC NHẬN THANH TOÁN */
+.btn-confirm-payment {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #d82d8b 0%, #b02070 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-confirm-payment:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(216, 45, 139, 0.3);
+}
+
+.btn-confirm-payment:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.6;
+}
+
+/* ✅ POPUP THÔNG BÁO THÀNH CÔNG */
+.success-backdrop {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .momo-dialog {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .momo-qr {
+        max-width: 240px;
+    }
+
+    .momo-title {
+        font-size: 18px;
+    }
+
+    .momo-info p {
+        font-size: 14px;
+    }
 }

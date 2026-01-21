@@ -198,6 +198,51 @@ public class OrderServlet extends HttpServlet {
             int orderId = orderDAO.createOrderWithPayment(order, orderItems, paymentMethod);
 
             if (orderId > 0) {
+                // ✅ NẾU LÀ E-WALLET, CẬP NHẬT TRANSACTION ID VÀ PAYMENT STATUS
+                if ("ewallet".equals(paymentMethod)) {
+                    PaymentDAO paymentDAO = new PaymentDAO(JdbiConnector.get());
+
+                    // Tạo transaction ID ngẫu nhiên
+                    String transactionId = generateTransactionId();
+
+                    // Lấy payment vừa tạo
+                    Optional<Payment> paymentOpt = paymentDAO.getPaymentByOrderId(orderId);
+                    if (paymentOpt.isPresent()) {
+                        Payment payment = paymentOpt.get();
+
+                        // Cập nhật transaction ID và status thành Completed
+                        paymentDAO.updatePaymentStatus(
+                                payment.getId(),
+                                "Completed",  // Trạng thái: Đã thanh toán
+                                transactionId
+                        );
+
+                        System.out.println("✅ E-wallet payment completed. Transaction ID: " + transactionId);
+                    }
+                }
+                // Xóa các sản phẩm đã đặt khỏi giỏ hàng
+                Cart cart = (Cart) session.getAttribute("cart");
+                @SuppressWarnings("unchecked")
+                List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
+
+                if (cart != null && cartItems != null) {
+                    // Lấy danh sách comic IDs đã mua để so sánh
+                    List<Integer> purchasedComicIds = new ArrayList<>();
+                    for (CartItem item : selectedItems) {
+                        purchasedComicIds.add(item.getComic().getId());
+                    }
+
+                    // XÓA TỪ CART OBJECT (quan trọng!)
+                    for (Integer comicId : purchasedComicIds) {
+                        cart.removeItem(comicId);
+                    }
+
+                    cartItems.removeIf(item -> purchasedComicIds.contains(item.getComic().getId()));
+
+                    session.setAttribute("cart", cart);
+                    session.setAttribute("cartItems", cartItems);
+                    session.setAttribute("clearCartLocalStorage", Boolean.TRUE);
+                }
                 // Nếu sử dụng điểm, trừ điểm của user
                 if (usePoints && pointsToUse > 0) {
                     int newPoints = user.getPoints() - pointsToUse;
@@ -209,36 +254,9 @@ public class OrderServlet extends HttpServlet {
                     // Cập nhật điểm trong session
                     user.setPoints(newPoints);
                     session.setAttribute("currentUser", user);
-                }
-
-                // Xóa các sản phẩm đã đặt khỏi giỏ hàng
-                @SuppressWarnings("unchecked")
-                List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
-                if (cartItems != null) {
-                    // Lấy danh sách comic IDs đã mua để so sánh
-                    List<Integer> purchasedComicIds = new ArrayList<>();
-                    for (CartItem item : selectedItems) {
-                        purchasedComicIds.add(item.getComic().getId());
-                    }
-                    // Xóa bằng cách lọc ra những item KHÔNG nằm trong danh sách đã mua
-                    cartItems.removeIf(item -> purchasedComicIds.contains(item.getComic().getId()));
-
-                    session.setAttribute("cartItems", cartItems);
-
-                    // ✅ THÊM FLAG ĐỂ XÓA LOCALSTORAGE
-                    session.setAttribute("clearCartLocalStorage", true);
-                }
-
-                // Xóa thông tin checkout khỏi session
-                session.removeAttribute("selectedItems");
-                session.removeAttribute("checkoutSubtotal");
-                session.removeAttribute("shippingFee");
-                session.removeAttribute("checkoutTotal");
-
-                if (usePoints && pointsToUse > 0) {
-                    PointTransactionDAO pointTransactionDAO = new PointTransactionDAO(JdbiConnector.get());
 
                     // Tạo transaction bằng setter thay vì constructor
+                    PointTransactionDAO pointTransactionDAO = new PointTransactionDAO(JdbiConnector.get());
                     PointTransaction transaction = new PointTransaction();
                     transaction.setUserId(user.getId());
                     transaction.setOrderId(orderId);
@@ -249,6 +267,12 @@ public class OrderServlet extends HttpServlet {
 
                     pointTransactionDAO.createTransaction(transaction);
                 }
+
+                // Xóa thông tin checkout khỏi session
+                session.removeAttribute("selectedItems");
+                session.removeAttribute("checkoutSubtotal");
+                session.removeAttribute("shippingFee");
+                session.removeAttribute("checkoutTotal");
 
                 // Lưu thông tin đơn hàng để hiển thị trang success
                 session.setAttribute("orderId", orderId);
@@ -274,5 +298,25 @@ public class OrderServlet extends HttpServlet {
             session.setAttribute("orderError", "Có lỗi xảy ra: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/checkout");
         }
+    }
+
+    /**
+     * Tạo transaction ID ngẫu nhiên cho thanh toán online
+     * Format: TXN + timestamp + random
+     * Ví dụ: TXN1737446789ABC123
+     */
+    private String generateTransactionId() {
+        String prefix = "TXN";
+        long timestamp = System.currentTimeMillis() / 1000; // Unix timestamp
+
+        // Tạo 6 ký tự ngẫu nhiên (A-Z, 0-9)
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder randomPart = new StringBuilder();
+        java.util.Random random = new java.util.Random();
+
+        for (int i = 0; i < 6; i++) {
+            randomPart.append(characters.charAt(random.nextInt(characters.length())));
+        }
+        return prefix + timestamp + randomPart.toString();
     }
 }

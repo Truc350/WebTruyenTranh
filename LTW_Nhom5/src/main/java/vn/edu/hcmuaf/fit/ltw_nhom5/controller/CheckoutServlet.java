@@ -60,6 +60,7 @@ public class CheckoutServlet extends HttpServlet {
             request.setAttribute("defaultRecipientName", address.getRecipientName());
             request.setAttribute("defaultPhone", address.getPhone());
             request.setAttribute("defaultProvince", address.getProvince());
+            request.setAttribute("defaultDistrict", address.getDistrict());
             request.setAttribute("defaultWard", address.getWard());
             request.setAttribute("defaultStreetAddress", address.getStreetAddress());
         }

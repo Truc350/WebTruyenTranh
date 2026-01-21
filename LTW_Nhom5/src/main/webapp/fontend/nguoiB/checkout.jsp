@@ -42,7 +42,8 @@
 
                     <div class="form-group">
                         <label>Họ và tên người nhận: *</label>
-                        <input type="text" name="receiverName" value="${defaultRecipientName != null ? defaultRecipientName : ''}"
+                        <input type="text" name="receiverName"
+                               value="${defaultRecipientName != null ? defaultRecipientName : ''}"
                                placeholder="Nhập họ tên" required>
                     </div>
 
@@ -88,15 +89,16 @@
                         </label>
                     </div>
 
-                    <!-- Hidden inputs để lưu code -->
-
-
+                    <!-- Hidden inputs để submit -->
                     <input type="hidden" name="provinceCode" id="provinceCodeInput">
                     <input type="hidden" name="wardCode" id="wardCodeInput">
                     <input type="hidden" name="provinceName" id="provinceName">
                     <input type="hidden" name="wardName" id="wardName">
+                    <input type="hidden" name="district" id="districtInput">
 
+                    <!-- Hidden inputs cho địa chỉ mặc định -->
                     <input type="hidden" id="defaultProvince" value="${defaultProvince != null ? defaultProvince : ''}">
+                    <input type="hidden" id="defaultDistrict" value="${defaultDistrict != null ? defaultDistrict : ''}">
                     <input type="hidden" id="defaultWard" value="${defaultWard != null ? defaultWard : ''}">
                 </section>
 
@@ -179,52 +181,41 @@
     </div>
 </div>
 
-<!--Popup mã QR-->
+<!----Popup mã QR-->
 <div class="container-qr-popup" style="display: none;">
+    <!-- Backdrop -->
+    <div class="qr-backdrop"></div>
+
     <div class="momo-modal" id="momoModal" aria-hidden="true">
         <div class="momo-dialog" role="dialog" aria-modal="true" aria-labelledby="momoTitle">
+            <!-- NÚT ĐÓNG (X) -->
             <button class="momo-close" id="momoClose" aria-label="Đóng popup">✕</button>
 
             <h2 class="momo-title" id="momoTitle">Quét QR MoMo để thanh toán</h2>
 
             <div class="momo-content">
-                <!-- Ảnh QR: thay bằng QR của bạn -->
-                <img src="https://tse3.mm.bing.net/th/id/OIP.IHv3sMp_4T18cEr7RTAdgQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
-                     alt="Mã QR MoMo" class="momo-qr"/>
+                <!-- Ảnh QR -->
+                <img src="${pageContext.request.contextPath}/img/qr.jpg"
+                     alt="Mã QR MoMo"
+                     class="momo-qr"/>
 
-                <!-- Thông tin người nhận: thay bằng của bạn -->
+                <!-- Thông tin người nhận -->
                 <div class="momo-info">
                     <p><strong>Người nhận:</strong> Comic Store</p>
                     <p><strong>SĐT MoMo:</strong> 0901234567</p>
                     <p><strong>Số tiền:</strong> <span id="qrAmount"></span></p>
-                    <p><strong>Nội dung chuyển khoản:</strong>Thanh toán đơn hàng</p>
+                    <p><strong>Nội dung chuyển khoản:</strong> Thanh toán đơn hàng</p>
                 </div>
-                <button type="button" id="confirmPayment" class="btn-confirm-payment">Xác nhận đã thanh toán</button>
+
+                <!-- NÚT XÁC NHẬN THANH TOÁN -->
+                <button type="button" id="confirmPayment" class="btn-confirm-payment">
+                    Xác nhận đã thanh toán
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-
-<!-- BACKDROP LÀM MỜ -->
-<div class="qr-backdrop"></div>
-
-<!-- POPUP MÃ QR -->
-<div class="qr-popup" id="qrPopup">
-    <div class="qr-content">
-        <button class="qr-close-btn">×</button>
-        <h3>Quét mã QR để thanh toán</h3>
-        <img src="https://vaynhanhonline.com.vn/wp-content/uploads/2024/01/cach-tao-ma-qr-ngan-hang-bidv-5-e1704968301891.jpg"
-             alt="QR Code Thanh toán">
-        <div class="qr-info">
-            <p><strong>Ngân hàng:</strong> BIDV</p>
-            <p><strong>Số tài khoản:</strong> 1234567890</p>
-            <p><strong>Chủ tài khoản:</strong> NGUYEN VAN A</p>
-            <p><strong>Nội dung chuyển khoản:</strong> <span id="orderCode">DH20251227001</span></p>
-        </div>
-        <button class="qr-copy-btn">Copy nội dung chuyển khoản</button>
-    </div>
-</div>
 
 <!-- BACKDROP -->
 <div class="voucher-backdrop" id="voucherBackdrop" style="display:none;"></div>
@@ -572,6 +563,7 @@
                 console.log("💳 E-wallet payment selected - showing QR modal");
 
                 // Hiển thị popup QR
+                const containerQrPopup = document.querySelector('.container-qr-popup');
                 const momoModal = document.getElementById('momoModal');
                 const backdrop = document.querySelector('.qr-backdrop');
                 const qrAmountSpan = document.getElementById('qrAmount');
@@ -582,9 +574,12 @@
                     qrAmountSpan.textContent = formatNumber(totalText) + 'đ';
                 }
 
-                // Hiện popup
-                if (momoModal) momoModal.style.display = 'block';
-                if (backdrop) backdrop.style.display = 'block';
+                // HIỆN POPUP
+                if (containerQrPopup) {
+                    containerQrPopup.style.display = 'flex';
+                }
+
+                console.log("✅ QR popup displayed");
 
             } else {
                 console.log("💵 COD payment selected - submitting form");
@@ -598,43 +593,49 @@
         });
     }
 
-    // Xử lý đóng popup MoMo
-    const momoClose = document.getElementById('momoClose');
-    const confirmPayment = document.getElementById('confirmPayment');
 
+    // ========================================
+    // XỬ LÝ NÚT ĐÓNG POPUP (X)
+    // ========================================
+    const momoClose = document.getElementById('momoClose');
     if (momoClose) {
         momoClose.addEventListener('click', function () {
             console.log("❌ Closing MoMo modal");
-            const momoModal = document.getElementById('momoModal');
-            const backdrop = document.querySelector('.qr-backdrop');
-            if (momoModal) momoModal.style.display = 'none';
-            if (backdrop) backdrop.style.display = 'none';
+            const containerQrPopup = document.querySelector('.container-qr-popup');
+            if (containerQrPopup) {
+                containerQrPopup.style.display = 'none';
+            }
         });
     }
 
-    if (confirmPayment) {
-        confirmPayment.addEventListener('click', function () {
-            console.log("✅ Payment confirmed - submitting form");
-            // Disable button để tránh double click
-            confirmPayment.disabled = true;
-            confirmPayment.textContent = 'Đang xử lý...';
-            // Submit form sau khi xác nhận thanh toán
+    // Đóng popup khi click vào backdrop
+    const containerQrPopup = document.querySelector('.container-qr-popup');
+    if (containerQrPopup) {
+        containerQrPopup.addEventListener('click', function (e) {
+            // Chỉ đóng khi click vào backdrop, không đóng khi click vào dialog
+            if (e.target === this || e.target.classList.contains('qr-backdrop')) {
+                this.style.display = 'none';
+            }
+        });
+    }
+
+    // Xóa event listener cũ của confirmPayment vì giờ tự động submit
+    const confirmPaymentBtn = document.getElementById('confirmPayment');
+    if (confirmPaymentBtn) {
+        confirmPaymentBtn.addEventListener('click', function () {
+            console.log("✅ Confirm payment button clicked");
+
+            // Disable nút để tránh click nhiều lần
+            this.disabled = true;
+            this.textContent = 'Đang xử lý...';
+
+            // Submit form
             orderForm.submit();
         });
     }
 
     // Khởi tạo tính toán ban đầu
     updateTotal();
-    // Đóng popup khi click backdrop
-    const backdrop = document.querySelector('.qr-backdrop');
-    if (backdrop) {
-        backdrop.addEventListener('click', function () {
-            const momoModal = document.getElementById('momoModal');
-            if (momoModal) momoModal.style.display = 'none';
-            if (backdrop) backdrop.style.display = 'none';
-        });
-    }
-
     /**
      * Hiển thị thông báo lỗi nếu có
      */
@@ -645,10 +646,72 @@
             // Xóa error khỏi session
             <% session.removeAttribute("orderError"); %>
         }
+
+        // HIỂN THỊ THÔNG BÁO THÀNH CÔNG
+        const successMsg = '${orderSuccess}';
+        if (successMsg && successMsg.trim() !== '' && successMsg !== 'null') {
+            // Tạo popup thông báo đẹp
+            showSuccessPopup(successMsg);
+            <% session.removeAttribute("orderSuccess"); %>
+        }
     });
 
-    console.log("✅ Checkout validation initialized");
-    console.log("🚀 Checkout page initialized successfully");
+    /**
+     *Hiển thị popup thông báo đặt hàng thành công
+     */
+    function showSuccessPopup(message) {
+        // Tạo backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'success-backdrop';
+        backdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+        // Tạo popup
+        const popup = document.createElement('div');
+        popup.className = 'success-popup';
+        popup.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s ease-out;
+    `;
+
+        popup.innerHTML = `
+        <div style="color: #28a745; font-size: 48px; margin-bottom: 15px;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 style="color: #333; font-size: 22px; margin-bottom: 10px;">Đặt hàng thành công!</h2>
+        <p style="color: #666; font-size: 15px; margin-bottom: 20px;">${message}</p>
+        <button onclick="this.closest('.success-backdrop').remove()"
+                style="background: #28a745; color: white; border: none; padding: 12px 30px;
+                       border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600;">
+            OK
+        </button>
+    `;
+
+        backdrop.appendChild(popup);
+        document.body.appendChild(backdrop);
+
+        // Tự động đóng sau 5 giây
+        setTimeout(() => {
+            backdrop.remove();
+        }, 5000);
+    }
+
 
 </script>
 
@@ -662,7 +725,7 @@
     const defaultProvince = document.getElementById('defaultProvince')?.value || '';
     const defaultWard = document.getElementById('defaultWard')?.value || '';
 
-    console.log("📍 Default address:", { defaultProvince, defaultWard });
+    console.log("📍 Default address:", {defaultProvince, defaultWard});
 
     // 1️⃣ Load danh sách Tỉnh/Thành phố khi trang load
     const provincesUrl = API_BASE + "/p/";
