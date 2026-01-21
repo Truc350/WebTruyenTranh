@@ -1,21 +1,22 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
-import org.jdbi.v3.core.mapper.reflect.ColumnName;
-
 import java.time.LocalDateTime;
 
 public class Category {
-    private int id;
-    @ColumnName("name_categories")
+    private Integer id;  // Đổi thành Integer để có thể null
     private String nameCategories;
     private String description;
-    private boolean isDeleted;
+    private Integer isDeleted;  // Đổi thành Integer thay vì boolean
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
 
+    // Constructor không tham số (BẮT BUỘC cho JDBI)
+    public Category() {
+    }
+
     // Constructor đầy đủ
-    public Category(int id, String nameCategories, String description,
-                    boolean isDeleted, LocalDateTime deletedAt, LocalDateTime createdAt) {
+    public Category(Integer id, String nameCategories, String description,
+                    Integer isDeleted, LocalDateTime deletedAt, LocalDateTime createdAt) {
         this.id = id;
         this.nameCategories = nameCategories;
         this.description = description;
@@ -24,17 +25,20 @@ public class Category {
         this.createdAt = createdAt;
     }
 
-    public Category() {
+    public Category(Integer id, String nameCategories, String description, Integer isDeleted, LocalDateTime createdAt) {
+        this.id = id;
+        this.nameCategories = nameCategories;
+        this.description = description;
+        this.isDeleted = isDeleted;
+        this.createdAt = createdAt;
     }
 
-
-
-    // Getter và Setter
-    public int getId() {
+    // Getters and Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,12 +58,17 @@ public class Category {
         this.description = description;
     }
 
-    public boolean isDeleted() {
+    public Integer getIsDeleted() {  // Đổi tên getter
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setIsDeleted(Integer isDeleted) {  // Đổi tên setter
+        this.isDeleted = isDeleted;
+    }
+
+    // Thêm method tiện ích
+    public boolean isDeleted() {
+        return isDeleted != null && isDeleted == 1;
     }
 
     public LocalDateTime getDeletedAt() {

@@ -1,74 +1,82 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.controller.admin;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.LocalDateTimeAdapter;
+
 
 import java.io.IOException;
-import java.util.*;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@WebServlet("/admin/categories/list")
+@WebServlet("/admin/listCategories")
 public class ListCategoriesServlet extends HttpServlet {
-
     private CategoriesDao categoriesDao;
     private Gson gson;
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing ListCategoriesServlet...");
         categoriesDao = new CategoriesDao();
-        gson = new Gson();
-        System.out.println("✅ ListCategoriesServlet initialized!");
+        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        response.setContentType("application/json; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json; charset=UTF-8");
 
-        Map<String, Object> result = new HashMap<>();
+        PrintWriter out = resp.getWriter();
+        Map<String, Object> response = new HashMap<>();
 
         try {
-            System.out.println("📋 Getting all categories...");
+            // Lấy tham số từ request
+            String pageStr = req.getParameter("page");
+            String pageSizeStr = req.getParameter("pageSize");
+            String keyword = req.getParameter("keyword");
 
-            List<Category> categories = categoriesDao.getAllCategories();
+            int page = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
+            int pageSize = (pageSizeStr != null) ? Integer.parseInt(pageSizeStr) : 10;
 
-            if (categories == null || categories.isEmpty()) {
-                System.out.println("⚠️ No categories found");
-                result.put("success", true);
-                result.put("categories", new ArrayList<>());
-                result.put("message", "Chưa có thể loại nào");
+            List<Category> categories;
+            int totalRecords;
+
+            // Nếu có từ khóa tìm kiếm
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                categories = categoriesDao.searchCategoriesByName(keyword.trim(), page, pageSize);
+                totalRecords = categoriesDao.countSearchResults(keyword.trim());
             } else {
-                // Chuyển đổi sang DTO
-                List<Map<String, Object>> categoryList = new ArrayList<>();
-
-                for (Category cat : categories) {
-                    Map<String, Object> categoryData = new HashMap<>();
-                    categoryData.put("id", cat.getId());
-                    categoryData.put("nameCategories", cat.getNameCategories());
-                    categoryData.put("description", cat.getDescription());
-                    categoryList.add(categoryData);
-                }
-
-                result.put("success", true);
-                result.put("categories", categoryList);
-                System.out.println("✅ Found " + categories.size() + " categories");
+                categories = categoriesDao.getCategoriesByPage(page, pageSize);
+                totalRecords = categoriesDao.getTotalCategories();
             }
 
+            int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+            response.put("success", true);
+            response.put("categories", categories);
+            response.put("currentPage", page);
+            response.put("totalPages", totalPages);
+            response.put("totalRecords", totalRecords);
+            response.put("pageSize", pageSize);
+
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
-            result.put("success", false);
-            result.put("message", "Lỗi server: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.put("success", false);
+            response.put("message", "Lỗi khi tải dữ liệu: " + e.getMessage());
         }
 
-        response.getWriter().write(gson.toJson(result));
-        response.getWriter().flush();
+        out.print(gson.toJson(response));
+        out.flush();
     }
 }
