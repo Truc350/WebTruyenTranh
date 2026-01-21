@@ -1,0 +1,140 @@
+package vn.edu.hcmuaf.fit.ltw_nhom5.model;
+
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+import java.time.LocalDate;
+
+public class Order {
+    private int id;
+    @ColumnName("user_id")
+    private int userId;
+    @ColumnName("order_date")
+    private LocalDate orderDate;
+    private String status;
+    @ColumnName("total_amount")
+    private double totalAmount;
+    @ColumnName("shipping_address_id")
+    private int shippingAddressId;
+    @ColumnName("recipient_name")
+    private String recipientName;
+    @ColumnName("shipping_phone")
+    private String shippingPhone;
+    @ColumnName("shipping_address")
+    private String shippingAddress;
+    @ColumnName("shipping_provider")
+    private String shippingProvider;
+    @ColumnName("shipping_fee")
+    private double shippingFee;
+    @ColumnName("points_used")
+    private int pointUsed;
+    @ColumnName("created_at")
+    private LocalDate createdAt;
+
+    public Order() {}
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public int getPointUsed() {
+        return pointUsed;
+    }
+
+    public void setPointUsed(int pointUsed) {
+        this.pointUsed = pointUsed;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public int getShippingAddressId() {
+        return shippingAddressId;
+    }
+
+    public void setShippingAddressId(int shippingAddressId) {
+        this.shippingAddressId = shippingAddressId;
+    }
+
+    public double getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
+    public String getShippingPhone() {
+        return shippingPhone;
+    }
+
+    public void setShippingPhone(String shippingPhone) {
+        this.shippingPhone = shippingPhone;
+    }
+
+    public String getShippingProvider() {
+        return shippingProvider;
+    }
+
+    public void setShippingProvider(String shippingProvider) {
+        this.shippingProvider = shippingProvider;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
+}

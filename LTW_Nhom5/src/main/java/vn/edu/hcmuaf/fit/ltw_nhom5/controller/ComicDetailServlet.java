@@ -144,7 +144,6 @@ public class ComicDetailServlet extends HttpServlet {
             System.err.println(">>> ERROR - NumberFormatException: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/home");
-
         } catch (Exception e) {
             System.err.println(">>> ERROR - Exception: " + e.getMessage());
             e.printStackTrace();

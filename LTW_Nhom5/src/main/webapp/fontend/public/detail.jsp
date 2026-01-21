@@ -736,120 +736,92 @@
 </script>
 
 <script>
-    // ========== FIX: Slider cho suggestion - 3 hàng độc lập ==========
-    (function() {
-        'use strict';
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 SLIDER INIT');
 
         const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
+        console.log('Found sliders:', sliders.length);
 
-        if (sliders.length === 0) {
-            console.warn('No sliders found');
-            return;
-        }
-
-        sliders.forEach((slider, sliderIndex) => {
+        sliders.forEach((slider, idx) => {
             const track = slider.querySelector('.slider-track');
             const items = slider.querySelectorAll('.product-item');
             const prevBtn = slider.querySelector('.arrow.prev');
             const nextBtn = slider.querySelector('.arrow.next');
             const viewport = slider.querySelector('.slider-viewport');
 
-            if (!track || !items || items.length === 0 || !prevBtn || !nextBtn || !viewport) {
-                console.warn(`Slider ${sliderIndex}: Missing elements`);
+            console.log(`Slider ${idx}:`, {
+                track: !!track,
+                items: items.length,
+                prevBtn: !!prevBtn,
+                nextBtn: !!nextBtn,
+                viewport: !!viewport
+            });
+
+            if (!track || !prevBtn || !nextBtn || items.length === 0) {
+                console.error(`❌ Slider ${idx} missing elements`);
                 return;
             }
 
-            let currentIndex = 0;
+            let position = 0;
 
-            function getVisibleItems() {
-                // Tính số items hiển thị dựa trên viewport width
+            function update() {
+                const itemWidth = 220;
+                const gap = 20;
+                const moveDistance = itemWidth + gap;
                 const viewportWidth = viewport.offsetWidth;
-                const itemWidth = items[0].offsetWidth;
-                const gap = 20;
+                const visibleCount = Math.floor(viewportWidth / moveDistance);
+                const maxPosition = Math.max(0, items.length - visibleCount);
 
-                // Số items có thể hiển thị = viewport / (itemWidth + gap)
-                const visibleCount = Math.floor(viewportWidth / (itemWidth + gap));
+                position = Math.min(position, maxPosition);
 
-                console.log(`Slider ${sliderIndex}: viewportWidth=${viewportWidth}, itemWidth=${itemWidth}, visible=${visibleCount}`);
+                const translateValue = position * moveDistance;
 
-                return Math.max(1, visibleCount); // Tối thiểu 1 item
+                console.log(`📊 Slider ${idx} update:`, {
+                    position,
+                    maxPosition,
+                    visibleCount,
+                    translateValue,
+                    itemsLength: items.length
+                });
+
+                // Set transform
+                track.style.transform = 'translateX(-' + translateValue + 'px)';
+
+                // Update buttons
+                prevBtn.disabled = (position === 0);
+                nextBtn.disabled = (position >= maxPosition);
+
+                console.log('🎯 Transform applied:', track.style.transform);
             }
 
-            function updateSlider() {
-                const itemWidth = items[0].offsetWidth;
-                const gap = 20;
-                const scrollDistance = itemWidth + gap;
-                const visibleItems = getVisibleItems();
-
-                // Di chuyển track
-                const translateX = currentIndex * scrollDistance;
-                track.style.transform = `translateX(-${translateX}px)`;
-
-                // Update buttons state
-                const maxIndex = Math.max(0, items.length - visibleItems);
-                prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex >= maxIndex;
-
-                console.log(`Slider ${sliderIndex}: index=${currentIndex}/${maxIndex}, translateX=${translateX}px, visible=${visibleItems}`);
-            }
-
-            function scrollNext(e) {
+            nextBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const visibleItems = getVisibleItems();
-                const maxIndex = Math.max(0, items.length - visibleItems);
+                console.log('▶️ NEXT clicked on slider', idx);
 
-                if (currentIndex < maxIndex) {
-                    currentIndex++;
-                    updateSlider();
-                    console.log(`→ Next: currentIndex=${currentIndex}`);
-                } else {
-                    console.log('→ Next: Already at end');
+                if (!nextBtn.disabled) {
+                    position++;
+                    update();
                 }
-            }
-
-            function scrollPrev(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateSlider();
-                    console.log(`← Prev: currentIndex=${currentIndex}`);
-                } else {
-                    console.log('← Prev: Already at start');
-                }
-            }
-
-            // Remove old listeners (if any)
-            const newNextBtn = nextBtn.cloneNode(true);
-            const newPrevBtn = prevBtn.cloneNode(true);
-            nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
-            prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
-
-            // Attach events to NEW buttons
-            newNextBtn.addEventListener('click', scrollNext);
-            newPrevBtn.addEventListener('click', scrollPrev);
-
-            // Init
-            updateSlider();
-
-            // Resize handler
-            let resizeTimer;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    currentIndex = 0;
-                    updateSlider();
-                }, 250);
             });
 
-            console.log(`✅ Slider ${sliderIndex} initialized with ${items.length} items`);
-        });
+            prevBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        console.log(`Total sliders ready: ${sliders.length}`);
-    })();
+                console.log('◀️ PREV clicked on slider', idx);
+
+                if (!prevBtn.disabled) {
+                    position--;
+                    update();
+                }
+            });
+
+            update();
+            console.log(`✅ Slider ${idx} initialized`);
+        });
+    });
 </script>
 
 
