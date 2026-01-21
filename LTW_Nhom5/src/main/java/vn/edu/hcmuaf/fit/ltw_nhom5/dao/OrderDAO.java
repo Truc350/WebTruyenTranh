@@ -8,6 +8,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.OrderItem;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class OrderDAO extends ADao{
@@ -443,5 +444,34 @@ public class OrderDAO extends ADao{
 
             return true;
         });
+    }
+
+    /**
+     * Cập nhật đơn vị vận chuyển
+     */
+    public boolean updateShippingProvider(int orderId, String shippingProvider) {
+        return jdbi.withHandle(handle -> {
+            int updated = handle.createUpdate(
+                            "UPDATE orders SET shipping_provider = ? WHERE id = ?")
+                    .bind(0, shippingProvider)
+                    .bind(1, orderId)
+                    .execute();
+            return updated > 0;
+        });
+    }
+
+    /**
+     * Lấy đơn hàng kèm thông tin user
+     */
+    public List<Map<String, Object>> getOrdersWithUserInfo() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery(
+                                "SELECT o.*, u.full_name as user_name " +
+                                        "FROM orders o " +
+                                        "JOIN users u ON o.user_id = u.id " +
+                                        "ORDER BY o.order_date DESC")
+                        .mapToMap()
+                        .list()
+        );
     }
 }
