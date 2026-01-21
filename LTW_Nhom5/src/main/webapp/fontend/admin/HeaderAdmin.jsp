@@ -4,12 +4,12 @@
 
     <header class="admin-header">
         <div class="header-right">
-            <a href="chatWithCus.jsp">
+            <a href="${pageContext.request.contextPath}/fontend/admin/chatWithCus.jsp">
                 <i class="fa-solid fa-comment"></i>
             </a>
 
             <div class="admin-profile">
-                <a href="profileAdmin.jsp">
+                <a href="${pageContext.request.contextPath}/fontend/admin/profileAdmin.jsp">
                     <img src="${pageContext.request.contextPath}/img/admin.png" class="admin-avatar" alt="Admin">
                 </a>
                 <span class="admin-name">Admin</span>
@@ -17,7 +17,7 @@
 
             <!-- Nút đăng xuất -->
             <button class="btn-logout" title="Đăng xuất">
-                <a href="../public/login_bo.jsp">
+                <a href="${pageContext.request.contextPath}/logout">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </a>
             </button>

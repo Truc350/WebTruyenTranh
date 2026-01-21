@@ -33,6 +33,24 @@
     <c:remove var="successMessage" scope="session" />
 </c:if>
 
+
+<%--thông báo khi vô trang admin--%>
+<%
+    String msg = (String) session.getAttribute("errorMessage");
+    if (msg != null) {
+%>
+<script type="text/javascript">
+    window.onload = function() {
+        alert("<%= msg %>");
+    };
+</script>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
+
 <div class="container-content">
     <%--banner    --%>
     <%
