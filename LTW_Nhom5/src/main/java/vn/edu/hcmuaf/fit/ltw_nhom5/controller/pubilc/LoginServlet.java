@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller.pubilc;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -64,6 +64,24 @@ public class LoginServlet extends HttpServlet {
                 System.out.println("===== SESSION MỚI =====");
                 System.out.println("Session ID mới: " + newSession.getId());
 
+
+//                check admin
+                // ===== KIỂM TRA ADMIN (CÁCH TỐT HƠN) =====
+                boolean isAdmin = "ADMIN".equalsIgnoreCase(user.getRole());
+
+                if (isAdmin) {
+                    newSession.setAttribute("currentUser", user);
+                    newSession.setAttribute("isAdmin", true);
+
+                    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                    response.setHeader("Pragma", "no-cache");
+                    response.setDateHeader("Expires", 0);
+
+                    response.sendRedirect(request.getContextPath() + "/fontend/admin/dashboard.jsp");
+                    return;
+                }
+
+                // ===== USER THƯỜNG =====
                 // Tạo giỏ hàng MỚI (TRỐNG)
                 Cart newCart = new Cart();
                 System.out.println("Giỏ hàng mới có: " + newCart.getItems().size() + " sản phẩm");

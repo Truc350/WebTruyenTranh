@@ -12,92 +12,94 @@
 <body>
 <div class="container">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
+    <jsp:include page="/fontend/admin/ASide.jsp"/>
+<%--    <aside class="sidebar">--%>
+<%--        <div class="sidebar-header">--%>
+<%--            <img src="../../img/logo.png" alt="Logo" class="logo">--%>
+<%--            <h2>Comic Store</h2>--%>
+<%--        </div>--%>
 
-        <ul>
-            <li>
-                <a href="dashboard.jsp">
-                <img src="../../img/home.png" class="icon">
-                <span>Trang chủ</span>
-                </a>
-            </li>
-            <li>
-                <a href="seriesManagement.jsp">
-                    <img src="../../img/series.png" class="icon">
-                    <span>Quản lý series</span>
-                </a>
-            </li>
-            <li>
-                <a href="productManagement.jsp">
-                    <img src="../../img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="category.jsp">
-                    <img src="../../img/category.png" class="icon">
-                    <span>Quản lý thể loại</span>
-                </a>
-            </li>
-            <li>
-                <a href="order.jsp">
-                    <img src="../../img/order.png" class="icon">
-                    <span>Quản lý đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="userManagement.jsp">
-                    <img src="../../img/user.png" class="icon">
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="flashSaleMan.jsp">
-                    <img src="../../img/flashSale.png" class="icon">
-                    <span>Quản lý Flash Sale</span>
-                </a>
-            </li>
+<%--        <ul>--%>
 <%--            <li>--%>
-<%--                <a href="promotion.jsp">--%>
-<%--                    <img src="../../img/promo.png" class="icon">--%>
-<%--                    <span>Quản lý khuyến mãi</span>--%>
+<%--                <a href="dashboard.jsp">--%>
+<%--                <img src="../../img/home.png" class="icon">--%>
+<%--                <span>Trang chủ</span>--%>
 <%--                </a>--%>
 <%--            </li>--%>
-            <li>
-                <a href="report.html">
-                    <img src="../../img/report.png" class="icon">
-                    <span>Thống kê</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+<%--            <li>--%>
+<%--                <a href="seriesManagement.jsp">--%>
+<%--                    <img src="../../img/series.png" class="icon">--%>
+<%--                    <span>Quản lý series</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a href="productManagement.jsp">--%>
+<%--                    <img src="../../img/product.png" class="icon">--%>
+<%--                    <span>Quản lý sản phẩm</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a href="category.jsp">--%>
+<%--                    <img src="../../img/category.png" class="icon">--%>
+<%--                    <span>Quản lý thể loại</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a href="order.jsp">--%>
+<%--                    <img src="../../img/order.png" class="icon">--%>
+<%--                    <span>Quản lý đơn hàng</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a href="userManagement.jsp">--%>
+<%--                    <img src="../../img/user.png" class="icon">--%>
+<%--                    <span>Quản lý người dùng</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a href="flashSaleMan.jsp">--%>
+<%--                    <img src="../../img/flashSale.png" class="icon">--%>
+<%--                    <span>Quản lý Flash Sale</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--&lt;%&ndash;            <li>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                <a href="promotion.jsp">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                    <img src="../../img/promo.png" class="icon">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                    <span>Quản lý khuyến mãi</span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                </a>&ndash;%&gt;--%>
+<%--&lt;%&ndash;            </li>&ndash;%&gt;--%>
+<%--            <li>--%>
+<%--                <a href="report.html">--%>
+<%--                    <img src="../../img/report.png" class="icon">--%>
+<%--                    <span>Thống kê</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
+<%--        </ul>--%>
+<%--    </aside>--%>
 
     <div class="main-content">
-        <header class="admin-header">
-            <div class="header-right">
-                <a href="chatWithCus.jsp">
-                    <i class="fa-solid fa-comment"></i>
-                </a>
+        <jsp:include page="/fontend/admin/HeaderAdmin.jsp"/>
+<%--        <header class="admin-header">--%>
+<%--            <div class="header-right">--%>
+<%--                <a href="chatWithCus.jsp">--%>
+<%--                    <i class="fa-solid fa-comment"></i>--%>
+<%--                </a>--%>
 
-                <div class="admin-profile">
-                    <a href="profileAdmin.jsp">
-                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
-                    </a>
-                    <span class="admin-name">Admin</span>
-                </div>
+<%--                <div class="admin-profile">--%>
+<%--                    <a href="profileAdmin.jsp">--%>
+<%--                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">--%>
+<%--                    </a>--%>
+<%--                    <span class="admin-name">Admin</span>--%>
+<%--                </div>--%>
 
-                <!-- Nút đăng xuất -->
-                <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login_bo.jsp">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                </button>
-            </div>
-        </header>
+<%--                <!-- Nút đăng xuất -->--%>
+<%--                <button class="btn-logout" title="Đăng xuất">--%>
+<%--                    <a href="../public/login_bo.jsp">--%>
+<%--                        <i class="fa-solid fa-right-from-bracket"></i>--%>
+<%--                    </a>--%>
+<%--                </button>--%>
+<%--            </div>--%>
+<%--        </header>--%>
 
         <!-- Bộ lọc thời gian -->
         <div class="filter-time">

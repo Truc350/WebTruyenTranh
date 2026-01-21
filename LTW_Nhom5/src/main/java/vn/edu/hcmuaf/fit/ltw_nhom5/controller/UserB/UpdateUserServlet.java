@@ -66,12 +66,6 @@ public class UpdateUserServlet extends HttpServlet {
         // Gọi DAO để update
         boolean success = userDao.updateUser(currentUser);
 
-//        if (success) {
-//            request.getSession().setAttribute("user", currentUser); // cập nhật lại session
-//            response.sendRedirect(request.getContextPath() +"/fontend/nguoiB/profile.jsp");
-//        } else {
-//            response.sendRedirect(request.getContextPath() +"/fontend/nguoiB/profile.jsp");
-//        }
         if (success) {
             request.setAttribute("message", "Cập nhật thông tin thành công!");
         } else {

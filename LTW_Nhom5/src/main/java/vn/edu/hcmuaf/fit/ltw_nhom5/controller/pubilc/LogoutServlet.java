@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller.pubilc;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

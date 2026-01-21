@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,15 +22,40 @@
 
 <jsp:include page="/fontend/public/header.jsp"/>
 
+<c:if test="${not empty sessionScope.successMessage}">
+    <script type="text/javascript">
+        window.onload = function() {
+            alert("${sessionScope.successMessage}");
+        };
+    </script>
+
+    <%-- Xóa ngay để không hiện lại khi refresh --%>
+    <c:remove var="successMessage" scope="session" />
+</c:if>
+
+
+<%--thông báo khi vô trang admin--%>
+<%
+    String msg = (String) session.getAttribute("errorMessage");
+    if (msg != null) {
+%>
+<script type="text/javascript">
+    window.onload = function() {
+        alert("<%= msg %>");
+    };
+</script>
+<%
+        session.removeAttribute("errorMessage");
+    }
+%>
+
+
+
 <div class="container-content">
-
-
     <%--banner    --%>
-
     <%
         List<Banner> banners = (List<Banner>) request.getAttribute("banners");
     %>
-
 
     <div class="bannder-des">
         <div class="banner">

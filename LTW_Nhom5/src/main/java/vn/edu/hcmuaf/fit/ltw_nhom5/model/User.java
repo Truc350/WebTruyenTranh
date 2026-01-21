@@ -14,7 +14,7 @@ public class User implements Serializable {
     private String gender;
     private String phone;
     private String fullName;
-    private LocalDate birthdate;           // Đổi từ java.sql.Date
+    private LocalDate birthdate;
     private String address;
     private String avatarUrl;
     private String role;
@@ -23,9 +23,9 @@ public class User implements Serializable {
     private String membershipLevel;
     private boolean isActive;
     private boolean isDeleted;
-    private LocalDateTime deletedAt;       // Đổi từ Timestamp
-    private LocalDateTime createdAt;       // Đổi từ Timestamp
-    private LocalDateTime updatedAt;       // Đổi từ Timestamp
+    private LocalDateTime deletedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     // Constructor rỗng (bắt buộc cho Jdbi mapToBean)
     public User() {
