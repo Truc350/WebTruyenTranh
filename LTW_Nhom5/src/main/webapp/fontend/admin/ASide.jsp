@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/order.jsp">
+                <a href="${pageContext.request.contextPath}/admin/orders">
                     <img src="${pageContext.request.contextPath}/img/order.png" class="icon">
                     <span>Quản lý đơn hàng</span>
                 </a>
