@@ -3,16 +3,29 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import org.jdbi.v3.core.Jdbi;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserShippingAddressDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.CartItem;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.UserShippingAddress;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
+    private UserShippingAddressDAO shippingAddressDAO;
+
+    @Override
+    public void init() throws ServletException {
+       Jdbi jdbi = JdbiConnector.get();
+        shippingAddressDAO = new UserShippingAddressDAO(jdbi);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -23,6 +36,32 @@ public class CheckoutServlet extends HttpServlet {
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
+        }
+
+        // Kiểm tra có sản phẩm được chọn không
+        @SuppressWarnings("unchecked")
+        List<CartItem> selectedItems = (List<CartItem>) session.getAttribute("selectedItems");
+
+        if (selectedItems == null || selectedItems.isEmpty()) {
+            session.setAttribute("cartError", "Vui lòng chọn sản phẩm để thanh toán");
+            response.sendRedirect(request.getContextPath() + "/cart");
+            return;
+        }
+
+        // Lấy địa chỉ mặc định của user (nếu có)
+        Optional<UserShippingAddress> defaultAddress =
+                shippingAddressDAO.getDefaultAddress(user.getId());
+
+        if (defaultAddress.isPresent()) {
+            UserShippingAddress address = defaultAddress.get();
+            request.setAttribute("defaultAddress", address);
+
+            // Set các giá trị mặc định vào request để hiển thị trong form
+            request.setAttribute("defaultRecipientName", address.getRecipientName());
+            request.setAttribute("defaultPhone", address.getPhone());
+            request.setAttribute("defaultProvince", address.getProvince());
+            request.setAttribute("defaultWard", address.getWard());
+            request.setAttribute("defaultStreetAddress", address.getStreetAddress());
         }
 
         // Chuyển đến trang checkout
@@ -66,7 +105,6 @@ public class CheckoutServlet extends HttpServlet {
 
         for (String comicId : selectedComicIds) {
             int id = Integer.parseInt(comicId);
-
             for (CartItem item : cartItems) {
                 if (item.getComic().getId() == id) {
                     selectedItems.add(item);
