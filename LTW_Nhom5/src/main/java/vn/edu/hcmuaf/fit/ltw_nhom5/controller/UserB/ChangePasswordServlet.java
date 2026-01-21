@@ -25,16 +25,22 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Chỉ cho phép người dùng đã đăng nhập truy cập trang đổi mật khẩu
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("currentUser") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // Chuyển tiếp đến trang đổi mật khẩu
+        // Lấy thông báo từ session
+        String successMessage = (String) session.getAttribute("success");
+        if (successMessage != null) {
+            request.setAttribute("success", successMessage);
+            session.removeAttribute("success");
+        }
+
         request.getRequestDispatcher("/fontend/nguoiB/change-password.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -107,10 +113,8 @@ public class ChangePasswordServlet extends HttpServlet {
             currentUser.setPasswordHash(newPasswordHash);
             session.setAttribute("currentUser", currentUser);
 
-            // Lưu thông báo flash-style
-            session.setAttribute("successMessage", "Đổi mật khẩu thành công!");
-
-            response.sendRedirect(request.getContextPath() + "/home");
+            session.setAttribute("success", "Đổi mật khẩu thành công!");
+            response.sendRedirect(request.getContextPath() + "/change-password");
         }
     }
 
@@ -121,6 +125,6 @@ public class ChangePasswordServlet extends HttpServlet {
     private void setErrorAndForward(HttpServletRequest request, HttpServletResponse response, String message)
             throws ServletException, IOException {
         request.setAttribute("error", message);
-        request.getRequestDispatcher("/fontend/nguoiB/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/fontend/nguoiB/change-password.jsp").forward(request, response);
     }
 }

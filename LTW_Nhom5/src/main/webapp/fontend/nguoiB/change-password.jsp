@@ -11,6 +11,33 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Khung chung cho alert */
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        /* Thông báo lỗi (màu đỏ nhạt) */
+        .alert-error {
+            background-color: #ffebee;   /* nền đỏ nhạt */
+            color: #b71c1c;              /* chữ đỏ đậm */
+            border: 1px solid #ef9a9a;   /* viền đỏ nhạt */
+            border-left: 5px solid #d32f2f; /* thanh trái nổi bật */
+        }
+
+        /* Thông báo thành công (màu xanh nhạt) */
+        .alert-success {
+            background-color: #e8f5e9;   /* nền xanh nhạt */
+            color: #1b5e20;              /* chữ xanh đậm */
+            border: 1px solid #a5d6a7;   /* viền xanh nhạt */
+            border-left: 5px solid #2e7d32; /* thanh trái nổi bật */
+        }
+
+    </style>
 </head>
 <body>
 

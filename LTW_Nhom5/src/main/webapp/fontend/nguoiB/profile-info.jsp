@@ -81,16 +81,31 @@
                         <div class="address-group">
                             <label for="province">Tỉnh/Thành phố: *</label>
                             <select id="province" name="province" required>
-                                <option value="" disabled selected>Chọn tỉnh/thành phố</option>
+                                <option value="">Chọn tỉnh/thành phố</option>
                             </select>
                         </div>
                         <div class="address-group">
-                            <label for="district">Huyện: *</label>
-                            <select id="district" name="district" required>
-                                <option value="" disabled selected>Chọn huyện</option>
+                            <label for="district">Huyện / Phường: *</label>
+                            <select id="district" name="district" required disabled>
+                                <option value="">Chọn huyện</option>
                             </select>
                         </div>
                     </div>
+
+                <%--                    <div class="diaChi">--%>
+<%--                        <div class="address-group">--%>
+<%--                            <label for="province">Tỉnh/Thành phố: *</label>--%>
+<%--                            <select id="province" name="province" required>--%>
+<%--                                <option value="" disabled selected>Chọn tỉnh/thành phố</option>--%>
+<%--                            </select>--%>
+<%--                        </div>--%>
+<%--                        <div class="address-group">--%>
+<%--                            <label for="district">Huyện: *</label>--%>
+<%--                            <select id="district" name="district" required>--%>
+<%--                                <option value="" disabled selected>Chọn huyện</option>--%>
+<%--                            </select>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
                     <label for="house-number">Số nhà: *</label>
                     <input type="text" id="house-number" name="house-number" placeholder="Nhập số nhà, xã" required>
                 </div>
@@ -102,67 +117,161 @@
 
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const provinceSelect = document.getElementById('province');
-        const districtSelect = document.getElementById('district');
+    document.addEventListener("DOMContentLoaded", function () {
 
-        const fallbackDistricts = {
-            '1': [{code: '001', name: 'Ba Đình'}, {code: '002', name: 'Hoàn Kiếm'}, {code: '003', name: 'Cầu Giấy'}],
-            '79': [{code: '268', name: 'Quận 1'}, {code: '269', name: 'Quận 3'}, {code: '270', name: 'Quận 7'}],
-            '48': [{code: '161', name: 'Hải Châu'}, {code: '162', name: 'Thanh Khê'}]
-        };
+        // =============================
+        // CONFIG
+        // =============================
+        const API_BASE = "${pageContext.request.contextPath}/api/provinces";
 
-        fetch('https://provinces.open-api.vn/api/?depth=1')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.code;
-                    option.textContent = item.name;
-                    provinceSelect.appendChild(option);
-                });
+        const provinceSelect = document.getElementById("province");
+        const districtSelect = document.getElementById("district");
+
+        console.log("📍 Profile address API:", API_BASE);
+
+        // =============================
+        // 1️⃣ LOAD TỈNH / THÀNH PHỐ
+        // =============================
+        fetch(API_BASE + "/p/")
+            .then(res => {
+                if (!res.ok) throw new Error("Không load được tỉnh");
+                return res.json();
             })
-            .catch(error => console.error('Error loading provinces:', error));
+            .then(provinces => {
+                provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
 
-        provinceSelect.addEventListener('change', function () {
+                provinces.forEach(p => {
+                    const opt = document.createElement("option");
+                    opt.value = p.code;          // gửi code về server
+                    opt.textContent = p.name;    // hiển thị tên
+                    opt.dataset.name = p.name;
+                    provinceSelect.appendChild(opt);
+                });
+
+                provinceSelect.disabled = false;
+                console.log("✅ Provinces loaded:", provinces.length);
+            })
+            .catch(err => {
+                console.error("❌ Lỗi load tỉnh:", err);
+                alert("Không thể tải danh sách tỉnh/thành phố");
+            });
+
+        // =============================
+        // 2️⃣ KHI CHỌN TỈNH → LOAD HUYỆN
+        // =============================
+        provinceSelect.addEventListener("change", function () {
             const provinceCode = this.value;
-            districtSelect.innerHTML = '<option value="" disabled selected>Đang tải huyện...</option>';
-            if (provinceCode) {
-                fetch(`https://esgoo.net/api-quanhuyen?tinhthanh=${provinceCode}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
-                        if (data.length > 0) {
-                            data.forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item.id;
-                                option.textContent = item.ten_quan_huyen;
-                                districtSelect.appendChild(option);
-                            });
-                        } else {
-                            loadFallbackDistricts(provinceCode);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Lỗi tải huyện:', error);
-                        loadFallbackDistricts(provinceCode);
-                    });
+
+            districtSelect.innerHTML = '<option>Đang tải...</option>';
+            districtSelect.disabled = true;
+
+            if (!provinceCode) {
+                districtSelect.innerHTML = '<option value="">Chọn huyện</option>';
+                return;
             }
+
+            fetch(API_BASE + "/p/" + provinceCode + "?depth=2")
+                .then(res => {
+                    if (!res.ok) throw new Error("Không load được huyện");
+                    return res.json();
+                })
+                .then(data => {
+                    districtSelect.innerHTML = '<option value="">Chọn huyện</option>';
+
+                    let districts = [];
+
+                    if (data.districts && Array.isArray(data.districts)) {
+                        districts = data.districts;
+                    } else if (data.wards && Array.isArray(data.wards)) {
+                        districts = data.wards;
+                    } else if (Array.isArray(data)) {
+                        districts = data;
+                    }
+
+                    districts.forEach(d => {
+                        const opt = document.createElement("option");
+                        opt.value = d.code;        // gửi code
+                        opt.textContent = d.name;  // hiển thị tên
+                        opt.dataset.name = d.name;
+                        districtSelect.appendChild(opt);
+                    });
+
+                    districtSelect.disabled = false;
+                    console.log(" Districts loaded:", districts.length);
+                })
+                .catch(err => {
+                    console.error(" Lỗi load huyện:", err);
+                    alert("Không thể tải danh sách huyện");
+                });
         });
 
-        function loadFallbackDistricts(provinceCode) {
-            districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
-            const districts = fallbackDistricts[provinceCode] || [{code: 'none', name: 'Không có dữ liệu'}];
-            districts.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.code;
-                option.textContent = item.name;
-                districtSelect.appendChild(option);
-            });
-        }
     });
 </script>
+
+
+<%--<script>--%>
+<%--    document.addEventListener('DOMContentLoaded', function () {--%>
+<%--        const provinceSelect = document.getElementById('province');--%>
+<%--        const districtSelect = document.getElementById('district');--%>
+
+<%--        const fallbackDistricts = {--%>
+<%--            '1': [{code: '001', name: 'Ba Đình'}, {code: '002', name: 'Hoàn Kiếm'}, {code: '003', name: 'Cầu Giấy'}],--%>
+<%--            '79': [{code: '268', name: 'Quận 1'}, {code: '269', name: 'Quận 3'}, {code: '270', name: 'Quận 7'}],--%>
+<%--            '48': [{code: '161', name: 'Hải Châu'}, {code: '162', name: 'Thanh Khê'}]--%>
+<%--        };--%>
+
+<%--        fetch('https://provinces.open-api.vn/api/?depth=1')--%>
+<%--            .then(response => response.json())--%>
+<%--            .then(data => {--%>
+<%--                data.forEach(item => {--%>
+<%--                    const option = document.createElement('option');--%>
+<%--                    option.value = item.code;--%>
+<%--                    option.textContent = item.name;--%>
+<%--                    provinceSelect.appendChild(option);--%>
+<%--                });--%>
+<%--            })--%>
+<%--            .catch(error => console.error('Error loading provinces:', error));--%>
+
+<%--        provinceSelect.addEventListener('change', function () {--%>
+<%--            const provinceCode = this.value;--%>
+<%--            districtSelect.innerHTML = '<option value="" disabled selected>Đang tải huyện...</option>';--%>
+<%--            if (provinceCode) {--%>
+<%--                fetch(`https://esgoo.net/api-quanhuyen?tinhthanh=${provinceCode}`)--%>
+<%--                    .then(response => response.json())--%>
+<%--                    .then(data => {--%>
+<%--                        districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';--%>
+<%--                        if (data.length > 0) {--%>
+<%--                            data.forEach(item => {--%>
+<%--                                const option = document.createElement('option');--%>
+<%--                                option.value = item.id;--%>
+<%--                                option.textContent = item.ten_quan_huyen;--%>
+<%--                                districtSelect.appendChild(option);--%>
+<%--                            });--%>
+<%--                        } else {--%>
+<%--                            loadFallbackDistricts(provinceCode);--%>
+<%--                        }--%>
+<%--                    })--%>
+<%--                    .catch(error => {--%>
+<%--                        console.error('Lỗi tải huyện:', error);--%>
+<%--                        loadFallbackDistricts(provinceCode);--%>
+<%--                    });--%>
+<%--            }--%>
+<%--        });--%>
+
+<%--        function loadFallbackDistricts(provinceCode) {--%>
+<%--            districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';--%>
+<%--            const districts = fallbackDistricts[provinceCode] || [{code: 'none', name: 'Không có dữ liệu'}];--%>
+<%--            districts.forEach(item => {--%>
+<%--                const option = document.createElement('option');--%>
+<%--                option.value = item.code;--%>
+<%--                option.textContent = item.name;--%>
+<%--                districtSelect.appendChild(option);--%>
+<%--            });--%>
+<%--        }--%>
+<%--    });--%>
+<%--</script>--%>
 
 </body>
 </html>
