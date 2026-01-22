@@ -475,6 +475,7 @@
                     <tr>
                         <th>Mã đơn hàng</th>
                         <th>Khách hàng</th>
+                        <th>Ngày đặt</th>
                         <th>Lý do hủy</th>
                         <th>Người hủy</th>
                         <th>Ngày hủy</th>
@@ -483,30 +484,64 @@
 
                     <tbody id="cancelledTableBody">
 
-                    <!-- DỮ LIỆU MẪU -->
-                    <tr>
-                        <td>DH00901</td>
-                        <td>Trần Minh Hào</td>
-                        <td>Đổi ý</td>
-                        <td>Khách hàng</td>
-                        <td>05/11/2025</td>
-                    </tr>
+                    <c:choose>
+                        <c:when test="${not empty ordersByStatus['Cancelled']}">
+                            <c:forEach items="${ordersByStatus['Cancelled']}" var="order">
+                                <tr>
+                                    <td>${order.orderCode}</td>
+                                    <td>${order.userName}</td>
+                                    <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
+                                    <td>
+                                            <%-- LÝ DO HỦY TỪ ORDER_HISTORY --%>
+                                        <c:choose>
+                                            <c:when test="${not empty order.cancellationReason}">
+                                                ${order.cancellationReason}
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: #999; font-style: italic;">Không có lý do</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                            <%-- NGƯỜI HỦY (ADMIN/CUSTOMER) --%>
+                                        <c:choose>
+                                            <c:when test="${not empty order.cancelledBy}">
+                                                <c:choose>
+                                                    <c:when test="${order.cancelledBy eq 'Admin'}">
+                                                        <span style="color: #dc2626; font-weight: 500;">
+                                                            <i class="fas fa-user-shield"></i> Admin
+                                                        </span>
+                                                    </c:when>
+                                                    <c:when test="${order.cancelledBy eq 'Customer'}">
+                                                        <span style="color: #2563eb; font-weight: 500;">
+                                                            <i class="fas fa-user"></i> Khách hàng
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        ${order.cancelledBy}
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: #999;">N/A</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
 
-                    <tr>
-                        <td>DH00902</td>
-                        <td>Ngô Thị Hạnh</td>
-                        <td>Sản phẩm giao chậm</td>
-                        <td>Khách hàng</td>
-                        <td>04/11/2025</td>
-                    </tr>
+                                    <td><fmt:formatDate value="${order.cancelledAt}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr class="no-result-message">
+                                <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
+                                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+                                    Chưa có đơn hàng nào bị hủy
+                                </td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
 
-                    <tr>
-                        <td>DH00903</td>
-                        <td>Bùi Tuấn Khang</td>
-                        <td>Không liên hệ được khách</td>
-                        <td>Admin</td>
-                        <td>03/11/2025</td>
-                    </tr>
 
                     <!-- Phân trang -->
                     <tr class="pagination-row-cancelled">
@@ -758,35 +793,49 @@
     });
 
     // Hủy đơn hàng
+    let currentCancelOrderId = null;
+
     document.querySelectorAll('.cancel-btn').forEach(btn => {
         btn.addEventListener('click', function () {
-            const orderId = this.dataset.orderId;
+            currentCancelOrderId = this.dataset.orderId;
             document.querySelector('.cancel-popup').style.display = 'flex';
-            document.querySelector('.cancel-popup').dataset.orderId = orderId;
+            document.querySelector('.cancel-popup textarea').value = ''; // Reset textarea
         });
     });
 
-    // Xác nhận hủy
-    document.querySelector('.confirm-cancel').addEventListener('click', function () {
-        const orderId = document.querySelector('.cancel-popup').dataset.orderId;
-        const reason = document.querySelector('.cancel-popup textarea').value;
+    // Đóng popup
+    document.querySelector('.close-popup').addEventListener('click', function() {
+        document.querySelector('.cancel-popup').style.display = 'none';
+        currentCancelOrderId = null;
+    });
 
-        if (!reason.trim()) {
+    // Xác nhận hủy - GỬI LÝ DO LÊN SERVER
+    document.querySelector('.confirm-cancel').addEventListener('click', function () {
+        if (!currentCancelOrderId) {
+            alert('Không xác định được đơn hàng cần hủy');
+            return;
+        }
+
+        const reason = document.querySelector('.cancel-popup textarea').value.trim();
+
+        if (!reason) {
             alert('Vui lòng nhập lý do hủy');
             return;
         }
 
+        // Gửi request với lý do hủy
         fetch(BASE_URL + '/admin/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: 'action=cancel&orderId=' + orderId + '&reason=' + encodeURIComponent(reason)
+            body: 'action=cancel&orderId=' + currentCancelOrderId + '&reason=' + encodeURIComponent(reason)
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert(data.message);
+                    document.querySelector('.cancel-popup').style.display = 'none';
                     location.reload();
                 } else {
                     alert('Lỗi: ' + data.message);
