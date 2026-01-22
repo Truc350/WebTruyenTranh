@@ -6,6 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +39,51 @@
     <jsp:include page="/fontend/nguoiB/ASideUser.jsp"/>
 
     <div class="wishlist-container">
+
+
+        <!-- Hiển thị thông báo SUCCESS -->
+        <c:if test="${not empty sessionScope.successMsg}">
+            <div class="alert alert-success"
+                 style="position: fixed; top: 80px; right: 20px; z-index: 9999; background: #4CAF50; color: white; padding: 15px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out;">
+                <i class="fas fa-check-circle"></i>
+                    ${sessionScope.successMsg}
+            </div>
+            <c:remove var="successMsg" scope="session"/>
+            <script>
+                setTimeout(function () {
+                    const alert = document.querySelector('.alert-success');
+                    if (alert) {
+                        alert.style.animation = 'slideOut 0.3s ease-out';
+                        setTimeout(function () {
+                            alert.remove();
+                        }, 300);
+                    }
+                }, 3000);
+            </script>
+        </c:if>
+
+        <!-- Hiển thị thông báo ERROR -->
+        <c:if test="${not empty sessionScope.errorMsg}">
+            <div class="alert alert-error"
+                 style="position: fixed; top: 80px; right: 20px; z-index: 9999; background: #f44336; color: white; padding: 15px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out;">
+                <i class="fas fa-exclamation-circle"></i>
+                    ${sessionScope.errorMsg}
+            </div>
+            <c:remove var="errorMsg" scope="session"/>
+            <script>
+                setTimeout(function () {
+                    const alert = document.querySelector('.alert-error');
+                    if (alert) {
+                        alert.style.animation = 'slideOut 0.3s ease-out';
+                        setTimeout(function () {
+                            alert.remove();
+                        }, 300);
+                    }
+                }, 3000);
+            </script>
+        </c:if>
+
+
         <h2>Sản phẩm yêu thích (<%= currentUser != null ? wishlistCount : 0 %> sản phẩm)</h2>
 
         <% if (currentUser == null) { %>
@@ -111,17 +157,39 @@
                     </p>
                     <% } %>
 
+<%--                    <div class="wishlist-actions">--%>
+<%--                        <button class="add-to-cart-btn"--%>
+<%--                                data-comic-id="<%= comic.getId() %>"--%>
+<%--                                <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>--%>
+<%--                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ--%>
+<%--                        </button>--%>
+<%--                        <button class="remove-wishlist-btn"--%>
+<%--                                data-comic-id="<%= comic.getId() %>">--%>
+<%--                            <i class="fas fa-trash-alt"></i> Xóa--%>
+<%--                        </button>--%>
+<%--                    </div>--%>
                     <div class="wishlist-actions">
-                        <button class="add-to-cart-btn"
-                                data-comic-id="<%= comic.getId() %>"
-                                <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>
-                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                        <% if (comic.getStockQuantity() > 0) { %>
+<%--                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=<%= comic.getId() %>&quantity=1"--%>
+<%--                           class="add-to-cart-btn">--%>
+<%--                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ--%>
+<%--                        </a>--%>
+                            <a href="${pageContext.request.contextPath}/cart?action=add&comicId=<%= comic.getId() %>&quantity=1&returnUrl=wishlist"
+                                class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+                            </a>
+                        <% } else { %>
+                        <button class="add-to-cart-btn" disabled>
+                            <i class="fas fa-shopping-cart"></i> Hết hàng
                         </button>
+                        <% } %>
+
                         <button class="remove-wishlist-btn"
                                 data-comic-id="<%= comic.getId() %>">
                             <i class="fas fa-trash-alt"></i> Xóa
                         </button>
                     </div>
+
                 </div>
             </div>
             <% } %>
@@ -156,80 +224,6 @@
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
-    // Xử lý thêm vào giỏ hàng bằng AJAX
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('add-to-cart-btn') ||
-            e.target.closest('.add-to-cart-btn')) {
-
-            e.preventDefault();
-
-            const btn = e.target.classList.contains('add-to-cart-btn') ?
-                e.target : e.target.closest('.add-to-cart-btn');
-            const comicId = btn.dataset.comicId;
-            const comicName = btn.closest('.wishlist-item').querySelector('h3 a').textContent;
-
-            if (btn.disabled) {
-                showWishlistToast('Sản phẩm đã hết hàng', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
-
-            fetch('${pageContext.request.contextPath}/cart?action=add&comicId=' + comicId + '&quantity=1&ajax=true', {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showAddToCartPopup(comicName, data.cartCount);
-                        updateCartCountBadge(data.cartCount);
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                    } else {
-                        showWishlistToast(data.message || 'Không thể thêm vào giỏ', 'error');
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                    }
-                })
-                .catch(err => {
-                    console.error('Lỗi:', err);
-                    showWishlistToast('Lỗi kết nối, vui lòng thử lại', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                });
-        }
-    });
-
-    function showAddToCartPopup(productName, cartCount) {
-        const popup = document.querySelector('.cart-success-popup');
-        popup.querySelector('.product-name').textContent = productName;
-        popup.querySelector('.cart-count-display').textContent = cartCount + ' sản phẩm';
-        popup.style.display = 'flex';
-        setTimeout(() => popup.classList.add('show'), 10);
-        setTimeout(() => closeCartPopup(), 5000);
-    }
-
-    function closeCartPopup() {
-        const popup = document.querySelector('.cart-success-popup');
-        popup.classList.remove('show');
-        setTimeout(() => popup.style.display = 'none', 300);
-    }
-
-    function updateCartCountBadge(count) {
-        const badge = document.querySelector('.cart-count, .cart-badge, #cart-count');
-        if (badge) {
-            badge.textContent = count;
-            badge.classList.add('bounce');
-            setTimeout(() => badge.classList.remove('bounce'), 500);
-        }
-    }
-
     // Xử lý xóa sản phẩm
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-wishlist-btn') ||

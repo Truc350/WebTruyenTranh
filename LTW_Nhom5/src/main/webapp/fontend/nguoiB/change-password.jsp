@@ -21,20 +21,20 @@
             opacity: 0.95;
         }
 
-        /* Thông báo lỗi (màu đỏ nhạt) */
+        /* Thông báo lỗi  */
         .alert-error {
-            background-color: #ffebee;   /* nền đỏ nhạt */
-            color: #b71c1c;              /* chữ đỏ đậm */
-            border: 1px solid #ef9a9a;   /* viền đỏ nhạt */
-            border-left: 5px solid #d32f2f; /* thanh trái nổi bật */
+            background-color: #ffebee;
+            color: #b71c1c;
+            border: 1px solid #ef9a9a;
+            border-left: 5px solid #d32f2f;
         }
 
-        /* Thông báo thành công (màu xanh nhạt) */
+        /* Thông báo thành công */
         .alert-success {
-            background-color: #e8f5e9;   /* nền xanh nhạt */
-            color: #1b5e20;              /* chữ xanh đậm */
-            border: 1px solid #a5d6a7;   /* viền xanh nhạt */
-            border-left: 5px solid #2e7d32; /* thanh trái nổi bật */
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            border: 1px solid #a5d6a7;
+            border-left: 5px solid #2e7d32;
         }
 
     </style>
