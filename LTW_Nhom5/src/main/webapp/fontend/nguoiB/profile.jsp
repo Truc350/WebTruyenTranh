@@ -1203,7 +1203,7 @@
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('add-to-cart-btn')) {
                 const title = e.target.closest('.wishlist-item').querySelector('h3').textContent;
-                alert('Đã thêm "' + title + '" vào giỏ hàng!');
+                alert('Đã thêm "' + title.trim() + '" vào giỏ hàng!');
             } else if (e.target.classList.contains('remove-wishlist-btn')) {
                 const item = e.target.closest('.wishlist-item');
                 if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
@@ -1488,21 +1488,125 @@
     });
 
     // Xử lý thêm vào giỏ hàng
+    // Xử lý thêm vào giỏ hàng bằng AJAX
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-to-cart-btn') ||
             e.target.closest('.add-to-cart-btn')) {
 
+            e.preventDefault(); // Ngăn hành vi mặc định
+
             const btn = e.target.classList.contains('add-to-cart-btn') ?
                 e.target : e.target.closest('.add-to-cart-btn');
             const comicId = btn.dataset.comicId;
+            const comicName = btn.closest('.wishlist-item').querySelector('h3 a').textContent;
 
-            // TODO: Implement thêm vào giỏ hàng
-            // Tạm thời hiển thị thông báo
-            showWishlistToast('Đang phát triển chức năng thêm vào giỏ hàng...', 'info');
-            console.log('Thêm vào giỏ hàng - Comic ID:', comicId);
+            // Kiểm tra hết hàng
+            if (btn.disabled) {
+                showWishlistToast('Sản phẩm đã hết hàng', 'error');
+                return;
+            }
+
+            // Disable button và hiển thị loading
+            btn.disabled = true;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
+
+            // Gọi API thêm vào giỏ
+            fetch('${pageContext.request.contextPath}/cart?action=add&comicId=' + comicId + '&quantity=1&ajax=true', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hiển thị popup success
+                        showAddToCartPopup(comicName, data.cartCount);
+
+                        // Cập nhật số lượng giỏ hàng trên header
+                        updateCartCountBadge(data.cartCount);
+
+                        // Reset button
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                    } else {
+                        // Hiển thị lỗi
+                        showWishlistToast(data.message || 'Không thể thêm vào giỏ', 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                    }
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                    showWishlistToast('Lỗi kết nối, vui lòng thử lại', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                });
         }
     });
 
+    // Hàm hiển thị popup thêm vào giỏ thành công
+    function showAddToCartPopup(productName, cartCount) {
+        // Xóa popup cũ nếu có
+        const oldPopup = document.querySelector('.cart-success-popup');
+        if (oldPopup) oldPopup.remove();
+
+        // Tạo popup mới
+        const popup = document.createElement('div');
+        popup.className = 'cart-success-popup';
+        popup.innerHTML = `
+        <div class="cart-popup-overlay"></div>
+        <div class="cart-popup-content">
+            <div class="cart-popup-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Đã thêm vào giỏ hàng!</h3>
+            <p class="product-name">${productName}</p>
+            <div class="cart-info">
+                <span>Giỏ hàng hiện có: <strong>${cartCount} sản phẩm</strong></span>
+            </div>
+            <div class="cart-popup-actions">
+                <button class="btn-continue" onclick="closeCartPopup()">
+                    <i class="fas fa-arrow-left"></i> Tiếp tục mua
+                </button>
+                <a href="${pageContext.request.contextPath}/cart" class="btn-view-cart">
+                    <i class="fas fa-shopping-cart"></i> Xem giỏ hàng
+                </a>
+            </div>
+        </div>
+    `;
+
+        document.body.appendChild(popup);
+
+        // Hiển thị với animation
+        setTimeout(() => popup.classList.add('show'), 10);
+
+        // Tự động đóng sau 5 giây
+        setTimeout(() => {
+            closeCartPopup();
+        }, 5000);
+    }
+
+    // Đóng popup
+    function closeCartPopup() {
+        const popup = document.querySelector('.cart-success-popup');
+        if (popup) {
+            popup.classList.remove('show');
+            setTimeout(() => popup.remove(), 300);
+        }
+    }
+
+    // Cập nhật badge số lượng giỏ hàng trên header
+    function updateCartCountBadge(count) {
+        const badge = document.querySelector('.cart-count, .cart-badge, #cart-count');
+        if (badge) {
+            badge.textContent = count;
+            badge.classList.add('bounce');
+            setTimeout(() => badge.classList.remove('bounce'), 500);
+        }
+    }
     // Hàm hiển thị toast notification cho wishlist
     function showWishlistToast(message, type = 'success') {
         // Xóa toast cũ nếu có

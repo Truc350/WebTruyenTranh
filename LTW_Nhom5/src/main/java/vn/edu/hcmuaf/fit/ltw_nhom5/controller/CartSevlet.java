@@ -146,6 +146,9 @@ public class CartSevlet extends HttpServlet {
             int comicId = Integer.parseInt(request.getParameter("comicId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
+            String returnUrl = request.getParameter("returnUrl"); // của wishlist
+
+
             // ===== DEBUG =====
             User currentUser = (User) session.getAttribute("currentUser");
             System.out.println("===== THÊM VÀO GIỎ HÀNG =====");
@@ -189,12 +192,28 @@ public class CartSevlet extends HttpServlet {
                     // Mua ngay -> chuyển đến giỏ hàng
                     response.sendRedirect(request.getContextPath() + "/cart");
                 } else {
-                    // Quay về trang chi tiết
-                    response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+
+                    // Quay về trang chi tiết hoặc trang wishlist
+//                  response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+                    if ("wishlist".equals(returnUrl)) {
+                        response.sendRedirect(request.getContextPath() + "/wishlist");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+                    }
+
                 }
             } else {
                 session.setAttribute("errorMsg", "Không tìm thấy sản phẩm");
-                response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+//              response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+                // REDIRECT DỰA VÀO returnUrl
+                if ("wishlist".equals(returnUrl)) {
+                    response.sendRedirect(request.getContextPath() + "/wishlist");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+                }
+
+
+
             }
 
         } catch (NumberFormatException e) {

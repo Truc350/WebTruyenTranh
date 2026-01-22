@@ -71,11 +71,21 @@ public class UpdateUserServlet extends HttpServlet {
         } else {
             request.setAttribute("message", "Cập nhật thất bại, vui lòng thử lại.");
         }
-        request.getRequestDispatcher("/fontend/nguoiB/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/fontend/nguoiB/profile-info.jsp").forward(request, response);
 
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
+        // kiểm tra đăng nhập
+        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        if (currentUser == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        // forward sang trang profile
+        request.getRequestDispatcher("/fontend/nguoiB/profile-info.jsp").forward(request, response);
     }
 }

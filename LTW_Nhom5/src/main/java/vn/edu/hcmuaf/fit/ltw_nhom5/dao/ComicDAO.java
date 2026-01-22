@@ -2,7 +2,6 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.UnableToExecuteStatementException;
-import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.ComicImage;
@@ -1619,5 +1618,5 @@ public class ComicDAO extends ADao {
         });
     }
 
-
 }
+
