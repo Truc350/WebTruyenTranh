@@ -37,20 +37,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        System.out.println("========================================");
-        System.out.println("=== doGet CALLED ===");
-        System.out.println("Request URL: " + req.getRequestURL());
-        System.out.println("Request URI: " + req.getRequestURI());
-        System.out.println("Context Path: " + req.getContextPath());
-        System.out.println("Servlet Path: " + req.getServletPath());
-        System.out.println("========================================");
-
         String action = req.getParameter("action");
         System.out.println("Action parameter: " + action);
-        String orderId = req.getParameter("orderId"); // ✅ THÊM LOG
+        String orderId = req.getParameter("orderId");
         try {
             if (action == null) {
-                System.out.println("➡️ Calling displayOrderManagement...");
                 // Hiển thị trang quản lý đơn hàng
                 displayOrderManagement(req, resp);
             } else {
@@ -102,7 +93,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 case "confirm":
                     result = confirmOrder(req);
                     break;
-                case "confirmAll":  // ✅ THÊM CASE MỚI
+                case "confirmAll":
                     result = confirmAllOrders(req);
                     break;
                 case "cancel":
@@ -142,7 +133,6 @@ public class AdminOrderManagementServlet extends HttpServlet {
             // Lấy tất cả đơn hàng với chi tiết đầy đủ từ SERVICE
             Map<String, Object> data = orderService.getAllOrdersWithDetails();
 
-            // ✅ THÊM LOGGING ĐỂ DEBUG
             System.out.println("=== DEBUG ORDER MANAGEMENT ===");
             System.out.println("Success: " + data.get("success"));
             System.out.println("Error: " + data.get("error"));
@@ -152,7 +142,6 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 Map<String, List<Map<String, Object>>> ordersByStatus =
                         (Map<String, List<Map<String, Object>>>) data.get("ordersByStatus");
 
-                // ✅ LOG SỐ LƯỢNG ĐƠN HÀNG
                 System.out.println("Pending orders: " + ordersByStatus.get("Pending").size());
                 System.out.println("AwaitingPickup orders: " + ordersByStatus.get("AwaitingPickup").size());
                 System.out.println("Shipping orders: " + ordersByStatus.get("Shipping").size());
