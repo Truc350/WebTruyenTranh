@@ -1,30 +1,30 @@
-// Hằng số
+// ==================== GLOBAL VARIABLES ====================
 const ROWS_PER_PAGE = 10;
 let currentPage = 1;
 let totalPages = 1;
 let currentKeyword = '';
+let currentCategoryPage = 1;
 let deletingCategoryId = null;
 let deletingCategoryName = '';
-
 let editingCategoryId = null;
 
-// Lấy context path
+// ==================== UTILITY FUNCTIONS ====================
 function getContextPath() {
     return window.contextPath || '';
 }
 
-// Khởi tạo khi trang load
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('=== Page Loading ===');
-    console.log('Context path:', getContextPath());
-    console.log('Current URL:', window.location.href);
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return String(text).replace(/[&<>"']/g, m => map[m]);
+}
 
-    initEventListeners();
-    setDefaultDate();
-    loadCategories(1);
-});
-
-// Thiết lập ngày hiện tại
 function setDefaultDate() {
     const today = new Date().toISOString().split('T')[0];
     const newDateInput = document.getElementById('newCategoryCreatedDate');
@@ -32,118 +32,265 @@ function setDefaultDate() {
         newDateInput.value = today;
         newDateInput.readOnly = true;
     }
+
+    const editDateInput = document.getElementById('editCategoryDate');
+    if (editDateInput) {
+        editDateInput.value = today;
+        editDateInput.readOnly = true;
+    }
 }
 
-// Khởi tạo các sự kiện
-function initEventListeners() {
-    const addBtn = document.querySelector('.add-category-btn');
-    if (addBtn) {
-        addBtn.addEventListener('click', openAddPopup);
-        console.log('Add button listener attached');
+// ==================== TOAST MESSAGES ====================
+function showMessage(message, type = 'info') {
+    const oldMsg = document.querySelector('.toast-message');
+    if (oldMsg) {
+        oldMsg.remove();
     }
 
-    const saveBtn = document.querySelector('#addPopup .save-btn');
-    if (saveBtn) {
-        saveBtn.addEventListener('click', handleAddCategory);
-        console.log('Save button listener attached');
+    const toast = document.createElement('div');
+    toast.className = `toast-message toast-${type}`;
+
+    let icon = '';
+    switch(type) {
+        case 'success':
+            icon = 'fa-check-circle';
+            break;
+        case 'error':
+            icon = 'fa-exclamation-circle';
+            break;
+        case 'info':
+            icon = 'fa-info-circle';
+            break;
+        default:
+            icon = 'fa-info-circle';
     }
 
-    const searchBtn = document.getElementById('categorySearchBtn');
-    if (searchBtn) {
-        searchBtn.addEventListener('click', handleSearch);
-        console.log('Search button listener attached');
-    }
+    toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${message}</span>
+    `;
 
-    const searchInput = document.getElementById('categorySearchInput');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                handleSearch();
-            }
-        });
-    }
-
-    // Event listeners cho Delete popup - Sử dụng ID đúng
-    const deleteConfirmBtn = document.getElementById('confirmDeleteBtn');
-    if (deleteConfirmBtn) {
-        deleteConfirmBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleDeleteCategory();
-        });
-        console.log('Delete confirm button listener attached');
-    } else {
-        console.warn('confirmDeleteBtn NOT FOUND');
-    }
-
-    const deleteCancelBtn = document.querySelector('#deletePopup .cancel-btn');
-    if (deleteCancelBtn) {
-        deleteCancelBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            closeDeletePopup();
-        });
-        console.log('Delete cancel button listener attached');
-    }
-
-    document.querySelectorAll('.popup-overlay').forEach(overlay => {
-        overlay.addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeAllPopups();
-            }
-        });
-    });
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
+function showToast(message, type = 'success') {
+    showMessage(message, type);
+}
+// ==================== SEARCH FUNCTIONALITY ====================
+function searchCategories(page = 1) {
+    const keyword = document.getElementById('categorySearchInput').value.trim();
+    const tbody = document.getElementById('categoryTableBody');
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="3" style="text-align: center; padding: 40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>
+                <p style="margin-top: 10px;">Đang tìm kiếm...</p>
+            </td>
+        </tr>
+    `;
+
+    const contextPath = getContextPath();
+
+    if (!contextPath && contextPath !== '') {
+        console.error('❌ contextPath is not defined!');
+        showError('Lỗi cấu hình: contextPath không tồn tại');
+        return;
+    }
+
+    const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+
+    console.log('🔍 Searching categories:', { keyword, page, url });
+
+    fetch(url)
+        .then(response => {
+            console.log('📡 Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Search results:', data);
+
+            if (data.success) {
+                currentCategoryPage = data.currentPage;
+                currentPage = data.currentPage;
+                updateCategoryTable(data.categories);
+                updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);
+
+                if (keyword) {
+                    showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');
+                }
+            } else {
+                showError(data.message || 'Có lỗi xảy ra');
+            }
+        })
+        .catch(error => {
+            console.error('❌ Search error:', error);
+            showError('Không thể kết nối đến server: ' + error.message);
+        });
+}
+
+
+function handleSearch() {
+    const input = document.getElementById('categorySearchInput');
+    currentKeyword = input.value.trim();
+    console.log('Searching with keyword:', currentKeyword);
+    searchCategories(1);
+}
+
+// ==================== LOAD CATEGORIES ====================
 function loadCategories(page = 1) {
     const contextPath = getContextPath();
-    fetch(`${contextPath}/admin/listCategories?page=${page}&pageSize=10`)
+    const tbody = document.getElementById('categoryTableBody');
+
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="3" style="text-align: center; padding: 40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>
+                <p style="margin-top: 10px;">Đang tải...</p>
+            </td>
+        </tr>
+    `;
+
+    fetch(`${contextPath}/admin/listCategories?page=${page}&pageSize=${ROWS_PER_PAGE}`)
         .then(res => res.json())
         .then(data => {
-            console.log("Response:", data);
+            console.log("Load categories response:", data);
 
             if (!data.success) {
                 console.error(data.message);
+                showMessage(data.message || 'Không thể tải dữ liệu', 'error');
                 return;
             }
 
-            const tbody = document.getElementById("categoryTableBody");
-            tbody.innerHTML = "";
+            currentPage = data.currentPage;
+            totalPages = data.totalPages;
 
-            const categories = data.categories;
-
-            if (categories.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4">Không có dữ liệu</td></tr>`;
-                return;
-            }
-
-            categories.forEach(cat => {
-                const escapedName = escapeHtml(cat.nameCategories);
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${cat.id}</td>
-                        <td>${escapedName}</td>
-                        <td class="action-cell">
-                            <button class="edit-btn" onclick="openEditPopup(${cat.id})" title="Chỉnh sửa">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="delete-btn"
-                                    onclick="openDeletePopup(${cat.id}, '${escapedName.replace(/'/g, "\\'")}')"
-                                    title="Xóa">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-
+            updateCategoryTable(data.categories);
             renderPagination(data.currentPage, data.totalPages);
         })
         .catch(err => {
             console.error("Fetch error:", err);
             showMessage('Không thể tải danh sách thể loại!', 'error');
+            showError('Không thể tải danh sách thể loại!');
         });
 }
 
-// Render phân trang
+// ==================== UPDATE TABLE ====================
+function updateCategoryTable(categories) {
+    const tbody = document.getElementById('categoryTableBody');
+
+    if (!categories || categories.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 40px; color: #999;">
+                    <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
+                    <p style="margin: 0; font-size: 16px;">Không tìm thấy thể loại nào</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    let html = '';
+    categories.forEach(category => {
+        const escapedName = escapeHtml(category.nameCategories || '-');
+        html += `
+            <tr>
+                <td>${category.id}</td>
+                <td>${escapedName}</td>
+                <td class="action-cell">
+                    <button class="edit-category-btn" 
+                            data-id="${category.id}" 
+                            onclick="openEditPopup(${category.id})"
+                            title="Chỉnh sửa">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button class="delete-category-btn" 
+                            data-id="${category.id}" 
+                            data-name="${escapedName}"
+                            onclick="openDeletePopup(${category.id}, '${escapedName.replace(/'/g, "\\'")}')"
+                            title="Xóa">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+    bindCategoryEventListeners();
+}
+
+// ==================== PAGINATION ====================
+function updateCategoryPagination(currentPage, totalPages, totalCategories) {
+    const container = document.getElementById('categoryPaginationContainer');
+
+    if (!container) return;
+
+    if (totalPages <= 1) {
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+
+    let html = '<div class="pagination">';
+
+    // First & Previous buttons
+    if (currentPage > 1) {
+        html += `<button class="page-btn nav-btn" onclick="searchCategories(1)">⏮</button>`;
+        html += `<button class="page-btn nav-btn" onclick="searchCategories(${currentPage - 1})">◀</button>`;
+    } else {
+        html += `<button class="page-btn nav-btn" disabled>⏮</button>`;
+        html += `<button class="page-btn nav-btn" disabled>◀</button>`;
+    }
+
+    // Page numbers
+    const maxVisible = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+    if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+
+    if (startPage > 1) {
+        html += `<button class="page-btn" onclick="searchCategories(1)">1</button>`;
+        if (startPage > 2) html += '<span>...</span>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const activeClass = i === currentPage ? 'active' : '';
+        html += `<button class="page-btn ${activeClass}" onclick="searchCategories(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) html += '<span>...</span>';
+        html += `<button class="page-btn" onclick="searchCategories(${totalPages})">${totalPages}</button>`;
+    }
+
+    // Next & Last buttons
+    if (currentPage < totalPages) {
+        html += `<button class="page-btn nav-btn" onclick="searchCategories(${currentPage + 1})">▶</button>`;
+        html += `<button class="page-btn nav-btn" onclick="searchCategories(${totalPages})">⏭</button>`;
+    } else {
+        html += `<button class="page-btn nav-btn" disabled>▶</button>`;
+        html += `<button class="page-btn nav-btn" disabled>⏭</button>`;
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
 function renderPagination(current, total) {
     const container = document.getElementById('categoryPaginationContainer');
 
@@ -177,15 +324,7 @@ function renderPagination(current, total) {
     container.innerHTML = html;
 }
 
-// Xử lý tìm kiếm
-function handleSearch() {
-    const input = document.getElementById('categorySearchInput');
-    currentKeyword = input.value.trim();
-    console.log('Searching with keyword:', currentKeyword);
-    loadCategories(1);
-}
-
-// Mở popup thêm
+// ==================== ADD CATEGORY ====================
 function openAddPopup() {
     console.log('Opening add popup');
     document.getElementById('newCategoryName').value = '';
@@ -194,12 +333,10 @@ function openAddPopup() {
     document.getElementById('addPopup').style.display = 'flex';
 }
 
-// Đóng popup thêm
 function closeAddPopup() {
     document.getElementById('addPopup').style.display = 'none';
 }
 
-// Xử lý thêm thể loại
 function handleAddCategory() {
     console.log('=== Adding Category ===');
     const name = document.getElementById('newCategoryName').value.trim();
@@ -218,6 +355,12 @@ function handleAddCategory() {
     const contextPath = getContextPath();
     const url = `${contextPath}/admin/addCategory`;
     console.log('Adding to URL:', url);
+
+    const saveBtn = document.querySelector('#addPopup .save-btn');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Đang lưu...';
+    }
 
     fetch(url, {
         method: 'POST',
@@ -238,43 +381,210 @@ function handleAddCategory() {
         })
         .then(data => {
             console.log('Add response data:', data);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Lưu';
+            }
+
             if (data.success) {
-                showMessage(data.message, 'success');
+                showMessage(data.message || 'Thêm thể loại thành công!', 'success');
                 closeAddPopup();
                 loadCategories(1);
             } else {
-                showMessage(data.message, 'error');
+                showMessage(data.message || 'Có lỗi xảy ra!', 'error');
             }
         })
         .catch(error => {
             console.error('Error adding category:', error);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Lưu';
+            }
+
             showMessage('Không thể kết nối đến server! ' + error.message, 'error');
         });
 }
 
-// ===== CHỨC NĂNG XÓA =====
+// ==================== EDIT CATEGORY ====================
+function openEditPopup(id) {
+    console.log('=== Opening Edit Popup ===');
+    console.log('Category ID:', id);
 
-// Mở popup xóa
+    editingCategoryId = id;
+
+    const popup = document.getElementById('editPopup');
+    const nameInput = document.getElementById('editCategoryName');
+    const descInput = document.getElementById('editCategoryDesc');
+    const dateInput = document.getElementById('editCategoryDate');
+
+    if (!popup || !nameInput || !descInput) {
+        console.error('❌ Edit popup elements not found!');
+        return;
+    }
+
+    nameInput.value = '';
+    descInput.value = '';
+
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+    }
+
+    popup.style.display = 'flex';
+
+    const contextPath = getContextPath();
+    const url = `${contextPath}/admin/getCategoryById?id=${id}`;
+
+    console.log('📡 Fetching from:', url);
+
+    fetch(url)
+        .then(response => {
+            console.log('📥 Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('📦 Response data:', data);
+
+            if (data.success && data.category) {
+                const category = data.category;
+                nameInput.value = category.nameCategories || '';
+                descInput.value = category.description || '';
+
+                console.log('✅ Values assigned to inputs');
+            } else {
+                console.error('❌ API response failed:', data.message);
+                showMessage(data.message || 'Không tìm thấy thể loại!', 'error');
+                closeEditPopup();
+            }
+        })
+        .catch(error => {
+            console.error('❌ Fetch error:', error);
+            showMessage('Không thể tải thông tin thể loại! ' + error.message, 'error');
+            closeEditPopup();
+        });
+}
+
+function closeEditPopup() {
+    const editPopup = document.getElementById('editPopup');
+    if (editPopup) {
+        editPopup.style.display = 'none';
+    }
+    editingCategoryId = null;
+
+    const nameInput = document.getElementById('editCategoryName');
+    const descInput = document.getElementById('editCategoryDesc');
+    if (nameInput) nameInput.value = '';
+    if (descInput) descInput.value = '';
+}
+
+function handleEditCategory() {
+    console.log('=== Updating Category ===');
+    console.log('Editing Category ID:', editingCategoryId);
+
+    if (!editingCategoryId) {
+        showMessage('Không xác định được thể loại cần sửa!', 'error');
+        return;
+    }
+
+    const name = document.getElementById('editCategoryName').value.trim();
+    const description = document.getElementById('editCategoryDesc').value.trim();
+
+    if (!name) {
+        showMessage('Vui lòng nhập tên thể loại!', 'error');
+        return;
+    }
+
+    if (name.length > 100) {
+        showMessage('Tên thể loại không được vượt quá 100 ký tự!', 'error');
+        return;
+    }
+
+    const contextPath = getContextPath();
+    const url = `${contextPath}/admin/updateCategory`;
+    console.log('Updating at URL:', url);
+
+    const saveBtn = document.getElementById('confirmEditBtn');
+    const originalText = saveBtn ? saveBtn.textContent : 'Cập nhật';
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Đang lưu...';
+    }
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify({
+            id: editingCategoryId,
+            name: name,
+            description: description
+        })
+    })
+        .then(response => {
+            console.log('Update response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Update response data:', data);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+            }
+
+            if (data.success) {
+                showMessage(data.message || 'Cập nhật thể loại thành công!', 'success');
+                closeEditPopup();
+                loadCategories(currentPage || 1);
+            } else {
+                showMessage(data.message || 'Cập nhật thất bại!', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating category:', error);
+
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+            }
+
+            showMessage('Không thể kết nối đến server! ' + error.message, 'error');
+        });
+}
+
+// ==================== DELETE CATEGORY ====================
 function openDeletePopup(id, name) {
     console.log('Opening delete popup for:', id, name);
 
     deletingCategoryId = id;
     deletingCategoryName = name;
 
-    // Hiển thị tên thể loại trong popup
+    const deleteNameElement = document.getElementById('deleteCategoryName');
     const deleteMessageElement = document.getElementById('deleteCategoryMessage');
-    if (deleteMessageElement) {
-        deleteMessageElement.textContent = `Bạn có chắc chắn muốn xóa thể loại "${name}"?`;
+
+    if (deleteNameElement) {
+        deleteNameElement.textContent = `"${name}"`;
     }
 
-    // Hiển thị popup
+    if (deleteMessageElement) {
+        deleteMessageElement.textContent = `Bạn có chắc chắn muốn xóa thể loại này?`;
+    }
+
     const deletePopup = document.getElementById('deletePopup');
     if (deletePopup) {
         deletePopup.style.display = 'flex';
     }
 }
 
-// Đóng popup xóa
 function closeDeletePopup() {
     const deletePopup = document.getElementById('deletePopup');
     if (deletePopup) {
@@ -284,11 +594,9 @@ function closeDeletePopup() {
     deletingCategoryName = '';
 }
 
-// Xử lý xóa thể loại
 function handleDeleteCategory() {
     console.log('=== Deleting Category ===');
     console.log('Category ID:', deletingCategoryId);
-    console.log('Category Name:', deletingCategoryName);
 
     if (!deletingCategoryId) {
         showMessage('Không xác định được thể loại cần xóa!', 'error');
@@ -299,7 +607,6 @@ function handleDeleteCategory() {
     const url = `${contextPath}/admin/deleteCategory`;
     console.log('Deleting at URL:', url);
 
-    // Disable nút để tránh click nhiều lần
     const deleteBtn = document.getElementById('confirmDeleteBtn');
     if (deleteBtn) {
         deleteBtn.disabled = true;
@@ -325,26 +632,22 @@ function handleDeleteCategory() {
         .then(data => {
             console.log('Delete response data:', data);
 
-            // Reset nút
             if (deleteBtn) {
                 deleteBtn.disabled = false;
                 deleteBtn.textContent = 'Xóa';
             }
 
             if (data.success) {
-                showMessage(data.message, 'success');
+                showMessage(data.message || 'Xóa thành công!', 'success');
                 closeDeletePopup();
-
-                // Reload lại trang hiện tại
                 loadCategories(currentPage);
             } else {
-                showMessage(data.message, 'error');
+                showMessage(data.message || 'Có lỗi xảy ra!', 'error');
             }
         })
         .catch(error => {
             console.error('Error deleting category:', error);
 
-            // Reset nút
             if (deleteBtn) {
                 deleteBtn.disabled = false;
                 deleteBtn.textContent = 'Xóa';
@@ -354,67 +657,95 @@ function handleDeleteCategory() {
         });
 }
 
-// Đóng tất cả popup
+// ==================== ERROR DISPLAY ====================
+function showError(message) {
+    const tbody = document.getElementById('categoryTableBody');
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="3" style="text-align: center; padding: 40px; color: #f44336;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>
+                <p style="margin-top: 10px;">${message}</p>
+                <button onclick="loadCategories(1)" 
+                        style="margin-top: 10px; padding: 8px 16px; cursor: pointer; 
+                               background: #ff4c4c; color: white; border: none; border-radius: 4px;">
+                    Thử lại
+                </button>
+            </td>
+        </tr>
+    `;
+}
+
 function closeAllPopups() {
     document.querySelectorAll('.popup-overlay').forEach(popup => {
         popup.style.display = 'none';
     });
     deletingCategoryId = null;
     deletingCategoryName = '';
-}
-
-// Hiển thị thông báo
-function showMessage(message, type = 'info') {
-    const oldMsg = document.querySelector('.toast-message');
-    if (oldMsg) {
-        oldMsg.remove();
-    }
-
-    const toast = document.createElement('div');
-    toast.className = `toast-message toast-${type}`;
-    toast.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        <span>${message}</span>
-    `;
-
-    document.body.appendChild(toast);
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-// Escape HTML
-function escapeHtml(text) {
-    if (!text) return '';
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return String(text).replace(/[&<>"']/g, m => map[m]);
-}
-
-
-
-
-function closeEditPopup() {
-    const editPopup = document.getElementById('editPopup');
-    if (editPopup) {
-        editPopup.style.display = 'none';
-    }
     editingCategoryId = null;
-
-    // Reset form
-    const nameInput = document.getElementById('editCategoryName');
-    const descInput = document.getElementById('editCategoryDesc');
-    if (nameInput) nameInput.value = '';
-    if (descInput) descInput.value = '';
 }
 
+// ==================== EVENT LISTENERS ====================
+function bindCategoryEventListeners() {
+    // Event listeners are handled by onclick in HTML
+    console.log('Category event listeners bound via onclick attributes');
+}
+
+function initEventListeners() {
+    const addBtn = document.querySelector('.add-category-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', openAddPopup);
+        console.log('✅ Add button listener attached');
+    }
+
+    const saveBtn = document.querySelector('#addPopup .save-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', handleAddCategory);
+        console.log('✅ Save button listener attached');
+    }
+
+    const searchBtn = document.getElementById('categorySearchBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', handleSearch);
+        console.log('✅ Search button listener attached');
+    }
+
+    const searchInput = document.getElementById('categorySearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearch();
+            }
+        });
+        console.log('✅ Search input listener attached');
+    }
+
+    const deleteConfirmBtn = document.getElementById('confirmDeleteBtn');
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleDeleteCategory();
+        });
+        console.log('✅ Delete confirm button listener attached');
+    }
+
+    const deleteCancelBtn = document.querySelector('#deletePopup .cancel-btn');
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeDeletePopup();
+        });
+        console.log('✅ Delete cancel button listener attached');
+    }
+
+    document.querySelectorAll('.popup-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeAllPopups();
+            }
+        });
+    });
+}
 
 function initEditEventListeners() {
     const editSaveBtn = document.getElementById('confirmEditBtn');
@@ -423,7 +754,7 @@ function initEditEventListeners() {
             e.preventDefault();
             handleEditCategory();
         });
-        console.log('Edit save button listener attached');
+        console.log('✅ Edit save button listener attached');
     }
 
     const editCancelBtn = document.querySelector('#editPopup .cancel-btn');
@@ -432,150 +763,20 @@ function initEditEventListeners() {
             e.preventDefault();
             closeEditPopup();
         });
-        console.log('Edit cancel button listener attached');
+        console.log('✅ Edit cancel button listener attached');
     }
 }
 
-function openEditPopup(id) {
-    console.log('Opening edit popup for ID:', id);
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Category Management Initialized');
+    console.log('🔍 Context Path:', getContextPath());
+    console.log('📍 Current URL:', window.location.href);
 
-    editingCategoryId = id;
+    initEventListeners();
+    initEditEventListeners();
+    setDefaultDate();
 
-    const contextPath = getContextPath();
-    const url = `${contextPath}/admin/getCategoryById?id=${id}`;
-
-    // Hiển thị popup trước
-    const editPopup = document.getElementById('editPopup');
-    if (editPopup) {
-        editPopup.style.display = 'flex';
-    }
-
-    // Reset form trước khi load
-    const nameInput = document.getElementById('editCategoryName');
-    const descInput = document.getElementById('editCategoryDesc');
-    if (nameInput) nameInput.value = '';
-    if (descInput) descInput.value = '';
-
-    // Gọi API để lấy thông tin thể loại
-    fetch(url)
-        .then(response => {
-            console.log('Get category response status:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Category data:', data);
-
-            if (data.success && data.category) {
-                const cat = data.category;
-
-                // Điền dữ liệu vào form
-                if (nameInput) nameInput.value = cat.nameCategories || '';
-                if (descInput) descInput.value = cat.description || '';
-
-            } else {
-                showMessage(data.message || 'Không thể tải thông tin thể loại!', 'error');
-                closeEditPopup();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading category:', error);
-            showMessage('Không thể kết nối đến server! ' + error.message, 'error');
-            closeEditPopup();
-        });
-}
-
-/**
- * Xử lý cập nhật thể loại
- */
-function handleEditCategory() {
-    console.log('=== Updating Category ===');
-    console.log('Editing Category ID:', editingCategoryId);
-
-    // Validate ID
-    if (!editingCategoryId) {
-        showMessage('Không xác định được thể loại cần sửa!', 'error');
-        return;
-    }
-
-    // Lấy dữ liệu từ form
-    const name = document.getElementById('editCategoryName').value.trim();
-    const description = document.getElementById('editCategoryDesc').value.trim();
-
-    // Validate tên
-    if (!name) {
-        showMessage('Vui lòng nhập tên thể loại!', 'error');
-        return;
-    }
-
-    if (name.length > 100) {
-        showMessage('Tên thể loại không được vượt quá 100 ký tự!', 'error');
-        return;
-    }
-
-    const contextPath = getContextPath();
-    const url = `${contextPath}/admin/updateCategory`;
-    console.log('Updating at URL:', url);
-
-    // Disable nút để tránh click nhiều lần
-    const saveBtn = document.getElementById('confirmEditBtn');
-    const originalText = saveBtn ? saveBtn.textContent : 'Lưu';
-    if (saveBtn) {
-        saveBtn.disabled = true;
-        saveBtn.textContent = 'Đang lưu...';
-    }
-
-    // Gọi API update
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: JSON.stringify({
-            id: editingCategoryId,
-            name: name,
-            description: description
-        })
-    })
-        .then(response => {
-            console.log('Update response status:', response.status);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Update response data:', data);
-
-            // Reset nút
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.textContent = originalText;
-            }
-
-            if (data.success) {
-                showMessage(data.message || 'Cập nhật thể loại thành công!', 'success');
-                closeEditPopup();
-
-                // Reload lại danh sách ở trang hiện tại
-                if (typeof loadCategories === 'function') {
-                    loadCategories(currentPage || 1);
-                }
-            } else {
-                showMessage(data.message || 'Cập nhật thất bại!', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error updating category:', error);
-
-            // Reset nút
-            if (saveBtn) {
-                saveBtn.disabled = false;
-                saveBtn.textContent = originalText;
-            }
-
-            showMessage('Không thể kết nối đến server! ' + error.message, 'error');
-        });
-}
+    // Load initial data
+    loadCategories(1);
+});
