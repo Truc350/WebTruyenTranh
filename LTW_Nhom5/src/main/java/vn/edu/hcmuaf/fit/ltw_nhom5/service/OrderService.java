@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.PaymentDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.CurrencyFormatter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -113,39 +114,60 @@ public class OrderService {
         data.put("orderCode", order.getId());
         data.put("userId", order.getUserId());
 
-        // ✅ CHUYỂN LocalDate sang java.util.Date
-        if (order.getOrderDate() != null) {
+        // ✅ XỬ LÝ NGÀY THÁNG - Xử lý cả trường hợp NULL
+        try {
             Object orderDate = order.getOrderDate();
+            String formattedDate = "";
 
-            // Nếu orderDate là LocalDate
-            if (orderDate instanceof java.time.LocalDate) {
+            if (orderDate == null) {
+                // ✅ Trường hợp NULL - set giá trị mặc định
+                formattedDate = "N/A";
+                data.put("orderDate", new java.util.Date());
+                System.out.println("⚠️ Order " + order.getId() + " has NULL orderDate");
+            } else if (orderDate instanceof java.time.LocalDate) {
                 java.time.LocalDate localDate = (java.time.LocalDate) orderDate;
+                formattedDate = localDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 data.put("orderDate", java.util.Date.from(
                         localDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant()
                 ));
-            }
-            // Nếu orderDate là LocalDateTime
-            else if (orderDate instanceof java.time.LocalDateTime) {
+            } else if (orderDate instanceof java.time.LocalDateTime) {
                 java.time.LocalDateTime localDateTime = (java.time.LocalDateTime) orderDate;
+                formattedDate = localDateTime.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 data.put("orderDate", java.util.Date.from(
                         localDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant()
                 ));
-            }
-            // Nếu đã là Date
-            else if (orderDate instanceof java.util.Date) {
+            } else if (orderDate instanceof java.sql.Timestamp) {
+                // ✅ THÊM XỬ LÝ CHO TIMESTAMP
+                java.sql.Timestamp timestamp = (java.sql.Timestamp) orderDate;
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                formattedDate = sdf.format(timestamp);
+                data.put("orderDate", timestamp);
+            } else if (orderDate instanceof java.util.Date) {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                formattedDate = sdf.format(orderDate);
                 data.put("orderDate", orderDate);
+            } else {
+                // ✅ Kiểu dữ liệu không xác định
+                System.out.println("❌ Unknown date type for order " + order.getId() + ": " + orderDate.getClass().getName());
+                formattedDate = "N/A";
+                data.put("orderDate", new java.util.Date());
             }
-            // Fallback: convert toString
-            else {
-                data.put("orderDate", new java.util.Date()); // default
-            }
-        } else {
-            data.put("orderDate", new java.util.Date()); // default
+
+            data.put("orderDateFormatted", formattedDate);
+
+        } catch (Exception e) {
+            System.out.println("❌ Exception formatting date for order " + order.getId() + ": " + e.getMessage());
+            e.printStackTrace();
+            data.put("orderDate", new java.util.Date());
+            data.put("orderDateFormatted", "N/A");
         }
 
         data.put("status", order.getStatus());
         data.put("totalAmount", order.getTotalAmount());
-        data.put("formattedAmount", String.format("%,.0f", order.getTotalAmount()) + "đ");
+
+        // ✅ SỬ DỤNG CurrencyFormatter ĐỂ FORMAT TIỀN
+        data.put("formattedAmount", CurrencyFormatter.format(order.getTotalAmount()));
+
         data.put("recipientName", order.getRecipientName());
         data.put("shippingPhone", order.getShippingPhone());
         data.put("shippingAddress", order.getShippingAddress());
@@ -167,6 +189,10 @@ public class OrderService {
         data.put("shippingProvider", shippingProviderDisplay);
 
         data.put("shippingFee", order.getShippingFee());
+
+        // ✅ FORMAT PHÍ VẬN CHUYỂN
+        data.put("formattedShippingFee", CurrencyFormatter.format(order.getShippingFee()));
+
         data.put("pointUsed", order.getPointUsed());
 
         // Lấy tên khách hàng từ recipient_name
@@ -231,7 +257,9 @@ public class OrderService {
             itemData.put("comicId", item.getComicId());
             itemData.put("quantity", item.getQuantity());
             itemData.put("priceAtPurchase", item.getPriceAtPurchase());
-            itemData.put("formattedPrice", String.format("%,.0f", item.getPriceAtPurchase()) + "đ");
+
+            // ✅ SỬ DỤNG CurrencyFormatter ĐỂ FORMAT GIÁ SẢN PHẨM
+            itemData.put("formattedPrice", CurrencyFormatter.format(item.getPriceAtPurchase()));
 
             // Lấy thông tin comic
             try {
@@ -426,40 +454,6 @@ public class OrderService {
     }
 
     /**
-     * Tìm kiếm đơn hàng
-     */
-    public List<Map<String, Object>> searchOrders(String keyword, String status) {
-        List<Order> orders;
-
-        if (status != null && !status.trim().isEmpty()) {
-            orders = orderDAO.getOrdersByStatus(status);
-        } else {
-            orders = orderDAO.getAllOrders();
-        }
-
-        // Lọc theo keyword nếu có
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            String lowerKeyword = keyword.toLowerCase();
-            orders = orders.stream()
-                    .filter(order -> {
-                        String orderCode = String.valueOf(order.getId());
-                        return orderCode.contains(lowerKeyword) ||
-                                order.getRecipientName().toLowerCase().contains(lowerKeyword) ||
-                                order.getShippingPhone().contains(keyword);
-                    })
-                    .collect(Collectors.toList());
-        }
-
-        // Build data cho từng order
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (Order order : orders) {
-            result.add(buildOrderData(order));
-        }
-
-        return result;
-    }
-
-    /**
      * Lấy thống kê đơn hàng
      */
     public Map<String, Object> getOrderStatistics() {
@@ -480,5 +474,30 @@ public class OrderService {
         }
 
         return stats;
+    }
+
+    public List<Map<String, Object>> searchOrders(String keyword, String status) {
+        if (keyword == null) keyword = "";
+        if (status == null || status.isEmpty()) status = "Pending";
+
+        List<Map<String, Object>> orders = orderDAO.searchOrders(keyword.trim(), status);
+
+        // ✅ SỬ DỤNG buildOrderData ĐỂ FORMAT ĐỒNG NHẤT
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        for (Map<String, Object> orderMap : orders) {
+            int orderId = ((Number) orderMap.get("id")).intValue();
+
+            // ✅ LẤY ORDER OBJECT ĐẦY ĐỦ
+            Order order = orderDAO.getOrderById(orderId).orElse(null);
+
+            if (order != null) {
+                // ✅ DÙNG buildOrderData ĐỂ FORMAT GIỐNG HỆT NHƯ LÚC LOAD TRANG
+                Map<String, Object> formattedOrder = buildOrderData(order);
+                result.add(formattedOrder);
+            }
+        }
+
+        return result;
     }
 }

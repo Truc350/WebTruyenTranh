@@ -474,4 +474,66 @@ public class OrderDAO extends ADao{
                         .list()
         );
     }
+
+    public List<Map<String, Object>> searchOrders(String keyword, String status) {
+        boolean isNumber = keyword != null && keyword.matches("\\d+");
+
+        String sqlById = """
+        SELECT 
+            o.id,
+            o.user_id,
+            o.order_date,
+            o.total_amount,
+            o.recipient_name,
+            o.shipping_phone,
+            o.shipping_address,
+            o.shipping_provider,
+            o.status,
+            p.payment_method,
+            p.payment_status
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        WHERE o.status = :status
+          AND o.id = :orderId
+        ORDER BY o.order_date DESC
+    """;
+
+        // ✅ THÊM COLLATE utf8mb4_unicode_ci VÀ LOWER() ĐỂ SEARCH KHÔNG PHÂN BIỆT HOA THƯỜNG
+        String sqlByName = """
+        SELECT 
+            o.id,
+            o.user_id,
+            o.order_date,
+            o.total_amount,
+            o.recipient_name,
+            o.shipping_phone,
+            o.shipping_address,
+            o.shipping_provider,
+            o.status,
+            p.payment_method,
+            p.payment_status
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        WHERE o.status = :status
+          AND LOWER(o.recipient_name) LIKE LOWER(:name)
+        ORDER BY o.order_date DESC
+    """;
+
+        return jdbi.withHandle(handle -> {
+            if (isNumber) {
+                return handle.createQuery(sqlById)
+                        .bind("status", status)
+                        .bind("orderId", Integer.parseInt(keyword))
+                        .mapToMap()
+                        .list();
+            } else {
+                return handle.createQuery(sqlByName)
+                        .bind("status", status)
+                        .bind("name", "%" + keyword + "%")  // ✅ LOWER() đã có trong SQL
+                        .mapToMap()
+                        .list();
+            }
+        });
+    }
+
 }

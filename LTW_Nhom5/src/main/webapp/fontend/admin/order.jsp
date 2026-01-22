@@ -93,14 +93,10 @@
                     <tr class="pagination-row">
                         <td colspan="10">
                             <div class="pagination" id="tablePagination">
-                                <button class="page-btn confirm-page" data-page="1">1</button>
-                                <button class="page-btn confirm-page" data-page="2">2</button>
-                                <button class="page-btn confirm-page" data-page="3">3</button>
-                                <button class="page-btn confirm-page" data-page="4">4</button>
+
                             </div>
                         </td>
                     </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -115,7 +111,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
 
@@ -164,10 +159,7 @@
                     <tr class="pagination-row-pickup">
                         <td colspan="10">
                             <div class="pagination" id="pickupPagination">
-                                <button class="page-btn pickup-page" data-page="1">1</button>
-                                <button class="page-btn pickup-page" data-page="2">2</button>
-                                <button class="page-btn pickup-page" data-page="3">3</button>
-                                <button class="page-btn pickup-page" data-page="4">4</button>
+
                             </div>
                         </td>
                     </tr>
@@ -218,14 +210,10 @@
                     <tr class="pagination-row-delivering">
                         <td colspan="10">
                             <div class="pagination" id="deliveringPagination">
-                                <button class="page-btn delivering-page" data-page="1">1</button>
-                                <button class="page-btn delivering-page" data-page="2">2</button>
-                                <button class="page-btn delivering-page" data-page="3">3</button>
-                                <button class="page-btn delivering-page" data-page="4">4</button>
+
                             </div>
                         </td>
                     </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -288,10 +276,7 @@
                     <tr class="pagination-row-delivered">
                         <td colspan="10">
                             <div class="pagination" id="deliveredPagination">
-                                <button class="page-btn delivered-page" data-page="1">1</button>
-                                <button class="page-btn delivered-page" data-page="2">2</button>
-                                <button class="page-btn delivered-page" data-page="3">3</button>
-                                <button class="page-btn delivered-page" data-page="4">4</button>
+
                             </div>
                         </td>
                     </tr>
@@ -395,9 +380,7 @@
                     <tr class="pagination-row-return">
                         <td colspan="10">
                             <div class="pagination" id="returnPagination">
-                                <button class="page-btn return-page" data-page="1">1</button>
-                                <button class="page-btn return-page" data-page="2">2</button>
-                                <button class="page-btn return-page" data-page="3">3</button>
+
                             </div>
                         </td>
                     </tr>
@@ -407,7 +390,6 @@
             </div>
         </div>
 
-        <!-- POPUP TỪ CHỐI HOÀN TIỀN -->
         <!-- POPUP TỪ CHỐI HOÀN TIỀN -->
         <div class="popup-desk-overlay" id="rejectPopup">
             <div class="popup-desk-box">
@@ -530,10 +512,7 @@
                     <tr class="pagination-row-cancelled">
                         <td colspan="10">
                             <div class="pagination" id="cancelledPagination">
-                                <button class="page-btn cancelled-page" data-page="1">1</button>
-                                <button class="page-btn cancelled-page" data-page="2">2</button>
-                                <button class="page-btn cancelled-page" data-page="3">3</button>
-                                <button class="page-btn cancelled-page" data-page="4">4</button>
+
                             </div>
                         </td>
                     </tr>
@@ -545,48 +524,10 @@
 
     </div>
 
-    <!-- ====================== POPUP CHI TIẾT ĐƠN HÀNG ====================== -->
-    <div class="order-detail-popup" id="popup-DH00201" style="display:none;">
-        <div class="popup-content">
-            <div class="popup-header">
-                <h3>Chi tiết đơn hàng</h3>
-                <button class="close-popup">&times;</button>
-            </div>
-            <div class="popup-body">
-                <div class="info-row"><span class="label">Mã đơn hàng:</span><span class="value">DH00201</span></div>
-                <div class="info-row"><span class="label">Khách hàng:</span><span class="value">Nguyễn Minh Khôi</span>
-                </div>
-                <div class="info-row"><span class="label">Đơn vị vận chuyển:</span><span class="value">Giao nhanh</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Trạng thái giao hàng:</span>
-                    <span class="value status"><span class="status-text">Đang giao</span><span
-                            class="status-icon"></span></span>
-                </div>
-                <div class="info-row timeline">
-                    <div class="step done">
-                        <div class="circle">1</div>
-                        <div class="line"></div>
-                        <p>Đã xác nhận</p></div>
-                    <div class="step active">
-                        <div class="circle">2</div>
-                        <div class="line"></div>
-                        <p>Đang giao</p></div>
-                    <div class="step">
-                        <div class="circle">3</div>
-                        <p>Hoàn thành</p></div>
-                </div>
-            </div>
-            <div class="popup-footer">
-                <button class="btn-close">Đóng</button>
-            </div>
-        </div>
-    </div>
-
 
 </div>
 
-
+<script src="${pageContext.request.contextPath}/js/orderManagement.js"></script>
 <!--xu li chuyen tab-->
 
 <!--khi nhan huy don => hiện form dien-->
@@ -599,36 +540,6 @@
     document.querySelector(".close-popup").addEventListener("click", () => {
         document.querySelector(".cancel-popup").style.display = "none";
     });
-</script>
-
-<!--Chuyển trang của tab CHỜ XÁC NHẬN-->
-<script>
-    const ROWS_PER_PAGE = 5;
-    const tbody = document.getElementById('confirmTableBody');
-    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-    const pageButtons = document.querySelectorAll('.confirm-page');
-
-    function showPage(page) {
-        const start = (page - 1) * ROWS_PER_PAGE;
-        const end = start + ROWS_PER_PAGE;
-
-        rows.forEach((r, idx) => {
-            r.style.display = (idx >= start && idx < end) ? "" : "none";
-        });
-
-        pageButtons.forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.confirm-page[data-page="${page}"]`)?.classList.add('active');
-    }
-
-    pageButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            showPage(Number(btn.dataset.page));
-        });
-    });
-
-    showPage(1);
-
-
 </script>
 
 <script>
@@ -678,170 +589,48 @@
 </script>
 
 
-
-<!--TAB CHỜ LẤY HÀNG-->
-<script>
-
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('pickupTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-pickup'));
-        const pageButtons = document.querySelectorAll('.pickup-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.pickup-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-
-    })();
-
-</script>
-
-
-<!--TAB ĐANG GIAO-->
-<script>
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('deliverTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-delivering'));
-        const pageButtons = document.querySelectorAll('.delivering-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.delivering-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-
-    })();
-</script>
-
-<!--POPUP XEM CHI TIET DON O TAB DANG GIAO-->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const overlay = document.getElementById('popupOverlay');
-
-        // MỞ POPUP
-        document.querySelectorAll('.btn-de-detail').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const targetId = this.getAttribute('data-target');
-                const popup = document.getElementById(targetId);
-                if (popup) {
-                    popup.style.display = 'block';
-                    overlay.style.display = 'block';
-                    document.body.style.overflow = 'hidden';   // chặn scroll
-                }
-            });
-        });
-
-        // ĐÓNG POPUP
-        function closeAllPopups() {
-            document.querySelectorAll('.order-detail-popup').forEach(p => p.style.display = 'none');
-            overlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Nút X, nút Đóng, overlay
-        document.querySelectorAll('.close-popup, .btn-close').forEach(el => {
-            el.addEventListener('click', closeAllPopups);
-        });
-        overlay.addEventListener('click', closeAllPopups);
-    });
-</script>
-
-
-<!--TAB ĐÃ GIAO-->
-<script>
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('deliveredTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-delivered'));
-        const pageButtons = document.querySelectorAll('.delivered-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.delivered-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-    })();
-</script>
-
-
 <!--CHUỂN TRANG GIŨA CÁC TAB-->
 <script>
-
     const tabs = document.querySelectorAll(".tab-item");
     const tabContents = document.querySelectorAll(".tab-content");
 
-    // Hiển thị tab theo index: 0 = chờ xác nhận, 1 = chờ lấy hàng, ...
-    function showTab(index) {
-        // Xóa active
+    function showTab(index, saveState = true) {
         tabs.forEach(t => t.classList.remove("active"));
         if (tabs[index]) tabs[index].classList.add("active");
 
-        // Ẩn mọi nội dung, chỉ show cái index
         tabContents.forEach((c, i) => {
-            if (i === index) c.style.display = ""; // show (mặc định)
-            else c.style.display = "none";
+            c.style.display = (i === index) ? "" : "none";
         });
+
+        // LƯU TAB HIỆN TẠI VÀO LOCALSTORAGE
+        if (saveState && typeof saveCurrentTab === 'function') {
+            saveCurrentTab(index);
+        }
     }
 
     // Gắn sự kiện click cho tab
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
-            showTab(index);
-            // Nếu cần focus vào search input tương ứng:
-            const targetContent = tabContents[index];
-            const input = targetContent ? targetContent.querySelector('.search-input') : null;
-            if (input) input.focus();
+            showTab(index, true); // Lưu state khi user click
         });
     });
 
-    // Khởi tạo: show tab đầu (Chờ xác nhận)
-    showTab(0);
+    // KHÔI PHỤC TAB ĐÃ LƯU HOẶC MẶC ĐỊNH TAB 0
+    document.addEventListener('DOMContentLoaded', function() {
+        let tabToShow = 0; // Mặc định tab đầu tiên
 
+        // Kiểm tra có tab đã lưu không
+        if (typeof getSavedTab === 'function') {
+            const savedTab = getSavedTab();
+            if (savedTab !== null && savedTab >= 0 && savedTab < tabs.length) {
+                tabToShow = savedTab;
+                console.log('📌 Khôi phục tab đã lưu:', tabToShow);
+            }
+        }
+
+        // Hiển thị tab (không lưu lại để tránh loop)
+        showTab(tabToShow, false);
+    });
 </script>
 
 <!--TRA TIEN/ HOAN TIEN-->
@@ -916,61 +705,9 @@
         alert('Đã hoàn tiền thành công!');
     };
 
-
-    /* --- PHÂN TRANG --- */
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('returnTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-return'));
-        const pageButtons = document.querySelectorAll('.return-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => r.style.display = (idx >= start && idx < end) ? "" : "none");
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.return-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => btn.addEventListener("click", () => showPage(Number(btn.dataset.page))));
-        showPage(1);
-    })();
-
 </script>
 
 <!--DON BI HUY-->
-<script>
-    (function () {
-        const ROWS_PER_PAGE = 5;
-        const tbody = document.getElementById('cancelledTableBody');
-        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row-cancelled'));
-        const pageButtons = document.querySelectorAll('.cancelled-page');
-
-        function showPage(page) {
-            const start = (page - 1) * ROWS_PER_PAGE;
-            const end = start + ROWS_PER_PAGE;
-
-            rows.forEach((r, idx) => {
-                r.style.display = (idx >= start && idx < end) ? "" : "none";
-            });
-
-            pageButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.cancelled-page[data-page="${page}"]`)?.classList.add('active');
-        }
-
-        pageButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                showPage(Number(btn.dataset.page));
-            });
-        });
-
-        showPage(1);
-    })();
-
-
-</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -1064,7 +801,7 @@
 
 <script>
     // XÁC NHẬN TẤT CẢ ĐơN HÀNG TRONG TAB CHỜ XÁC NHẬN
-    document.querySelector('.confirm-all-btn').addEventListener('click', function() {
+    document.querySelector('.confirm-all-btn').addEventListener('click', function () {
 
         if (!confirm('Bạn có chắc muốn xác nhận TẤT CẢ đơn hàng đang chờ xác nhận?')) {
             return;
