@@ -146,22 +146,77 @@ body {
 /* Nút hành động trong bảng */
 .edit-btn,
 .delete-btn {
-    border: none;
-    background: transparent;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ddd;
+    background-color: #fff;
     cursor: pointer;
-    font-size: 18px;
-    padding: 6px;
+    font-size: 16px;
+    padding: 0;
+    border-radius: 6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.2s ease;
 }
 
+/* Nút hành động trong bảng */
+.edit-btn,
+.delete-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    font-size: 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* Cột thao tác */
+.action-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px; /* khoảng cách giữa 2 icon */
+}
+
+/* Nút icon trần */
+.edit-btn,
+.delete-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Icon */
 .edit-btn i,
 .delete-btn i {
+    font-size: 18px;
     color: #000;
+    transition: color 0.2s ease;
 }
 
-.edit-btn:hover i,
-.delete-btn:hover i {
-    color: #ff4c4c;
+/* Hover đổi màu */
+.edit-btn:hover i {
+    color: #ff9800; /* cam */
 }
+
+.delete-btn:hover i {
+    color: #f44336; /* đỏ */
+}
+
+
+
 
 
 /* Phân trang */
@@ -340,10 +395,47 @@ body {
 }
 
 
+/* Ô thao tác */
 .action-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+}
+
+/* Nút icon chung */
+.action-cell button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* Icon */
+.action-cell button i {
+    font-size: 16px;
+    color: #000;
+}
+
+/* Hover chung */
+.action-cell button:hover {
+    background-color: #f5f5f5;
+    border-color: #bbb;
+}
+
+/* Hover riêng cho nút sửa */
+.action-cell .edit-btn:hover i {
+    color: #ff9800; /* cam */
+}
+
+/* Hover riêng cho nút xóa */
+.action-cell .delete-btn:hover i {
+    color: #f44336; /* đỏ */
 }
 

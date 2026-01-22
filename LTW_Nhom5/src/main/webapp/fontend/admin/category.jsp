@@ -214,20 +214,17 @@
             <div class="popup-box">
                 <h3>Chỉnh sửa thể loại</h3>
 
-                <label>Mã thể loại:</label>
-                <input type="text" id="editCategoryId" readonly>
-
                 <label>Tên thể loại:</label>
                 <input type="text" id="editCategoryName">
 
                 <label>Mô tả:</label>
                 <textarea id="editCategoryDesc" rows="4"></textarea>
 
-                <label>Ngày tạo:</label>
-                <input type="date" id="editCategoryCreatedDate" readonly>
+                <label>Ngày chỉnh sửa:</label>
+                <input type="date" id="editCategoryDate" readonly>
 
                 <div class="popup-actions">
-                    <button class="save-btn">Cập nhật</button>
+                    <button class="save-btn" id="confirmEditBtn">Cập nhật</button>
                     <button class="cancel-btn" onclick="closeEditPopup()">Hủy</button>
                 </div>
             </div>
@@ -238,6 +235,8 @@
             <div class="popup-box">
                 <h3>Bạn có chắc muốn xóa?</h3>
                 <p id="deleteCategoryName" style="text-align: center; color: #666; margin: 10px 0;"></p>
+                <!-- Thêm dòng này để hiển thị message -->
+                <p id="deleteCategoryMessage" style="text-align: center; color: #333; margin: 10px 0; font-weight: 500;"></p>
                 <div class="popup-actions">
                     <button class="save-btn" id="confirmDeleteBtn">Xóa</button>
                     <button class="cancel-btn" onclick="closeDeletePopup()">Hủy</button>
@@ -255,6 +254,7 @@
     console.log('Context path set to:', window.contextPath);
 </script>
 <script src="<%=request.getContextPath()%>/js/categoryManagement.js"></script>
+<%--<script src="<%=request.getContextPath()%>/js/categorySearch.js"></script>--%>
 
 </body>
 </html>

@@ -157,26 +157,47 @@ public class CategoriesDao {
      * Lấy thể loại theo ID - SỬA LẠI SELECT *
      */
     public Category getCategoryById(int id) {
-        String sql = "SELECT id, " +
+        String sql = "SELECT " +
+                "id, " +
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
-                "FROM categories WHERE id = :id AND is_deleted = 0";
+                "FROM categories " +
+                "WHERE id = :id AND is_deleted = 0";
 
         try {
-            return jdbi.withHandle(handle ->
-                    handle.createQuery(sql)
-                            .bind("id", id)
-                            .mapToBean(Category.class)
-                            .findOne()
-                            .orElse(null)
-            );
+            System.out.println("=== getCategoryById called ===");
+            System.out.println("ID: " + id);
+            System.out.println("SQL: " + sql);
+
+            Category result = jdbi.withHandle(handle -> {
+                System.out.println("Handle created, executing query...");
+
+                return handle.createQuery(sql)
+                        .bind("id", id)
+                        .mapToBean(Category.class)
+                        .findOne()
+                        .orElse(null);
+            });
+
+            if (result != null) {
+                System.out.println("✓ Found category:");
+                System.out.println("  - ID: " + result.getId());
+                System.out.println("  - Name: " + result.getNameCategories());
+                System.out.println("  - Description: " + result.getDescription());
+            } else {
+                System.out.println("✗ No category found with ID: " + id);
+            }
+
+            return result;
+
         } catch (Exception e) {
-            System.err.println("Error in getCategoryById:");
+            System.err.println("✗✗✗ ERROR in getCategoryById ✗✗✗");
+            System.err.println("ID parameter: " + id);
             e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error getting category by ID: " + id, e);
         }
     }
 
@@ -207,25 +228,22 @@ public class CategoriesDao {
      * Cập nhật thể loại
      */
     public boolean updateCategory(Category category) {
-        String sql = "UPDATE categories " +
-                "SET name_categories = :name, description = :description " +
-                "WHERE id = :id AND is_deleted = 0";
+        String sql = """
+        UPDATE categories
+        SET name_categories = :name,
+            description = :description
+        WHERE id = :id AND is_deleted = 0
+    """;
 
-        try {
-            int rowsAffected = jdbi.withHandle(handle ->
-                    handle.createUpdate(sql)
-                            .bind("id", category.getId())
-                            .bind("name", category.getNameCategories())
-                            .bind("description", category.getDescription())
-                            .execute()
-            );
-            System.out.println("✓ Category updated - Rows affected: " + rowsAffected);
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            System.err.println("✗ Error updating category:");
-            e.printStackTrace();
-            return false;
-        }
+        int rows = jdbi.withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("id", category.getId())
+                        .bind("name", category.getNameCategories())
+                        .bind("description", category.getDescription())
+                        .execute()
+        );
+
+        return rows > 0;
     }
 
     /**
@@ -282,6 +300,18 @@ public class CategoriesDao {
     }
 
     public static void main(String[] args) {
-        System.out.println(    new CategoriesDao().addCategory(new Category(36, "Truyện dân gian","Truyện cổ tích là loại truyện dân gian hư cấu, phản ánh ước mơ, niềm tin và bài học đạo đức qua những nhân vật, sự kiện kỳ ảo, giàu tính nhân văn.", 0, null,LocalDateTime.now())));
+        CategoriesDao dao = new CategoriesDao();
+
+        System.out.println("=== Testing getCategoryById ===");
+        Category cat = dao.getCategoryById(2);
+
+        if (cat != null) {
+            System.out.println("SUCCESS!");
+            System.out.println("ID: " + cat.getId());
+            System.out.println("Name: " + cat.getNameCategories());
+            System.out.println("Description: " + cat.getDescription());
+        } else {
+            System.out.println("FAILED - returned null");
+        }
     }
 }
