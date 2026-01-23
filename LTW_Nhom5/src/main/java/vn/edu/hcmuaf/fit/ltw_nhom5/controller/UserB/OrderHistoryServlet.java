@@ -146,6 +146,12 @@ public class OrderHistoryServlet extends HttpServlet {
                 System.out.println("Receive order #" + orderId + ": " + success);
                 break;
 
+            case "return":
+                // Trả hàng -> cập nhật trạng thái Returned
+                success = orderDAO.updateOrderStatus(orderId, "Returned");
+                System.out.println("Return order #" + orderId + ": " + success);
+                break;
+
             default:
                 System.out.println("Unknown action: " + action);
                 break;

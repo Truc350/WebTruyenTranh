@@ -152,7 +152,9 @@
                             </c:when>
 
                             <c:when test="${order.status == 'Shipping'}">
-                                <button class="action-btn contact-seller">Trả hàng</button>
+                                <button class="action-btn contact-seller" onclick="returnOrder(${order.id})">
+                                        Trả hàng
+                                        </button>
                                 <button class="action-btn receive-order" onclick="receiveOrder(${order.id})">
                                     Đã nhận hàng
                                 </button>
@@ -394,6 +396,33 @@
                 });
         }
     }
+
+    function returnOrder(orderId) {
+        if (confirm('Bạn có chắc muốn trả hàng cho đơn này?')) {
+            fetch('${pageContext.request.contextPath}/order-history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=return&orderId=' + orderId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Yêu cầu trả hàng thành công!');
+                        location.reload();
+                    } else {
+                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra!');
+                });
+        }
+    }
+
+
 </script>
 
 </body>
