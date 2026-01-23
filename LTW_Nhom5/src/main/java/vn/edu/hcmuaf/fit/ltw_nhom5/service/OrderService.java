@@ -1,19 +1,13 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.service;
 
 import org.jdbi.v3.core.Jdbi;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.OrderDAO;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.PaymentDAO;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.CurrencyFormatter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OrderService {
@@ -22,6 +16,7 @@ public class OrderService {
     private PaymentDAO paymentDAO;
     private ComicDAO comicDAO;
     private UserDao userDAO;
+    private OrderHistoryDAO orderHistoryDAO;
 
     public OrderService() {
         this.jdbi = JdbiConnector.get();
@@ -29,6 +24,7 @@ public class OrderService {
         this.paymentDAO = new PaymentDAO();
         this.comicDAO = new ComicDAO();
         this.userDAO = new UserDao(jdbi);
+        this.orderHistoryDAO = new OrderHistoryDAO();
     }
 
     /**
@@ -114,13 +110,13 @@ public class OrderService {
         data.put("orderCode", order.getId());
         data.put("userId", order.getUserId());
 
-        // ✅ XỬ LÝ NGÀY THÁNG - Xử lý cả trường hợp NULL
+        // XỬ LÝ NGÀY THÁNG - Xử lý cả trường hợp NULL
         try {
             Object orderDate = order.getOrderDate();
             String formattedDate = "";
 
             if (orderDate == null) {
-                // ✅ Trường hợp NULL - set giá trị mặc định
+                // Trường hợp NULL - set giá trị mặc định
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
                 System.out.println("⚠️ Order " + order.getId() + " has NULL orderDate");
@@ -137,7 +133,7 @@ public class OrderService {
                         localDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant()
                 ));
             } else if (orderDate instanceof java.sql.Timestamp) {
-                // ✅ THÊM XỬ LÝ CHO TIMESTAMP
+                // THÊM XỬ LÝ CHO TIMESTAMP
                 java.sql.Timestamp timestamp = (java.sql.Timestamp) orderDate;
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
                 formattedDate = sdf.format(timestamp);
@@ -147,7 +143,7 @@ public class OrderService {
                 formattedDate = sdf.format(orderDate);
                 data.put("orderDate", orderDate);
             } else {
-                // ✅ Kiểu dữ liệu không xác định
+                // Kiểu dữ liệu không xác định
                 System.out.println("❌ Unknown date type for order " + order.getId() + ": " + orderDate.getClass().getName());
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
@@ -165,7 +161,7 @@ public class OrderService {
         data.put("status", order.getStatus());
         data.put("totalAmount", order.getTotalAmount());
 
-        // ✅ SỬ DỤNG CurrencyFormatter ĐỂ FORMAT TIỀN
+        // SỬ DỤNG CurrencyFormatter ĐỂ FORMAT TIỀN
         data.put("formattedAmount", CurrencyFormatter.format(order.getTotalAmount()));
 
         data.put("recipientName", order.getRecipientName());
@@ -190,10 +186,37 @@ public class OrderService {
 
         data.put("shippingFee", order.getShippingFee());
 
-        // ✅ FORMAT PHÍ VẬN CHUYỂN
+        //  FORMAT PHÍ VẬN CHUYỂN
         data.put("formattedShippingFee", CurrencyFormatter.format(order.getShippingFee()));
 
         data.put("pointUsed", order.getPointUsed());
+
+        // LẤY LÝ DO HỦY TỪ ORDER_HISTORY (NẾU ĐƠN BỊ HỦY)
+        if ("Cancelled".equals(order.getStatus())) {
+            try {
+                Optional<OrderHistory> history = orderHistoryDAO.getCancellationReason(order.getId());
+                if (history.isPresent()) {
+                    data.put("cancellationReason", history.get().getReason() != null ? history.get().getReason() : "Không có lý do");
+                    data.put("cancelledBy", history.get().getChangedBy());
+                    // CONVERT LocalDateTime sang java.util.Date cho JSTL
+                    LocalDateTime cancelledAt = history.get().getChangedAt();
+                    if (cancelledAt != null) {
+                        java.util.Date cancelledDate = java.util.Date.from(
+                                cancelledAt.atZone(java.time.ZoneId.systemDefault()).toInstant()
+                        );
+                        data.put("cancelledAt", cancelledDate);
+                    }
+                } else {
+                    data.put("cancellationReason", "Không có lý do");
+                    data.put("cancelledBy", "N/A");
+                    data.put("cancelledAt", null);
+                }
+            } catch (Exception e) {
+                data.put("cancellationReason", "Không có lý do");
+                data.put("cancelledBy", "N/A");
+                data.put("cancelledAt", null);
+            }
+        }
 
         // Lấy tên khách hàng từ recipient_name
         data.put("userName", order.getRecipientName());
@@ -258,7 +281,7 @@ public class OrderService {
             itemData.put("quantity", item.getQuantity());
             itemData.put("priceAtPurchase", item.getPriceAtPurchase());
 
-            // ✅ SỬ DỤNG CurrencyFormatter ĐỂ FORMAT GIÁ SẢN PHẨM
+            // SỬ DỤNG CurrencyFormatter ĐỂ FORMAT GIÁ SẢN PHẨM
             itemData.put("formattedPrice", CurrencyFormatter.format(item.getPriceAtPurchase()));
 
             // Lấy thông tin comic
@@ -300,6 +323,12 @@ public class OrderService {
         Map<String, Object> result = new HashMap<>();
 
         try {
+            Order order = orderDAO.getOrderById(orderId).orElse(null);
+            if (order == null) {
+                return Map.of("success", false, "message", "Không tìm thấy đơn hàng");
+            }
+            String oldStatus = order.getStatus();
+
             // Cập nhật đơn vị vận chuyển nếu có
             if (shippingProvider != null && !shippingProvider.trim().isEmpty()) {
                 orderDAO.updateShippingProvider(orderId, shippingProvider);
@@ -309,6 +338,14 @@ public class OrderService {
             boolean success = orderDAO.updateOrderStatus(orderId, "AwaitingPickup");
 
             if (success) {
+                OrderHistory history = new OrderHistory(
+                        orderId,
+                        oldStatus,
+                        "AwaitingPickup",
+                        "Admin",
+                        null  // Không có lý do khi xác nhận
+                );
+                orderHistoryDAO.addHistory(history);
                 result.put("success", true);
                 result.put("message", "Đã xác nhận đơn hàng thành công");
             } else {
@@ -331,10 +368,27 @@ public class OrderService {
         Map<String, Object> result = new HashMap<>();
 
         try {
+            // Lấy thông tin đơn hàng trước khi hủy
+            Order order = orderDAO.getOrderById(orderId).orElse(null);
+            if (order == null) {
+                return Map.of("success", false, "message", "Không tìm thấy đơn hàng");
+            }
+
+            String oldStatus = order.getStatus();
+
             // Sử dụng updateOrderStatusWithPoints để tự động hoàn xu và tồn kho
             boolean success = orderDAO.updateOrderStatusWithPoints(orderId, "Cancelled");
 
             if (success) {
+                OrderHistory history = new OrderHistory(
+                        orderId,
+                        oldStatus,
+                        "Cancelled",
+                        "Admin",  // Hoặc lấy từ session
+                        reason != null ? reason : "Không có lý do"
+                );
+
+                orderHistoryDAO.addHistory(history);
                 result.put("success", true);
                 result.put("message", "Đã hủy đơn hàng. Xu và tồn kho đã được hoàn lại.");
             } else {
@@ -499,5 +553,89 @@ public class OrderService {
         }
 
         return result;
+    }
+
+
+    /**
+     * Tìm kiếm đơn hàng theo tab cụ thể
+     * @param keyword Từ khóa tìm kiếm (mã đơn hoặc tên khách)
+     * @param status Trạng thái đơn hàng (tab hiện tại)
+     * @return Danh sách đơn hàng đã format
+     */
+    public List<Map<String, Object>> searchOrdersByTab(String keyword, String status) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        try {
+            List<Map<String, Object>> orders;
+
+            // Xử lý riêng cho tab Cancelled vì cần lấy thêm thông tin từ order_history
+            if ("Cancelled".equalsIgnoreCase(status)) {
+                orders = orderDAO.searchCancelledOrders(keyword);
+            } else {
+                orders = orderDAO.searchOrdersByStatus(keyword, status);
+            }
+
+            // Format dữ liệu giống như buildOrderData
+            for (Map<String, Object> orderMap : orders) {
+                int orderId = ((Number) orderMap.get("id")).intValue();
+
+                // Lấy Order object đầy đủ
+                Order order = orderDAO.getOrderById(orderId).orElse(null);
+
+                if (order != null) {
+                    // Sử dụng buildOrderData để format đồng nhất
+                    Map<String, Object> formattedOrder = buildOrderData(order);
+                    result.add(formattedOrder);
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error in searchOrdersByTab: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab CHỜ XÁC NHẬN
+     */
+    public List<Map<String, Object>> searchPendingOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Pending");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab CHỜ LẤY HÀNG
+     */
+    public List<Map<String, Object>> searchAwaitingPickupOrders(String keyword) {
+        return searchOrdersByTab(keyword, "AwaitingPickup");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐANG GIAO
+     */
+    public List<Map<String, Object>> searchShippingOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Shipping");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
+     */
+    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Completed");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab TRẢ HÀNG/HOÀN TIỀN
+     */
+    public List<Map<String, Object>> searchReturnedOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Returned");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐƠN BỊ HỦY
+     */
+    public List<Map<String, Object>> searchCancelledOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Cancelled");
     }
 }
