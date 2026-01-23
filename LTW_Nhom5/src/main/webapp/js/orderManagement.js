@@ -3,6 +3,18 @@
 // =====================================================================
 
 /**
+ * Helper function: Kiểm tra xem row có phải là pagination row không
+ */
+function isPaginationRow(row) {
+    const classList = row.classList;
+    return classList.contains('pagination-row') ||
+        classList.contains('pagination-row-pickup') ||
+        classList.contains('pagination-row-delivering') ||
+        classList.contains('pagination-row-delivered') ||
+        classList.contains('pagination-row-return') ||
+        classList.contains('pagination-row-cancelled');
+}
+/**
  * Hàm khởi tạo phân trang động cho một tab
  * @param {string} tbodyId - ID của tbody
  * @param {string} paginationId - ID của container phân trang
@@ -18,17 +30,13 @@ function initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPa
         return;
     }
 
-    // Lấy tất cả các dòng (trừ dòng pagination)
-    const allRows = Array.from(tbody.querySelectorAll('tr'))
-        .filter(r => !r.classList.contains('pagination-row') &&
-            !r.classList.contains('pagination-row-pickup') &&
-            !r.classList.contains('pagination-row-delivering') &&
-            !r.classList.contains('pagination-row-delivered') &&
-            !r.classList.contains('pagination-row-return') &&
-            !r.classList.contains('pagination-row-cancelled'));
+    // ✅ SỬ DỤNG isPaginationRow() thay vì hardcode
+    const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !isPaginationRow(r));
 
     // Tính số trang cần thiết
     const totalPages = Math.ceil(allRows.length / rowsPerPage);
+
+    console.log(`📊 ${tbodyId}: ${allRows.length} rows, ${totalPages} pages`);
 
     // Xóa các nút trang cũ
     paginationContainer.innerHTML = '';
@@ -49,9 +57,10 @@ function initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPa
     }
 
     // Hiển thị trang đầu tiên
-    showPage(1, allRows, paginationContainer, pageButtonClass, rowsPerPage);
+    if (totalPages > 0) {
+        showPage(1, allRows, paginationContainer, pageButtonClass, rowsPerPage);
+    }
 }
-
 /**
  * Hiển thị một trang cụ thể
  */
@@ -193,33 +202,32 @@ function initSearchWithDynamicPagination(searchInputId, tbodyId, paginationId, p
         return;
     }
 
-    searchInput.addEventListener('input', function () {
-        const keyword = this.value.toLowerCase().trim();
+    // Tìm icon search
+    const searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
 
-        // Lấy tất cả các dòng
-        const allRows = Array.from(tbody.querySelectorAll('tr'))
-            .filter(r => !r.classList.contains('pagination-row') &&
-                !r.classList.contains('pagination-row-pickup') &&
-                !r.classList.contains('pagination-row-delivering') &&
-                !r.classList.contains('pagination-row-delivered') &&
-                !r.classList.contains('pagination-row-return') &&
-                !r.classList.contains('pagination-row-cancelled'));
+    // Hàm thực hiện search
+    const performSearch = function() {
+        const keyword = searchInput.value.toLowerCase().trim();
 
-        // Lọc các dòng phù hợp
+        if (!keyword) {
+            // Hiển thị lại TẤT CẢ các rows trước
+            const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !isPaginationRow(r));
+            allRows.forEach(row => row.style.display = '');
+
+            // Sau đó mới reset pagination
+            initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPage);
+            return;
+        }
+
+        const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !isPaginationRow(r));
         const visibleRows = allRows.filter(row => {
             const orderCode = row.cells[0].textContent.toLowerCase();
             const customerName = row.cells[1].textContent.toLowerCase();
-
             return orderCode.includes(keyword) || customerName.includes(keyword);
         });
 
-        // Ẩn tất cả các dòng
         allRows.forEach(row => row.style.display = 'none');
-
-        // Tính số trang mới
         const totalPages = Math.ceil(visibleRows.length / rowsPerPage);
-
-        // Cập nhật pagination
         paginationContainer.innerHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
@@ -227,19 +235,36 @@ function initSearchWithDynamicPagination(searchInputId, tbodyId, paginationId, p
             pageBtn.className = `page-btn ${pageButtonClass}`;
             pageBtn.dataset.page = i;
             pageBtn.textContent = i;
-
             pageBtn.addEventListener('click', function () {
                 showPage(i, visibleRows, paginationContainer, pageButtonClass, rowsPerPage);
             });
-
             paginationContainer.appendChild(pageBtn);
         }
 
-        // Hiển thị trang đầu tiên
         if (totalPages > 0) {
             showPage(1, visibleRows, paginationContainer, pageButtonClass, rowsPerPage);
         }
+    };
+
+    // Nhấn Enter để search
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+        }
     });
+
+    searchInput.addEventListener('input', function() {
+        if (this.value.trim() === '') {
+            performSearch();
+        }
+    });
+
+    // Click icon để search
+    if (searchIcon) {
+        searchIcon.style.cursor = 'pointer';
+        searchIcon.addEventListener('click', performSearch);
+    }
 }
 
 // =====================================================================
@@ -257,20 +282,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 2. TAB CHỜ LẤY HÀNG
     initDynamicPagination('pickupTableBody', 'pickupPagination', 'pickup-page', 5);
+    initSearchWithDynamicPagination('pickupSearch', 'pickupTableBody', 'pickupPagination', 'pickup-page', 5)
     initShipConfirmButtons();
 
     // 3. TAB ĐANG GIAO
     initDynamicPagination('deliverTableBody', 'deliveringPagination', 'delivering-page', 5);
+    initSearchWithDynamicPagination('deliverSearch', 'deliverTableBody', 'deliveringPagination', 'delivering-page', 5);
     initOrderDetailButtons();
 
     // 4. TAB ĐÃ GIAO
     initDynamicPagination('deliveredTableBody', 'deliveredPagination', 'delivered-page', 5);
+    initSearchWithDynamicPagination('deliveredSearch', 'deliveredTableBody', 'deliveredPagination', 'delivered-page', 5);
 
     // 5. TAB TRẢ HÀNG/HOÀN TIỀN
     initDynamicPagination('returnTableBody', 'returnPagination', 'return-page', 5);
+    initSearchWithDynamicPagination('returnSearch', 'returnTableBody', 'returnPagination', 'return-page', 5);
 
     // 6. TAB ĐƠN BỊ HỦY
     initDynamicPagination('cancelledTableBody', 'cancelledPagination', 'cancelled-page', 5);
+    initSearchWithDynamicPagination('cancelledSearch', 'cancelledTableBody', 'cancelledPagination', 'cancelled-page', 5);
 });
 
 
@@ -574,3 +604,595 @@ function formatCurrency(amount) {
 // Export functions để dùng ở nơi khác
 window.initOrderDetailButtons = initOrderDetailButtons;
 window.closeOrderDetailPopup = closeOrderDetailPopup;
+
+
+// =====================================================================
+// CHỨC NĂNG TÌM KIẾM
+// =====================================================================
+/**
+ * XỬ LÝ TÌM KIẾM ĐƠN HÀNG THEO TỪNG TAB
+ * File này xử lý tìm kiếm cho tất cả các tab trong quản lý đơn hàng
+ */
+
+(function () {
+    'use strict';
+
+    // ================== CONSTANTS ==================
+    const SEARCH_DELAY = 500; // Delay 500ms trước khi search (debounce)
+
+    // Mapping giữa tab và status
+    const TAB_STATUS_MAP = {
+        'tab-pending': 'Pending',
+        'tab-pickup': 'AwaitingPickup',
+        'tab-delivering': 'Shipping',
+        'tab-delivered': 'Completed',
+        'tab-return': 'Returned',
+        'tab-cancelled': 'Cancelled'
+    };
+
+    // Mapping giữa input search và tbody tương ứng
+    const SEARCH_CONFIG = {
+        'pendingSearch': {
+            status: 'Pending',
+            tbody: 'confirmTableBody',
+            pagination: 'tablePagination',
+            pageButtonClass: 'confirm-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        },
+        'pickupSearch': {
+            status: 'AwaitingPickup',
+            tbody: 'pickupTableBody',
+            pagination: 'pickupPagination',
+            pageButtonClass: 'pickup-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        },
+        'deliverSearch': {
+            status: 'Shipping',
+            tbody: 'deliverTableBody',
+            pagination: 'deliveringPagination',
+            pageButtonClass: 'delivering-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        },
+        'deliveredSearch': {
+            status: 'Completed',
+            tbody: 'deliveredTableBody',
+            pagination: 'deliveredPagination',
+            pageButtonClass: 'delivered-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        },
+        'returnSearch': {
+            status: 'Returned',
+            tbody: 'returnTableBody',
+            pagination: 'returnPagination',
+            pageButtonClass: 'return-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        },
+        'cancelledSearch': {
+            status: 'Cancelled',
+            tbody: 'cancelledTableBody',
+            pagination: 'cancelledPagination',
+            pageButtonClass: 'cancelled-page',
+            noResultMessage: 'Không tìm thấy đơn hàng nào'
+        }
+    };
+
+    // ================== DEBOUNCE UTILITY ==================
+    let searchTimeouts = {};
+
+    function debounce(func, delay, key) {
+        return function (...args) {
+            clearTimeout(searchTimeouts[key]);
+            searchTimeouts[key] = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // ================== SEARCH FUNCTION ==================
+    /**
+     * Thực hiện tìm kiếm đơn hàng
+     */
+    function searchOrders(keyword, config) {
+        if (!keyword || keyword.trim() === '') {
+            location.reload();
+            return;
+        }
+
+        const tbody = document.getElementById(config.tbody);          // Dùng config.tbody
+        const paginationContainer = document.getElementById(config.pagination); // Dùng config.pagination
+
+        if (!tbody || !paginationContainer) {
+            console.error('Không tìm thấy tbody hoặc pagination container');
+            return;
+        }
+
+        // Hiển thị loading
+        showLoading(tbody);
+
+        // Gọi API tìm kiếm
+        fetch(`${BASE_URL}/admin/orders?action=searchByTab&keyword=${encodeURIComponent(keyword)}&status=${config.status}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderSearchResults(data.orders, tbody, config, paginationContainer);
+                } else {
+                    showError(tbody, data.error || 'Lỗi khi tìm kiếm');
+                }
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                showError(tbody, 'Lỗi kết nối: ' + error.message);
+            });
+    }
+
+    // ================== RENDER FUNCTIONS ==================
+    /**
+     * Render kết quả tìm kiếm
+     */
+    function renderSearchResults(orders, tbody, config, paginationContainer) {
+        // Xóa tất cả rows trừ pagination, loading, error, no-result
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (!isPaginationRow(row)) {
+                row.remove();
+            }
+        });
+
+        if (!orders || orders.length === 0) {
+            showNoResults(tbody, config.noResultMessage);
+            paginationContainer.innerHTML = '';
+            return;
+        }
+
+        // Render từng đơn hàng theo tab
+        const fragment = document.createDocumentFragment();
+
+        orders.forEach(order => {
+            const row = createOrderRow(order, config.status);
+            fragment.appendChild(row);
+        });
+
+        // Insert trước pagination row - tìm bất kỳ dạng pagination row nào
+        const paginationRow = Array.from(tbody.querySelectorAll('tr')).find(row => isPaginationRow(row));
+        if (paginationRow) {
+            tbody.insertBefore(fragment, paginationRow);
+        } else {
+            tbody.appendChild(fragment);
+        }
+
+        // Gắn lại sự kiện cho các nút
+        attachButtonEvents(tbody, config.status);
+
+        // Filter rows với logic đầy đủ
+        const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r =>
+            !isPaginationRow(r) &&
+            !r.classList.contains('loading-row') &&
+            !r.classList.contains('error-row') &&
+            !r.classList.contains('no-result-row')
+        );
+
+        const totalPages = Math.ceil(allRows.length / 5);
+
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${config.pageButtonClass}`;
+            pageBtn.dataset.page = i;
+            pageBtn.textContent = i;
+
+            pageBtn.addEventListener('click', function () {
+                showPage(i, allRows, paginationContainer, config.pageButtonClass, 5);
+            });
+
+            paginationContainer.appendChild(pageBtn);
+        }
+
+        // Hiển thị trang đầu tiên
+        if (totalPages > 0) {
+            showPage(1, allRows, paginationContainer, config.pageButtonClass, 5);
+        }
+    }
+
+    /**
+     * Tạo row cho đơn hàng theo từng tab
+     */
+    function createOrderRow(order, status) {
+        const tr = document.createElement('tr');
+
+        switch (status) {
+            case 'Pending':
+                tr.innerHTML = createPendingRow(order);
+                break;
+            case 'AwaitingPickup':
+                tr.innerHTML = createPickupRow(order);
+                break;
+            case 'Shipping':
+                tr.innerHTML = createShippingRow(order);
+                break;
+            case 'Completed':
+                tr.innerHTML = createCompletedRow(order);
+                break;
+            case 'Returned':
+                tr.innerHTML = createReturnedRow(order);
+                break;
+            case 'Cancelled':
+                tr.innerHTML = createCancelledRow(order);
+                break;
+        }
+
+        return tr;
+    }
+
+    // ================== ROW TEMPLATES ==================
+    /**
+     * Template cho tab CHỜ XÁC NHẬN
+     */
+    function createPendingRow(order) {
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>${order.orderDateFormatted || formatDate(order.orderDate)}</td>
+            <td>${order.formattedAmount || formatCurrency(order.totalAmount)}</td>
+            <td>${order.paymentMethodDisplay || order.paymentMethod || '—'}</td>
+            <td class="product-cell">${order.productSummary || ''}</td>
+            <td>${order.fullAddress || order.shippingAddress || ''}</td>
+            <td>${order.shippingProvider || '—'}</td>
+            <td>
+                <button class="confirm-btn" data-order-id="${order.id}">Xác nhận</button>
+                <button class="cancel-btn" data-order-id="${order.id}">Hủy</button>
+            </td>
+        `;
+    }
+
+    /**
+     * Template cho tab CHỜ LẤY HÀNG
+     */
+    function createPickupRow(order) {
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>${order.formattedAmount || formatCurrency(order.totalAmount)}</td>
+            <td>${order.shippingProvider || '—'}</td>
+            <td>${order.shippingAddress || ''}</td>
+            <td>
+                <button class="ship-confirm-btn" data-order-id="${order.id}">
+                    Xác nhận đã giao cho ĐVVC
+                </button>
+            </td>
+        `;
+    }
+
+    /**
+     * Template cho tab ĐANG GIAO
+     */
+    function createShippingRow(order) {
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>${order.shippingProvider || '—'}</td>
+            <td class="action-cell">
+                <button class="btn-de-detail" data-order-id="${order.id}">
+                    Xem chi tiết đơn
+                </button>
+            </td>
+        `;
+    }
+
+    /**
+     * Template cho tab ĐÃ GIAO
+     */
+    function createCompletedRow(order) {
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>${order.orderDateFormatted || formatDate(order.orderDate)}</td>
+            <td>${order.formattedAmount || formatCurrency(order.totalAmount)}</td>
+            <td>${order.paymentMethodDisplay || order.paymentMethod || '—'}</td>
+            <td>${order.transactionId || '—'}</td>
+            <td class="stars">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star-half-stroke"></i>
+            </td>
+        `;
+    }
+
+    /**
+     * Template cho tab TRẢ HÀNG/HOÀN TIỀN
+     */
+    function createReturnedRow(order) {
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>Yêu cầu hoàn trả</td>
+            <td><span class="status yellow">Đang xem xét</span></td>
+            <td><button class="btn-detail">Xem</button></td>
+            <td class="action-buttons">
+                <button class="btn-refund" onclick="confirmRefund(this)">Xác nhận hoàn tiền</button>
+                <button class="btn-reject" onclick="openRejectPopup(this)">Từ chối</button>
+            </td>
+        `;
+    }
+
+    /**
+     * Template cho tab ĐƠN BỊ HỦY
+     */
+    function createCancelledRow(order) {
+        const cancelledBy = order.cancelledBy;
+        let cancelledByDisplay = '<span style="color: #999;">N/A</span>';
+
+        if (cancelledBy === 'Admin') {
+            cancelledByDisplay = '<span style="color: #dc2626; font-weight: 500;"><i class="fas fa-user-shield"></i> Admin</span>';
+        } else if (cancelledBy === 'Customer') {
+            cancelledByDisplay = '<span style="color: #2563eb; font-weight: 500;"><i class="fas fa-user"></i> Khách hàng</span>';
+        }
+
+        return `
+            <td>${order.orderCode || order.id}</td>
+            <td>${order.userName || order.recipientName || ''}</td>
+            <td>${order.orderDateFormatted || formatDate(order.orderDate)}</td>
+            <td>${order.cancellationReason || '<span style="color: #999; font-style: italic;">Không có lý do</span>'}</td>
+            <td>${cancelledByDisplay}</td>
+            <td>${order.cancelledAtFormatted || formatDate(order.cancelledAt)}</td>
+        `;
+    }
+
+    // ================== HELPER FUNCTIONS ==================
+    /**
+     * Format currency
+     */
+    function formatCurrency(amount) {
+        if (!amount) return '0đ';
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(amount);
+    }
+
+    /**
+     * Format date
+     */
+    function formatDate(dateStr) {
+        if (!dateStr) return 'N/A';
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+
+    /**
+     * Hiển thị loading
+     */
+    function showLoading(tbody) {
+        const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
+        rows.forEach(row => row.remove());
+
+        const loadingRow = document.createElement('tr');
+        loadingRow.className = 'loading-row';
+        loadingRow.innerHTML = `
+            <td colspan="10" style="text-align: center; padding: 30px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #3b82f6;"></i>
+                <p style="margin-top: 10px; color: #666;">Đang tìm kiếm...</p>
+            </td>
+        `;
+
+        const paginationRow = tbody.querySelector('[class*="pagination-row"]');
+        if (paginationRow) {
+            tbody.insertBefore(loadingRow, paginationRow);
+        } else {
+            tbody.appendChild(loadingRow);
+        }
+    }
+
+    /**
+     * Hiển thị lỗi
+     */
+    function showError(tbody, message) {
+        const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
+        rows.forEach(row => row.remove());
+
+        const errorRow = document.createElement('tr');
+        errorRow.className = 'error-row';
+        errorRow.innerHTML = `
+        <td colspan="10" style="text-align: center; padding: 50px 30px;">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" 
+                 style="margin: 0 auto 20px; display: block; opacity: 0.3;">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="M21 21l-4.35-4.35" stroke="currentColor" 
+                      stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p style="color: #999; font-size: 16px; margin: 0;">${message}</p>
+        </td>
+    `;
+
+        const paginationRow = tbody.querySelector('[class*="pagination-row"]');
+        if (paginationRow) {
+            tbody.insertBefore(errorRow, paginationRow);
+        } else {
+            tbody.appendChild(errorRow);
+        }
+    }
+
+    /**
+     * Hiển thị không có kết quả
+     */
+    function showNoResults(tbody, message) {
+        const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
+        rows.forEach(row => row.remove());
+
+        const noResultRow = document.createElement('tr');
+        noResultRow.className = 'no-result-row';
+        noResultRow.innerHTML = `
+            <td colspan="10" style="text-align: center; padding: 50px 30px;">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" style="margin: 0 auto 20px; display: block; opacity: 0.3;">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p style="color: #999; font-size: 16px; margin: 0;">${message}</p>
+            </td>
+        `;
+
+        const paginationRow = tbody.querySelector('[class*="pagination-row"]');
+        if (paginationRow) {
+            tbody.insertBefore(noResultRow, paginationRow);
+        } else {
+            tbody.appendChild(noResultRow);
+        }
+    }
+
+    /**
+     * Gắn lại sự kiện cho các nút sau khi render
+     */
+    function attachButtonEvents(tbody, status) {
+        // Xác nhận đơn hàng (tab Pending)
+        if (status === 'Pending') {
+            tbody.querySelectorAll('.confirm-btn').forEach(btn => {
+                btn.addEventListener('click', handleConfirmOrder);
+            });
+
+            tbody.querySelectorAll('.cancel-btn').forEach(btn => {
+                btn.addEventListener('click', handleCancelOrder);
+            });
+        }
+
+        // Xác nhận giao ĐVVC (tab AwaitingPickup)
+        if (status === 'AwaitingPickup') {
+            tbody.querySelectorAll('.ship-confirm-btn').forEach(btn => {
+                btn.addEventListener('click', handleShipConfirm);
+            });
+        }
+
+        // Xem chi tiết (tab Shipping)
+        if (status === 'Shipping') {
+            tbody.querySelectorAll('.btn-de-detail').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const orderId = this.dataset.orderId;
+                    showOrderDetailPopup(orderId);
+                });
+            });
+        }
+    }
+
+    // ================== EVENT HANDLERS ==================
+    /**
+     * Xử lý xác nhận đơn hàng
+     */
+    function handleConfirmOrder(e) {
+        const orderId = e.target.dataset.orderId;
+
+        if (confirm('Xác nhận đơn hàng này?')) {
+            fetch(BASE_URL + '/admin/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=confirm&orderId=' + orderId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Lỗi kết nối: ' + error);
+                });
+        }
+    }
+
+    /**
+     * Xử lý hủy đơn hàng
+     */
+    function handleCancelOrder(e) {
+        const orderId = e.target.dataset.orderId;
+        window.currentCancelOrderId = orderId;
+        document.querySelector('.cancel-popup').style.display = 'flex';
+        document.querySelector('.cancel-popup textarea').value = '';
+    }
+
+    /**
+     * Xử lý xác nhận đã giao ĐVVC
+     */
+    function handleShipConfirm(e) {
+        const orderId = e.target.dataset.orderId;
+
+        if (confirm('Xác nhận đã giao cho đơn vị vận chuyển?')) {
+            fetch(`${BASE_URL}/admin/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=confirmShipped&orderId=${orderId}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Lỗi kết nối: ' + error);
+                });
+        }
+    }
+
+    // ================== INITIALIZATION ==================
+    /**
+     * Khởi tạo tìm kiếm cho tất cả các tab
+     */
+    function initializeSearch() {
+        Object.entries(SEARCH_CONFIG).forEach(([inputId, config]) => {
+            const searchInput = document.getElementById(inputId);
+
+            if (searchInput) {
+                // Tìm icon search
+                const searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
+
+                // Hàm perform search
+                const performSearch = function() {
+                    const keyword = searchInput.value.trim();
+                    searchOrders(keyword, config);
+                };
+
+                // Nhấn Enter
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        performSearch();
+                    }
+                });
+
+                // Click icon
+                if (searchIcon) {
+                    searchIcon.style.cursor = 'pointer';
+                    searchIcon.addEventListener('click', performSearch);
+                }
+
+                console.log(`✅ Search initialized for: ${inputId}`);
+            } else {
+                console.warn(`⚠️ Search input not found: ${inputId}`);
+            }
+        });
+    }
+
+    // ================== AUTO INIT ==================
+    // Khởi tạo khi DOM đã sẵn sàng
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSearch);
+    } else {
+        initializeSearch();
+    }
+
+})();

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class OrderDAO extends ADao{
+public class OrderDAO extends ADao {
     public final Jdbi jdbi;
     private ComicDAO comicDAO;
     private PaymentDAO paymentDAO;
@@ -30,8 +30,9 @@ public class OrderDAO extends ADao{
 
     /**
      * Tạo đơn hàng mới với transaction (bao gồm payment và kiểm tra tồn kho)
-     * @param order Thông tin đơn hàng
-     * @param orderItems Danh sách sản phẩm trong đơn
+     *
+     * @param order         Thông tin đơn hàng
+     * @param orderItems    Danh sách sản phẩm trong đơn
      * @param paymentMethod Phương thức thanh toán
      * @return ID của đơn hàng mới tạo, trả về 0 nếu thất bại
      */
@@ -144,7 +145,8 @@ public class OrderDAO extends ADao{
 
     /**
      * Tạo đơn hàng mới với transaction
-     * @param order Thông tin đơn hàng
+     *
+     * @param order      Thông tin đơn hàng
      * @param orderItems Danh sách sản phẩm trong đơn
      * @return ID của đơn hàng mới tạo, trả về 0 nếu thất bại
      */
@@ -199,6 +201,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy thông tin đơn hàng theo ID
+     *
      * @param orderId ID đơn hàng
      * @return Optional chứa Order nếu tìm thấy
      */
@@ -213,6 +216,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy danh sách đơn hàng của user
+     *
      * @param userId ID của user
      * @return Danh sách đơn hàng
      */
@@ -227,6 +231,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy danh sách sản phẩm trong đơn hàng
+     *
      * @param orderId ID đơn hàng
      * @return Danh sách OrderItem
      */
@@ -241,8 +246,9 @@ public class OrderDAO extends ADao{
 
     /**
      * Cập nhật trạng thái đơn hàng
+     *
      * @param orderId ID đơn hàng
-     * @param status Trạng thái mới
+     * @param status  Trạng thái mới
      * @return true nếu cập nhật thành công
      */
     public boolean updateOrderStatus(int orderId, String status) {
@@ -258,6 +264,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy danh sách tất cả đơn hàng (cho admin)
+     *
      * @return Danh sách tất cả đơn hàng
      */
     public List<Order> getAllOrders() {
@@ -270,6 +277,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy danh sách đơn hàng theo trạng thái
+     *
      * @param status Trạng thái đơn hàng
      * @return Danh sách đơn hàng
      */
@@ -284,6 +292,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Đếm số đơn hàng của user
+     *
      * @param userId ID user
      * @return Số lượng đơn hàng
      */
@@ -298,6 +307,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Xóa đơn hàng (soft delete - chuyển status thành Cancelled)
+     *
      * @param orderId ID đơn hàng
      * @return true nếu xóa thành công
      */
@@ -307,6 +317,7 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy tổng doanh thu từ các đơn hàng đã hoàn thành
+     *
      * @return Tổng doanh thu
      */
     public double getTotalRevenue() {
@@ -320,8 +331,9 @@ public class OrderDAO extends ADao{
 
     /**
      * Lấy doanh thu theo khoảng thời gian
+     *
      * @param startDate Ngày bắt đầu
-     * @param endDate Ngày kết thúc
+     * @param endDate   Ngày kết thúc
      * @return Tổng doanh thu
      */
     public double getRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
@@ -338,7 +350,8 @@ public class OrderDAO extends ADao{
 
     /**
      * Cập nhật trạng thái đơn hàng VÀ cộng xu khi hoàn thành
-     * @param orderId ID đơn hàng
+     *
+     * @param orderId   ID đơn hàng
      * @param newStatus Trạng thái mới
      * @return true nếu cập nhật thành công
      */
@@ -479,45 +492,45 @@ public class OrderDAO extends ADao{
         boolean isNumber = keyword != null && keyword.matches("\\d+");
 
         String sqlById = """
-        SELECT 
-            o.id,
-            o.user_id,
-            o.order_date,
-            o.total_amount,
-            o.recipient_name,
-            o.shipping_phone,
-            o.shipping_address,
-            o.shipping_provider,
-            o.status,
-            p.payment_method,
-            p.payment_status
-        FROM orders o
-        LEFT JOIN payments p ON o.id = p.order_id
-        WHERE o.status = :status
-          AND o.id = :orderId
-        ORDER BY o.order_date DESC
-    """;
+                    SELECT 
+                        o.id,
+                        o.user_id,
+                        o.order_date,
+                        o.total_amount,
+                        o.recipient_name,
+                        o.shipping_phone,
+                        o.shipping_address,
+                        o.shipping_provider,
+                        o.status,
+                        p.payment_method,
+                        p.payment_status
+                    FROM orders o
+                    LEFT JOIN payments p ON o.id = p.order_id
+                    WHERE o.status = :status
+                      AND o.id = :orderId
+                    ORDER BY o.order_date DESC
+                """;
 
         // ✅ THÊM COLLATE utf8mb4_unicode_ci VÀ LOWER() ĐỂ SEARCH KHÔNG PHÂN BIỆT HOA THƯỜNG
         String sqlByName = """
-        SELECT 
-            o.id,
-            o.user_id,
-            o.order_date,
-            o.total_amount,
-            o.recipient_name,
-            o.shipping_phone,
-            o.shipping_address,
-            o.shipping_provider,
-            o.status,
-            p.payment_method,
-            p.payment_status
-        FROM orders o
-        LEFT JOIN payments p ON o.id = p.order_id
-        WHERE o.status = :status
-          AND LOWER(o.recipient_name) LIKE LOWER(:name)
-        ORDER BY o.order_date DESC
-    """;
+                    SELECT 
+                        o.id,
+                        o.user_id,
+                        o.order_date,
+                        o.total_amount,
+                        o.recipient_name,
+                        o.shipping_phone,
+                        o.shipping_address,
+                        o.shipping_provider,
+                        o.status,
+                        p.payment_method,
+                        p.payment_status
+                    FROM orders o
+                    LEFT JOIN payments p ON o.id = p.order_id
+                    WHERE o.status = :status
+                      AND LOWER(o.recipient_name) LIKE LOWER(:name)
+                    ORDER BY o.order_date DESC
+                """;
 
         return jdbi.withHandle(handle -> {
             if (isNumber) {
@@ -534,6 +547,173 @@ public class OrderDAO extends ADao{
                         .list();
             }
         });
+    }
+
+    /**
+     * Tìm kiếm đơn hàng theo keyword và status cụ thể
+     *
+     * @param keyword Mã đơn hàng hoặc tên khách hàng
+     * @param status  Trạng thái đơn hàng
+     * @return Danh sách đơn hàng phù hợp
+     */
+    public List<Map<String, Object>> searchOrdersByStatus(String keyword, String status) {
+        if (keyword == null) keyword = "";
+        if (status == null) status = "";
+
+        String trimmedKeyword = keyword.trim();
+        boolean isNumber = trimmedKeyword.matches("\\d+");
+
+        // ✅ DÙNG POSITIONAL PARAMETERS (?)
+        String sqlById = """
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ? AND o.id = ?
+                ORDER BY o.order_date DESC
+            """;
+
+        String sqlByName = """
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ? 
+                  AND LOWER(o.recipient_name) LIKE LOWER(?)
+                ORDER BY o.order_date DESC
+            """;
+
+        String sqlAll = """
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ?
+                ORDER BY o.order_date DESC
+            """;
+
+        String finalStatus = status;
+        return jdbi.withHandle(handle -> {
+            if (isNumber && !trimmedKeyword.isEmpty()) {
+                // POSITIONAL BINDING
+                return handle.createQuery(sqlById)
+                        .bind(0, finalStatus)
+                        .bind(1, Integer.parseInt(trimmedKeyword))
+                        .mapToMap()
+                        .list();
+            } else if (!trimmedKeyword.isEmpty()) {
+                return handle.createQuery(sqlByName)
+                        .bind(0, finalStatus)
+                        .bind(1, "%" + trimmedKeyword + "%")
+                        .mapToMap()
+                        .list();
+            } else {
+                return handle.createQuery(sqlAll)
+                        .bind(0, finalStatus)
+                        .mapToMap()
+                        .list();
+            }
+        });
+    }
+    /**
+     * Tìm kiếm đơn hàng bị hủy (lấy thêm thông tin từ order_history)
+     *
+     * @param keyword Mã đơn hàng hoặc tên khách hàng
+     * @return Danh sách đơn hàng bị hủy
+     */
+    public List<Map<String, Object>> searchCancelledOrders(String keyword) {
+        System.out.println("=== searchCancelledOrders DEBUG ===");
+        System.out.println("📝 Input keyword: [" + keyword + "]");
+
+        if (keyword == null) keyword = "";
+
+        String trimmedKeyword = keyword.trim();
+        boolean isNumber = trimmedKeyword.matches("\\d+");
+
+        System.out.println("📝 Trimmed keyword: [" + trimmedKeyword + "]");
+
+        // SQL tìm kiếm đơn bị hủy theo ID
+        String sqlById = """
+                    SELECT 
+                        o.id, o.user_id, o.order_date, o.total_amount,
+                        o.recipient_name, o.shipping_phone, o.shipping_address, o.status,
+                        oh.reason as cancellation_reason,
+                        oh.changed_by as cancelled_by,
+                        oh.changed_at as cancelled_at
+                    FROM orders o
+                    LEFT JOIN order_history oh ON o.id = oh.order_id 
+                        AND oh.status_to = 'Cancelled'
+                    WHERE o.status = 'Cancelled' AND o.id = :orderId
+                    ORDER BY o.order_date DESC
+                """;
+
+        // SQL tìm kiếm đơn bị hủy theo tên
+        String sqlByName = """
+                    SELECT 
+                        o.id, o.user_id, o.order_date, o.total_amount, o.recipient_name,
+                        o.shipping_phone, o.shipping_address, o.status,
+                        oh.reason as cancellation_reason,
+                        oh.changed_by as cancelled_by,
+                        oh.changed_at as cancelled_at
+                    FROM orders o
+                    LEFT JOIN order_history oh ON o.id = oh.order_id 
+                        AND oh.status_to = 'Cancelled'
+                    WHERE o.status = 'Cancelled'
+                      AND LOWER(o.recipient_name) LIKE LOWER(:keyword)
+                    ORDER BY o.order_date DESC
+                """;
+
+        String sqlAll = """
+                    SELECT 
+                        o.id, o.user_id, o.order_date, o.total_amount,
+                        o.recipient_name, o.shipping_phone, o.shipping_address, o.status,
+                        oh.reason as cancellation_reason,
+                        oh.changed_by as cancelled_by,
+                        oh.changed_at as cancelled_at
+                    FROM orders o
+                    LEFT JOIN order_history oh ON o.id = oh.order_id 
+                        AND oh.status_to = 'Cancelled'
+                    WHERE o.status = 'Cancelled'
+                    ORDER BY o.order_date DESC
+                """;
+
+        List<Map<String, Object>> result = jdbi.withHandle(handle -> {
+            if (isNumber && !trimmedKeyword.isEmpty()) {
+                System.out.println("🔍 Searching by ID: " + trimmedKeyword);
+                return handle.createQuery(sqlById)
+                        .bind("orderId", Integer.parseInt(trimmedKeyword))
+                        .mapToMap()
+                        .list();
+            } else if (!trimmedKeyword.isEmpty()) {
+                System.out.println("🔍 Searching by name: %" + trimmedKeyword + "%");
+                return handle.createQuery(sqlByName)
+                        .bind("keyword", "%" + trimmedKeyword + "%")
+                        .mapToMap()
+                        .list();
+            } else {
+                System.out.println("🔍 Loading all cancelled orders");
+                return handle.createQuery(sqlAll)
+                        .mapToMap()
+                        .list();
+            }
+        });
+
+        System.out.println("✅ Found " + result.size() + " cancelled orders");
+        if (result.size() > 0) {
+            System.out.println("📦 First result: " + result.get(0));
+        }
+        System.out.println("=================================");
+
+        return result;
     }
 
 }
