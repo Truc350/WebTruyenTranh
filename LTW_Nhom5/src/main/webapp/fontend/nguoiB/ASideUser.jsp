@@ -18,7 +18,8 @@
             <li class="active"><a href="${pageContext.request.contextPath}/updateUser">Thông tin tài khoản</a></li>
             <li><a href="${pageContext.request.contextPath}/change-password">Đổi mật khẩu</a></li>
             <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/points.jsp">Ưu đãi C-Point</a></li>
-            <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/orders.jsp">Đơn hàng của tôi</a></li>
+            <li><a href="${pageContext.request.contextPath}/order-history">Đơn hàng của tôi</a></li>
+<%--            <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/orders.jsp">Đơn hàng của tôi</a></li>--%>
             <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp">Thông báo</a></li>
             <li><a href="${pageContext.request.contextPath}/wishlist">Sản phẩm yêu thích</a></li>
         </ul>

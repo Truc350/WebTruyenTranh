@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +38,10 @@
                 <button class="scroll-btn scroll-right" title="Cuộn phải">&gt;</button>
             </div>
         </div>
+
+
         <div class="orders-list">
+<%--            hoàn thành--%>
             <div class="order-item" data-status="completed">
                 <div class="order-header">
                     <span class="order-id">ID đơn hàng: #10000095</span>
@@ -45,7 +51,8 @@
                 <div class="order-content">
                     <div class="product-item">
                         <img src="https://product.hstatic.net/200000343865/product/thanh-pho-len-day-cot-2_b38b1803c2894d72ba2852cacb606a78_master.jpg"
-                             alt="truyen tranh" class="product-img">
+                             alt="truyen tranh"
+                             class="product-img">
                         <div class="product-info">
                             <h3>Doraemon - Nobita và cuộc phiêu lưu <br> ở thành phố dây cót</h3>
                             <p class="product-quantity">Số lượng: x1</p>
@@ -55,26 +62,206 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+
                 <div class="order-total">
                     <span>Tổng tiền: <strong>95.000đ</strong></span>
                 </div>
                 <div class="order-actions">
-                    <a href="${pageContext.request.contextPath}/cart">
+                    <a href="cart.jsp">
                         <button class="action-btn buy-again">Mua lại</button>
                     </a>
                     <button id="Evaluate" class="action-btn contact-seller">Đánh giá</button>
                 </div>
             </div>
 
-            <div class="no-orders" style="display: none; text-align: center; padding: 60px 20px; color: #666; font-size: 16px;">
+<%--            chờ xác nhận--%>
+            <div class="order-item" data-status="pending">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000123</span>
+                    <span class="order-date">10/11/2025</span>
+                    <span class="order-status pending">Chờ xác nhận</span>
+                </div>
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://salt.tikicdn.com/media/catalog/product/b/i/bia_1-_co_be_ban_diem_1.jpg"
+                             alt="truyen tranh" class="product-img">
+                        <div class="product-info">
+                            <h3>Cô bé bán diêm</h3>
+                            <p class="product-quantity">Số lượng: x1</p>
+                            <div class="price-details">
+                                <span class="original-price">60.000đ</span>
+                                <span class="discount-price">55.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>55.000đ</strong></span>
+                </div>
+                <div class="order-actions">
+                    <a href="chat.jsp">
+                        <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
+                    <button class="action-btn cancel-order">Hủy đơn hàng</button>
+                </div>
+            </div>
+
+<%--            vận chuyển--%>
+            <div class="order-item" data-status="shipping">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000265</span>
+                    <span class="order-date">10/11/2025</span>
+                    <span class="order-status shipping">Vận chuyển</span>
+                </div>
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg"
+                             alt="truyen tranh" class="product-img">
+                        <div class="product-info">
+                            <h3>Shin cậu bé bút chì - Học viện hoa lệ Tenkasu</h3>
+                            <p class="product-quantity">Số lượng: x1</p>
+                            <div class="price-details">
+                                <span class="original-price">89.000đ</span>
+                                <span class="discount-price">80.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>80.000đ</strong></span>
+                </div>
+                <div class="order-actions">
+                    <a href="chat.jsp">
+                        <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
+                </div>
+            </div>
+
+
+<%--            chờ giao hàng--%>
+            <div class="order-item" data-status="delivery">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000234</span>
+                    <span class="order-date">10/11/2025</span>
+                    <span class="order-status delivery">Chờ giao hàng</span>
+                </div>
+
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://product.hstatic.net/200000287623/product/5cm_5f3b4ebe155b4d6491c244b8623657b5_master.jpg"
+                             alt="truyen tranh" class="product-img">
+                        <div class="product-info">
+                            <h3>5cm/s</h3>
+                            <a class="product-quantity">Số lượng: x1</a>
+                            <div class="price-details">
+                                <span class="original-price">125.000đ</span>
+                                <span class="discount-price">120.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>120.000đ</strong></span>
+                </div>
+
+                <div class="order-actions">
+                    <button class="action-btn contact-seller">Trả hàng</button>
+                    <button class="action-btn receive-order">Đã nhận hàng</button>
+                </div>
+            </div>
+
+<%--            đã hủy--%>
+            <div class="order-item" data-status="canceled">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000345</span>
+                    <span class="order-date">09/11/2025</span>
+                    <span class="order-status canceled">Đã hủy</span>
+                </div>
+
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://bookbuy.vn/Res/Images/Product/cardcaptor-sakura-tap-7_44502_1.jpg"
+                             alt="truyen tranh" class="product-img">
+                        <div class="product-info">
+                            <h3>Sakura thủ lĩnh thẻ bài</h3>
+                            <p class="product-quantity">Số lượng: x1</p>
+                            <div class="price-details">
+                                <span class="original-price">50.000đ</span>
+                                <span class="discount-price">48.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>48.000đ</strong></span>
+                </div>
+
+                <div class="order-actions">
+                    <a href="cart.jsp">
+                        <button class="action-btn buy-again">Mua lại</button>
+                    </a>
+                    <a href="chat.jsp">
+                        <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
+                </div>
+            </div>
+
+
+<%--            trả hoàn/hoàn tiền--%>
+            <div class="order-item" data-status="refund">
+                <div class="order-header">
+                    <span class="order-id">ID đơn hàng: #10000478</span>
+                    <span class="order-date">08/11/2025</span>
+                    <span class="order-status refund">Trả hàng/Hoàn tiền</span>
+                </div>
+
+                <div class="order-content">
+                    <div class="product-item">
+                        <img src="https://www.netabooks.vn/Data/Sites/1/Product/66328/kho-do-danh-tap-1-2.jpg"
+                             alt="truyen tranh" class="product-img">
+                        <div class="product-info">
+                            <h3>Khó ỗ dành</h3>
+                            <p class="product-quantity">Số lượng: x1</p>
+                            <div class="price-details">
+                                <span class="original-price">128.000đ</span>
+                                <span class="discount-price">125.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <span>Tổng tiền: <strong>125.000đ</strong></span>
+                </div>
+
+                <div class="order-actions">
+                    <a href="cart.jsp">
+                        <button class="action-btn buy-again">Mua lại</button>
+                    </a>
+                    <a href="chat.jsp">
+                        <button class="action-btn contact-seller">Liên hệ</button>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="no-orders"
+                 style="display: none; text-align: center; padding: 60px 20px; color: #666; font-size: 16px;">
                 <div style="margin-bottom: 20px;">
                     <img src="https://png.pngtree.com/png-clipart/20230418/original/pngtree-order-confirm-line-icon-png-image_9065104.png"
                          alt="No orders" style="width: 120px; height: auto;">
                 </div>
                 <p style="margin: 0; font-weight: 500; color: #555;">Bạn chưa có đơn hàng nào cả</p>
             </div>
+
+
         </div>
+
+
     </div>
 
     <!-- Popup đánh giá -->
