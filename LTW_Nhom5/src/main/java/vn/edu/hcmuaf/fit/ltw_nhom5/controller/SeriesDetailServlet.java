@@ -9,10 +9,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Series;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @WebServlet("/series-detail")
 public class SeriesDetailServlet extends HttpServlet {
@@ -70,6 +67,13 @@ public class SeriesDetailServlet extends HttpServlet {
 
             // Lấy danh sách comic thuộc series này
             List<Comic> comicsInSeries = comicDAO.getComicsBySeriesId(seriesId);
+
+            Map<Integer, Integer> soldMap = comicDAO.getTotalSoldBySeriesId(seriesId);
+            // Gán totalSold cho từng comic
+            for (Comic comic : comicsInSeries) {
+                int totalSold = soldMap.getOrDefault(comic.getId(), 0);
+                comic.setTotalSold(totalSold);
+            }
 
             // TỔNG HỢP TÁC GIẢ VÀ NHÀ XUẤT BẢN TỪ TẤT CẢ COMICS
             Set<String> authorSet = new HashSet<>();
