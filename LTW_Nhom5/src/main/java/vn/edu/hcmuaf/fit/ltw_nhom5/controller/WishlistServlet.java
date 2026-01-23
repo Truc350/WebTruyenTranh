@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+//trang này xóa sản phẩm đó, mà có dư vài chức năng
+
 @WebServlet("/WishlistServlet")
 public class WishlistServlet extends HttpServlet {
     private WishlistDAO wishlistDAO;

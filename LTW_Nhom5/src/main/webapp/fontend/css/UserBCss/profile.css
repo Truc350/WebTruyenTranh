@@ -630,8 +630,9 @@ main {
 
 .order-content {
     display: flex;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 12px; /* Giảm từ 10px */
     margin-bottom: 8px;
+    flex-direction: column;
 }
 
 .product-img {
