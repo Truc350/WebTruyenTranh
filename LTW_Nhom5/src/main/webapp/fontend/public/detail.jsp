@@ -151,18 +151,16 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 </div>
-                <%--                <p class="daban">Đã bán 196</p>--%>
             </div>
             <div class="line4">
-                <fmt:formatNumber value="${comic.discountPrice}" type="number" groupingUsed="true"
-                                  var="discountPriceFormatted"/>
                 <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true" var="priceFormatted"/>
 
-                <p id="giamdagiam">${discountPriceFormatted} đ</p>
+<%--                <p id="giamdagiam">${discountPriceFormatted} đ</p>--%>
 
-                <c:if test="${comic.discountPrice lt comic.price}">
-                    <p id="giagoc">${priceFormatted} đ</p>
-                </c:if>
+<%--                <c:if test="${comic.discountPrice lt comic.price}">--%>
+<%--                    <p id="giagoc">${priceFormatted} đ</p>--%>
+<%--                </c:if>--%>
+                <p id="giamdagiam">${priceFormatted} đ</p>
 
             </div>
 
@@ -198,13 +196,16 @@
                 </div>
             </div>
 
-            <c:if test="${not empty seriesName}">
+            <c:if test="${not empty comic.seriesId && not empty seriesName}">
                 <div style="display: flex; align-items: center; gap: 8px; font-family: sans-serif;">
                     <div style="background-color: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
                         Bộ
                     </div>
                     <div style="font-size: 18px; font-weight: bold;">
-                            ${seriesName}
+                        <a href="${pageContext.request.contextPath}/series-detail?id=${comic.seriesId}"
+                           class="series-name-link">
+                                ${seriesName}
+                        </a>
                     </div>
                 </div>
             </c:if>
@@ -227,10 +228,10 @@
                             <a href="${pageContext.request.contextPath}/comic-detail?id=${relatedComic.id}">
                                 <img src="${relatedComic.thumbnailUrl}" alt="${relatedComic.nameComics}">
                                 <h3>${relatedComic.nameComics}</h3>
-                                <fmt:formatNumber value="${relatedComic.discountPrice}" type="number"
+                                <fmt:formatNumber value="${relatedComic.price}" type="number"
                                                   groupingUsed="true" var="price"/>
                                 <p class="price">${price} đ</p>
-                                <p class="sold">Đã bán: <strong>${relatedComic.totalSold}</strong></p>
+                                <p class="sold">Đã bán: <strong>${relatedComic.totalSold != null ? relatedComic.totalSold : 0}</strong></p>
                             </a>
                         </div>
                     </c:forEach>
@@ -459,10 +460,10 @@
                                                 <img src="${suggested.thumbnailUrl}"
                                                      alt="${suggested.nameComics}">
                                                 <p class="product-name">${suggested.nameComics}</p>
-                                                <fmt:formatNumber value="${suggested.discountPrice}" type="number"
+                                                <fmt:formatNumber value="${suggested.price}" type="number"
                                                                   groupingUsed="true" var="suggestedPrice"/>
                                                 <p class="product-price">${suggestedPrice} đ</p>
-                                                <p class="sold">Đã bán: <strong>${suggested.totalSold}</strong></p>
+                                                <p class="sold">Đã bán: <strong>${suggested.totalSold != null ? suggested.totalSold : 0}</strong></p>
                                             </a>
                                         </div>
                                     </c:forEach>

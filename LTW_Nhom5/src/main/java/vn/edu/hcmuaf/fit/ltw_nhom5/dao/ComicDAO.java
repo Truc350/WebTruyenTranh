@@ -1884,5 +1884,118 @@ public class ComicDAO extends ADao {
         );
     }
 
+    /**
+     * Lấy danh sách comic theo series ID
+     * Comics sẽ được sắp xếp theo volume (số tập) nếu có, nếu không thì theo ngày tạo
+     */
+    public List<Comic> getComicsBySeriesId(int seriesId) {
+        String sql = "SELECT c.* " +  // ← Bỏ phần discount_percent
+                "FROM comics c " +
+                "WHERE c.series_id = :seriesId " +
+                "AND c.is_deleted = 0 " +
+                "AND c.is_hidden = 0 " +
+                "ORDER BY " +
+                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
+                "c.created_at DESC";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Đếm số lượng comic trong series
+     */
+    public int countComicsBySeriesId(int seriesId) {
+        String sql = "SELECT COUNT(*) FROM comics " +
+                "WHERE series_id = :seriesId " +
+                "AND is_deleted = 0 " +
+                "AND is_hidden = 0";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    /**
+     * Lấy tất cả comic trong series kể cả đã ẩn (dùng cho admin)
+     */
+    public List<Comic> getAllComicsBySeriesId(int seriesId) {
+        String sql = "SELECT c.*, " +
+                "COALESCE(c.discount_percent, 0) as discountPercent " +
+                "FROM comics c " +
+                "WHERE c.series_id = :seriesId " +
+                "AND c.is_deleted = 0 " +
+                "ORDER BY " +
+                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
+                "c.created_at DESC";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    // Trong ComicDAO.java
+    public int getTotalSoldByComicId(int comicId) {
+        String sql = "SELECT COALESCE(SUM(oi.quantity), 0) as total_sold " +
+                "FROM order_item oi " +
+                "INNER JOIN `order` o ON oi.order_id = o.id " +
+                "WHERE oi.comic_id = ? " +
+                "AND o.status = 'completed'"; // Chỉ tính đơn đã hoàn thành
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind(0, comicId)
+                            .mapTo(Integer.class)
+                            .findOne()
+                            .orElse(0)
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    // Hoặc lấy cho nhiều comics cùng lúc (hiệu quả hơn)
+    public Map<Integer, Integer> getTotalSoldBySeriesId(int seriesId) {
+        String sql = "SELECT oi.comic_id, COALESCE(SUM(oi.quantity), 0) as total_sold " +
+                "FROM order_item oi " +
+                "INNER JOIN `order` o ON oi.order_id = o.id " +
+                "INNER JOIN comic c ON oi.comic_id = c.id " +
+                "WHERE c.series_id = ? " +
+                "AND o.status = 'completed' " +
+                "GROUP BY oi.comic_id";
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind(0, seriesId)
+                            .map((rs, ctx) -> {
+                                Map<Integer, Integer> map = new HashMap<>();
+                                while (rs.next()) {
+                                    map.put(rs.getInt("comic_id"), rs.getInt("total_sold"));
+                                }
+                                return map;
+                            })
+                            .findOne()
+                            .orElse(new HashMap<>())
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new HashMap<>();
+        }
+    }
+
+
 
 }

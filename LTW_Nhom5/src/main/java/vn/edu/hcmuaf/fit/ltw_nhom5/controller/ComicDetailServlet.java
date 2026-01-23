@@ -3,8 +3,10 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Series;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
@@ -12,18 +14,21 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet("/comic-detail")
 public class ComicDetailServlet extends HttpServlet {
     private ComicService comicService;
     private RecommendationService recommendationService;
     private WishlistDAO wishlistDAO;
+    private SeriesDAO seriesDAO;
 
     @Override
     public void init() throws ServletException {
         comicService = new ComicService();
         recommendationService = new RecommendationService();
         wishlistDAO = new WishlistDAO();
+        seriesDAO = new SeriesDAO();
     }
 
     @Override
@@ -69,10 +74,39 @@ public class ComicDetailServlet extends HttpServlet {
             // ========== LẤY TÊN SERIES ==========
             String seriesName = null;
             if (comic.getSeriesId() != null && comic.getSeriesId() > 0) {
-                seriesName = comicService.getSeriesName(comic.getSeriesId());
+                System.out.println("🔍 Attempting to get series name for series_id: " + comic.getSeriesId());
+//                seriesName = comicService.getSeriesName(comic.getSeriesId());
+                try {
+                    // Cách 1: Sử dụng ComicService nếu có method
+                    seriesName = comicService.getSeriesName(comic.getSeriesId());
+                    System.out.println("✅ Series name from ComicService: " + seriesName);
+                } catch (Exception e) {
+                    System.out.println("⚠️ ComicService.getSeriesName() failed: " + e.getMessage());
+
+                    // Cách 2: Fallback - Sử dụng SeriesDAO trực tiếp
+                    try {
+                        Optional<Series> seriesOpt = seriesDAO.getSeriesById(comic.getSeriesId());
+                        if (seriesOpt.isPresent()) {
+                            seriesName = seriesOpt.get().getSeriesName();
+                            System.out.println("✅ Series name from SeriesDAO: " + seriesName);
+                        } else {
+                            System.out.println("⚠️ Series not found in database");
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("❌ Failed to get series: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+
+                if (seriesName == null && comic.getSeriesName() != null) {
+                    seriesName = comic.getSeriesName();
+                    System.out.println("✅ Series name from Comic object: " + seriesName);
+                }
             } else {
-                System.out.println("⚠️ Comic has no series_id or series_id <= 0, skipping getSeriesName");
+                System.out.println("⚠️ Comic has no series_id or series_id <= 0");
             }
+
+            System.out.println("📌 Final series name: " + seriesName);
 
 
             // Lấy DS gợi ý truyện
