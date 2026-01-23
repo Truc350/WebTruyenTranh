@@ -240,11 +240,11 @@
                                         <c:when test="${comic.hasDiscount()}">
                                             <p class="product-price">
                                                 <fmt:formatNumber value="${comic.discountPrice}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/> đ
                                             </p>
                                             <p class="original-price">
                                                 <s><fmt:formatNumber value="${comic.price}"
-                                                                     pattern="#,###"/>₫</s>
+                                                                     pattern="#,###"/> đ</s>
                                                 <span class="discount-badge">
                                                     -<fmt:formatNumber value="${comic.discountPercent}"
                                                                        pattern="#"/>%

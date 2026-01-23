@@ -1889,8 +1889,7 @@ public class ComicDAO extends ADao {
      * Comics sẽ được sắp xếp theo volume (số tập) nếu có, nếu không thì theo ngày tạo
      */
     public List<Comic> getComicsBySeriesId(int seriesId) {
-        String sql = "SELECT c.*, " +
-                "COALESCE(c.discount_percent, 0) as discountPercent " +
+        String sql = "SELECT c.* " +  // ← Bỏ phần discount_percent
                 "FROM comics c " +
                 "WHERE c.series_id = :seriesId " +
                 "AND c.is_deleted = 0 " +

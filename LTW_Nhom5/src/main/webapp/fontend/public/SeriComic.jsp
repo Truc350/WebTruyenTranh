@@ -31,18 +31,27 @@
         <div class="contain1">
             <div class="contain-header">
                 <h2 class="manga-title">${series.seriesName}</h2>
-                <c:if test="${not empty series.description}">
-                    <p class="manga-description">${series.description}</p>
+
+                <%-- Hiển thị tác giả --%>
+                <c:if test="${not empty seriesAuthors}">
+                    <p class="series-detail">
+                        <strong>Tác giả:</strong> ${seriesAuthors}
+                    </p>
+                </c:if>
+
+                <%-- Hiển thị nhà xuất bản --%>
+                <c:if test="${not empty seriesPublishers}">
+                    <p class="series-detail">
+                        <strong>Nhà xuất bản:</strong> ${seriesPublishers}
+                    </p>
                 </c:if>
 
                 <div class="series-info">
                     <p class="series-detail">
-                        <i class="fas fa-book"></i>
                         <strong>Tổng số tập:</strong> ${series.totalVolumes}
                     </p>
 
                     <p class="series-detail">
-                        <i class="fas fa-info-circle"></i>
                         <strong>Trạng thái:</strong>
                         <span class="status-badge ${series.status == 'completed' ? 'completed' : 'ongoing'}">
                             ${series.status == 'completed' ? 'Hoàn thành' :
@@ -50,12 +59,6 @@
                         </span>
                     </p>
 
-<%--                    <p class="series-detail">--%>
-<%--                        <strong>Tác giả:</strong> ${}--%>
-<%--                    </p>--%>
-<%--                    <p class="series-detail">--%>
-<%--                        <strong>Nhà xuất bản:</strong> ${}--%>
-<%--                    </p>--%>
                 </div>
             </div>
 
@@ -73,9 +76,6 @@
 
 <!-- Danh sách các tập truyện trong series -->
 <div class="series-volumes-container">
-    <h2 class="section-title">
-        <i class="fas fa-list"></i> Danh sách tập truyện
-    </h2>
 
     <c:choose>
         <c:when test="${not empty comicsInSeries}">
@@ -89,25 +89,18 @@
                                      onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
                                 <p class="product-name">${comic.nameComics}</p>
 
-                                <fmt:formatNumber value="${comic.discountPrice}"
+                                <fmt:formatNumber value="${comic.price}"
                                                   type="number"
                                                   groupingUsed="true"
                                                   var="formattedPrice"/>
-                                <p class="product-price">₫${formattedPrice}</p>
-
-                                <c:if test="${comic.totalSold > 0}">
-                                    <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
-                                </c:if>
+                                <p class="product-price">${formattedPrice} đ</p>
 
                                 <c:choose>
-                                    <c:when test="${comic.stockQuantity == 0}">
-                                        <span class="stock-badge out-of-stock">Hết hàng</span>
-                                    </c:when>
-                                    <c:when test="${comic.stockQuantity > 0 && comic.stockQuantity < 10}">
-                                        <span class="stock-badge low-stock">Còn ${comic.stockQuantity}</span>
+                                    <c:when test="${comic.totalSold != null && comic.totalSold > 0}">
+                                        <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="stock-badge in-stock">Còn hàng</span>
+                                        <p class="sold">Đã bán: <strong>0</strong></p>
                                     </c:otherwise>
                                 </c:choose>
                             </a>
@@ -133,33 +126,35 @@
     // Toggle notification button
     const notifyBtn = document.getElementById("notifyBtn");
 
-    notifyBtn.addEventListener("click", () => {
-        const icon = notifyBtn.querySelector('i');
-        const isSubscribed = notifyBtn.classList.contains('subscribed');
+    if (notifyBtn) {
+        notifyBtn.addEventListener("click", () => {
+            const icon = notifyBtn.querySelector('i');
+            const isSubscribed = notifyBtn.classList.contains('subscribed');
 
-        if (isSubscribed) {
-            notifyBtn.classList.remove('subscribed');
-            icon.className = 'fas fa-bell';
-            notifyBtn.innerHTML = '<i class="fas fa-bell"></i> Nhận thông báo';
+            if (isSubscribed) {
+                notifyBtn.classList.remove('subscribed');
+                icon.className = 'fas fa-bell';
+                notifyBtn.innerHTML = '<i class="fas fa-bell"></i> Nhận thông báo';
 
-            // TODO: Gọi API hủy đăng ký thông báo
-            showToast('Đã hủy nhận thông báo', 'info');
-        } else {
-            notifyBtn.classList.add('subscribed');
-            icon.className = 'fas fa-bell-slash';
-            notifyBtn.innerHTML = '<i class="fas fa-bell-slash"></i> Hủy thông báo';
+                // TODO: Gọi API hủy đăng ký thông báo
+                showToast('Đã hủy nhận thông báo', 'info');
+            } else {
+                notifyBtn.classList.add('subscribed');
+                icon.className = 'fas fa-bell-slash';
+                notifyBtn.innerHTML = '<i class="fas fa-bell-slash"></i> Hủy thông báo';
 
-            // TODO: Gọi API đăng ký thông báo
-            showToast('Đã đăng ký nhận thông báo khi có tập mới', 'success');
-        }
-    });
+                // TODO: Gọi API đăng ký thông báo
+                showToast('Đã đăng ký nhận thông báo khi có tập mới', 'success');
+            }
+        });
+    }
 
     // Toast notification
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <i class="fas fa-${type == 'success' ? 'check-circle' : 'info-circle'}"></i>
             <span>${message}</span>
         `;
 
