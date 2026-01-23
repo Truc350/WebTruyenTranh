@@ -1,11 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>${series.seriesName} - Comic Store</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/SeriComic.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
@@ -14,115 +17,159 @@
 
 <body>
 
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <div class="contain-main">
     <div class="seri">
         <a href="#" class="image">
-            <img src="https://tse4.mm.bing.net/th/id/OIP.FznzlFc591l-OschGXnpHgHaEK?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                 alt="Detective Conan Volume 107 cover" class="manga-cover">
+            <img src="${series.coverUrl}"
+                 alt="${series.seriesName}"
+                 class="manga-cover"
+                 onerror="this.src='https://via.placeholder.com/300x400?text=No+Image'">
         </a>
 
         <div class="contain1">
             <div class="contain-header">
-                <h2 class="manga-title">Detective Conan</h2>
-                <p class="manga-author"><strong>Tác giả:</strong> Goshi aoyama</p>
-                <p class="manga-publisher"><strong>Nhà xuất bản:</strong> 小学館</p>
+                <h2 class="manga-title">${series.seriesName}</h2>
+                <c:if test="${not empty series.description}">
+                    <p class="manga-description">${series.description}</p>
+                </c:if>
+
+                <div class="series-info">
+                    <p class="series-detail">
+                        <i class="fas fa-book"></i>
+                        <strong>Tổng số tập:</strong> ${series.totalVolumes}
+                    </p>
+
+                    <p class="series-detail">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Trạng thái:</strong>
+                        <span class="status-badge ${series.status == 'completed' ? 'completed' : 'ongoing'}">
+                            ${series.status == 'completed' ? 'Hoàn thành' :
+                                    series.status == 'ongoing' ? 'Đang phát hành' : 'Tạm dừng'}
+                        </span>
+                    </p>
+
+<%--                    <p class="series-detail">--%>
+<%--                        <strong>Tác giả:</strong> ${}--%>
+<%--                    </p>--%>
+<%--                    <p class="series-detail">--%>
+<%--                        <strong>Nhà xuất bản:</strong> ${}--%>
+<%--                    </p>--%>
+                </div>
             </div>
 
             <div class="action-panel">
                 <div class="notify-section">
-                    <button  id="notifyBtn" class="notify-btn">🔔 Nhận thông báo</button>
+                    <button id="notifyBtn" class="notify-btn">
+                        <i class="fas fa-bell"></i> Nhận thông báo
+                    </button>
                 </div>
             </div>
 
         </div>
-
     </div>
 </div>
 
-<div class="item">
-    <div class="slider-track">
-        <div class="product-item">
-            <img src="https://m.media-amazon.com/images/I/91IqatXbNGL.jpg" alt="">
-            <p class="product-name">Onepiece Tâp 8</p>
-            <p class="product-price">₫35,000</p>
-            <p class="sold">Đã bán: <strong>103</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://tse2.mm.bing.net/th/id/OIP.sOYHVoZtuhT_wslUk377nAHaLH?w=1498&h=2250&rs=1&pid=ImgDetMain&o=7&rm=3"
-                 alt="">
-            <p class="product-name">Onepiece Tâp 7</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>138</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://th.bing.com/th/id/OIP.Rv6Zq3gzBUg7PZIoSibkuAAAAA?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3"
-                 alt="">
-            <p class="product-name">Onepiece Tâp 75</p>
-            <p class="product-price">₫39,000</p>
-            <p class="sold">Đã bán: <strong>109</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://tse4.mm.bing.net/th/id/OIP.mk3uhKbGlMl1FGnF8lhUlAAAAA?rs=1&pid=ImgDetMain&o=7&rm=3"
-                 alt="">
-            <p class="product-name">Onepiece Tâp 22</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>72</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-            <p class="product-name">Opiece Tâp 21</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>58</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-            <p class="product-name">Opiece Tâp 21</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>58</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://m.media-amazon.com/images/I/91hZpBeRbaL._SY425_.jpg" alt="">
-            <p class="product-name">Opiece Tâp 21</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>58</strong></p>
-        </div>
+<!-- Danh sách các tập truyện trong series -->
+<div class="series-volumes-container">
+    <h2 class="section-title">
+        <i class="fas fa-list"></i> Danh sách tập truyện
+    </h2>
 
-        <div class="product-item">
-            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-            <p class="product-name">Onepiece Tâp 52</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>17</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-            <p class="product-name">Onepiece Tâp 52</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>17</strong></p>
-        </div>
-        <div class="product-item">
-            <img src="https://dw9to29mmj727.cloudfront.net/products/1421534681.jpg" alt="">
-            <p class="product-name">Onepiece Tâp 52</p>
-            <p class="product-price">₫40,000</p>
-            <p class="sold">Đã bán: <strong>17</strong></p>
-        </div>
-    </div>
+    <c:choose>
+        <c:when test="${not empty comicsInSeries}">
+            <div class="item">
+                <div class="slider-track">
+                    <c:forEach var="comic" items="${comicsInSeries}">
+                        <div class="product-item">
+                            <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
+                                <img src="${comic.thumbnailUrl}"
+                                     alt="${comic.nameComics}"
+                                     onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                                <p class="product-name">${comic.nameComics}</p>
+
+                                <fmt:formatNumber value="${comic.discountPrice}"
+                                                  type="number"
+                                                  groupingUsed="true"
+                                                  var="formattedPrice"/>
+                                <p class="product-price">₫${formattedPrice}</p>
+
+                                <c:if test="${comic.totalSold > 0}">
+                                    <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
+                                </c:if>
+
+                                <c:choose>
+                                    <c:when test="${comic.stockQuantity == 0}">
+                                        <span class="stock-badge out-of-stock">Hết hàng</span>
+                                    </c:when>
+                                    <c:when test="${comic.stockQuantity > 0 && comic.stockQuantity < 10}">
+                                        <span class="stock-badge low-stock">Còn ${comic.stockQuantity}</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="stock-badge in-stock">Còn hàng</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="no-comics-message">
+                <i class="fas fa-inbox"></i>
+                <p>Chưa có tập truyện nào trong series này</p>
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
 
 <!-- INCLUDE FOOTER -->
-<jsp:include page="/fontend/public/Footer.jsp" />
+<jsp:include page="/fontend/public/Footer.jsp"/>
 
 </body>
 <script>
+    // Toggle notification button
     const notifyBtn = document.getElementById("notifyBtn");
 
     notifyBtn.addEventListener("click", () => {
-        if (notifyBtn.textContent.trim() === "🔔 Nhận thông báo") {
-            notifyBtn.textContent = "🔔 Hủy thông báo";
+        const icon = notifyBtn.querySelector('i');
+        const isSubscribed = notifyBtn.classList.contains('subscribed');
+
+        if (isSubscribed) {
+            notifyBtn.classList.remove('subscribed');
+            icon.className = 'fas fa-bell';
+            notifyBtn.innerHTML = '<i class="fas fa-bell"></i> Nhận thông báo';
+
+            // TODO: Gọi API hủy đăng ký thông báo
+            showToast('Đã hủy nhận thông báo', 'info');
         } else {
-            notifyBtn.textContent = "🔔 Nhận thông báo";
+            notifyBtn.classList.add('subscribed');
+            icon.className = 'fas fa-bell-slash';
+            notifyBtn.innerHTML = '<i class="fas fa-bell-slash"></i> Hủy thông báo';
+
+            // TODO: Gọi API đăng ký thông báo
+            showToast('Đã đăng ký nhận thông báo khi có tập mới', 'success');
         }
     });
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 </script>
 </html>

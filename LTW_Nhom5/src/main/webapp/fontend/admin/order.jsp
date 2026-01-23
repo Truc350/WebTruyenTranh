@@ -54,51 +54,53 @@
             </div>
 
             <!-- Bảng đơn hàng -->
-            <div class="table-wrapper">
-                <table class="order-table">
-                    <thead>
-                    <tr>
-                        <th>Mã đơn hàng</th>
-                        <th>Khách hàng</th>
-                        <th>Ngày đặt</th>
-                        <th>Tổng tiền</th>
-                        <th>Thanh toán</th>
-                        <th>Sản phẩm</th>
-                        <th>Địa chỉ giao hàng</th>
-                        <th>Đơn vị vận chuyển</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-
-                    <tbody id="confirmTableBody">
-
-                    <c:forEach items="${ordersByStatus['Pending']}" var="order" varStatus="status">
+            <div class="table-scroll-wrapper">
+                <div class="table-wrapper">
+                    <table class="order-table">
+                        <thead>
                         <tr>
-                            <td>${order.orderCode}</td>
-                            <td>${order.userName}</td>
-                            <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
-                            <td>${order.formattedAmount}</td>
-                            <td>${order.paymentMethodDisplay}</td>
-                            <td class="product-cell">${order.productSummary}</td>
-                            <td>${order.fullAddress}</td>
-                            <td>${order.shippingProvider}</td>
-                            <td>
-                                <button class="confirm-btn" data-order-id="${order.id}">Xác nhận</button>
-                                <button class="cancel-btn" data-order-id="${order.id}">Hủy</button>
+                            <th>Mã đơn hàng</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Thanh toán</th>
+                            <th>Sản phẩm</th>
+                            <th>Địa chỉ giao hàng</th>
+                            <th>Đơn vị vận chuyển</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="confirmTableBody">
+
+                        <c:forEach items="${ordersByStatus['Pending']}" var="order" varStatus="status">
+                            <tr>
+                                <td>${order.orderCode}</td>
+                                <td>${order.userName}</td>
+                                <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
+                                <td>${order.formattedAmount}</td>
+                                <td>${order.paymentMethodDisplay}</td>
+                                <td class="product-cell">${order.productSummary}</td>
+                                <td>${order.fullAddress}</td>
+                                <td>${order.shippingProvider}</td>
+                                <td>
+                                    <button class="confirm-btn" data-order-id="${order.id}">Xác nhận</button>
+                                    <button class="cancel-btn" data-order-id="${order.id}">Hủy</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+
+                        <!-- Pagination -->
+                        <tr class="pagination-row">
+                            <td colspan="10">
+                                <div class="pagination" id="tablePagination">
+
+                                </div>
                             </td>
                         </tr>
-                    </c:forEach>
-
-                    <!-- Pagination -->
-                    <tr class="pagination-row">
-                        <td colspan="10">
-                            <div class="pagination" id="tablePagination">
-
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="cancel-popup" style="display:none;">
@@ -120,7 +122,8 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls">
                 <div class="search-box">
-                    <input type="text" id="pickupSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
+                    <input type="text" id="pickupSearch" class="search-input"
+                           placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -875,6 +878,88 @@
             }
         });
     });
+</script>
+
+<script>
+    // Thêm effect khi scroll
+    document.addEventListener('DOMContentLoaded', function () {
+        const scrollWrapper = document.querySelector('.table-scroll-wrapper');
+        if (scrollWrapper) {
+            scrollWrapper.addEventListener('scroll', function () {
+                if (this.scrollLeft > 0) {
+                    this.classList.add('scrolled');
+                } else {
+                    this.classList.remove('scrolled');
+                }
+            });
+        }
+    });
+
+    // ============================================
+    // PASTE ĐOẠN NÀY VÀO CONSOLE ĐỂ DEBUG
+    // ============================================
+
+    console.log('🔍 KIỂM TRA SCROLL PANE...');
+
+    const wrapper = document.querySelector('#tab-pending .table-scroll-wrapper');
+    const table = document.querySelector('#tab-pending .order-table');
+
+    if (!wrapper) {
+        console.error('❌ Không tìm thấy .table-scroll-wrapper');
+    } else {
+        console.log('✅ Tìm thấy wrapper');
+
+        // Kiểm tra kích thước
+        console.log('📏 KÍCH THƯỚC:');
+        console.log('  Wrapper clientWidth:', wrapper.clientWidth + 'px');
+        console.log('  Wrapper scrollWidth:', wrapper.scrollWidth + 'px');
+        console.log('  Table offsetWidth:', table.offsetWidth + 'px');
+
+        // Kiểm tra có overflow không
+        const hasOverflow = wrapper.scrollWidth > wrapper.clientWidth;
+        console.log('📊 CÓ OVERFLOW:', hasOverflow ? '✅ CÓ' : '❌ KHÔNG');
+
+        if (!hasOverflow) {
+            console.warn('⚠️ TABLE CHƯA ĐỦ RỘNG ĐỂ SCROLL!');
+            console.log('💡 Table cần rộng hơn:', wrapper.clientWidth + 'px');
+            console.log('💡 Table hiện tại:', table.offsetWidth + 'px');
+        }
+
+        // Kiểm tra CSS
+        const wrapperStyle = window.getComputedStyle(wrapper);
+        console.log('🎨 CSS WRAPPER:');
+        console.log('  overflow-x:', wrapperStyle.overflowX);
+        console.log('  width:', wrapperStyle.width);
+
+        const tableStyle = window.getComputedStyle(table);
+        console.log('🎨 CSS TABLE:');
+        console.log('  width:', tableStyle.width);
+        console.log('  min-width:', tableStyle.minWidth);
+        console.log('  table-layout:', tableStyle.tableLayout);
+
+        // Đếm số cột
+        const columns = table.querySelectorAll('thead th').length;
+        console.log('📋 SỐ CỘT:', columns);
+
+        // Tính tổng width các cột
+        let totalWidth = 0;
+        table.querySelectorAll('thead th').forEach((th, i) => {
+            const w = th.offsetWidth;
+            totalWidth += w;
+            console.log(`  Cột ${i + 1}: ${w}px - ${th.textContent.trim()}`);
+        });
+        console.log('📊 TỔNG WIDTH:', totalWidth + 'px');
+
+        // GỢI Ý FIX
+        console.log('');
+        console.log('💡 GIẢI PHÁP:');
+        if (!hasOverflow) {
+            const suggestedWidth = wrapper.clientWidth + 500;
+            console.log(`1. Tăng width của table lên ít nhất: ${suggestedWidth}px`);
+            console.log('2. Hoặc giảm width của container');
+            console.log('3. Hoặc tăng width từng cột');
+        }
+    }
 </script>
 </body>
 </html>

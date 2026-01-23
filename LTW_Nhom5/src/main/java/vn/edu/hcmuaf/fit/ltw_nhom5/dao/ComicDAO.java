@@ -1884,5 +1884,93 @@ public class ComicDAO extends ADao {
         );
     }
 
+    /**
+     * Lấy danh sách comic theo series ID
+     * Comics sẽ được sắp xếp theo volume (số tập) nếu có, nếu không thì theo ngày tạo
+     */
+    public List<Comic> getComicsBySeriesId(int seriesId) {
+        String sql = "SELECT c.*, " +
+                "COALESCE(c.discount_percent, 0) as discountPercent " +
+                "FROM comics c " +
+                "WHERE c.series_id = :seriesId " +
+                "AND c.is_deleted = 0 " +
+                "AND c.is_hidden = 0 " +
+                "ORDER BY " +
+                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
+                "c.created_at DESC";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Đếm số lượng comic trong series
+     */
+    public int countComicsBySeriesId(int seriesId) {
+        String sql = "SELECT COUNT(*) FROM comics " +
+                "WHERE series_id = :seriesId " +
+                "AND is_deleted = 0 " +
+                "AND is_hidden = 0";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    /**
+     * Lấy danh sách comic trong series với phân trang
+     */
+    public List<Comic> getComicsBySeriesIdWithPagination(int seriesId, int page, int pageSize) {
+        int offset = (page - 1) * pageSize;
+
+        String sql = "SELECT c.*, " +
+                "COALESCE(c.discount_percent, 0) as discountPercent " +
+                "FROM comics c " +
+                "WHERE c.series_id = :seriesId " +
+                "AND c.is_deleted = 0 " +
+                "AND c.is_hidden = 0 " +
+                "ORDER BY " +
+                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
+                "c.created_at DESC " +
+                "LIMIT :limit OFFSET :offset";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy tất cả comic trong series kể cả đã ẩn (dùng cho admin)
+     */
+    public List<Comic> getAllComicsBySeriesId(int seriesId) {
+        String sql = "SELECT c.*, " +
+                "COALESCE(c.discount_percent, 0) as discountPercent " +
+                "FROM comics c " +
+                "WHERE c.series_id = :seriesId " +
+                "AND c.is_deleted = 0 " +
+                "ORDER BY " +
+                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
+                "c.created_at DESC";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("seriesId", seriesId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
 
 }

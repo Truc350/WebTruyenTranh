@@ -162,4 +162,165 @@
     flex: 0 0 calc(20% - 20px);
 }
 
+.manga-description {
+    margin: 15px 0;
+    line-height: 1.6;
+    color: #555;
+}
 
+.series-info {
+    margin-top: 20px;
+}
+
+.series-detail {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.series-detail i {
+    color: #ff4c4c;
+    width: 20px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-badge.completed {
+    background: #4caf50;
+    color: white;
+}
+
+.status-badge.ongoing {
+    background: #2196f3;
+    color: white;
+}
+
+.notify-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.notify-btn:hover {
+    background: #e63946;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 76, 76, 0.3);
+}
+
+.notify-btn.subscribed {
+    background: #666;
+}
+
+.series-volumes-container {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #333;
+}
+
+.section-title i {
+    color: #ff4c4c;
+}
+
+.stock-badge {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.stock-badge.in-stock {
+    background: #4caf50;
+    color: white;
+}
+
+.stock-badge.low-stock {
+    background: #ff9800;
+    color: white;
+}
+
+.stock-badge.out-of-stock {
+    background: #f44336;
+    color: white;
+}
+
+.no-comics-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.no-comics-message i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.no-comics-message p {
+    font-size: 18px;
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast-success {
+    border-left: 4px solid #4caf50;
+}
+
+.toast-info {
+    border-left: 4px solid #2196f3;
+}
+
+.toast i {
+    font-size: 20px;
+}
+
+.toast-success i {
+    color: #4caf50;
+}
+
+.toast-info i {
+    color: #2196f3;
+}

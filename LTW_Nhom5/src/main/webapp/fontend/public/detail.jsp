@@ -204,7 +204,10 @@
                         Bộ
                     </div>
                     <div style="font-size: 18px; font-weight: bold;">
-                            ${seriesName}
+                        <a href="${pageContext.request.contextPath}/series-detail?id=${comic.seriesId}"
+                           class="series-name-link">
+                                ${seriesName}
+                        </a>
                     </div>
                 </div>
             </c:if>
