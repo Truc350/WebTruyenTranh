@@ -40,6 +40,7 @@ public class ListComicsServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
+            // ✅ PARSE PAGE
             int page = 1;
             String pageParam = request.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
@@ -47,21 +48,48 @@ public class ListComicsServlet extends HttpServlet {
                 if (page < 1) page = 1;
             }
 
-            // ✅ HỖ TRỢ CUSTOM LIMIT
-            int limit = 8; // Default
+            // ✅ PARSE LIMIT
+            int limit = 8;
             String limitParam = request.getParameter("limit");
             if (limitParam != null && !limitParam.isEmpty()) {
                 limit = Integer.parseInt(limitParam);
                 if (limit < 1) limit = 8;
-                if (limit > 1000) limit = 1000; // Max 1000
+                if (limit > 1000) limit = 1000;
             }
 
-            List<Comic> comics = comicDAO.getAllComicsAdmin(page, limit);
-            int totalComics = comicDAO.countAllComics();
+            // ✅ PARSE HIDDEN FILTER (QUAN TRỌNG!)
+            Integer hiddenFilter = null;
+            String hiddenParam = request.getParameter("hiddenFilter");
+            if (hiddenParam != null && !hiddenParam.isEmpty()) {
+                try {
+                    int hiddenValue = Integer.parseInt(hiddenParam);
+                    if (hiddenValue == 0 || hiddenValue == 1) {
+                        hiddenFilter = hiddenValue;
+                    }
+                } catch (NumberFormatException e) {
+                    // Ignore invalid value
+                }
+            }
+
+            System.out.println("📋 List params: page=" + page + ", limit=" + limit + ", hiddenFilter=" + hiddenFilter);
+
+            // ✅ GỌI DAO VỚI FILTER
+            List<Comic> comics;
+            int totalComics;
+
+            if (hiddenFilter != null) {
+                comics = comicDAO.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
+                totalComics = comicDAO.countAllComicsWithFilter(hiddenFilter);
+            } else {
+                comics = comicDAO.getAllComicsAdmin(page, limit);
+                totalComics = comicDAO.countAllComics();
+            }
+
             int totalPages = (int) Math.ceil((double) totalComics / limit);
 
-            System.out.println("✅ Page: " + page + "/" + totalPages + " - Loaded " + comics.size() + " comics");
+            System.out.println("✅ Loaded " + comics.size() + " comics (filtered: " + hiddenFilter + ")");
 
+            // ✅ BUILD RESPONSE (THÊM isHidden)
             List<Map<String, Object>> simplifiedComics = new ArrayList<>();
             for (Comic comic : comics) {
                 Map<String, Object> dto = new HashMap<>();
@@ -73,6 +101,7 @@ public class ListComicsServlet extends HttpServlet {
                 dto.put("price", comic.getPrice());
                 dto.put("stockQuantity", comic.getStockQuantity());
                 dto.put("volume", comic.getVolume());
+                dto.put("isHidden", comic.getIsHidden());
                 simplifiedComics.add(dto);
             }
 
@@ -83,7 +112,7 @@ public class ListComicsServlet extends HttpServlet {
             result.put("totalComics", totalComics);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Server error: " + e.getMessage());

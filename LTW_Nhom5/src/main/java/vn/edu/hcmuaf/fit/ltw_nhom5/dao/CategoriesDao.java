@@ -27,6 +27,8 @@ public class CategoriesDao {
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
+                "is_hidden AS is_hidden, " +
+
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
                 "FROM categories WHERE is_deleted = 0 ORDER BY name_categories";
@@ -43,6 +45,7 @@ public class CategoriesDao {
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
+                "is_hidden AS is_hidden, " +
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
                 "FROM categories WHERE is_deleted = 0 ORDER BY name_categories ASC";
@@ -94,6 +97,7 @@ public class CategoriesDao {
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
+                "is_hidden AS is_hidden, " +
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
                 "FROM categories " +
@@ -126,6 +130,7 @@ public class CategoriesDao {
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
+                "is_hidden AS is_hidden, " +
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
                 "FROM categories " +
@@ -162,6 +167,7 @@ public class CategoriesDao {
                 "name_categories as nameCategories, " +
                 "description, " +
                 "is_deleted as isDeleted, " +
+                "is_hidden AS is_hidden, " +
                 "deleted_at as deletedAt, " +
                 "created_at as createdAt " +
                 "FROM categories " +

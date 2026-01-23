@@ -56,7 +56,7 @@ public class GetComicDetailServlet extends HttpServlet {
             Comic comic = comicDAO.getComicById2(comicId);
 
             if (comic == null) {
-                System.out.println("❌ Comic not found: " + comicId);
+                System.out.println("Comic not found: " + comicId);
                 result.put("success", false);
                 result.put("message", "Không tìm thấy truyện");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);

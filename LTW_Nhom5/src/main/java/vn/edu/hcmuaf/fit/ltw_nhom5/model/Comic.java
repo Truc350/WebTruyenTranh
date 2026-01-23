@@ -53,8 +53,20 @@ public class Comic {
     private String authorName;
 
     private String publisherName;
+    @ColumnName("is_hidden")
+    private int isHidden;
 
-    public Comic() {}
+
+    public Comic() {
+    }
+
+    public int getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(int isHidden) {
+        this.isHidden = isHidden;
+    }
 
     public String getAuthor() {
         return author;
