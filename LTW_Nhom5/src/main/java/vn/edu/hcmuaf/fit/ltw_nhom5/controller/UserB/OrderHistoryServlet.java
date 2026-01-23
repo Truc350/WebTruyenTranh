@@ -34,46 +34,72 @@ public class OrderHistoryServlet extends HttpServlet {
 
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
-            System.out.println("User is null, redirecting to login");
             return;
         }
-        System.out.println("User found: " + user.getUsername() + " (ID: " + user.getId() + ")");
 
-        // Lấy filter từ parameter (mặc định là "all" để hiển thị tất cả)
+        System.out.println("========== ORDER HISTORY DEBUG ==========");
+        System.out.println("User: " + user.getUsername() + " (ID: " + user.getId() + ")");
+
+        // Lấy filter từ parameter
         String filter = request.getParameter("filter");
         if (filter == null || filter.isEmpty()) {
-            filter = "all";
+            filter = "completed"; // Mặc định
         }
+        System.out.println("Filter: " + filter);
+
+        // Map filter sang status
+        String dbStatus = mapFilterToStatus(filter);
+        System.out.println("DB Status: " + dbStatus);
 
         // Lấy tất cả đơn hàng của user
         List<Order> allOrders = orderDAO.getOrdersByUserId(user.getId());
-        System.out.println("Total orders for user: " + allOrders.size());
+        System.out.println("Total orders: " + allOrders.size());
 
-        // Lấy thông tin chi tiết cho từng đơn hàng
+        // Filter theo status
+        List<Order> filteredOrders;
+        if ("all".equals(filter)) {
+            filteredOrders = allOrders;
+        } else {
+            filteredOrders = allOrders.stream()
+                    .filter(o -> o.getStatus().equals(dbStatus))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        System.out.println("Filtered orders: " + filteredOrders.size());
+
+        // Lấy thông tin chi tiết
         List<Map<String, Object>> orderDetails = new ArrayList<>();
 
-        for (Order order : allOrders) {
+        for (Order order : filteredOrders) {
+            System.out.println("\n--- Order #" + order.getId() + " ---");
+            System.out.println("Date: " + order.getOrderDate());
+            System.out.println("Status: " + order.getStatus());
+            System.out.println("Total: " + order.getTotalAmount());
+
             Map<String, Object> orderData = new HashMap<>();
             orderData.put("order", order);
 
-            // Lấy danh sách sản phẩm trong đơn
+            // Lấy order items
             List<OrderItem> items = orderDAO.getOrderItems(order.getId());
-            System.out.println("Order #" + order.getId() + " has " + items.size() + " items");
+            System.out.println("Items count: " + items.size());
 
-            // Lấy thông tin comic cho từng item
             List<Map<String, Object>> itemsWithComics = new ArrayList<>();
+
             for (OrderItem item : items) {
+                System.out.println("  Item - Comic ID: " + item.getComicId() +
+                        ", Qty: " + item.getQuantity() +
+                        ", Price: " + item.getPriceAtPurchase());
+
                 Map<String, Object> itemData = new HashMap<>();
                 itemData.put("item", item);
 
                 Comic comic = comicDAO.getComicById(item.getComicId());
+                System.out.println("item.getComicId() "+ item.getComicId());
                 if (comic != null) {
+                    System.out.println("    ✓ Comic found: " + comic.getNameComics());
+                    System.out.println("      Thumbnail: " + comic.getThumbnailUrl());
                     itemData.put("comic", comic);
-                    System.out.println("  - Comic: " + comic.getNameComics() +
-                            ", Qty: " + item.getQuantity() +
-                            ", Price: " + item.getPriceAtPurchase());
                 } else {
-                    System.out.println("  - Comic ID " + item.getComicId() + " not found!");
+                    System.out.println("    ✗ Comic NOT FOUND for ID: " + item.getComicId());
                 }
 
                 itemsWithComics.add(itemData);
@@ -81,13 +107,10 @@ public class OrderHistoryServlet extends HttpServlet {
 
             orderData.put("items", itemsWithComics);
             orderDetails.add(orderData);
-
-            System.out.println("Order #" + order.getId() +
-                    " - Status: " + order.getStatus() +
-                    " - Total: " + order.getTotalAmount());
         }
 
-        System.out.println("Sending " + orderDetails.size() + " orders to JSP");
+        System.out.println("\nTotal orderDetails: " + orderDetails.size());
+        System.out.println("=========================================\n");
 
         request.setAttribute("orderDetails", orderDetails);
         request.setAttribute("currentFilter", filter);
