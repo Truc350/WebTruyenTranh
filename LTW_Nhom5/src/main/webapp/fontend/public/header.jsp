@@ -105,7 +105,7 @@
         </div>
 
         <div class="actions">
-            <a href="../nguoiB/chat.jsp">
+            <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                 <i class="fa-solid fa-comment"></i>
             </a>
         </div>
@@ -122,8 +122,7 @@
         <div class="actions user-nav">
             <i class="fa-solid fa-user" id="user"></i>
             <div class="dropdown-user">
-                    <a href="${pageContext.request.contextPath}/updateUser">Người dùng</a>
-<%--                    <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile-info.jsp">Người dùng</a>--%>
+                <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp">Người dùng</a>
 
                 <%
                     User curnentUser = (User) session.getAttribute("currentUser");
@@ -360,3 +359,4 @@
 
     <script src="${pageContext.request.contextPath}/fontend/js/firebase-notification.js"></script>
 </c:if>
+

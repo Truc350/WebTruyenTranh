@@ -24,10 +24,9 @@ body {
     flex: 1;
     padding: 30px;
     background-color: white;
-    overflow-y: auto; /* CHỈ scroll dọc ở đây */
-    overflow-x: hidden;
+    overflow-y: auto;       /* scroll dọc chính */
+    overflow-x: hidden;     /* ngăn scroll ngang ở main */
     height: 100vh;
-    position: relative; /* THÊM ĐỂ PAGINATION ABSOLUTE THEO MAIN */
 }
 
 .page-title {
@@ -122,13 +121,49 @@ body {
     background-color: #ff6a6a;
 }
 
-/* ===== TABLE WRAPPER - BỎ HẾT SCROLL ===== */
+
+/*.table-wrapper {*/
+/*    width: 100%;*/
+/*    background: white;*/
+/*    border-radius: 8px;*/
+/*    overflow: visible; !* Bỏ scroll *!*/
+/*}*/
+/* Container bao quanh bảng */
 .table-wrapper {
-    width: 100%;
-    background: white;
-    border-radius: 8px;
-    overflow: visible; /* Bỏ scroll */
+    width: 100%;           /* Chiều rộng tối đa của vùng chứa */
+    overflow-x: auto;      /* Tự động hiện thanh cuộn ngang khi bảng quá rộng */
+    -webkit-overflow-scrolling: touch; /* Giúp cuộn mượt hơn trên thiết bị di động */
+    margin-bottom: 1rem;   /* Khoảng cách phía dưới bảng */
+    border: 1px solid #ddd; /* Tùy chọn: tạo khung để dễ nhìn thấy vùng cuộn */
 }
+
+/* Đảm bảo bảng không bị co lại quá mức */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;      /* Quan trọng: ép bảng phải rộng ít nhất 800px để kích hoạt scroll */
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp hơn (Dành cho Chrome, Safari, Edge) */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;           /* Độ dày của thanh cuộn ngang */
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;   /* Màu nền của thanh cuộn */
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #888;      /* Màu của thanh kéo */
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;      /* Màu thanh kéo khi di chuột qua */
+}
+
+
+
 
 /* Table */
 table {
@@ -889,4 +924,26 @@ th, td {
 
 .trash-btn i {
     pointer-events: none;
+}
+.search-add .dropdown {
+    flex-shrink: 0;
+}
+
+.search-add .dropdown select {
+    height: 50px;
+    padding: 0 14px;
+    border: 2px solid #ff8282;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    min-width: 160px;
+}
+
+.search-add .dropdown select:hover,
+.search-add .dropdown select:focus {
+    border-color: #ff4c4c;
 }
