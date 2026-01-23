@@ -46,7 +46,7 @@
         <div class="tab-content" id="tab-pending">
             <div class="order-controls">
                 <div class="search-box">
-                    <input type="text" id="pendingSearch"
+                    <input type="text" id="pendingSearch" class="search-input"
                            placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng..." class="search-input">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
@@ -120,7 +120,7 @@
             <!-- Thanh tìm kiếm -->
             <div class="order-controls">
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
+                    <input type="text" id="pickupSearch" class="search-input" placeholder="Tìm kiếm theo mã đơn hoặc tên khách hàng...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -535,7 +535,8 @@
                         <c:otherwise>
                             <tr class="no-result-message">
                                 <td colspan="6" style="text-align: center; padding: 30px; color: #999;">
-                                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+                                    <i class="fas fa-inbox"
+                                       style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
                                     Chưa có đơn hàng nào bị hủy
                                 </td>
                             </tr>
@@ -577,53 +578,6 @@
     });
 </script>
 
-<script>
-    (function () {
-        const searchInput = document.getElementById('pendingSearch');
-        const tbody = document.getElementById('confirmTableBody');
-
-        // Lấy tất cả row trừ dòng phân trang
-        const allRows = Array.from(tbody.querySelectorAll('tr'))
-            .filter(r => !r.classList.contains('pagination-row'));
-
-        searchInput.addEventListener('input', function () {
-            const keyword = this.value.toLowerCase().trim();
-
-            let visibleRows = [];
-
-            allRows.forEach(row => {
-                const orderCode = row.cells[0].textContent.toLowerCase();
-                const customerName = row.cells[1].textContent.toLowerCase();
-
-                const match =
-                    orderCode.includes(keyword) ||
-                    customerName.includes(keyword);
-
-                row.style.display = match ? '' : 'none';
-
-                if (match) visibleRows.push(row);
-            });
-
-            // Sau khi search → reset phân trang về trang 1
-            resetPaginationAfterSearch(visibleRows);
-        });
-
-        function resetPaginationAfterSearch(rows) {
-            const ROWS_PER_PAGE = 5;
-            rows.forEach((row, index) => {
-                row.style.display = index < ROWS_PER_PAGE ? '' : 'none';
-            });
-
-            document.querySelectorAll('.confirm-page')
-                .forEach(btn => btn.classList.remove('active'));
-
-            document.querySelector('.confirm-page[data-page="1"]')
-                ?.classList.add('active');
-        }
-    })();
-</script>
-
-
 <!--CHUỂN TRANG GIŨA CÁC TAB-->
 <script>
     const tabs = document.querySelectorAll(".tab-item");
@@ -651,7 +605,7 @@
     });
 
     // KHÔI PHỤC TAB ĐÃ LƯU HOẶC MẶC ĐỊNH TAB 0
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         let tabToShow = 0; // Mặc định tab đầu tiên
 
         // Kiểm tra có tab đã lưu không
@@ -804,7 +758,7 @@
     });
 
     // Đóng popup
-    document.querySelector('.close-popup').addEventListener('click', function() {
+    document.querySelector('.close-popup').addEventListener('click', function () {
         document.querySelector('.cancel-popup').style.display = 'none';
         currentCancelOrderId = null;
     });
@@ -922,6 +876,5 @@
         });
     });
 </script>
-
 </body>
 </html>

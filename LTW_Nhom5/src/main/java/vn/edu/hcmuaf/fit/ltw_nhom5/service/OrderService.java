@@ -554,4 +554,88 @@ public class OrderService {
 
         return result;
     }
+
+
+    /**
+     * Tìm kiếm đơn hàng theo tab cụ thể
+     * @param keyword Từ khóa tìm kiếm (mã đơn hoặc tên khách)
+     * @param status Trạng thái đơn hàng (tab hiện tại)
+     * @return Danh sách đơn hàng đã format
+     */
+    public List<Map<String, Object>> searchOrdersByTab(String keyword, String status) {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        try {
+            List<Map<String, Object>> orders;
+
+            // Xử lý riêng cho tab Cancelled vì cần lấy thêm thông tin từ order_history
+            if ("Cancelled".equalsIgnoreCase(status)) {
+                orders = orderDAO.searchCancelledOrders(keyword);
+            } else {
+                orders = orderDAO.searchOrdersByStatus(keyword, status);
+            }
+
+            // Format dữ liệu giống như buildOrderData
+            for (Map<String, Object> orderMap : orders) {
+                int orderId = ((Number) orderMap.get("id")).intValue();
+
+                // Lấy Order object đầy đủ
+                Order order = orderDAO.getOrderById(orderId).orElse(null);
+
+                if (order != null) {
+                    // Sử dụng buildOrderData để format đồng nhất
+                    Map<String, Object> formattedOrder = buildOrderData(order);
+                    result.add(formattedOrder);
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error in searchOrdersByTab: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab CHỜ XÁC NHẬN
+     */
+    public List<Map<String, Object>> searchPendingOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Pending");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab CHỜ LẤY HÀNG
+     */
+    public List<Map<String, Object>> searchAwaitingPickupOrders(String keyword) {
+        return searchOrdersByTab(keyword, "AwaitingPickup");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐANG GIAO
+     */
+    public List<Map<String, Object>> searchShippingOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Shipping");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
+     */
+    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Completed");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab TRẢ HÀNG/HOÀN TIỀN
+     */
+    public List<Map<String, Object>> searchReturnedOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Returned");
+    }
+
+    /**
+     * Tìm kiếm đơn hàng cho tab ĐƠN BỊ HỦY
+     */
+    public List<Map<String, Object>> searchCancelledOrders(String keyword) {
+        return searchOrdersByTab(keyword, "Cancelled");
+    }
 }

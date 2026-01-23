@@ -38,34 +38,31 @@ public class AdminOrderManagementServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String action = req.getParameter("action");
-        System.out.println("Action parameter: " + action);
-        String orderId = req.getParameter("orderId");
+
         try {
             if (action == null) {
-                // Hiển thị trang quản lý đơn hàng
                 displayOrderManagement(req, resp);
             } else {
                 switch (action) {
                     case "detail":
-                        System.out.println("➡️ Calling getOrderDetail...");
                         getOrderDetail(req, resp);
                         break;
                     case "search":
-                        System.out.println("➡️ Calling searchOrders...");
+                        // Tìm kiếm cũ (có thể giữ lại hoặc xóa)
                         searchOrders(req, resp);
                         break;
+                    case "searchByTab":
+                        // Tìm kiếm mới theo tab
+                        searchOrdersByTab(req, resp);
+                        break;
                     case "stats":
-                        System.out.println("➡️ Calling getStatistics...");
                         getStatistics(req, resp);
                         break;
                     default:
-                        System.out.println("➡️ Default: Calling displayOrderManagement...");
                         displayOrderManagement(req, resp);
                 }
             }
-            System.out.println("✅ doGet completed successfully");
         } catch (Exception e) {
-            System.out.println("❌ ERROR in doGet:");
             e.printStackTrace();
             throw e;
         }
@@ -395,5 +392,114 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 "success", false,
                 "error", message
         )));
+    }
+
+    /**
+     * Tìm kiếm đơn hàng theo tab cụ thể
+     * Thêm vào method doGet của AdminOrderManagementServlet
+     */
+    private void searchOrdersByTab(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        // ✅ SET CONTENT TYPE NGAY TỪ ĐẦU - TRƯỚC KHI XỬ LÝ BẤT KỲ LOGIC NÀO
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        // ✅ THÊM HEADER ĐỂ TRÁNH CACHE
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        resp.setHeader("Pragma", "no-cache");
+        resp.setHeader("Expires", "0");
+
+        try {
+            String keyword = req.getParameter("keyword");
+            String status = req.getParameter("status");
+
+            // ✅ LOG ĐỂ DEBUG
+            System.out.println("=== SEARCH BY TAB ===");
+            System.out.println("Keyword: " + keyword);
+            System.out.println("Status: " + status);
+
+            // ✅ VALIDATE INPUT
+            if (status == null || status.isEmpty()) {
+                System.err.println("❌ Missing status parameter");
+                resp.getWriter().write(gson.toJson(Map.of(
+                        "success", false,
+                        "error", "Missing status parameter"
+                )));
+                return;
+            }
+
+            // ✅ XỬ LÝ KEYWORD NULL
+            if (keyword == null) {
+                keyword = "";
+            }
+
+            List<Map<String, Object>> orders;
+
+            // ✅ SWITCH CASE VỚI LOG
+            switch (status) {
+                case "Pending":
+                    System.out.println("→ Searching Pending orders...");
+                    orders = orderService.searchPendingOrders(keyword);
+                    break;
+                case "AwaitingPickup":
+                    System.out.println("→ Searching AwaitingPickup orders...");
+                    orders = orderService.searchAwaitingPickupOrders(keyword);
+                    break;
+                case "Shipping":
+                    System.out.println("→ Searching Shipping orders...");
+                    orders = orderService.searchShippingOrders(keyword);
+                    break;
+                case "Completed":
+                    System.out.println("→ Searching Completed orders...");
+                    orders = orderService.searchCompletedOrders(keyword);
+                    break;
+                case "Returned":
+                    System.out.println("→ Searching Returned orders...");
+                    orders = orderService.searchReturnedOrders(keyword);
+                    break;
+                case "Cancelled":
+                    System.out.println("→ Searching Cancelled orders...");
+                    orders = orderService.searchCancelledOrders(keyword);
+                    break;
+                default:
+                    System.err.println("❌ Invalid status: " + status);
+                    orders = new ArrayList<>();
+            }
+
+            System.out.println("✅ Found " + orders.size() + " orders");
+
+            // ✅ TẠO RESPONSE
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("orders", orders);
+            response.put("count", orders.size());
+
+            // ✅ CONVERT TO JSON VÀ GHI RESPONSE
+            String jsonResponse = gson.toJson(response);
+            System.out.println("📤 Response length: " + jsonResponse.length() + " chars");
+
+            resp.getWriter().write(jsonResponse);
+            resp.getWriter().flush();
+
+        } catch (Exception e) {
+            // ✅ XỬ LÝ LỖI AN TOÀN
+            System.err.println("❌ ERROR in searchOrdersByTab:");
+            e.printStackTrace();
+
+            // ✅ ĐẢM BẢO RESPONSE VẪN LÀ JSON
+            try {
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("success", false);
+                errorResponse.put("error", e.getMessage() != null ? e.getMessage() : "Unknown error");
+                errorResponse.put("errorType", e.getClass().getSimpleName());
+
+                resp.getWriter().write(gson.toJson(errorResponse));
+                resp.getWriter().flush();
+            } catch (IOException ioException) {
+                System.err.println("❌ Failed to send error response:");
+                ioException.printStackTrace();
+            }
+        }
     }
 }
