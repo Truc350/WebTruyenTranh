@@ -167,9 +167,13 @@ public class OrderHistoryServlet extends HttpServlet {
                 return "Shipping";
             case "completed":
                 return "Completed";
-            case "cancelled":
+//          case "cancelled":
+//              return "Cancelled";
+            case "canceled":  // ✅ Đã hủy
                 return "Cancelled";
-            case "returned":
+//          case "returned":
+//              return "Returned";
+            case "refund":    // ✅ Trả hàng/Hoàn tiền
                 return "Returned";
             default:
                 return "Pending";
