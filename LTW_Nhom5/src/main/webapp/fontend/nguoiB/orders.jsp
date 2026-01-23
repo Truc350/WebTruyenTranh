@@ -61,11 +61,11 @@
                         <c:set var="statusClass" value="pending" />
                         <c:set var="statusText" value="Chờ xác nhận" />
                     </c:when>
-                    <c:when test="${order.status == 'Shipping'}">
+                    <c:when test="${order.status == 'AwaitingPickup'}">
                         <c:set var="statusClass" value="shipping" />
                         <c:set var="statusText" value="Vận chuyển" />
                     </c:when>
-                    <c:when test="${order.status == 'AwaitingPickup'}">
+                    <c:when test="${order.status == 'Shipping'}">
                         <c:set var="statusClass" value="delivery" />
                         <c:set var="statusText" value="Chờ giao hàng" />
                     </c:when>
@@ -145,13 +145,13 @@
                                 </button>
                             </c:when>
 
-                            <c:when test="${order.status == 'Shipping'}">
+                            <c:when test="${order.status == 'AwaitingPickup'}">
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
                             </c:when>
 
-                            <c:when test="${order.status == 'AwaitingPickup'}">
+                            <c:when test="${order.status == 'Shipping'}">
                                 <button class="action-btn contact-seller">Trả hàng</button>
                                 <button class="action-btn receive-order" onclick="receiveOrder(${order.id})">
                                     Đã nhận hàng

@@ -161,9 +161,9 @@ public class OrderHistoryServlet extends HttpServlet {
         switch (filter) {
             case "pending":
                 return "Pending";
-            case "awaitingpickup":
+            case "shipping":  // ✅ Shipping = Vận chuyển
                 return "AwaitingPickup";
-            case "shipping":
+            case "delivery":  // ✅ Delivery = Chờ giao hàng
                 return "Shipping";
             case "completed":
                 return "Completed";
