@@ -71,6 +71,8 @@ public class LoginServlet extends HttpServlet {
 
                 if (isAdmin) {
                     newSession.setAttribute("currentUser", user);
+
+                    newSession.setAttribute("userId", user.getId());
                     newSession.setAttribute("isAdmin", true);
 
                     response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");

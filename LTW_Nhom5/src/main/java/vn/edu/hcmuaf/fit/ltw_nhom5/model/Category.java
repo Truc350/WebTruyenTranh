@@ -9,6 +9,25 @@ public class Category {
     private Integer isDeleted;  // Đổi thành Integer thay vì boolean
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
+    private int is_hidden;
+
+    public int getIs_hidden() {
+        return is_hidden;
+    }
+
+    public void setIs_hidden(int is_hidden) {
+        this.is_hidden = is_hidden;
+    }
+
+    public Category(Integer id, String nameCategories, String description, Integer isDeleted, LocalDateTime deletedAt, LocalDateTime createdAt, int is_hidden) {
+        this.id = id;
+        this.nameCategories = nameCategories;
+        this.description = description;
+        this.isDeleted = isDeleted;
+        this.deletedAt = deletedAt;
+        this.createdAt = createdAt;
+        this.is_hidden = is_hidden;
+    }
 
     // Constructor không tham số (BẮT BUỘC cho JDBI)
     public Category() {

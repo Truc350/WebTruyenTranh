@@ -576,7 +576,7 @@ function openDeletePopup(id, name) {
     }
 
     if (deleteMessageElement) {
-        deleteMessageElement.textContent = `Bạn có chắc chắn muốn xóa thể loại này?`;
+        deleteMessageElement.textContent = `Bạn có chắc chắn muốn xóa thể loại `;
     }
 
     const deletePopup = document.getElementById('deletePopup');

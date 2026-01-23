@@ -123,6 +123,12 @@
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
                 </div>
+                <select id="displayFilter" class="filter-select">
+                    <option value="all">Tất cả sản phẩm</option>
+                    <option value="visible">Sản phẩm đang hiển thị</option>
+                    <option value="hidden">Sản phẩm đang bị ẩn</option>
+                </select>
+
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
@@ -347,38 +353,38 @@
 
 
         <!-- POPUP XÓA TRUYỆN -->
-<%--        <div class="modal-overlay" id="deleteModal">--%>
-<%--            <div class="delete-modal">--%>
-<%--                <h3>Xóa truyện</h3>--%>
+        <%--        <div class="modal-overlay" id="deleteModal">--%>
+        <%--            <div class="delete-modal">--%>
+        <%--                <h3>Xóa truyện</h3>--%>
 
-<%--                <div class="search-bar">--%>
-<%--                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">--%>
-<%--                    <button id="searchBtn" class="search-icon">--%>
-<%--                        <i class="fa-solid fa-magnifying-glass"></i>--%>
-<%--                    </button>--%>
-<%--                </div>--%>
+        <%--                <div class="search-bar">--%>
+        <%--                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">--%>
+        <%--                    <button id="searchBtn" class="search-icon">--%>
+        <%--                        <i class="fa-solid fa-magnifying-glass"></i>--%>
+        <%--                    </button>--%>
+        <%--                </div>--%>
 
-<%--                <div class="delete-list">--%>
-<%--                    <label><input type="checkbox"> Thám tử lừng danh Conan – Tập 15 – Gosho Aoyama</label>--%>
-<%--                    <label><input type="checkbox"> Doraemon – Tập 30 – Fujiko F. Fujio</label>--%>
-<%--                    <label><input type="checkbox"> One Piece – Tập 100 – Eiichiro Oda</label>--%>
-<%--                    <label><input type="checkbox"> Attack on Titan – Tập 17 – Hajime Isayama</label>--%>
-<%--                    <label><input type="checkbox"> Naruto – Tập 300 – Masashi Kishimoto</label>--%>
-<%--                    <label><input type="checkbox"> Bleach – Tập 70 – Tite Kubo</label>--%>
-<%--                    <label><input type="checkbox"> Spy x Family – Tập 12 – Tatsuya Endo</label>--%>
-<%--                    <label><input type="checkbox"> Bleach – Tập 40 – Tite Kubo</label>--%>
-<%--                    <label><input type="checkbox"> Spy x Family– Tập 45 – Tatsuya Endo</label>--%>
-<%--                    <label><input type="checkbox"> Bleach– Tập 80 – Tite Kubo</label>--%>
-<%--                    <label><input type="checkbox"> Spy x Family– Tập 50 – Tatsuya Endo</label>--%>
-<%--                </div>--%>
+        <%--                <div class="delete-list">--%>
+        <%--                    <label><input type="checkbox"> Thám tử lừng danh Conan – Tập 15 – Gosho Aoyama</label>--%>
+        <%--                    <label><input type="checkbox"> Doraemon – Tập 30 – Fujiko F. Fujio</label>--%>
+        <%--                    <label><input type="checkbox"> One Piece – Tập 100 – Eiichiro Oda</label>--%>
+        <%--                    <label><input type="checkbox"> Attack on Titan – Tập 17 – Hajime Isayama</label>--%>
+        <%--                    <label><input type="checkbox"> Naruto – Tập 300 – Masashi Kishimoto</label>--%>
+        <%--                    <label><input type="checkbox"> Bleach – Tập 70 – Tite Kubo</label>--%>
+        <%--                    <label><input type="checkbox"> Spy x Family – Tập 12 – Tatsuya Endo</label>--%>
+        <%--                    <label><input type="checkbox"> Bleach – Tập 40 – Tite Kubo</label>--%>
+        <%--                    <label><input type="checkbox"> Spy x Family– Tập 45 – Tatsuya Endo</label>--%>
+        <%--                    <label><input type="checkbox"> Bleach– Tập 80 – Tite Kubo</label>--%>
+        <%--                    <label><input type="checkbox"> Spy x Family– Tập 50 – Tatsuya Endo</label>--%>
+        <%--                </div>--%>
 
-<%--                <div class="delete-buttons">--%>
-<%--                    <button class="cancel-btn">Hủy</button>--%>
-<%--                    <button class="delete-confirm-btn">Xóa</button>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-        deleteBtnMain
+        <%--                <div class="delete-buttons">--%>
+        <%--                    <button class="cancel-btn">Hủy</button>--%>
+        <%--                    <button class="delete-confirm-btn">Xóa</button>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+        <%--        deleteBtnMain--%>
 
         <!-- POPUP XÁC NHẬN XÓA -->
         <div class="modal-overlay" id="confirmDeleteModal">
@@ -459,12 +465,25 @@
 
 
 </div>
-<%--ti kiem tram--%>
+<!-- Script thêm truyện mới -->
+<script src="${pageContext.request.contextPath}/js/addComic.js"></script>
+<!-- Script chỉnh sửa truyện -->
+<script src="${pageContext.request.contextPath}/js/editComic.js"></script>
+<!-- Script xóa truyện -->
+<script src="${pageContext.request.contextPath}/js/deleteComic.js"></script>
 <script>
     let currentPage = 1;
+    let currentFilter = 'all';
+
 
     function searchProducts(page = 1) {
         const keyword = document.getElementById('mainSearchInput').value.trim();
+        const filterSelect = document.getElementById('displayFilter');
+        const filterValue = filterSelect.value; // 'all', 'visible', 'hidden'
+
+        console.log('🔍 Search params:', {keyword, filterValue, page});
+
+        currentFilter = filterValue; // Lưu filter hiện tại
         const tbody = document.getElementById('productTableBody');
 
         // Hiển thị loading
@@ -472,36 +491,140 @@
             '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
             '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
 
-        // Gọi API
-        const url = '${pageContext.request.contextPath}/admin/products/search?keyword=' +
+        // ✅ Xác định hiddenFilter dựa trên filterValue
+        let hiddenFilter = null;
+        if (filterValue === 'visible') {
+            hiddenFilter = 0; // Chỉ hiện truyện ĐANG HIỂN THỊ (is_hidden = 0)
+        } else if (filterValue === 'hidden') {
+            hiddenFilter = 1; // Chỉ hiện truyện ĐÃ ẨN (is_hidden = 1)
+        }
+        // Nếu filterValue === 'all' → hiddenFilter = null (hiện tất cả)
+
+        // ✅ Build URL với hiddenFilter
+        let url = contextPath + '/admin/products/search?keyword=' +
             encodeURIComponent(keyword) + '&page=' + page;
 
-        console.log('Calling API:', url); // DEBUG
+        if (hiddenFilter !== null) {
+            url += '&hiddenFilter=' + hiddenFilter;
+        }
 
+        console.log('📡 Calling API:', url);
+
+        // Gọi API
         fetch(url)
             .then(response => {
-                console.log('Response status:', response.status); // DEBUG
+                console.log('Response status:', response.status);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Data received:', data); // DEBUG
+                console.log('✅ Data received:', data);
                 currentPage = data.currentPage;
                 updateTable(data.comics);
                 updatePagination(data.currentPage, data.totalPages);
-
                 bindEventListeners();
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('❌ Error:', error);
                 tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
                     '<i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>' +
                     '<p style="margin-top: 10px;">Có lỗi xảy ra: ' + error.message + '</p></td></tr>';
             });
     }
 
+    function searchProducts(page = 1) {
+        const keyword = document.getElementById('mainSearchInput').value.trim();
+        const filterSelect = document.getElementById('displayFilter');
+        const filterValue = filterSelect.value; // 'all', 'visible', 'hidden'
+
+        console.log('🔍 Search params:', {keyword, filterValue, page});
+
+        currentFilter = filterValue; // Lưu filter hiện tại
+        const tbody = document.getElementById('productTableBody');
+
+        // Hiển thị loading
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">' +
+            '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
+            '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
+
+        // ✅ Xác định hiddenFilter dựa trên filterValue
+        let hiddenFilter = null;
+        if (filterValue === 'visible') {
+            hiddenFilter = 0; // Chỉ hiện truyện ĐANG HIỂN THỊ (is_hidden = 0)
+        } else if (filterValue === 'hidden') {
+            hiddenFilter = 1; // Chỉ hiện truyện ĐÃ ẨN (is_hidden = 1)
+        }
+        // Nếu filterValue === 'all' → hiddenFilter = null (hiện tất cả)
+
+        // ✅ Build URL với hiddenFilter
+        let url = contextPath + '/admin/products/search?keyword=' +
+            encodeURIComponent(keyword) + '&page=' + page;
+
+        if (hiddenFilter !== null) {
+            url += '&hiddenFilter=' + hiddenFilter;
+        }
+
+        console.log('📡 Calling API:', url);
+
+        // Gọi API
+        fetch(url)
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('✅ Data received:', data);
+                currentPage = data.currentPage;
+                updateTable(data.comics);
+                updatePagination(data.currentPage, data.totalPages);
+                bindEventListeners();
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
+                    '<i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>' +
+                    '<p style="margin-top: 10px;">Có lỗi xảy ra: ' + error.message + '</p></td></tr>';
+            });
+    }
+
+    // === HÀM TOGGLE ẨN/HIỆN ===
+    function toggleHidden(id, hidden) {
+        console.log('🔄 toggleHidden called:', id, hidden); // Debug log
+
+        fetch(contextPath + '/admin/products/toggle-hidden', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'id=' + id + '&hidden=' + hidden
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('📡 Response:', data); // Debug log
+
+                if (data.success) {
+                    console.log('✅ Toggle success:', data.message);
+
+                    // Hiển thị thông báo ngắn cho user
+                    alert(data.message);
+
+                    // Reload lại danh sách để cập nhật
+                    searchProducts(currentPage);
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error toggling hidden:', error);
+                alert('Có lỗi xảy ra khi cập nhật trạng thái');
+            });
+    }
+
+
+    // === HÀM CẬP NHẬT BẢNG ===
     function updateTable(comics) {
         const tbody = document.getElementById('productTableBody');
 
@@ -538,8 +661,18 @@
                 '<div class="menu-container">' +
                 '<button class="more-btn">⋮</button>' +
                 '<div class="dropdown-menu">' +
-                '<label><input type="radio" name="display-' + comic.id + '" checked> Hiển thị</label>' +
-                '<label><input type="radio" name="display-' + comic.id + '"> Ẩn sản phẩm</label>' +
+                '<label>' +
+                '<input type="radio" name="display-' + comic.id + '" ' +
+                (comic.isHidden === 0 ? 'checked' : '') +
+                ' onchange="toggleHidden(' + comic.id + ', 0)">' +
+                ' Hiển thị' +
+                '</label>' +
+                '<label>' +
+                '<input type="radio" name="display-' + comic.id + '" ' +
+                (comic.isHidden === 1 ? 'checked' : '') +
+                ' onchange="toggleHidden(' + comic.id + ', 1)">' +
+                ' Ẩn sản phẩm' +
+                '</label>' +
                 '</div>' +
                 '</div>' +
                 '</td>' +
@@ -548,6 +681,7 @@
 
         tbody.innerHTML = html;
     }
+
 
     function updatePagination(currentPage, totalPages, totalComics) {
         const paginationContainer = document.getElementById('paginationContainer');
@@ -558,8 +692,6 @@
         }
 
         paginationContainer.style.display = 'block';
-
-        // BỎ phần pagination-wrapper và pagination-info
         let paginationHtml = '<div class="pagination">';
 
         if (currentPage > 1) {
@@ -601,7 +733,6 @@
         }
 
         paginationHtml += '</div>';
-
         paginationContainer.innerHTML = paginationHtml;
     }
 
@@ -649,7 +780,7 @@
                 if (typeof window.showDeleteConfirmation === 'function') {
                     window.showDeleteConfirmation(comicId, comicName);
                 } else {
-                    console.error('❌ showDeleteConfirmation not found!');
+                    console.error('showDeleteConfirmation not found!');
                     // Fallback nếu script chưa load
                     const confirmDelete = confirm('Bạn có chắc muốn xóa truyện "' + comicName + '" không?');
                     if (confirmDelete) {
@@ -659,7 +790,7 @@
             });
         });
 
-        // 4. Bind event cho menu "Hiện/Ẩn"
+        // 4.Bind event cho menu "Hiện/Ẩn"
         document.querySelectorAll('.more-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -675,11 +806,28 @@
         });
     }
 
-    // Tìm kiếm khi nhấn Enter
-    document.getElementById('mainSearchInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            searchProducts(1);
-        }
+
+    // === EVENT LISTENERS ===
+    document.addEventListener('DOMContentLoaded', function () {
+        // Load danh sách ban đầu
+        loadInitialComicsList();
+
+        // Tìm kiếm khi nhấn Enter
+        document.getElementById('mainSearchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchProducts(1);
+            }
+        });
+
+        // Lắng nghe thay đổi filter
+        document.getElementById('displayFilter').addEventListener('change', function () {
+            searchProducts(1); // Reset về trang 1 khi đổi filter
+        });
+
+        // Đóng menu khi click ra ngoài
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+        });
     });
 
     // BIND EVENT CHO CÁC PHẦN TỬ BAN ĐẦU (TỪ HTML TĨnh)
@@ -902,16 +1050,15 @@
 </script>
 
 
-
-
 <!-- ===== LOAD DANH SÁCH BAN ĐẦU ===== -->
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        console.log('🔄 Loading initial comics list...');
+        console.log('Loading initial comics list...');
         loadInitialComicsList();
     });
+
 
 
     async function loadInitialComicsList() {
@@ -922,17 +1069,33 @@
             '<p style="margin-top: 10px;">Đang tải danh sách truyện...</p></td></tr>';
 
         try {
-            const url = contextPath + '/admin/products/list?page=1';
-            console.log('📥 Fetching from:', url);
+            // ✅ LẤY FILTER HIỆN TẠI
+            const filterSelect = document.getElementById('displayFilter');
+            const filterValue = filterSelect.value;
+
+            let hiddenFilter = null;
+            if (filterValue === 'visible') {
+                hiddenFilter = 0;
+            } else if (filterValue === 'hidden') {
+                hiddenFilter = 1;
+            }
+
+            // ✅ BUILD URL VỚI FILTER
+            let url = contextPath + '/admin/products/list?page=1';
+            if (hiddenFilter !== null) {
+                url += '&hiddenFilter=' + hiddenFilter;
+            }
+
+            console.log('📡 Fetching from:', url);
 
             const response = await fetch(url);
             if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
 
             const data = await response.json();
-            console.log('📦 Data received:', data);
+            console.log('✅ Data received:', data);
 
             if (data.success && data.comics) {
-                console.log('✅ Comics count:', data.comics.length);
+                console.log('Comics count:', data.comics.length);
                 updateTable(data.comics);
                 updatePagination(1, data.totalPages || 1, data.totalComics || data.comics.length);
                 bindEventListeners();
@@ -948,13 +1111,39 @@
         }
     }
 </script>
+<script>
+    function toggleHidden(id, hidden) {
+        fetch(contextPath + '/admin/products/toggle-hidden', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'id=' + id + '&hidden=' + hidden
+        });
+    }
 
-<!-- Script thêm truyện mới -->
-<script src="${pageContext.request.contextPath}/js/addComic.js"></script>
-<!-- Script chỉnh sửa truyện -->
-<script src="${pageContext.request.contextPath}/js/editComic.js"></script>
-<!-- Script xóa truyện -->
-<script src="${pageContext.request.contextPath}/js/deleteComic.js"></script>
+</script>
+<%--xu ly dropdown filetr--%>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('Initializing filter dropdown...');
+        const filterSelect = document.getElementById('displayFilter');
+
+        // Lắng nghe thay đổi dropdown
+        filterSelect.addEventListener('change', function () {
+            const filterValue = this.value;
+            console.log('🔽 Filter changed to:', filterValue);
+
+            // Reset về trang 1 và search với filter mới
+            searchProducts(1);
+        });
+
+        console.log('✅ Filter dropdown initialized');
+    });
+
+
+
+</script>
+
+
 </body>
 </html>
 
