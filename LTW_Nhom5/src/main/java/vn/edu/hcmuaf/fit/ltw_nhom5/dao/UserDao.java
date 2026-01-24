@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class UserDao {
@@ -174,10 +175,258 @@ public class UserDao {
 
     public Optional<User> findById(int id) {
         return JdbiConnector.get().withHandle(handle ->
-                handle.createQuery("SELECT * FROM users WHERE id = :id AND is_deleted = false")
+                handle.createQuery("SELECT * FROM users WHERE id = :id AND is_deleted = 0")
                         .bind("id", id)
                         .mapToBean(User.class)
                         .findOne()
+        );
+    }
+
+    /**
+     * Lấy tất cả users (chỉ customer, không lấy admin)
+     * @return Danh sách user
+     */
+    public List<User> getAllCustomers() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE role = 'user' " +
+                                "AND is_deleted = 0 ORDER BY created_at DESC")
+                        .mapToBean(User.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Đếm tổng số customer
+     * @return Tổng số customer
+     */
+    public int countAllCustomers() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM users WHERE role = 'customer' AND is_deleted = false")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    /**
+     * Tìm kiếm user theo tên hoặc email
+     * @param keyword từ khóa tìm kiếm
+     * @return Danh sách user tìm được
+     */
+    public List<User> searchCustomers(String keyword) {
+        return jdbi.withHandle(handle -> {
+            String membershipLevel = convertVietnameseToLevel(keyword);
+
+            StringBuilder sql = new StringBuilder(
+                    "SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 AND ("
+            );
+
+            // Luôn tìm theo tên, email, username
+            sql.append("full_name LIKE :keyword OR email LIKE :keyword OR username LIKE :keyword");
+
+            // Nếu keyword khớp với tên cấp độ, THÊM điều kiện tìm theo membership_level
+            if (membershipLevel != null) {
+                sql.append(" OR membership_level = :level");
+            }
+
+            sql.append(") ORDER BY created_at DESC");
+
+            var query = handle.createQuery(sql.toString())
+                    .bind("keyword", "%" + keyword + "%");
+
+            if (membershipLevel != null) {
+                query.bind("level", membershipLevel);
+            }
+
+            List<User> result = query.mapToBean(User.class).list();
+
+            return result;
+        });
+    }
+
+    private String convertVietnameseToLevel(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return null;
+        }
+
+        String lowerKeyword = keyword.toLowerCase().trim();
+
+        // Mapping tiếng Việt và tiếng Anh sang tên cấp độ
+        if (lowerKeyword.contains("thường") || lowerKeyword.contains("thuong") ||
+                lowerKeyword.equals("normal")) {
+            return "Normal";
+        } else if (lowerKeyword.contains("bạc") || lowerKeyword.contains("bac") ||
+                lowerKeyword.equals("silver")) {
+            return "Silver";
+        } else if (lowerKeyword.contains("vàng") || lowerKeyword.contains("vang") ||
+                lowerKeyword.equals("gold")) {
+            return "Gold";
+        } else if (lowerKeyword.contains("bạch kim") || lowerKeyword.contains("bach kim") ||
+                lowerKeyword.equals("platinum") || lowerKeyword.contains("kim cương") ||
+                lowerKeyword.contains("kim cuong")) {
+            return "Platinum";
+        }
+
+        return null;
+    }
+
+    /**
+     * Lọc user theo cấp độ thành viên
+     * @param membershipLevel cấp độ (Normal, Silver, Gold, Platinum)
+     * @return Danh sách user theo cấp độ
+     */
+    public List<User> filterCustomersByMembershipLevel(String membershipLevel) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 " +
+                                "AND membership_level = :level ORDER BY created_at DESC")
+                        .bind("level", membershipLevel)
+                        .mapToBean(User.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Tìm kiếm và lọc kết hợp
+     * @param keyword từ khóa tìm kiếm
+     * @param membershipLevel cấp độ thành viên
+     * @return Danh sách user
+     */
+    public List<User> searchAndFilterCustomers(String keyword, String membershipLevel) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 "
+        );
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND (full_name LIKE :keyword OR email LIKE :keyword OR username LIKE :keyword) ");
+        }
+
+        if (membershipLevel != null && !membershipLevel.trim().isEmpty()) {
+            sql.append("AND membership_level = :level ");
+        }
+
+        sql.append("ORDER BY created_at DESC");
+
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString());
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                query.bind("keyword", "%" + keyword + "%");
+            }
+
+            if (membershipLevel != null && !membershipLevel.trim().isEmpty()) {
+                query.bind("level", membershipLevel);
+            }
+
+            return query.mapToBean(User.class).list();
+        });
+    }
+
+    /**
+     * Nâng cấp membership level của user
+     * @param userId ID của user
+     * @param newLevel cấp độ mới (Normal, Silver, Gold, Platinum)
+     * @return true nếu thành công
+     */
+    public boolean upgradeMembershipLevel(int userId, String newLevel) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET membership_level = :level, updated_at = NOW() WHERE id = :id")
+                        .bind("level", newLevel)
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Khóa tài khoản user (soft delete)
+     * @param userId ID của user cần khóa
+     * @return true nếu thành công
+     */
+    public boolean lockUserAccount(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET is_active = 0, " +
+                                "deleted_at = NOW(), updated_at = NOW() WHERE id = :id")
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Mở khóa tài khoản user
+     * @param userId ID của user
+     * @return true nếu thành công
+     */
+    public boolean unlockUserAccount(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET is_active = 1, " +
+                                "deleted_at = NULL, updated_at = NOW() WHERE id = :id")
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Lấy thống kê số lượng user theo membership level
+     * @return Map với key là level, value là số lượng
+     */
+    public List<MembershipStats> getMembershipStatistics() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT membership_level as level, COUNT(*) as count " +
+                                "FROM users WHERE role = 'user' AND is_deleted = 0 " +
+                                "GROUP BY membership_level")
+                        .map((rs, ctx) -> new MembershipStats(
+                                rs.getString("level"),
+                                rs.getInt("count")
+                        ))
+                        .list()
+        );
+    }
+
+    /**
+     * Inner class cho thống kê membership
+     */
+    public static class MembershipStats {
+        private String level;
+        private int count;
+
+        public MembershipStats(String level, int count) {
+            this.level = level;
+            this.count = count;
+        }
+
+        public String getLevel() {
+            return level;
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
+    /**
+     * Cập nhật tổng chi tiêu của user
+     * @param userId ID của user
+     * @param amount số tiền cần cộng thêm
+     * @return true nếu thành công
+     */
+    public boolean updateTotalSpent(int userId, double amount) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET total_spent = total_spent + :amount, updated_at = NOW() WHERE id = :id")
+                        .bind("amount", amount)
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+
+    /**
+     * Lấy danh sách user đã bị khóa
+     * @return Danh sách user bị khóa
+     */
+    public List<User> getLockedUsers() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_active = 0 " +
+                                "ORDER BY deleted_at DESC")
+                        .mapToBean(User.class)
+                        .list()
         );
     }
 
