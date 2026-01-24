@@ -34,10 +34,6 @@ public class ComicDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        System.out.println("\n🔴🔴🔴 ComicDetailServlet doGet CALLED 🔴🔴🔴");
-        System.out.println("🔴 Request URI: " + request.getRequestURI());
-        System.out.println("🔴 Query String: " + request.getQueryString());
-
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
@@ -74,12 +70,9 @@ public class ComicDetailServlet extends HttpServlet {
             // ========== LẤY TÊN SERIES ==========
             String seriesName = null;
             if (comic.getSeriesId() != null && comic.getSeriesId() > 0) {
-                System.out.println("🔍 Attempting to get series name for series_id: " + comic.getSeriesId());
-//                seriesName = comicService.getSeriesName(comic.getSeriesId());
                 try {
                     // Cách 1: Sử dụng ComicService nếu có method
                     seriesName = comicService.getSeriesName(comic.getSeriesId());
-                    System.out.println("✅ Series name from ComicService: " + seriesName);
                 } catch (Exception e) {
                     System.out.println("⚠️ ComicService.getSeriesName() failed: " + e.getMessage());
 
@@ -90,23 +83,19 @@ public class ComicDetailServlet extends HttpServlet {
                             seriesName = seriesOpt.get().getSeriesName();
                             System.out.println("✅ Series name from SeriesDAO: " + seriesName);
                         } else {
-                            System.out.println("⚠️ Series not found in database");
                         }
                     } catch (Exception ex) {
-                        System.out.println("❌ Failed to get series: " + ex.getMessage());
                         ex.printStackTrace();
                     }
                 }
 
                 if (seriesName == null && comic.getSeriesName() != null) {
                     seriesName = comic.getSeriesName();
-                    System.out.println("✅ Series name from Comic object: " + seriesName);
                 }
             } else {
                 System.out.println("⚠️ Comic has no series_id or series_id <= 0");
             }
 
-            System.out.println("📌 Final series name: " + seriesName);
 
 
             // Lấy DS gợi ý truyện

@@ -1676,13 +1676,13 @@ public class ComicDAO extends ADao {
         String searchTerm = keyword.trim().toLowerCase();
 
         StringBuilder sql = new StringBuilder("""
-                SELECT distinct c.*, s.series_name
-                , cat.name_categories as categoryName
-                FROM Comics c
-                LEFT JOIN Series s ON c.series_id = s.id
-                LEFT JOIN Categories cat ON c.category_id = cat.id
-                WHERE c.is_deleted = 0
-            """);
+                    SELECT distinct c.*, s.series_name
+                    , cat.name_categories as categoryName
+                    FROM Comics c
+                    LEFT JOIN Series s ON c.series_id = s.id
+                    LEFT JOIN Categories cat ON c.category_id = cat.id
+                    WHERE c.is_deleted = 0
+                """);
 
         // Thêm điều kiện lọc ẩn/hiện
         if (hiddenFilter != null) {
@@ -1695,12 +1695,12 @@ public class ComicDAO extends ADao {
         }
 
         sql.append("""
-                AND (
-                     LOWER(c.name_comics) LIKE :keyword
-                     OR LOWER(c.author) LIKE :keyword
-                     OR LOWER(cat.name_categories) LIKE :keyword
-                     OR LOWER(s.series_name) LIKE :keyword
-            """);
+                    AND (
+                         LOWER(c.name_comics) LIKE :keyword
+                         OR LOWER(c.author) LIKE :keyword
+                         OR LOWER(cat.name_categories) LIKE :keyword
+                         OR LOWER(s.series_name) LIKE :keyword
+                """);
 
         // Nếu keyword chứa số → tìm theo volume
         String numberOnly = keyword.replaceAll("\\D+", "");
@@ -1761,12 +1761,12 @@ public class ComicDAO extends ADao {
         String searchTerm = keyword.trim().toLowerCase();
 
         StringBuilder sql = new StringBuilder("""
-            SELECT COUNT(DISTINCT c.id)
-            FROM Comics c
-            LEFT JOIN Series s ON c.series_id = s.id
-            LEFT JOIN Categories cat ON c.category_id = cat.id
-            WHERE c.is_deleted = 0
-        """);
+                    SELECT COUNT(DISTINCT c.id)
+                    FROM Comics c
+                    LEFT JOIN Series s ON c.series_id = s.id
+                    LEFT JOIN Categories cat ON c.category_id = cat.id
+                    WHERE c.is_deleted = 0
+                """);
 
         // Thêm điều kiện lọc ẩn/hiện
         if (hiddenFilter != null) {
@@ -1778,12 +1778,12 @@ public class ComicDAO extends ADao {
         }
 
         sql.append("""
-            AND (
-                LOWER(c.name_comics) LIKE :keyword
-                OR LOWER(c.author) LIKE :keyword
-                OR LOWER(cat.name_categories) LIKE :keyword
-                OR LOWER(s.series_name) LIKE :keyword
-            """);
+                AND (
+                    LOWER(c.name_comics) LIKE :keyword
+                    OR LOWER(c.author) LIKE :keyword
+                    OR LOWER(cat.name_categories) LIKE :keyword
+                    OR LOWER(s.series_name) LIKE :keyword
+                """);
 
         String numberOnly = keyword.replaceAll("\\D+", "");
         if (!numberOnly.isEmpty()) {
@@ -1887,18 +1887,18 @@ public class ComicDAO extends ADao {
 
     public List<Comic> getComicsByCategory1(int categoryId) {
         String sql = """
-            SELECT c.id, c.name_comics,c.author,c.publisher, c.description, c.price,c.stock_quantity,c.status, c.thumbnail_url, c.category_id, c.series_id, c.is_deleted, 
-                   cat.name_categories AS categoryName,
-                   s.series_name AS seriesName
-            FROM comics c
-            LEFT JOIN categories cat ON c.category_id = cat.id
-            LEFT JOIN series s ON c.series_id = s.id
-            WHERE c.category_id = :categoryId
-              AND c.is_deleted = 0
-              AND c.is_hidden = 0
-              AND c.status = 'available'
-            ORDER BY c.created_at DESC, c.name_comics ASC
-        """;
+                    SELECT c.id, c.name_comics,c.author,c.publisher, c.description, c.price,c.stock_quantity,c.status, c.thumbnail_url, c.category_id, c.series_id, c.is_deleted, 
+                           cat.name_categories AS categoryName,
+                           s.series_name AS seriesName
+                    FROM comics c
+                    LEFT JOIN categories cat ON c.category_id = cat.id
+                    LEFT JOIN series s ON c.series_id = s.id
+                    WHERE c.category_id = :categoryId
+                      AND c.is_deleted = 0
+                      AND c.is_hidden = 0
+                      AND c.status = 'available'
+                    ORDER BY c.created_at DESC, c.name_comics ASC
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -1907,6 +1907,7 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
+
     /**
      * Lấy danh sách comics theo category với các bộ lọc
      */
@@ -1918,21 +1919,21 @@ public class ComicDAO extends ADao {
             List<String> years) {
 
         StringBuilder sql = new StringBuilder("""
-        SELECT DISTINCT c.*, 
-               cat.name_categories AS categoryName,
-               s.series_name AS seriesName
-        FROM comics c
-        LEFT JOIN categories cat ON c.category_id = cat.id
-        LEFT JOIN series s ON c.series_id = s.id
-        LEFT JOIN comic_authors ca ON c.id = ca.comic_id
-        LEFT JOIN authors a ON ca.author_id = a.id
-        LEFT JOIN comic_publishers cp ON c.id = cp.comic_id
-        LEFT JOIN publishers p ON cp.publisher_id = p.id
-        WHERE c.category_id = :categoryId
-          AND c.is_deleted = 0
-          AND c.is_hidden = 0
-          AND c.status = 'available'
-    """);
+                    SELECT DISTINCT c.*, 
+                           cat.name_categories AS categoryName,
+                           s.series_name AS seriesName
+                    FROM comics c
+                    LEFT JOIN categories cat ON c.category_id = cat.id
+                    LEFT JOIN series s ON c.series_id = s.id
+                    LEFT JOIN comic_authors ca ON c.id = ca.comic_id
+                    LEFT JOIN authors a ON ca.author_id = a.id
+                    LEFT JOIN comic_publishers cp ON c.id = cp.comic_id
+                    LEFT JOIN publishers p ON cp.publisher_id = p.id
+                    WHERE c.category_id = :categoryId
+                      AND c.is_deleted = 0
+                      AND c.is_hidden = 0
+                      AND c.status = 'available'
+                """);
 
         // Thêm điều kiện lọc giá
         if (priceRanges != null && !priceRanges.isEmpty()) {
@@ -2031,16 +2032,16 @@ public class ComicDAO extends ADao {
 
     public List<String> getAuthorsByCategory(int categoryId) {
         String sql = """
-        SELECT DISTINCT a.name
-        FROM authors a
-        INNER JOIN comic_authors ca ON a.id = ca.author_id
-        INNER JOIN comics c ON ca.comic_id = c.id
-        WHERE c.category_id = :categoryId
-          AND c.is_deleted = 0
-          AND c.is_hidden = 0
-          AND a.is_deleted = 0
-        ORDER BY a.name
-    """;
+                    SELECT DISTINCT a.name
+                    FROM authors a
+                    INNER JOIN comic_authors ca ON a.id = ca.author_id
+                    INNER JOIN comics c ON ca.comic_id = c.id
+                    WHERE c.category_id = :categoryId
+                      AND c.is_deleted = 0
+                      AND c.is_hidden = 0
+                      AND a.is_deleted = 0
+                    ORDER BY a.name
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -2055,16 +2056,16 @@ public class ComicDAO extends ADao {
      */
     public List<String> getPublishersByCategory(int categoryId) {
         String sql = """
-        SELECT DISTINCT p.name
-        FROM publishers p
-        INNER JOIN comic_publishers cp ON p.id = cp.publisher_id
-        INNER JOIN comics c ON cp.comic_id = c.id
-        WHERE c.category_id = :categoryId
-          AND c.is_deleted = 0
-          AND c.is_hidden = 0
-          AND p.is_deleted = 0
-        ORDER BY p.name
-    """;
+                    SELECT DISTINCT p.name
+                    FROM publishers p
+                    INNER JOIN comic_publishers cp ON p.id = cp.publisher_id
+                    INNER JOIN comics c ON cp.comic_id = c.id
+                    WHERE c.category_id = :categoryId
+                      AND c.is_deleted = 0
+                      AND c.is_hidden = 0
+                      AND p.is_deleted = 0
+                    ORDER BY p.name
+                """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -2077,13 +2078,13 @@ public class ComicDAO extends ADao {
     public List<Comic> getComicsBySeriesId(int seriesId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("""
-                    SELECT *
-                    FROM comics
-                    WHERE series_id = :seriesId
-                      AND is_deleted = 0
-                      AND is_hidden = 0
-                    ORDER BY volume ASC
-                """)
+                                    SELECT *
+                                    FROM comics
+                                    WHERE series_id = :seriesId
+                                      AND is_deleted = 0
+                                      AND is_hidden = 0
+                                    ORDER BY volume ASC
+                                """)
                         .bind("seriesId", seriesId)
                         .mapToBean(Comic.class)
                         .list()
@@ -2093,15 +2094,15 @@ public class ComicDAO extends ADao {
     public Map<Integer, Integer> getTotalSoldBySeriesId(int seriesId) {
         return JdbiConnector.get().withHandle(handle ->
                 handle.createQuery("""
-                SELECT c.series_id AS seriesId,
-                       COALESCE(SUM(oi.quantity), 0) AS totalSold
-                FROM order_items oi
-                JOIN comics c ON oi.comic_id = c.id
-                JOIN orders o ON oi.order_id = o.id
-                WHERE o.status = 'COMPLETED'
-                  AND c.series_id = :seriesId
-                GROUP BY c.series_id
-            """)
+                                    SELECT c.series_id AS seriesId,
+                                           COALESCE(SUM(oi.quantity), 0) AS totalSold
+                                    FROM order_items oi
+                                    JOIN comics c ON oi.comic_id = c.id
+                                    JOIN orders o ON oi.order_id = o.id
+                                    WHERE o.status = 'COMPLETED'
+                                      AND c.series_id = :seriesId
+                                    GROUP BY c.series_id
+                                """)
                         .bind("seriesId", seriesId)
                         .map((rs, ctx) -> Map.entry(
                                 rs.getInt("seriesId"),
@@ -2118,5 +2119,77 @@ public class ComicDAO extends ADao {
         );
     }
 
+    /**
+     * Lấy danh sách truyện theo tên tác giả
+     */
+    public List<Comic> getComicsByAuthor(String authorName) {
+
+        String sql = """
+               SELECT c.*,
+                      s.series_name AS seriesName
+               FROM comics c
+               LEFT JOIN series s ON c.series_id = s.id
+               WHERE c.id IN (
+                   SELECT DISTINCT ca.comic_id
+                   FROM comic_authors ca
+                   JOIN authors a ON ca.author_id = a.id
+                   WHERE a.name LIKE :authorName
+                     AND a.is_deleted = 0
+               )
+               AND c.is_deleted = 0
+               AND (c.is_hidden IS NULL OR c.is_hidden = 0)
+               ORDER BY c.created_at DESC
+               LIMIT 50;
+            """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("authorName", "%" + authorName.trim() + "%")
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error in getComicsByAuthor: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Lấy danh sách truyện theo tên nhà xuất bản
+     */
+    public List<Comic> getComicsByPublisher(String publisherName) {
+        String sql = """
+                SELECT DISTINCT c.*,
+                       s.series_name AS seriesName
+                FROM comics c
+                LEFT JOIN series s ON c.series_id = s.id
+                WHERE c.id IN (
+                     SELECT DISTINCT cp.comic_id
+                     FROM comic_publishers cp
+                     JOIN publishers p ON cp.publisher_id = p.id
+                     WHERE p.name LIKE :publisherName
+                       AND p.is_deleted = 0
+                 )
+                AND c.is_deleted = 0
+                AND (c.is_hidden IS NULL OR c.is_hidden = 0)
+                ORDER BY c.created_at DESC
+                LIMIT 50;
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("publisherName", "%" + publisherName.trim() + "%")
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error in getComicsByPublisher: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 
 }
