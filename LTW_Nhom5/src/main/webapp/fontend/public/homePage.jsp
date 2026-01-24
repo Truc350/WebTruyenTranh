@@ -111,12 +111,13 @@
     <div class="danh-muc-icon">
         <h2>Tiện ích</h2>
         <div class="icon-list">
-            <a href="FlashSale.jsp">
+            <a href="${pageContext.request.contextPath}/flash-sale">
                 <div class="icon-item">
                     <i class="fa-solid fa-bolt-lightning"></i>
                     <p>Flash Sale</p>
                 </div>
             </a>
+
 
             <a href="getVourcher.jsp">
                 <div class="icon-item">
@@ -240,11 +241,11 @@
                                         <c:when test="${comic.hasDiscount()}">
                                             <p class="product-price">
                                                 <fmt:formatNumber value="${comic.discountPrice}"
-                                                                  pattern="#,###"/> đ
+                                                                  pattern="#,###"/>₫
                                             </p>
                                             <p class="original-price">
                                                 <s><fmt:formatNumber value="${comic.price}"
-                                                                     pattern="#,###"/> đ</s>
+                                                                     pattern="#,###"/>₫</s>
                                                 <span class="discount-badge">
                                                     -<fmt:formatNumber value="${comic.discountPercent}"
                                                                        pattern="#"/>%

@@ -40,13 +40,15 @@
             <p class="or">Hoặc đăng nhập bằng</p>
 
             <div class="social">
-                <img class="google"
+                <img class="google" id="googleLogin"
                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ13Zhu7gCjSl_MTncNr7aEbl9HkMWaidA4wNFbPO0oxQm49i-RPgTEME3oN_nSroHl1KqwY2haK-IFEYfBc1BkwP9PBNEv9ApC9tvzcVM&s"
-                     alt="Google">
+                     alt="Google"
+                     style="cursor: pointer;">
 
-                <img class="facebook"
+                <img class="facebook" id="facebookLogin"
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/500px-Facebook_Logo_%282019%29.png"
-                     alt="Facebook">
+                     alt="Facebook"
+                     style="cursor: pointer;">
             </div>
 
         </div>
@@ -57,37 +59,45 @@
         <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
     </div>
 </div>
+
 <script>
-    <%--const eye = document.getElementById("toggleEye");--%>
-    <%--const passwordInput = document.querySelector(".password-box input");--%>
-
-    <%--eye.addEventListener("click", () => {--%>
-    <%--    if (passwordInput.type === "password") {--%>
-    <%--        passwordInput.type = "text";--%>
-    <%--        eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";--%>
-    <%--    } else {--%>
-    <%--        passwordInput.type = "password";--%>
-    <%--        eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";--%>
-    <%--    }--%>
-    <%--});--%>
-
-
-
-    <%--<img src="../../img/anhLogin.png" height="1200" width="676"/><img src="../../img/eyePasswordHide.png" height="512"--%>
-    <%--                                                                  width="512"/><img--%>
-    <%--    src="../../img/eyePasswordHide.png" height="512" width="512"/></script><script>--%>
+    // Toggle password visibility
     const eye = document.getElementById("toggleEye");
     const passwordInput = document.querySelector(".password-box input");
 
-    eye.addEventListener("click", () => {
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
-        } else {
-            passwordInput.type = "password";
-            eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
-        }
-    });
+    if (eye && passwordInput) {
+        eye.addEventListener("click", () => {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
+            } else {
+                passwordInput.type = "password";
+                eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
+            }
+        });
+    }
+
+    // Google login
+    const googleBtn = document.getElementById("googleLogin");
+    if (googleBtn) {
+        googleBtn.addEventListener("click", () => {
+            window.location.href = "${pageContext.request.contextPath}/login-google";
+        });
+    }
+
+    // Facebook login
+    const facebookBtn = document.getElementById("facebookLogin");
+    if (facebookBtn) {
+        facebookBtn.addEventListener("click", () => {
+            const clientId = "YOUR_FACEBOOK_APP_ID"; // Lấy từ env hoặc config
+            const redirectUri = encodeURIComponent("http://localhost:8080/LTW_Nhom5/login-facebook-callback");
+            const scope = encodeURIComponent("email,public_profile");
+
+            const facebookAuthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
+
+            window.location.href = facebookAuthUrl;
+        });
+    }
 </script>
 
 </body>

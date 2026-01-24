@@ -1884,118 +1884,239 @@ public class ComicDAO extends ADao {
         );
     }
 
+
+    public List<Comic> getComicsByCategory1(int categoryId) {
+        String sql = """
+            SELECT c.id, c.name_comics,c.author,c.publisher, c.description, c.price,c.stock_quantity,c.status, c.thumbnail_url, c.category_id, c.series_id, c.is_deleted, 
+                   cat.name_categories AS categoryName,
+                   s.series_name AS seriesName
+            FROM comics c
+            LEFT JOIN categories cat ON c.category_id = cat.id
+            LEFT JOIN series s ON c.series_id = s.id
+            WHERE c.category_id = :categoryId
+              AND c.is_deleted = 0
+              AND c.is_hidden = 0
+              AND c.status = 'available'
+            ORDER BY c.created_at DESC, c.name_comics ASC
+        """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
     /**
-     * Lấy danh sách comic theo series ID
-     * Comics sẽ được sắp xếp theo volume (số tập) nếu có, nếu không thì theo ngày tạo
+     * Lấy danh sách comics theo category với các bộ lọc
      */
+    public List<Comic> getComicsByCategoryWithFilters(
+            int categoryId,
+            List<String> priceRanges,
+            List<String> authors,
+            List<String> publishers,
+            List<String> years) {
+
+        StringBuilder sql = new StringBuilder("""
+        SELECT DISTINCT c.*, 
+               cat.name_categories AS categoryName,
+               s.series_name AS seriesName
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        LEFT JOIN series s ON c.series_id = s.id
+        LEFT JOIN comic_authors ca ON c.id = ca.comic_id
+        LEFT JOIN authors a ON ca.author_id = a.id
+        LEFT JOIN comic_publishers cp ON c.id = cp.comic_id
+        LEFT JOIN publishers p ON cp.publisher_id = p.id
+        WHERE c.category_id = :categoryId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND c.status = 'available'
+    """);
+
+        // Thêm điều kiện lọc giá
+        if (priceRanges != null && !priceRanges.isEmpty()) {
+            sql.append(" AND (");
+            for (int i = 0; i < priceRanges.size(); i++) {
+                if (i > 0) sql.append(" OR ");
+
+                switch (priceRanges.get(i)) {
+                    case "0-15000":
+                        sql.append("c.price BETWEEN 0 AND 15000");
+                        break;
+                    case "15000-30000":
+                        sql.append("c.price BETWEEN 15000 AND 30000");
+                        break;
+                    case "30000-50000":
+                        sql.append("c.price BETWEEN 30000 AND 50000");
+                        break;
+                    case "50000-70000":
+                        sql.append("c.price BETWEEN 50000 AND 70000");
+                        break;
+                    case "70000-100000":
+                        sql.append("c.price BETWEEN 70000 AND 100000");
+                        break;
+                    case "100000+":
+                        sql.append("c.price > 100000");
+                        break;
+                }
+            }
+            sql.append(")");
+        }
+
+        // Thêm điều kiện lọc tác giả
+        if (authors != null && !authors.isEmpty()) {
+            sql.append(" AND a.name IN (<authors>)");
+        }
+
+        // Thêm điều kiện lọc nhà xuất bản
+        if (publishers != null && !publishers.isEmpty()) {
+            sql.append(" AND p.name IN (<publishers>)");
+        }
+
+        // Thêm điều kiện lọc thời gian
+        if (years != null && !years.isEmpty()) {
+            sql.append(" AND (");
+            for (int i = 0; i < years.size(); i++) {
+                if (i > 0) sql.append(" OR ");
+
+                switch (years.get(i)) {
+                    case "recent":
+                        sql.append("YEAR(c.created_at) = YEAR(CURDATE())");
+                        break;
+                    case "2024":
+                        sql.append("YEAR(c.created_at) = 2024");
+                        break;
+                    case "2023":
+                        sql.append("YEAR(c.created_at) = 2023");
+                        break;
+                    case "2022":
+                        sql.append("YEAR(c.created_at) = 2022");
+                        break;
+                    case "2021":
+                        sql.append("YEAR(c.created_at) = 2021");
+                        break;
+                    case "2020":
+                        sql.append("YEAR(c.created_at) = 2020");
+                        break;
+                    case "before2020":
+                        sql.append("YEAR(c.created_at) < 2020");
+                        break;
+                }
+            }
+            sql.append(")");
+        }
+
+        sql.append(" ORDER BY c.created_at DESC, c.name_comics ASC");
+
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString())
+                    .bind("categoryId", categoryId);
+
+            if (authors != null && !authors.isEmpty()) {
+                query.bindList("authors", authors);
+            }
+
+            if (publishers != null && !publishers.isEmpty()) {
+                query.bindList("publishers", publishers);
+            }
+
+            return query.mapToBean(Comic.class).list();
+        });
+    }
+
+    /**
+     * Lấy danh sách tác giả trong một category
+     */
+
+    public List<String> getAuthorsByCategory(int categoryId) {
+        String sql = """
+        SELECT DISTINCT a.name
+        FROM authors a
+        INNER JOIN comic_authors ca ON a.id = ca.author_id
+        INNER JOIN comics c ON ca.comic_id = c.id
+        WHERE c.category_id = :categoryId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND a.is_deleted = 0
+        ORDER BY a.name
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .mapTo(String.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy danh sách nhà xuất bản trong một category
+     */
+    public List<String> getPublishersByCategory(int categoryId) {
+        String sql = """
+        SELECT DISTINCT p.name
+        FROM publishers p
+        INNER JOIN comic_publishers cp ON p.id = cp.publisher_id
+        INNER JOIN comics c ON cp.comic_id = c.id
+        WHERE c.category_id = :categoryId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND p.is_deleted = 0
+        ORDER BY p.name
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .mapTo(String.class)
+                        .list()
+        );
+    }
+
     public List<Comic> getComicsBySeriesId(int seriesId) {
-        String sql = "SELECT c.* " +  // ← Bỏ phần discount_percent
-                "FROM comics c " +
-                "WHERE c.series_id = :seriesId " +
-                "AND c.is_deleted = 0 " +
-                "AND c.is_hidden = 0 " +
-                "ORDER BY " +
-                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
-                "c.created_at DESC";
-
         return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
+                handle.createQuery("""
+                    SELECT *
+                    FROM comics
+                    WHERE series_id = :seriesId
+                      AND is_deleted = 0
+                      AND is_hidden = 0
+                    ORDER BY volume ASC
+                """)
                         .bind("seriesId", seriesId)
                         .mapToBean(Comic.class)
                         .list()
         );
     }
 
-    /**
-     * Đếm số lượng comic trong series
-     */
-    public int countComicsBySeriesId(int seriesId) {
-        String sql = "SELECT COUNT(*) FROM comics " +
-                "WHERE series_id = :seriesId " +
-                "AND is_deleted = 0 " +
-                "AND is_hidden = 0";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .mapTo(Integer.class)
-                        .one()
-        );
-    }
-
-    /**
-     * Lấy tất cả comic trong series kể cả đã ẩn (dùng cho admin)
-     */
-    public List<Comic> getAllComicsBySeriesId(int seriesId) {
-        String sql = "SELECT c.*, " +
-                "COALESCE(c.discount_percent, 0) as discountPercent " +
-                "FROM comics c " +
-                "WHERE c.series_id = :seriesId " +
-                "AND c.is_deleted = 0 " +
-                "ORDER BY " +
-                "CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 9999 END ASC, " +
-                "c.created_at DESC";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-
-    // Trong ComicDAO.java
-    public int getTotalSoldByComicId(int comicId) {
-        String sql = "SELECT COALESCE(SUM(oi.quantity), 0) as total_sold " +
-                "FROM order_item oi " +
-                "INNER JOIN `order` o ON oi.order_id = o.id " +
-                "WHERE oi.comic_id = ? " +
-                "AND o.status = 'completed'"; // Chỉ tính đơn đã hoàn thành
-
-        try {
-            return jdbi.withHandle(handle ->
-                    handle.createQuery(sql)
-                            .bind(0, comicId)
-                            .mapTo(Integer.class)
-                            .findOne()
-                            .orElse(0)
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
-    // Hoặc lấy cho nhiều comics cùng lúc (hiệu quả hơn)
     public Map<Integer, Integer> getTotalSoldBySeriesId(int seriesId) {
-        String sql = "SELECT oi.comic_id, COALESCE(SUM(oi.quantity), 0) as total_sold " +
-                "FROM order_item oi " +
-                "INNER JOIN `order` o ON oi.order_id = o.id " +
-                "INNER JOIN comic c ON oi.comic_id = c.id " +
-                "WHERE c.series_id = ? " +
-                "AND o.status = 'completed' " +
-                "GROUP BY oi.comic_id";
-
-        try {
-            return jdbi.withHandle(handle ->
-                    handle.createQuery(sql)
-                            .bind(0, seriesId)
-                            .map((rs, ctx) -> {
-                                Map<Integer, Integer> map = new HashMap<>();
-                                while (rs.next()) {
-                                    map.put(rs.getInt("comic_id"), rs.getInt("total_sold"));
-                                }
-                                return map;
-                            })
-                            .findOne()
-                            .orElse(new HashMap<>())
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new HashMap<>();
-        }
+        return JdbiConnector.get().withHandle(handle ->
+                handle.createQuery("""
+                SELECT c.series_id AS seriesId,
+                       COALESCE(SUM(oi.quantity), 0) AS totalSold
+                FROM order_items oi
+                JOIN comics c ON oi.comic_id = c.id
+                JOIN orders o ON oi.order_id = o.id
+                WHERE o.status = 'COMPLETED'
+                  AND c.series_id = :seriesId
+                GROUP BY c.series_id
+            """)
+                        .bind("seriesId", seriesId)
+                        .map((rs, ctx) -> Map.entry(
+                                rs.getInt("seriesId"),
+                                rs.getInt("totalSold")
+                        ))
+                        .list()
+                        .stream()
+                        .collect(
+                                java.util.stream.Collectors.toMap(
+                                        Map.Entry::getKey,
+                                        Map.Entry::getValue
+                                )
+                        )
+        );
     }
-
 
 
 }

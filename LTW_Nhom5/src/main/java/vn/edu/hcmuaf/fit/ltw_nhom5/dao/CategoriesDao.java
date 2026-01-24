@@ -3,9 +3,11 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesDao {
@@ -235,11 +237,11 @@ public class CategoriesDao {
      */
     public boolean updateCategory(Category category) {
         String sql = """
-        UPDATE categories
-        SET name_categories = :name,
-            description = :description
-        WHERE id = :id AND is_deleted = 0
-    """;
+                    UPDATE categories
+                    SET name_categories = :name,
+                        description = :description
+                    WHERE id = :id AND is_deleted = 0
+                """;
 
         int rows = jdbi.withHandle(handle ->
                 handle.createUpdate(sql)
@@ -305,6 +307,187 @@ public class CategoriesDao {
         }
     }
 
+
+    /**
+     * Đếm số lượng truyện trong một thể loại
+     * Chỉ đếm những truyện không bị xóa, không bị ẩn và đang available
+     */
+    public int countComicsInCategory(int categoryId) {
+        String sql = """
+                    SELECT COUNT(*) 
+                    FROM comics 
+                    WHERE category_id = :categoryId 
+                      AND is_deleted = 0 
+                      AND is_hidden = 0 
+                      AND status = 'available'
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("categoryId", categoryId)
+                            .mapTo(Integer.class)
+                            .findOne()
+                            .orElse(0)
+            );
+        } catch (Exception e) {
+            System.err.println("Error counting comics in category " + categoryId + ":");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Lấy danh sách thể loại kèm số lượng truyện
+     * Trả về List<Category> với thêm thuộc tính comicCount
+     */
+    public List<Category> listCategoriesWithCount() {
+        String sql = """
+                    SELECT 
+                        c.id,
+                        c.name_categories as nameCategories,
+                        c.description,
+                        c.is_deleted as isDeleted,
+                        c.is_hidden AS is_hidden,
+                        c.deleted_at as deletedAt,
+                        c.created_at as createdAt,
+                        COUNT(DISTINCT cm.id) as comicCount
+                    FROM categories c
+                    LEFT JOIN comics cm ON c.id = cm.category_id 
+                        AND cm.is_deleted = 0 
+                        AND cm.is_hidden = 0 
+                        AND cm.status = 'available'
+                    WHERE c.is_deleted = 0 
+                      AND c.is_hidden = 0
+                    GROUP BY c.id, c.name_categories, c.description, c.is_deleted, 
+                             c.is_hidden, c.deleted_at, c.created_at
+                    ORDER BY c.name_categories ASC
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .mapToBean(Category.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("Error listing categories with count:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Lấy danh sách thể loại có ít nhất 1 truyện
+     */
+    public List<Category> listCategoriesWithComics() {
+        String sql = """
+                    SELECT DISTINCT
+                        c.id,
+                        c.name_categories as nameCategories,
+                        c.description,
+                        c.is_deleted as isDeleted,
+                        c.is_hidden AS is_hidden,
+                        c.deleted_at as deletedAt,
+                        c.created_at as createdAt
+                    FROM categories c
+                    INNER JOIN comics cm ON c.id = cm.category_id
+                    WHERE c.is_deleted = 0 
+                      AND c.is_hidden = 0
+                      AND cm.is_deleted = 0 
+                      AND cm.is_hidden = 0 
+                      AND cm.status = 'available'
+                    ORDER BY c.name_categories ASC
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .mapToBean(Category.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("Error listing categories with comics:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Kiểm tra category có truyện hay không
+     */
+    public boolean hasComics(int categoryId) {
+        return countComicsInCategory(categoryId) > 0;
+    }
+
+
+    /**
+     * Toggle ẩn/hiện category
+     */
+    public boolean toggleHidden(int id, int hidden) {
+        String sql = """
+                    UPDATE categories 
+                    SET is_hidden = :hidden 
+                    WHERE id = :id AND is_deleted = 0
+                """;
+
+        try {
+            int rows = jdbi.withHandle(handle ->
+                    handle.createUpdate(sql)
+                            .bind("id", id)
+                            .bind("hidden", hidden)
+                            .execute()
+            );
+            return rows > 0;
+        } catch (Exception e) {
+            System.err.println("Error toggling category hidden status:");
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    /**
+     * Lấy thể loại phổ biến nhất (có nhiều truyện nhất)
+     */
+    public List<Category> getTopCategories(int limit) {
+        String sql = """
+                    SELECT 
+                        c.id,
+                        c.name_categories as nameCategories,
+                        c.description,
+                        c.is_deleted as isDeleted,
+                        c.is_hidden AS is_hidden,
+                        c.deleted_at as deletedAt,
+                        c.created_at as createdAt,
+                        COUNT(DISTINCT cm.id) as comicCount
+                    FROM categories c
+                    INNER JOIN comics cm ON c.id = cm.category_id 
+                        AND cm.is_deleted = 0 
+                        AND cm.is_hidden = 0 
+                        AND cm.status = 'available'
+                    WHERE c.is_deleted = 0 
+                      AND c.is_hidden = 0
+                    GROUP BY c.id, c.name_categories, c.description, c.is_deleted, 
+                             c.is_hidden, c.deleted_at, c.created_at
+                    ORDER BY comicCount DESC
+                    LIMIT :limit
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("limit", limit)
+                            .mapToBean(Category.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("Error getting top categories:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
     public static void main(String[] args) {
         CategoriesDao dao = new CategoriesDao();
 
@@ -320,4 +503,7 @@ public class CategoriesDao {
             System.out.println("FAILED - returned null");
         }
     }
+
+
+
 }
