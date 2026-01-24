@@ -111,12 +111,13 @@
     <div class="danh-muc-icon">
         <h2>Tiện ích</h2>
         <div class="icon-list">
-            <a href="FlashSale.jsp">
+            <a href="${pageContext.request.contextPath}/flash-sale">
                 <div class="icon-item">
                     <i class="fa-solid fa-bolt-lightning"></i>
                     <p>Flash Sale</p>
                 </div>
             </a>
+
 
             <a href="getVourcher.jsp">
                 <div class="icon-item">

@@ -22,30 +22,31 @@
                 <%
                     List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
 
-                    // Nếu chưa có trong request thì tự load luôn chỗ này
+                    // Nếu chưa có trong request thì tự load
                     if (listCategories == null || listCategories.isEmpty()) {
                         CategoriesDao categoriesDao = new CategoriesDao();
                         listCategories = categoriesDao.listCategories();
                     }
 
-                    //List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
                     if (listCategories != null && !listCategories.isEmpty()) {
                         for (Category c : listCategories) {
+                            // Chỉ hiển thị category không bị ẩn
+                            if (c.getIs_hidden() == 0) {
                 %>
-                <a href="${pageContext.request.contextPath}/category?id=<%= c.getId() %>"><%= c.getNameCategories() %>
+                <a href="${pageContext.request.contextPath}/userCategory?id=<%= c.getId() %>">
+                    <%= c.getNameCategories() %>
                 </a>
                 <%
+                        }
                     }
                 } else {
                 %>
-                <a href="#">KHÔNG CÓ</a>
+                <a href="#">Không có thể loại</a>
                 <%
                     }
                 %>
             </div>
         </div>
-
-
         <a href="${pageContext.request.contextPath}/fontend/public/AbouUS.jsp">Liên hệ</a>
     </nav>
     <div class="search-bar">

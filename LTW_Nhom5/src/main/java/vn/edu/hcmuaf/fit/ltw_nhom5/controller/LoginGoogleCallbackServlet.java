@@ -7,6 +7,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.json.JSONObject;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
+import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Cart;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @WebServlet(urlPatterns = "/login-google-callback", name = "LoginGoogleCallbackServlet")
 public class LoginGoogleCallbackServlet extends HttpServlet {
@@ -24,7 +29,12 @@ public class LoginGoogleCallbackServlet extends HttpServlet {
     private static final String CLIENT_SECRET = System.getenv("GOOGLE_CLIENT_SECRET");
     private static final String REDIRECT_URI = "http://localhost:8080/LTW_Nhom5/login-google-callback";
 
-    static {
+    private UserDao userDao;
+
+    @Override
+    public void init() {
+        userDao = new UserDao(JdbiConnector.get());
+
         if (CLIENT_ID == null || CLIENT_SECRET == null) {
             throw new RuntimeException("Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables");
         }
@@ -55,7 +65,7 @@ public class LoginGoogleCallbackServlet extends HttpServlet {
             // 1️⃣ Đổi code → access_token
             String accessToken = exchangeCodeForToken(code);
 
-            // 2️⃣ Lấy user info
+            // 2️⃣ Lấy user info từ Google
             JSONObject userInfo = getUserInfo(accessToken);
 
             String email = userInfo.getString("email");
@@ -63,21 +73,96 @@ public class LoginGoogleCallbackServlet extends HttpServlet {
             String picture = userInfo.optString("picture", "");
             String googleId = userInfo.getString("id");
 
-            // TODO: Kiểm tra user có tồn tại trong database chưa
-            // Nếu chưa có thì tạo mới, nếu có rồi thì lấy thông tin
-            // User user = userDAO.findOrCreateGoogleUser(googleId, email, name, picture);
+            // 3️⃣ Kiểm tra/Tạo user trong database
+            Optional<User> userOpt = userDao.findByEmail(email);
+            User user;
 
-            // 3️⃣ Lưu session
-            HttpSession session = request.getSession();
-            session.setAttribute("userEmail", email);
-            session.setAttribute("userName", name);
-            session.setAttribute("userPicture", picture);
-            session.setAttribute("googleId", googleId);
-            session.setAttribute("loginMethod", "google");
-            session.setMaxInactiveInterval(30 * 60); // 30 phút
+            if (userOpt.isPresent()) {
+                // User đã tồn tại - cập nhật thông tin Google nếu cần
+                user = userOpt.get();
+                // TODO: Có thể cập nhật googleId, picture vào DB nếu cần
+            } else {
+                // User chưa tồn tại - tạo mới
+                user = new User();
+                user.setEmail(email);
+                user.setUsername(name);
+                user.setFullName(name);
+                user.setRole("USER"); // Mặc định là USER
+                // TODO: Lưu user mới vào database
+                // userDao.createGoogleUser(user, googleId, picture);
 
-            // 4️⃣ Redirect về trang chủ
-            response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
+                // Tạm thời set ID (trong thực tế phải lấy từ DB sau khi insert)
+                user.setId(0); // Placeholder - cần thay bằng ID thực từ DB
+            }
+
+            // 4️⃣ XÓA SESSION CŨ (giống LoginServlet)
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                Cart oldCart = (Cart) oldSession.getAttribute("cart");
+                System.out.println("===== SESSION CŨ (GOOGLE LOGIN) =====");
+                System.out.println("Session ID cũ: " + oldSession.getId());
+                if (oldCart != null) {
+                    System.out.println("Giỏ hàng cũ có: " + oldCart.getItems().size() + " sản phẩm");
+                }
+                System.out.println("=> ĐANG XÓA SESSION CŨ...");
+                oldSession.invalidate();
+                System.out.println("=> ĐÃ XÓA SESSION CŨ!");
+            }
+
+            // 5️⃣ TẠO SESSION MỚI
+            HttpSession newSession = request.getSession(true);
+            System.out.println("===== SESSION MỚI (GOOGLE LOGIN) =====");
+            System.out.println("Session ID mới: " + newSession.getId());
+
+            // 6️⃣ KIỂM TRA ADMIN
+            boolean isAdmin = "ADMIN".equalsIgnoreCase(user.getRole());
+
+            if (isAdmin) {
+                newSession.setAttribute("currentUser", user);
+                newSession.setAttribute("userId", user.getId());
+                newSession.setAttribute("isAdmin", true);
+                newSession.setAttribute("loginMethod", "google");
+
+                response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+                response.setHeader("Pragma", "no-cache");
+                response.setDateHeader("Expires", 0);
+
+                response.sendRedirect(request.getContextPath() + "/fontend/admin/dashboard.jsp");
+                return;
+            }
+
+            // 7️⃣ USER THƯỜNG - Tạo giỏ hàng mới
+            Cart newCart = new Cart();
+            System.out.println("Giỏ hàng mới có: " + newCart.getItems().size() + " sản phẩm");
+
+            // Lưu vào session
+            newSession.setAttribute("cart", newCart);
+            newSession.setAttribute("currentUser", user);
+            newSession.setAttribute("clearCartLocalStorage", true);
+            newSession.setAttribute("loginMethod", "google");
+
+            // Lưu thêm thông tin Google (tuỳ chọn)
+            newSession.setAttribute("userPicture", picture);
+            newSession.setAttribute("googleId", googleId);
+
+            newSession.setMaxInactiveInterval(30 * 60); // 30 phút
+
+            System.out.println("======================");
+
+            // 8️⃣ Tắt cache
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.setHeader("Pragma", "no-cache");
+            response.setDateHeader("Expires", 0);
+
+            // 9️⃣ Kiểm tra redirect URL (từ checkout)
+            String redirectUrl = (String) newSession.getAttribute("redirectAfterLogin");
+
+            if (redirectUrl != null) {
+                newSession.removeAttribute("redirectAfterLogin");
+                response.sendRedirect(redirectUrl);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/home");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
