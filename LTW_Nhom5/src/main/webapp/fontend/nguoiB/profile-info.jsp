@@ -72,11 +72,11 @@
             </div>
             <div class="form-group">
                 <div class="address">
-                    <label for="country">Quốc gia: *</label>
-                    <select id="country" name="country" required>
-                        <option value="" disabled selected>Chọn quốc gia</option>
-                        <option value="Vietnam">Việt Nam</option>
-                    </select>
+<%--                    <label for="country">Quốc gia: *</label>--%>
+<%--                    <select id="country" name="country" required>--%>
+<%--&lt;%&ndash;                        <option value="" disabled selected>Chọn quốc gia</option>&ndash;%&gt;--%>
+<%--                        <option value="Vietnam">Việt Nam</option>--%>
+<%--                    </select>--%>
                     <div class="diaChi">
                         <div class="address-group">
                             <label for="province">Tỉnh/Thành phố: *</label>
@@ -85,9 +85,9 @@
                             </select>
                         </div>
                         <div class="address-group">
-                            <label for="district">Huyện / Phường: *</label>
+                            <label for="district">Phường/Xã: *</label>
                             <select id="district" name="district" required disabled>
-                                <option value="">Chọn huyện</option>
+                                <option value="">Chọn phường/Xã</option>
                             </select>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
             districtSelect.disabled = true;
 
             if (!provinceCode) {
-                districtSelect.innerHTML = '<option value="">Chọn huyện</option>';
+                districtSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
                 return;
             }
 
@@ -157,7 +157,7 @@
                     return res.json();
                 })
                 .then(data => {
-                    districtSelect.innerHTML = '<option value="">Chọn huyện</option>';
+                    districtSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
 
                     let districts = [];
 

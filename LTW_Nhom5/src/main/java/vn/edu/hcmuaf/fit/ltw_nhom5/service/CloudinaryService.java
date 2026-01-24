@@ -62,12 +62,12 @@ public class CloudinaryService {
             // Lấy URL của ảnh
             String imageUrl = (String) uploadResult.get("secure_url");
 
-            System.out.println("✅ Image uploaded to Cloudinary: " + imageUrl);
+            System.out.println("Image uploaded to Cloudinary: " + imageUrl);
 
             return imageUrl;
 
         } catch (Exception e) {
-            System.err.println("❌ Error uploading to Cloudinary: " + e.getMessage());
+            System.err.println("Error uploading to Cloudinary: " + e.getMessage());
             e.printStackTrace();
             throw new IOException("Lỗi khi upload ảnh: " + e.getMessage());
         }
@@ -84,11 +84,11 @@ public class CloudinaryService {
             Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             String resultStatus = (String) result.get("result");
 
-            System.out.println("🗑️ Delete image result: " + resultStatus);
+            System.out.println("Delete image result: " + resultStatus);
 
             return "ok".equals(resultStatus);
         } catch (Exception e) {
-            System.err.println("❌ Error deleting image: " + e.getMessage());
+            System.err.println("Error deleting image: " + e.getMessage());
             return false;
         }
     }

@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.OrderDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ReviewDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Order;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.OrderItem;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
@@ -19,11 +20,13 @@ import java.util.Map;
 public class OrderHistoryServlet extends HttpServlet {
     private OrderDAO orderDAO;
     private ComicDAO comicDAO;
+    private ReviewDAO reviewDAO;
 
     @Override
     public void init() throws ServletException {
         orderDAO = new OrderDAO();
         comicDAO = new ComicDAO();
+        reviewDAO = new ReviewDAO();
     }
 
     @Override
@@ -77,6 +80,12 @@ public class OrderHistoryServlet extends HttpServlet {
 
             Map<String, Object> orderData = new HashMap<>();
             orderData.put("order", order);
+
+
+            // Kiểm tra đã review chưa
+            boolean hasReviewed = reviewDAO.hasUserReviewedOrder(user.getId(), order.getId());
+            orderData.put("hasReviewed", hasReviewed);
+            System.out.println("Has reviewed: " + hasReviewed);
 
             // Lấy order items
             List<OrderItem> items = orderDAO.getOrderItems(order.getId());
@@ -135,9 +144,10 @@ public class OrderHistoryServlet extends HttpServlet {
 
         switch (action) {
             case "cancel":
+                String cancelReason = request.getParameter("reason");
                 // Hủy đơn hàng - sử dụng updateOrderStatusWithPoints để hoàn xu và tồn kho
-                success = orderDAO.updateOrderStatusWithPoints(orderId, "Cancelled");
-                System.out.println("Cancel order #" + orderId + ": " + success);
+                success = orderDAO.cancelOrderWithHistory(orderId, user.getId(), cancelReason);
+                System.out.println("Cancel order #" + orderId + " with reason: " + cancelReason + " - " + success);
                 break;
 
             case "receive":

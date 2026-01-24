@@ -716,4 +716,89 @@ public class OrderDAO extends ADao {
         return result;
     }
 
+
+    // THÊM: Method hủy đơn hàng kèm lưu lý do vào order_history
+    public boolean cancelOrderWithHistory(int orderId, int userId, String reason) {
+        return jdbi.inTransaction(handle -> {
+            // 1. Lấy thông tin đơn hàng
+            Order order = handle.createQuery("SELECT * FROM orders WHERE id = ?")
+                    .bind(0, orderId)
+                    .mapToBean(Order.class)
+                    .findOne()
+                    .orElse(null);
+
+            if (order == null) {
+                return false;
+            }
+
+            String oldStatus = order.getStatus();
+
+            // 2. Cập nhật trạng thái đơn hàng
+            int updated = handle.createUpdate("UPDATE orders SET status = ? WHERE id = ?")
+                    .bind(0, "Cancelled")
+                    .bind(1, orderId)
+                    .execute();
+
+            if (updated == 0) {
+                return false;
+            }
+
+            // 3. Lưu vào order_history
+            String insertHistorySql = """
+            INSERT INTO order_history (order_id, status_from, status_to, changed_by, reason, changed_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """;
+
+            handle.createUpdate(insertHistorySql)
+                    .bind(0, orderId)
+                    .bind(1, oldStatus)
+                    .bind(2, "Cancelled")
+                    .bind(3, userId)
+                    .bind(4, reason)
+                    .bind(5, LocalDateTime.now())
+                    .execute();
+
+            // 4. Hoàn xu nếu đã sử dụng
+            if (order.getPointUsed() > 0) {
+                handle.createUpdate("UPDATE users SET points = points + ? WHERE id = ?")
+                        .bind(0, order.getPointUsed())
+                        .bind(1, order.getUserId())
+                        .execute();
+
+                String insertTransactionSql = """
+                INSERT INTO PointTransactions 
+                (user_id, order_id, points, transaction_type, description, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            """;
+
+                handle.createUpdate(insertTransactionSql)
+                        .bind(0, order.getUserId())
+                        .bind(1, orderId)
+                        .bind(2, order.getPointUsed())
+                        .bind(3, "REFUND")
+                        .bind(4, "Hoàn " + order.getPointUsed() + " xu do hủy đơn hàng #" + orderId)
+                        .bind(5, LocalDateTime.now())
+                        .execute();
+            }
+
+            // 5. Hoàn lại tồn kho
+            List<OrderItem> orderItems = handle.createQuery(
+                            "SELECT * FROM order_items WHERE order_id = ?")
+                    .bind(0, orderId)
+                    .mapToBean(OrderItem.class)
+                    .list();
+
+            for (OrderItem item : orderItems) {
+                handle.createUpdate(
+                                "UPDATE comics SET stock_quantity = stock_quantity + ? WHERE id = ?")
+                        .bind(0, item.getQuantity())
+                        .bind(1, item.getComicId())
+                        .execute();
+            }
+
+            return true;
+        });
+    }
+
+
 }

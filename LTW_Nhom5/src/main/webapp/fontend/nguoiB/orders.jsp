@@ -131,8 +131,13 @@
                                 <a href="${pageContext.request.contextPath}/cart.jsp">
                                     <button class="action-btn buy-again">Mua lại</button>
                                 </a>
-                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">
-                                    Đánh giá
+<%--                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">--%>
+<%--                                    Đánh giá--%>
+<%--                                </button>--%>
+                                <button class="action-btn contact-seller ${orderDetail.hasReviewed ? 'disabled' : ''}"
+                                        onclick="openReviewPopup(${order.id})"
+                                    ${orderDetail.hasReviewed ? 'disabled' : ''}>
+                                        ${orderDetail.hasReviewed ? 'Đã đánh giá' : 'Đánh giá'}
                                 </button>
                             </c:when>
 
@@ -140,7 +145,8 @@
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
-                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">
+<%--                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">--%>
+                                <button class="action-btn cancel-order" onclick="openCancelPopup(${order.id})">
                                     Hủy đơn hàng
                                 </button>
                             </c:when>
@@ -214,11 +220,94 @@
             <button class="submit-review btn-reivew primary">Gửi nhận xét</button>
         </div>
     </div>
+
+
+    <!-- Popup trả hàng -->
+    <div class="popup-backdrop-return" style="display: none;"></div>
+    <div class="container-write-review" id="return-popup" style="display: none;">
+        <div class="header-review">
+            <p id="title">YÊU CẦU TRẢ HÀNG</p>
+        </div>
+        <div class="field">
+            <label for="return-reason" class="nameDisplay">Lý do trả hàng</label>
+            <textarea id="return-reason" placeholder="Nhập lý do trả hàng của bạn"></textarea>
+        </div>
+        <div class="field-img">
+            <label for="return-image-upload" class="nameDisplay">Tải ảnh (nếu có)</label>
+            <input type="file" id="return-image-upload" accept="image/*" multiple/>
+            <div id="return-image-preview"></div>
+        </div>
+        <div class="actions-write-review">
+            <button class="cancel-return btn-reivew">Hủy</button>
+            <button class="submit-return btn-reivew primary">Gửi yêu cầu</button>
+        </div>
+    </div>
+
+
+
+    <!--Popup hủy đơn hàng -->
+    <div class="popup-backdrop-cancel" style="display: none;"></div>
+    <div class="container-write-review" id="cancel-popup" style="display: none;">
+        <div class="header-review">
+            <p id="title">HỦY ĐƠN HÀNG</p>
+        </div>
+        <div class="field">
+            <label for="cancel-reason" class="nameDisplay">Lý do hủy đơn hàng</label>
+            <textarea id="cancel-reason" placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy đơn hàng này"></textarea>
+        </div>
+        <div class="actions-write-review">
+            <button class="cancel-cancel btn-reivew">Đóng</button>
+            <button class="submit-cancel btn-reivew primary">Xác nhận hủy</button>
+        </div>
+    </div>
 </main>
 
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
+
+    // Biến global để lưu orderId hiện tại
+    let currentOrderId = null;
+
+    // Biến global cho return
+    let currentReturnOrderId = null;
+
+    //Biến global cho cancel
+    let currentCancelOrderId = null;
+
+    //Function mở popup hủy đơn hàng
+    function openCancelPopup(orderId) {
+        currentCancelOrderId = orderId;
+        const cancelPopup = document.querySelector('#cancel-popup');
+        const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
+
+        // Reset form
+        document.querySelector('#cancel-reason').value = '';
+
+        if (cancelPopup && popupBackdropCancel) {
+            cancelPopup.style.display = 'block';
+            popupBackdropCancel.style.display = 'block';
+        }
+    }
+
+
+    // Function mở popup trả hàng
+    function openReturnPopup(orderId) {
+        currentReturnOrderId = orderId;
+        const returnPopup = document.querySelector('#return-popup');
+        const popupBackdropReturn = document.querySelector('.popup-backdrop-return');
+
+        // Reset form
+        document.querySelector('#return-reason').value = '';
+        document.querySelector('#return-image-preview').innerHTML = '';
+        document.querySelector('#return-image-upload').value = '';
+
+        if (returnPopup && popupBackdropReturn) {
+            returnPopup.style.display = 'block';
+            popupBackdropReturn.style.display = 'block';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const tabsContainer = document.querySelector('.tabs-container');
         const scrollLeftBtn = document.querySelector('.scroll-left');
@@ -268,8 +357,9 @@
         }
 
         function closeReviewPopup() {
-            reviewContainer.style.display = 'none';
-            popupBackdropReview.style.display = 'none';
+            if (reviewContainer) reviewContainer.style.display = 'none';
+            if (popupBackdropReview) popupBackdropReview.style.display = 'none';
+            currentOrderId = null;
         }
 
         if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewPopup);
@@ -319,57 +409,290 @@
             });
         }
 
-        // Submit review
+        // Submit review với FormData
         if (submitReviewBtn) {
             submitReviewBtn.addEventListener('click', () => {
                 const comment = document.querySelector('#comment').value.trim();
                 const rating = document.querySelectorAll('#rating-stars .active').length;
+                const imageUpload = document.querySelector('#image-upload');
 
                 if (!comment || rating === 0) {
-                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");
                     return;
                 }
 
-                alert("Gửi đánh giá thành công!");
-                closeReviewPopup();
+                if (!currentOrderId) {
+                    alert("Không tìm thấy thông tin đơn hàng!");
+                    return;
+                }
+
+                // Tạo FormData
+                const formData = new FormData();
+                formData.append('orderId', currentOrderId);
+                formData.append('rating', rating);
+                formData.append('comment', comment);
+
+                // Thêm ảnh
+                if (imageUpload.files.length > 0) {
+                    for (let i = 0; i < imageUpload.files.length; i++) {
+                        formData.append('images', imageUpload.files[i]);
+                    }
+                }
+
+                // Disable nút submit để tránh spam
+                submitReviewBtn.disabled = true;
+                submitReviewBtn.textContent = 'Đang gửi...';
+
+                fetch('${pageContext.request.contextPath}/submit-review', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Gửi đánh giá thành công!');
+                            closeReviewPopup();
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            submitReviewBtn.disabled = false;
+                            submitReviewBtn.textContent = 'Gửi nhận xét';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra!');
+                        submitReviewBtn.disabled = false;
+                        submitReviewBtn.textContent = 'Gửi nhận xét';
+                    });
             });
         }
+
+
+        // === Popup trả hàng ===
+        const returnPopup = document.querySelector('#return-popup');
+        const popupBackdropReturn = document.querySelector('.popup-backdrop-return');
+        const cancelReturnBtn = document.querySelector('.cancel-return');
+        const submitReturnBtn = document.querySelector('.submit-return');
+
+        function closeReturnPopup() {
+            if (returnPopup) returnPopup.style.display = 'none';
+            if (popupBackdropReturn) popupBackdropReturn.style.display = 'none';
+            currentReturnOrderId = null;
+        }
+
+        if (cancelReturnBtn) {
+            cancelReturnBtn.addEventListener('click', closeReturnPopup);
+        }
+
+        if (popupBackdropReturn) {
+            popupBackdropReturn.addEventListener('click', closeReturnPopup);
+        }
+
+        // Upload ảnh trả hàng
+        const returnImageUpload = document.querySelector('#return-image-upload');
+        if (returnImageUpload) {
+            returnImageUpload.addEventListener('change', function () {
+                const preview = document.querySelector('#return-image-preview');
+                const files = Array.from(this.files).slice(0, 3);
+                preview.innerHTML = '';
+
+                if (this.files.length > 3) {
+                    alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+                }
+
+                files.forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(file);
+                        img.style.width = "80px";
+                        img.style.height = "80px";
+                        img.style.objectFit = "cover";
+                        img.style.marginRight = "8px";
+                        img.style.borderRadius = "4px";
+                        img.style.border = "1px solid #ddd";
+                        preview.appendChild(img);
+                    }
+                });
+
+                const dataTransfer = new DataTransfer();
+                files.forEach(file => dataTransfer.items.add(file));
+                this.files = dataTransfer.files;
+            });
+        }
+
+        // Submit trả hàng
+        if (submitReturnBtn) {
+            submitReturnBtn.addEventListener('click', () => {
+                const reason = document.querySelector('#return-reason').value.trim();
+                const returnImageUpload = document.querySelector('#return-image-upload');
+
+                if (!reason) {
+                    alert("Vui lòng nhập lý do trả hàng!");
+                    return;
+                }
+
+                if (!currentReturnOrderId) {
+                    alert("Không tìm thấy thông tin đơn hàng!");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('orderId', currentReturnOrderId);
+                formData.append('reason', reason);
+
+                if (returnImageUpload.files.length > 0) {
+                    for (let i = 0; i < returnImageUpload.files.length; i++) {
+                        formData.append('images', returnImageUpload.files[i]);
+                    }
+                }
+
+                submitReturnBtn.disabled = true;
+                submitReturnBtn.textContent = 'Đang gửi...';
+
+                fetch('${pageContext.request.contextPath}/submit-return', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Gửi yêu cầu trả hàng thành công!');
+                            closeReturnPopup();
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            submitReturnBtn.disabled = false;
+                            submitReturnBtn.textContent = 'Gửi yêu cầu';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra!');
+                        submitReturnBtn.disabled = false;
+                        submitReturnBtn.textContent = 'Gửi yêu cầu';
+                    });
+            });
+        }
+
+
+        //Popup hủy đơn hàng
+        const cancelPopup = document.querySelector('#cancel-popup');
+        const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
+        const cancelCancelBtn = document.querySelector('.cancel-cancel');
+        const submitCancelBtn = document.querySelector('.submit-cancel');
+
+        function closeCancelPopup() {
+            if (cancelPopup) cancelPopup.style.display = 'none';
+            if (popupBackdropCancel) popupBackdropCancel.style.display = 'none';
+            currentCancelOrderId = null;
+        }
+
+        if (cancelCancelBtn) {
+            cancelCancelBtn.addEventListener('click', closeCancelPopup);
+        }
+
+        if (popupBackdropCancel) {
+            popupBackdropCancel.addEventListener('click', closeCancelPopup);
+        }
+
+        // Submit hủy đơn hàng
+        if (submitCancelBtn) {
+            submitCancelBtn.addEventListener('click', () => {
+                const reason = document.querySelector('#cancel-reason').value.trim();
+
+                if (!reason) {
+                    alert("Vui lòng nhập lý do hủy đơn hàng!");
+                    return;
+                }
+
+                if (!currentCancelOrderId) {
+                    alert("Không tìm thấy thông tin đơn hàng!");
+                    return;
+                }
+
+                submitCancelBtn.disabled = true;
+                submitCancelBtn.textContent = 'Đang xử lý...';
+
+                fetch('${pageContext.request.contextPath}/order-history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=cancel&orderId=' + currentCancelOrderId + '&reason=' + encodeURIComponent(reason)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Hủy đơn hàng thành công!');
+                            closeCancelPopup();
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            submitCancelBtn.disabled = false;
+                            submitCancelBtn.textContent = 'Xác nhận hủy';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra!');
+                        submitCancelBtn.disabled = false;
+                        submitCancelBtn.textContent = 'Xác nhận hủy';
+                    });
+            });
+        }
+
+
     });
 
-    // ===== GLOBAL FUNCTIONS FOR ORDER ACTIONS =====
-
+    // FUNCTIONS FOR ORDER ACTIONS
     function openReviewPopup(orderId) {
+        currentOrderId = orderId;
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
+
+        // Reset form
+        document.querySelector('#comment').value = '';
+        document.querySelector('#image-preview').innerHTML = '';
+        document.querySelector('#image-upload').value = '';
+
+        // Reset rating stars
+        document.querySelectorAll('#rating-stars span').forEach(s => s.classList.remove('active'));
+
         if (reviewContainer && popupBackdropReview) {
             reviewContainer.style.display = 'block';
             popupBackdropReview.style.display = 'block';
         }
     }
 
+    <%--function cancelOrder(orderId) {--%>
+    <%--    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {--%>
+    <%--        fetch('${pageContext.request.contextPath}/order-history', {--%>
+    <%--            method: 'POST',--%>
+    <%--            headers: {--%>
+    <%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
+    <%--            },--%>
+    <%--            body: 'action=cancel&orderId=' + orderId--%>
+    <%--        })--%>
+    <%--            .then(response => response.json())--%>
+    <%--            .then(data => {--%>
+    <%--                if (data.success) {--%>
+    <%--                    alert('Hủy đơn hàng thành công!');--%>
+    <%--                    location.reload();--%>
+    <%--                } else {--%>
+    <%--                    alert('Có lỗi xảy ra, vui lòng thử lại!');--%>
+    <%--                }--%>
+    <%--            })--%>
+    <%--            .catch(error => {--%>
+    <%--                console.error('Error:', error);--%>
+    <%--                alert('Có lỗi xảy ra!');--%>
+    <%--            });--%>
+    <%--    }--%>
+    <%--}--%>
+
+
     function cancelOrder(orderId) {
-        if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-            fetch('${pageContext.request.contextPath}/order-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=cancel&orderId=' + orderId
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Hủy đơn hàng thành công!');
-                        location.reload();
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Có lỗi xảy ra!');
-                });
-        }
+        openCancelPopup(orderId);
     }
 
     function receiveOrder(orderId) {
@@ -398,30 +721,8 @@
     }
 
     function returnOrder(orderId) {
-        if (confirm('Bạn có chắc muốn trả hàng cho đơn này?')) {
-            fetch('${pageContext.request.contextPath}/order-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=return&orderId=' + orderId
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Yêu cầu trả hàng thành công!');
-                        location.reload();
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Có lỗi xảy ra!');
-                });
-        }
+        openReturnPopup(orderId);
     }
-
 
 </script>
 
