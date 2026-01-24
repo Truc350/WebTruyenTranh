@@ -255,7 +255,7 @@
                                         <c:otherwise>
                                             <p class="product-price">
                                                 <fmt:formatNumber value="${comic.price}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/> đ
                                             </p>
                                         </c:otherwise>
                                     </c:choose>
