@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,12 +37,12 @@
                         <i class="fas fa-magnifying-glass"></i>
                     </div>
 
-                    <select id="levelFilter" class="level-filter">
+                    <select id="levelFilter" name="level" class="level-filter">
                         <option value="">Tất cả cấp độ</option>
-                        <option value="Normal">Normal</option>
-                        <option value="Silver">Silver</option>
-                        <option value="Gold">Gold</option>
-                        <option value="Platinum">Platinum</option>
+                        <option value="Normal" ${param.level == 'Normal' ? 'selected' : ''}>Normal</option>
+                        <option value="Silver" ${param.level == 'Silver' ? 'selected' : ''}>Silver</option>
+                        <option value="Gold" ${param.level == 'Gold' ? 'selected' : ''}>Gold</option>
+                        <option value="Platinum" ${param.level == 'Platinum' ? 'selected' : ''}>Platinum</option>
                     </select>
                 </form>
             </div>
@@ -72,8 +73,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <fmt:formatNumber value="${user.totalSpent != null ? user.totalSpent : 0}"
-                                                      pattern="#.###"/>đ
+                                    <c:set var="formattedSpent">
+                                        <fmt:formatNumber value="${user.totalSpent != null ? user.totalSpent : 0}"
+                                                          pattern="#,###"
+                                                          groupingUsed="true"/>
+                                    </c:set>
+                                        ${fn:replace(formattedSpent, ',', '.')}đ
                                 </td>
                                 <td>${user.points} xu</td>
                                 <td class="action-cell">
@@ -84,9 +89,12 @@
                                                data-id="${user.id}"
                                                data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
                                                data-email="${user.email}"
+                                               data-phone="${user.phone != null ? user.phone : 'Chưa cập nhật'}"
                                                data-level="${user.membershipLevel != null ? user.membershipLevel : 'Normal'}"
-                                               data-spent="<fmt:formatNumber value='${user.totalSpent != null ? user.totalSpent : 0}' pattern='#,###'/>đ"
-                                               data-points="${user.points} xu">Xem chi tiết</a>
+                                               data-spent="${user.totalSpent != null ? user.totalSpent : 0}"
+                                               data-points="${user.points} xu"
+                                               data-created-at="${user.createdAt}">
+                                                Xem chi tiết</a>
                                             <a href="#" class="menu-item upgrade-user"
                                                data-id="${user.id}"
                                                data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
@@ -130,6 +138,7 @@
         <div id="upgradePopup" class="popup-overlay">
             <div class="popup-box">
                 <h3>Nâng cấp thành viên</h3>
+                <input type="hidden" id="upgradeUserId" value="">
                 <p id="popupUserName"></p>
                 <select id="upgradeSelect">
                     <option value="Normal">Thường (0%)</option>
@@ -145,20 +154,72 @@
             </div>
         </div>
 
-        <!-- Popup Xem chi tiết -->
+        <!-- Popup Xem chi tiết - IMPROVED -->
         <div id="detailPopup" class="popup-overlay">
-            <div class="popup-box" style="width: 500px; text-align:left;">
-                <h3>Thông tin khách hàng</h3>
-                <div style="margin:20px 0; line-height:1.9; font-size:15px;">
-                    <p><strong>Họ tên:</strong> <span id="detailName"></span></p>
-                    <p><strong>Email:</strong> <span id="detailEmail"></span></p>
-                    <p><strong>Cấp bậc:</strong> <span id="detailLevel"></span></p>
-                    <p><strong>Tổng chi tiêu:</strong> <span id="detailSpent"></span></p>
-                    <p><strong>Điểm xu:</strong> <span id="detailPoints"></span></p>
+            <div class="popup-box">
+                <!-- Header -->
+                <div class="popup-header">
+                    <h3>Thông tin khách hàng</h3>
                 </div>
-                <div class="popup-actions">
-                    <button class="btn-secondary" onclick="document.getElementById('detailPopup').style.display='none'">
-                        Đóng
+
+                <!-- Body -->
+                <div class="popup-body">
+                    <div class="info-row">
+                <span class="info-label">
+                    Họ tên:
+                </span>
+                        <span class="info-value" id="detailName"></span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    </i>Email:
+                </span>
+                        <span class="info-value" id="detailEmail"></span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    Số điện thoại:
+                </span>
+                        <span class="info-value" id="detailPhone">Chưa cập nhật</span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    Cấp thành viên:
+                </span>
+                        <span class="info-value">
+                    <span class="level-badge" id="detailLevelBadge"></span>
+                </span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    </i>Tổng chi tiêu:
+                </span>
+                        <span class="info-value" id="detailSpent" style="color: #28a745; font-weight: 600;"></span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    Điểm tích lũy:
+                </span>
+                        <span class="info-value" id="detailPoints" style="color: #ffc107; font-weight: 600;"></span>
+                    </div>
+
+                    <div class="info-row">
+                <span class="info-label">
+                    </i>Ngày tham gia:
+                </span>
+                        <span class="info-value" id="detailCreatedAt">01/01/2024</span>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="popup-footer">
+                    <button class="btn-close" onclick="document.getElementById('detailPopup').style.display='none'">
+                         Đóng
                     </button>
                 </div>
             </div>
@@ -167,9 +228,11 @@
         <div id="lockPopup" class="popup-overlay">
             <div class="popup-box">
                 <h3>Xác nhận khóa tài khoản</h3>
+                <input type="hidden" id="lockUserId" value="">
                 <div class="popup-message" id="lockMessage"></div>
                 <div class="popup-actions">
-                    <button class="btn-cancel" onclick="document.getElementById('lockPopup').style.display='none'">Hủy</button>
+                    <button class="btn-cancel" onclick="document.getElementById('lockPopup').style.display='none'">Hủy
+                    </button>
                     <button class="btn-danger" id="confirmLock">Khóa vĩnh viễn</button>
                 </div>
             </div>
@@ -180,7 +243,7 @@
 
 <script>
     // Tìm kiếm khi nhấn Enter
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             document.getElementById('searchForm').submit();
@@ -188,12 +251,12 @@
     });
 
     // Tìm kiếm khi click vào icon
-    document.querySelector('.fa-magnifying-glass').addEventListener('click', function() {
+    document.querySelector('.fa-magnifying-glass').addEventListener('click', function () {
         document.getElementById('searchForm').submit();
     });
 
     // Lọc theo level
-    document.getElementById('levelFilter').addEventListener('change', function() {
+    document.getElementById('levelFilter').addEventListener('change', function () {
         document.getElementById('searchForm').submit();
     });
 
@@ -202,11 +265,43 @@
     document.querySelectorAll('.view-detail').forEach(item => {
         item.addEventListener('click', e => {
             e.preventDefault();
-            document.getElementById('detailName').textContent = item.dataset.name;
-            document.getElementById('detailEmail').textContent = item.dataset.email;
-            document.getElementById('detailLevel').textContent = item.dataset.level;
-            document.getElementById('detailSpent').textContent = item.dataset.spent;
-            document.getElementById('detailPoints').textContent = item.dataset.points;
+
+            const name = item.dataset.name;
+            const email = item.dataset.email;
+            const phone = item.dataset.phone || 'Chưa cập nhật';
+            const level = item.dataset.level;
+            // Format số tiền
+            const spent = parseFloat(item.dataset.spent) || 0;
+            const spentFormatted = spent.toLocaleString('vi-VN') + 'đ';
+            // Format điểm
+            const points = parseInt(item.dataset.points) || 0;
+            const pointsFormatted = points.toLocaleString('vi-VN') + ' xu';
+
+            // Format ngày tháng
+            let createdAt = 'Chưa có thông tin';
+            if (item.dataset.createdAt && item.dataset.createdAt !== 'null') {
+                try {
+                    const date = new Date(item.dataset.createdAt);
+                    createdAt = date.toLocaleDateString('vi-VN');
+                } catch (e) {
+                    createdAt = 'Chưa có thông tin';
+                }
+            }
+
+
+            document.getElementById('detailName').textContent = name;
+            document.getElementById('detailEmail').textContent = email;
+            document.getElementById('detailPhone').textContent = phone;
+            document.getElementById('detailSpent').textContent = spentFormatted;
+            document.getElementById('detailPoints').textContent = pointsFormatted;
+            document.getElementById('detailCreatedAt').textContent = createdAt;
+
+            // Badge cấp độ
+            const badge = document.getElementById('detailLevelBadge');
+            badge.textContent = level;
+            badge.className = 'level-badge level-' + level;
+
+            // Hiện popup
             document.getElementById('detailPopup').style.display = 'flex';
         });
     });
@@ -227,13 +322,13 @@
     });
 
     // Hủy nâng cấp
-    document.getElementById('upgradeCancel').onclick = function() {
+    document.getElementById('upgradeCancel').onclick = function () {
         document.getElementById('upgradePopup').style.display = 'none';
     };
 
 
     // Xác nhận nâng cấp
-    document.getElementById('upgradeConfirm').addEventListener('click', function() {
+    document.getElementById('upgradeConfirm').addEventListener('click', function () {
         const userId = document.getElementById('upgradeUserId').value;
         const newLevel = document.getElementById('upgradeSelect').value;
 
@@ -276,7 +371,7 @@
     });
 
     // Xác nhận khóa
-    document.getElementById('confirmLock').addEventListener('click', function() {
+    document.getElementById('confirmLock').addEventListener('click', function () {
         const userId = document.getElementById('lockUserId').value;
 
         fetch('${pageContext.request.contextPath}/admin/user-management', {
@@ -305,7 +400,7 @@
 
 
     // Phân trang
-    (function() {
+    (function () {
         const ROWS_PER_PAGE = 10;
         const tbody = document.getElementById('userTableBody');
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row') && r.cells.length > 1);
@@ -333,7 +428,7 @@
     })();
 
     // Active sidebar
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
 

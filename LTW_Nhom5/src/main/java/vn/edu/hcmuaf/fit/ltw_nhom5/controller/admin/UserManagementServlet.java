@@ -24,20 +24,30 @@ public class UserManagementServlet extends HttpServlet {
             String search = request.getParameter("search");
             String levelFilter = request.getParameter("level");
 
+            // DEBUG
+            System.out.println("=== REQUEST PARAMS ===");
+            System.out.println("search: " + search);
+            System.out.println("levelFilter: " + levelFilter);
+            System.out.println("======================");
+
             List<User> users;
 
             // Xử lý tìm kiếm và lọc
             if (search != null && !search.trim().isEmpty() && levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Tìm kiếm và lọc kết hợp
+                System.out.println("Using searchAndFilterCustomers");
                 users = userDao.searchAndFilterCustomers(search, levelFilter);
             } else if (search != null && !search.trim().isEmpty()) {
                 // Chỉ tìm kiếm
+                System.out.println("Using searchCustomers");
                 users = userDao.searchCustomers(search);
             } else if (levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Chỉ lọc theo level
+                System.out.println("Using filterCustomersByMembershipLevel");
                 users = userDao.filterCustomersByMembershipLevel(levelFilter);
             } else {
                 // Lấy tất cả
+                System.out.println("Using getAllCustomers");
                 users = userDao.getAllCustomers();
             }
 

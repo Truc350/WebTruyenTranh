@@ -275,13 +275,19 @@ public class UserDao {
      * @return Danh sách user theo cấp độ
      */
     public List<User> filterCustomersByMembershipLevel(String membershipLevel) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 " +
-                                "AND membership_level = :level ORDER BY created_at DESC")
-                        .bind("level", membershipLevel)
-                        .mapToBean(User.class)
-                        .list()
-        );
+        return jdbi.withHandle(handle -> {
+            System.out.println("=== FILTER BY LEVEL ===");
+            System.out.println("Level filter: " + membershipLevel);
+
+            List<User> users = handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 " +
+                            "AND membership_level = :level ORDER BY created_at DESC")
+                    .bind("level", membershipLevel)
+                    .mapToBean(User.class)
+                    .list();
+
+            System.out.println("Found users: " + users.size());
+            return users;
+        });
     }
 
     /**

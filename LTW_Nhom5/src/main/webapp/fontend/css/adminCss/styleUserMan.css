@@ -322,12 +322,88 @@ body {
 
 /* Popup Xem chi tiết - riêng */
 #detailPopup .popup-box {
-    width: 520px; text-align: left;
+    width: 550px;
+    text-align: left;
+    padding: 0;
+    overflow: hidden;
 }
-#detailPopup p {
-    margin: 12px 0; font-size: 15px;
+#detailPopup .popup-header {
+    background: #007bff;
+    padding: 15px 20px;
+    color: white;
 }
-#detailPopup hr { margin: 18px 0; border-color: #eee; }
+
+#detailPopup .popup-header {
+    margin: 0;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+}
+
+#detailPopup .popup-body {
+    padding: 30px;
+}
+
+#detailPopup .info-row {
+    display: flex;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+}
+
+#detailPopup .info-row:last-child {
+    border-bottom: none;
+}
+
+#detailPopup .info-label {
+    font-weight: 600;
+    color: #666;
+    min-width: 140px;
+    font-size: 14px;
+}
+
+#detailPopup .info-value {
+    color: #333;
+    font-size: 15px;
+    flex: 1;
+}
+
+/* Badge trong popup */
+#detailPopup .level-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+#detailPopup .level-Normal { background: #e0e0e0; color: #333; }
+#detailPopup .level-Silver { background: #d6eaff; color: #005bbb; }
+#detailPopup .level-Gold { background: #ffe8a3; color: #7a5600; }
+#detailPopup .level-Platinum { background: #e7dbff; color: #5b41b3; }
+
+/* Footer popup */
+#detailPopup .popup-footer {
+    padding: 10px 20px;
+    background: #f8f9fa;
+    text-align: center;
+}
+
+#detailPopup .btn-close {
+    background: #667eea;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+#detailPopup .btn-close:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
 
 /* Menu 3 chấm */
 .action-cell { position: relative; text-align: center; }
