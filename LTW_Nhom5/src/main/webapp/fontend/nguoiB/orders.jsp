@@ -131,8 +131,13 @@
                                 <a href="${pageContext.request.contextPath}/cart.jsp">
                                     <button class="action-btn buy-again">Mua lại</button>
                                 </a>
-                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">
-                                    Đánh giá
+<%--                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">--%>
+<%--                                    Đánh giá--%>
+<%--                                </button>--%>
+                                <button class="action-btn contact-seller ${orderDetail.hasReviewed ? 'disabled' : ''}"
+                                        onclick="openReviewPopup(${order.id})"
+                                    ${orderDetail.hasReviewed ? 'disabled' : ''}>
+                                        ${orderDetail.hasReviewed ? 'Đã đánh giá' : 'Đánh giá'}
                                 </button>
                             </c:when>
 
@@ -219,6 +224,10 @@
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
+
+    // Biến global để lưu orderId hiện tại
+    let currentOrderId = null;
+
     document.addEventListener('DOMContentLoaded', function () {
         const tabsContainer = document.querySelector('.tabs-container');
         const scrollLeftBtn = document.querySelector('.scroll-left');
@@ -267,10 +276,17 @@
             });
         }
 
+        // function closeReviewPopup() {
+        //     reviewContainer.style.display = 'none';
+        //     popupBackdropReview.style.display = 'none';
+        // }
+
         function closeReviewPopup() {
-            reviewContainer.style.display = 'none';
-            popupBackdropReview.style.display = 'none';
+            if (reviewContainer) reviewContainer.style.display = 'none';
+            if (popupBackdropReview) popupBackdropReview.style.display = 'none';
+            currentOrderId = null;
         }
+
 
         if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewPopup);
         if (popupBackdropReview) popupBackdropReview.addEventListener('click', closeReviewPopup);
@@ -320,32 +336,111 @@
         }
 
         // Submit review
+        // if (submitReviewBtn) {
+        //     submitReviewBtn.addEventListener('click', () => {
+        //         const comment = document.querySelector('#comment').value.trim();
+        //         const rating = document.querySelectorAll('#rating-stars .active').length;
+        //
+        //         if (!comment || rating === 0) {
+        //             alert("Vui lòng nhập đầy đủ thông tin!");
+        //             return;
+        //         }
+        //
+        //         alert("Gửi đánh giá thành công!");
+        //         closeReviewPopup();
+        //     });
+        // }
+
+
+        // Submit review với FormData
         if (submitReviewBtn) {
             submitReviewBtn.addEventListener('click', () => {
                 const comment = document.querySelector('#comment').value.trim();
                 const rating = document.querySelectorAll('#rating-stars .active').length;
+                const imageUpload = document.querySelector('#image-upload');
 
                 if (!comment || rating === 0) {
-                    alert("Vui lòng nhập đầy đủ thông tin!");
+                    alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");
                     return;
                 }
 
-                alert("Gửi đánh giá thành công!");
-                closeReviewPopup();
+                if (!currentOrderId) {
+                    alert("Không tìm thấy thông tin đơn hàng!");
+                    return;
+                }
+
+                // Tạo FormData
+                const formData = new FormData();
+                formData.append('orderId', currentOrderId);
+                formData.append('rating', rating);
+                formData.append('comment', comment);
+
+                // Thêm ảnh
+                if (imageUpload.files.length > 0) {
+                    for (let i = 0; i < imageUpload.files.length; i++) {
+                        formData.append('images', imageUpload.files[i]);
+                    }
+                }
+
+                // Disable nút submit để tránh spam
+                submitReviewBtn.disabled = true;
+                submitReviewBtn.textContent = 'Đang gửi...';
+
+                fetch('${pageContext.request.contextPath}/submit-review', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Gửi đánh giá thành công!');
+                            closeReviewPopup();
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            submitReviewBtn.disabled = false;
+                            submitReviewBtn.textContent = 'Gửi nhận xét';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra!');
+                        submitReviewBtn.disabled = false;
+                        submitReviewBtn.textContent = 'Gửi nhận xét';
+                    });
             });
         }
     });
 
-    // ===== GLOBAL FUNCTIONS FOR ORDER ACTIONS =====
+    // FUNCTIONS FOR ORDER ACTIONS
 
     function openReviewPopup(orderId) {
+        currentOrderId = orderId;
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
+
+        // Reset form
+        document.querySelector('#comment').value = '';
+        document.querySelector('#image-preview').innerHTML = '';
+        document.querySelector('#image-upload').value = '';
+
+        // Reset rating stars
+        document.querySelectorAll('#rating-stars span').forEach(s => s.classList.remove('active'));
+
         if (reviewContainer && popupBackdropReview) {
             reviewContainer.style.display = 'block';
             popupBackdropReview.style.display = 'block';
         }
     }
+
+    // function openReviewPopup(orderId) {
+    //     const reviewContainer = document.querySelector('.container-write-review');
+    //     const popupBackdropReview = document.querySelector('.popup-backdrop-review');
+    //     if (reviewContainer && popupBackdropReview) {
+    //         reviewContainer.style.display = 'block';
+    //         popupBackdropReview.style.display = 'block';
+    //     }
+    // }
 
     function cancelOrder(orderId) {
         if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
@@ -424,6 +519,99 @@
 
 
 </script>
+
+
+
+<%--<script>--%>
+<%--    // Biến global để lưu orderId hiện tại--%>
+<%--    let currentOrderId = null;--%>
+
+<%--    function openReviewPopup(orderId) {--%>
+<%--        currentOrderId = orderId;--%>
+<%--        const reviewContainer = document.querySelector('.container-write-review');--%>
+<%--        const popupBackdropReview = document.querySelector('.popup-backdrop-review');--%>
+
+<%--        // Reset form--%>
+<%--        document.querySelector('#comment').value = '';--%>
+<%--        document.querySelector('#image-preview').innerHTML = '';--%>
+<%--        document.querySelector('#image-upload').value = '';--%>
+
+<%--        // Reset rating stars--%>
+<%--        document.querySelectorAll('#rating-stars span').forEach(s => s.classList.remove('active'));--%>
+
+<%--        if (reviewContainer && popupBackdropReview) {--%>
+<%--            reviewContainer.style.display = 'block';--%>
+<%--            popupBackdropReview.style.display = 'block';--%>
+<%--        }--%>
+<%--    }--%>
+
+<%--    // Submit review với FormData--%>
+<%--    if (submitReviewBtn) {--%>
+<%--        submitReviewBtn.addEventListener('click', () => {--%>
+<%--            const comment = document.querySelector('#comment').value.trim();--%>
+<%--            const rating = document.querySelectorAll('#rating-stars .active').length;--%>
+<%--            const imageUpload = document.querySelector('#image-upload');--%>
+
+<%--            if (!comment || rating === 0) {--%>
+<%--                alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");--%>
+<%--                return;--%>
+<%--            }--%>
+
+<%--            if (!currentOrderId) {--%>
+<%--                alert("Không tìm thấy thông tin đơn hàng!");--%>
+<%--                return;--%>
+<%--            }--%>
+
+<%--            // Tạo FormData--%>
+<%--            const formData = new FormData();--%>
+<%--            formData.append('orderId', currentOrderId);--%>
+<%--            formData.append('rating', rating);--%>
+<%--            formData.append('comment', comment);--%>
+
+<%--            // Thêm ảnh--%>
+<%--            if (imageUpload.files.length > 0) {--%>
+<%--                for (let i = 0; i < imageUpload.files.length; i++) {--%>
+<%--                    formData.append('images', imageUpload.files[i]);--%>
+<%--                }--%>
+<%--            }--%>
+
+<%--            // Disable nút submit để tránh spam--%>
+<%--            submitReviewBtn.disabled = true;--%>
+<%--            submitReviewBtn.textContent = 'Đang gửi...';--%>
+
+<%--            fetch('${pageContext.request.contextPath}/submit-review', {--%>
+<%--                method: 'POST',--%>
+<%--                body: formData--%>
+<%--            })--%>
+<%--                .then(response => response.json())--%>
+<%--                .then(data => {--%>
+<%--                    if (data.success) {--%>
+<%--                        alert('Gửi đánh giá thành công!');--%>
+<%--                        closeReviewPopup();--%>
+<%--                        location.reload(); // Reload để cập nhật trạng thái nút--%>
+<%--                    } else {--%>
+<%--                        alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');--%>
+<%--                        submitReviewBtn.disabled = false;--%>
+<%--                        submitReviewBtn.textContent = 'Gửi nhận xét';--%>
+<%--                    }--%>
+<%--                })--%>
+<%--                .catch(error => {--%>
+<%--                    console.error('Error:', error);--%>
+<%--                    alert('Có lỗi xảy ra!');--%>
+<%--                    submitReviewBtn.disabled = false;--%>
+<%--                    submitReviewBtn.textContent = 'Gửi nhận xét';--%>
+<%--                });--%>
+<%--        });--%>
+<%--    }--%>
+
+<%--    function closeReviewPopup() {--%>
+<%--        const reviewContainer = document.querySelector('.container-write-review');--%>
+<%--        const popupBackdropReview = document.querySelector('.popup-backdrop-review');--%>
+<%--        reviewContainer.style.display = 'none';--%>
+<%--        popupBackdropReview.style.display = 'none';--%>
+<%--        currentOrderId = null;--%>
+<%--    }--%>
+<%--</script>--%>
 
 </body>
 </html>

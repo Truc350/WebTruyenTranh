@@ -918,7 +918,7 @@
     `;
 
         const contextPath = window.contextPath || '';
-        const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
+        <%--const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;--%>
 
         console.log('🔍 Searching categories:', { keyword, page, url });
 
