@@ -144,9 +144,10 @@ public class OrderHistoryServlet extends HttpServlet {
 
         switch (action) {
             case "cancel":
+                String cancelReason = request.getParameter("reason");
                 // Hủy đơn hàng - sử dụng updateOrderStatusWithPoints để hoàn xu và tồn kho
-                success = orderDAO.updateOrderStatusWithPoints(orderId, "Cancelled");
-                System.out.println("Cancel order #" + orderId + ": " + success);
+                success = orderDAO.cancelOrderWithHistory(orderId, user.getId(), cancelReason);
+                System.out.println("Cancel order #" + orderId + " with reason: " + cancelReason + " - " + success);
                 break;
 
             case "receive":

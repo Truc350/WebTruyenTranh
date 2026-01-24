@@ -145,7 +145,8 @@
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
-                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">
+<%--                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">--%>
+                                <button class="action-btn cancel-order" onclick="openCancelPopup(${order.id})">
                                     Hủy đơn hàng
                                 </button>
                             </c:when>
@@ -242,6 +243,23 @@
         </div>
     </div>
 
+
+
+    <!--Popup hủy đơn hàng -->
+    <div class="popup-backdrop-cancel" style="display: none;"></div>
+    <div class="container-write-review" id="cancel-popup" style="display: none;">
+        <div class="header-review">
+            <p id="title">HỦY ĐƠN HÀNG</p>
+        </div>
+        <div class="field">
+            <label for="cancel-reason" class="nameDisplay">Lý do hủy đơn hàng</label>
+            <textarea id="cancel-reason" placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy đơn hàng này"></textarea>
+        </div>
+        <div class="actions-write-review">
+            <button class="cancel-cancel btn-reivew">Đóng</button>
+            <button class="submit-cancel btn-reivew primary">Xác nhận hủy</button>
+        </div>
+    </div>
 </main>
 
 <jsp:include page="/fontend/public/Footer.jsp"/>
@@ -253,6 +271,25 @@
 
     // Biến global cho return
     let currentReturnOrderId = null;
+
+    //Biến global cho cancel
+    let currentCancelOrderId = null;
+
+    //Function mở popup hủy đơn hàng
+    function openCancelPopup(orderId) {
+        currentCancelOrderId = orderId;
+        const cancelPopup = document.querySelector('#cancel-popup');
+        const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
+
+        // Reset form
+        document.querySelector('#cancel-reason').value = '';
+
+        if (cancelPopup && popupBackdropCancel) {
+            cancelPopup.style.display = 'block';
+            popupBackdropCancel.style.display = 'block';
+        }
+    }
+
 
     // Function mở popup trả hàng
     function openReturnPopup(orderId) {
@@ -325,7 +362,6 @@
             currentOrderId = null;
         }
 
-
         if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewPopup);
         if (popupBackdropReview) popupBackdropReview.addEventListener('click', closeReviewPopup);
 
@@ -372,8 +408,6 @@
                 this.files = dataTransfer.files;
             });
         }
-
-
 
         // Submit review với FormData
         if (submitReviewBtn) {
@@ -542,6 +576,72 @@
         }
 
 
+        //Popup hủy đơn hàng
+        const cancelPopup = document.querySelector('#cancel-popup');
+        const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
+        const cancelCancelBtn = document.querySelector('.cancel-cancel');
+        const submitCancelBtn = document.querySelector('.submit-cancel');
+
+        function closeCancelPopup() {
+            if (cancelPopup) cancelPopup.style.display = 'none';
+            if (popupBackdropCancel) popupBackdropCancel.style.display = 'none';
+            currentCancelOrderId = null;
+        }
+
+        if (cancelCancelBtn) {
+            cancelCancelBtn.addEventListener('click', closeCancelPopup);
+        }
+
+        if (popupBackdropCancel) {
+            popupBackdropCancel.addEventListener('click', closeCancelPopup);
+        }
+
+        // Submit hủy đơn hàng
+        if (submitCancelBtn) {
+            submitCancelBtn.addEventListener('click', () => {
+                const reason = document.querySelector('#cancel-reason').value.trim();
+
+                if (!reason) {
+                    alert("Vui lòng nhập lý do hủy đơn hàng!");
+                    return;
+                }
+
+                if (!currentCancelOrderId) {
+                    alert("Không tìm thấy thông tin đơn hàng!");
+                    return;
+                }
+
+                submitCancelBtn.disabled = true;
+                submitCancelBtn.textContent = 'Đang xử lý...';
+
+                fetch('${pageContext.request.contextPath}/order-history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=cancel&orderId=' + currentCancelOrderId + '&reason=' + encodeURIComponent(reason)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Hủy đơn hàng thành công!');
+                            closeCancelPopup();
+                            location.reload();
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            submitCancelBtn.disabled = false;
+                            submitCancelBtn.textContent = 'Xác nhận hủy';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra!');
+                        submitCancelBtn.disabled = false;
+                        submitCancelBtn.textContent = 'Xác nhận hủy';
+                    });
+            });
+        }
+
 
     });
 
@@ -565,30 +665,34 @@
         }
     }
 
+    <%--function cancelOrder(orderId) {--%>
+    <%--    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {--%>
+    <%--        fetch('${pageContext.request.contextPath}/order-history', {--%>
+    <%--            method: 'POST',--%>
+    <%--            headers: {--%>
+    <%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
+    <%--            },--%>
+    <%--            body: 'action=cancel&orderId=' + orderId--%>
+    <%--        })--%>
+    <%--            .then(response => response.json())--%>
+    <%--            .then(data => {--%>
+    <%--                if (data.success) {--%>
+    <%--                    alert('Hủy đơn hàng thành công!');--%>
+    <%--                    location.reload();--%>
+    <%--                } else {--%>
+    <%--                    alert('Có lỗi xảy ra, vui lòng thử lại!');--%>
+    <%--                }--%>
+    <%--            })--%>
+    <%--            .catch(error => {--%>
+    <%--                console.error('Error:', error);--%>
+    <%--                alert('Có lỗi xảy ra!');--%>
+    <%--            });--%>
+    <%--    }--%>
+    <%--}--%>
+
 
     function cancelOrder(orderId) {
-        if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-            fetch('${pageContext.request.contextPath}/order-history', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'action=cancel&orderId=' + orderId
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Hủy đơn hàng thành công!');
-                        location.reload();
-                    } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Có lỗi xảy ra!');
-                });
-        }
+        openCancelPopup(orderId);
     }
 
     function receiveOrder(orderId) {
@@ -616,37 +720,9 @@
         }
     }
 
-
     function returnOrder(orderId) {
         openReturnPopup(orderId);
     }
-
-
-    <%--function returnOrder(orderId) {--%>
-    <%--    if (confirm('Bạn có chắc muốn trả hàng cho đơn này?')) {--%>
-    <%--        fetch('${pageContext.request.contextPath}/order-history', {--%>
-    <%--            method: 'POST',--%>
-    <%--            headers: {--%>
-    <%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
-    <%--            },--%>
-    <%--            body: 'action=return&orderId=' + orderId--%>
-    <%--        })--%>
-    <%--            .then(response => response.json())--%>
-    <%--            .then(data => {--%>
-    <%--                if (data.success) {--%>
-    <%--                    alert('Yêu cầu trả hàng thành công!');--%>
-    <%--                    location.reload();--%>
-    <%--                } else {--%>
-    <%--                    alert('Có lỗi xảy ra, vui lòng thử lại!');--%>
-    <%--                }--%>
-    <%--            })--%>
-    <%--            .catch(error => {--%>
-    <%--                console.error('Error:', error);--%>
-    <%--                alert('Có lỗi xảy ra!');--%>
-    <%--            });--%>
-    <%--    }--%>
-    <%--}--%>
-
 
 </script>
 
