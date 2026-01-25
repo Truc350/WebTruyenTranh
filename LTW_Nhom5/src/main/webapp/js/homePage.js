@@ -199,3 +199,34 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+/**
+ * Hiển thị chi tiết comic trong popup bên phải
+ */
+function showTopComicDetail(index) {
+    // Ẩn tất cả popup
+    const allPopups = document.querySelectorAll('.sach-chi-tiet');
+    allPopups.forEach(popup => {
+        popup.style.display = 'none';
+    });
+
+    // Hiển thị popup được chọn
+    const selectedPopup = document.querySelector(`.pop-detail-home${index}`);
+    if (selectedPopup) {
+        selectedPopup.style.display = 'flex';
+    }
+
+    // Highlight item được chọn
+    const allItems = document.querySelectorAll('.sach-item');
+    allItems.forEach((item, i) => {
+        if (i === index - 1) {
+            item.style.backgroundColor = '#fff3e0';
+        } else {
+            item.style.backgroundColor = '';
+        }
+    });
+}
+
+// Auto-show first item khi load trang
+document.addEventListener('DOMContentLoaded', function() {
+    showTopComicDetail(1);
+});
