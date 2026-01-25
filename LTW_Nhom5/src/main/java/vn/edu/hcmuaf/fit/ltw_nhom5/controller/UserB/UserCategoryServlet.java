@@ -7,17 +7,18 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 @WebServlet(name = "UserCategoryServlet", urlPatterns = {"/userCategory"})
 public class UserCategoryServlet extends HttpServlet {
     private CategoriesDao categoriesDao;
     private ComicDAO comicDAO;
+    private RecommendationService recommendationService;
 
     @Override
     public void init() throws ServletException {
@@ -25,6 +26,7 @@ public class UserCategoryServlet extends HttpServlet {
         try {
             categoriesDao = new CategoriesDao();
             comicDAO = new ComicDAO();
+            recommendationService = new RecommendationService();
             System.out.println("✓ UserCategoryServlet initialized successfully");
         } catch (Exception e) {
             System.err.println("✗ ERROR initializing UserCategoryServlet:");
@@ -38,6 +40,19 @@ public class UserCategoryServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+
+        // ========== LẤY USER ID TỪ SESSION ==========
+        Integer userId = null;
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser != null) {
+                userId = currentUser.getId();
+                System.out.println("✅ User đã login: " + currentUser.getUsername() + " (ID: " + userId + ")");
+            } else {
+                System.out.println("⚠️ User chưa login - Hiển thị gợi ý phổ biến");
+            }
+        }
 
         try {
             String categoryIdParam = request.getParameter("id");
@@ -87,7 +102,51 @@ public class UserCategoryServlet extends HttpServlet {
             // Lấy danh sách categories cho header
             List<Category> listCategories = categoriesDao.listCategories();
 
-            // Set attributes
+            // ========== GỢI Ý THÔNG MINH ==========
+            Map<String, List<Comic>> recommendations = new LinkedHashMap<>();
+
+            try {
+                if (userId != null) {
+                    // User đã login → Gợi ý cá nhân hóa
+                    System.out.println("🎯 Tạo gợi ý cá nhân hóa cho user ID: " + userId);
+                    recommendations = recommendationService.getCategorizedRecommendations(userId);
+                    System.out.println("✅ Đã tạo " + recommendations.size() + " nhóm gợi ý");
+
+                    // Debug: In ra số lượng mỗi nhóm
+                    recommendations.forEach((key, value) ->
+                            System.out.println("   - " + key + ": " + value.size() + " sản phẩm")
+                    );
+
+                } else {
+                    // User chưa login → Gợi ý phổ biến
+                    System.out.println("🔥 Tạo gợi ý phổ biến (chưa login)");
+                    List<Comic> popularComics = comicDAO.getPopularComics(24);
+
+                    if (!popularComics.isEmpty()) {
+                        // Chia thành 3 nhóm
+                        int size = popularComics.size();
+                        if (size >= 8) {
+                            recommendations.put("Phổ biến nhất",
+                                    new ArrayList<>(popularComics.subList(0, Math.min(8, size))));
+                        }
+                        if (size >= 16) {
+                            recommendations.put("Bán chạy",
+                                    new ArrayList<>(popularComics.subList(8, Math.min(16, size))));
+                        }
+                        if (size >= 24) {
+                            recommendations.put("Mới cập nhật",
+                                    new ArrayList<>(popularComics.subList(16, Math.min(24, size))));
+                        }
+                    }
+                    System.out.println("✅ Đã tạo " + recommendations.size() + " nhóm gợi ý phổ biến");
+                }
+            } catch (Exception e) {
+                System.err.println("❌ Lỗi khi tạo gợi ý: " + e.getMessage());
+                e.printStackTrace();
+                // Nếu lỗi, để recommendations trống, không ảnh hưởng trang chính
+            }
+
+            // Set attributes cho view
             request.setAttribute("selectedCategory", selectedCategory);
             request.setAttribute("comicList", comicList);
             request.setAttribute("listCategories", listCategories);
@@ -98,15 +157,21 @@ public class UserCategoryServlet extends HttpServlet {
             request.setAttribute("selectedPublishers", publishers);
             request.setAttribute("selectedYears", years);
 
+            // ========== GỬI DỮ LIỆU GỢI Ý ==========
+            request.setAttribute("recommendations", recommendations);
+            request.setAttribute("isPersonalized", userId != null);
+
             request.getRequestDispatcher("/fontend/public/CatagoryPage.jsp").forward(request, response);
 
+        } catch (NumberFormatException e) {
+            System.err.println("✗ Invalid category ID format: " + request.getParameter("id"));
+            response.sendRedirect(request.getContextPath() + "/home");
         } catch (Exception e) {
             System.err.println("✗ ERROR in UserCategoryServlet:");
             e.printStackTrace();
             throw new ServletException("Error processing category request", e);
         }
     }
-
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
