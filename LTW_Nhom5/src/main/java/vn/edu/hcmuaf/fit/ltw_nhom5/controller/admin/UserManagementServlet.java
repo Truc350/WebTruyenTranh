@@ -24,36 +24,24 @@ public class UserManagementServlet extends HttpServlet {
             String search = request.getParameter("search");
             String levelFilter = request.getParameter("level");
 
-            // DEBUG
-            System.out.println("=== REQUEST PARAMS ===");
-            System.out.println("search: " + search);
-            System.out.println("levelFilter: " + levelFilter);
-            System.out.println("======================");
-
             List<User> users;
 
             // Xử lý tìm kiếm và lọc
             if (search != null && !search.trim().isEmpty() && levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Tìm kiếm và lọc kết hợp
-                System.out.println("Using searchAndFilterCustomers");
                 users = userDao.searchAndFilterCustomers(search, levelFilter);
             } else if (search != null && !search.trim().isEmpty()) {
                 // Chỉ tìm kiếm
-                System.out.println("Using searchCustomers");
                 users = userDao.searchCustomers(search);
             } else if (levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Chỉ lọc theo level
-                System.out.println("Using filterCustomersByMembershipLevel");
                 users = userDao.filterCustomersByMembershipLevel(levelFilter);
             } else {
                 // Lấy tất cả
-                System.out.println("Using getAllCustomers");
                 users = userDao.getAllCustomers();
             }
 
-            // DEBUG: Log để kiểm tra
-            System.out.println("=== DEBUG USER MANAGEMENT ===");
-            System.out.println("Total users found: " + (users != null ? users.size() : "null"));
+
             if (users != null && !users.isEmpty()) {
                 System.out.println("First user: " + users.get(0));
             }
@@ -104,6 +92,35 @@ public class UserManagementServlet extends HttpServlet {
                     response.getWriter().write("{\"status\":\"error\",\"message\":\"Khóa tài khoản thất bại\"}");
                 }
 
+            } else if ("syncSpent".equals(action)) {
+                // Đồng bộ total_spent từ orders
+                String syncType = request.getParameter("syncType");
+
+                if ("all".equals(syncType)) {
+                    // Đồng bộ cho tất cả users
+                    int updated = userDao.syncAllUsersTotalSpent();
+                    response.getWriter().write(
+                            "{\"status\":\"success\",\"message\":\"Đã cập nhật " + updated + " users\",\"count\":" + updated + "}"
+                    );
+                } else if ("one".equals(syncType)) {
+                    // Đồng bộ cho 1 user
+                    int userId = Integer.parseInt(request.getParameter("userId"));
+                    boolean success = userDao.syncTotalSpentFromOrders(userId);
+
+                    if (success) {
+                        response.getWriter().write(
+                                "{\"status\":\"success\",\"message\":\"Đã cập nhật tổng chi tiêu\"}"
+                        );
+                    } else {
+                        response.getWriter().write(
+                                "{\"status\":\"error\",\"message\":\"Không thể cập nhật\"}"
+                        );
+                    }
+                } else {
+                    response.getWriter().write(
+                            "{\"status\":\"error\",\"message\":\"syncType không hợp lệ\"}"
+                    );
+                }
             } else {
                 response.getWriter().write("{\"status\":\"error\",\"message\":\"Action không hợp lệ\"}");
             }

@@ -441,32 +441,6 @@
     });
 </script>
 
-<%--<script>--%>
-<%--    // Xem chi tiết--%>
-<%--    document.querySelectorAll('.view-detail').forEach(item => {--%>
-<%--        item.addEventListener('click', e => {--%>
-<%--            e.preventDefault();--%>
-<%--            document.getElementById('detailName').textContent = item.dataset.name;--%>
-<%--            document.getElementById('detailEmail').textContent = item.dataset.email;--%>
-<%--            document.getElementById('detailLevel').textContent = item.dataset.level;--%>
-<%--            document.getElementById('detailSpent').textContent = item.dataset.spent;--%>
-<%--            document.getElementById('detailPoints').textContent = item.dataset.points;--%>
-<%--            document.getElementById('detailPopup').style.display = 'flex';--%>
-<%--        });--%>
-<%--    });--%>
-
-<%--    // Nâng cấp--%>
-<%--    document.querySelectorAll('.upgrade-user').forEach(item => {--%>
-<%--        item.addEventListener('click', e => {--%>
-<%--            e.preventDefault();--%>
-<%--            selectedRow = item.closest('tr');--%>
-<%--            document.getElementById("popupUserName").innerText = "Tên: " + item.dataset.name;--%>
-<%--            document.getElementById("upgradePopup").style.display = "flex";--%>
-<%--        });--%>
-<%--    });--%>
-
-<%--</script>--%>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
@@ -480,6 +454,31 @@
             }
         });
     });
+</script>
+
+<script>
+    // ✅ TỰ ĐỘNG CẬP NHẬT DỮ LIỆU SAU MỖI 30 GIÂY
+    (function autoRefreshUserData() {
+        setInterval(function() {
+            // Lưu trạng thái tìm kiếm hiện tại
+            const currentSearch = document.getElementById('searchInput').value;
+            const currentLevel = document.getElementById('levelFilter').value;
+
+            // Reload trang với params hiện tại
+            let url = '${pageContext.request.contextPath}/admin/user-management';
+            let params = [];
+
+            if (currentSearch) params.push('search=' + encodeURIComponent(currentSearch));
+            if (currentLevel) params.push('level=' + encodeURIComponent(currentLevel));
+
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            // Reload silent (không thông báo)
+            window.location.href = url;
+        }, 5000); // 30 giây = 30,000 ms
+    })();
 </script>
 
 </body>

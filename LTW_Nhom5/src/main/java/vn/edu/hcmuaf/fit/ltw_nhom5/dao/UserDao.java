@@ -276,9 +276,6 @@ public class UserDao {
      */
     public List<User> filterCustomersByMembershipLevel(String membershipLevel) {
         return jdbi.withHandle(handle -> {
-            System.out.println("=== FILTER BY LEVEL ===");
-            System.out.println("Level filter: " + membershipLevel);
-
             List<User> users = handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 " +
                             "AND membership_level = :level ORDER BY created_at DESC")
                     .bind("level", membershipLevel)
@@ -433,6 +430,49 @@ public class UserDao {
                                 "ORDER BY deleted_at DESC")
                         .mapToBean(User.class)
                         .list()
+        );
+    }
+
+    /**
+     * Đồng bộ total_spent từ orders đã completed
+     * @param userId ID của user
+     * @return true nếu thành công
+     */
+    public boolean syncTotalSpentFromOrders(int userId) {
+        return jdbi.withHandle(handle -> {
+            int updated = handle.createUpdate(
+                            "UPDATE users u " +
+                                    "SET u.total_spent = (" +
+                                    "    SELECT COALESCE(SUM(o.total_amount), 0) " +
+                                    "    FROM orders o " +
+                                    "    WHERE o.user_id = u.id AND o.status = 'Completed'" +
+                                    "), " +
+                                    "u.updated_at = NOW() " +
+                                    "WHERE u.id = :userId"
+                    )
+                    .bind("userId", userId)
+                    .execute();
+            return updated > 0;
+        });
+    }
+
+    /**
+     * Đồng bộ total_spent cho TẤT CẢ users
+     * @return Số lượng user được cập nhật
+     */
+    public int syncAllUsersTotalSpent() {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(
+                                "UPDATE users u " +
+                                        "SET u.total_spent = (" +
+                                        "    SELECT COALESCE(SUM(o.total_amount), 0) " +
+                                        "    FROM orders o " +
+                                        "    WHERE o.user_id = u.id AND o.status = 'Completed'" +
+                                        "), " +
+                                        "u.updated_at = NOW() " +
+                                        "WHERE u.role = 'user'"
+                        )
+                        .execute()
         );
     }
 
