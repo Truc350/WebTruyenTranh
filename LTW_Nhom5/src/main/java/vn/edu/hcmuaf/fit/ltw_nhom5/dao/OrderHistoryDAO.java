@@ -156,5 +156,25 @@ public class OrderHistoryDAO {
         }
     }
 
+    public static int countUserCancelledOrdersLastHour(int userId) {
+        return JdbiConnector.get().withHandle(handle ->
+                handle.createQuery(
+                                """
+                                SELECT COUNT(*)
+                                FROM order_history oh
+                                JOIN orders o ON oh.order_id = o.id
+                                WHERE o.user_id = :userId
+                                  AND oh.status_to = 'Cancelled'
+                                  AND oh.changed_by = :userId
+                                  AND oh.changed_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                                """
+                        )
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+
 
 }

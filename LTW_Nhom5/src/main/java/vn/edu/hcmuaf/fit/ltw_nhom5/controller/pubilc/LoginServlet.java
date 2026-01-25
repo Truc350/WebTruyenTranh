@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Cart;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.OrderViolationService;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.PasswordUtils;
 
 import java.io.IOException;
@@ -41,6 +42,10 @@ public class LoginServlet extends HttpServlet {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
 
+                // 1️⃣ RESET SỐ LẦN ĐĂNG NHẬP THẤT BẠI VỀ 0
+                OrderViolationService.getInstance().resetLoginFailureCount(user.getId());
+                System.out.println("✅ [Login] Đăng nhập thành công - User: " + user.getUsername());
+
                 // ===== BƯỚC 1: LẤY SESSION CŨ VÀ IN DEBUG =====
                 HttpSession oldSession = request.getSession(false);
                 if (oldSession != null) {
@@ -71,7 +76,6 @@ public class LoginServlet extends HttpServlet {
 
                 if (isAdmin) {
                     newSession.setAttribute("currentUser", user);
-
                     newSession.setAttribute("userId", user.getId());
                     newSession.setAttribute("isAdmin", true);
 
@@ -113,10 +117,25 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/home");
                 }
             } else {
+                // ========================================
+                // ❌ SAI MẬT KHẨU
+                // ========================================
+
+                // 1️⃣ TĂNG SỐ LẦN ĐĂNG NHẬP THẤT BẠI
+                OrderViolationService.getInstance().incrementLoginFailureCount(usernameOrEmail);
+                System.out.println("❌ [Login] Sai mật khẩu - User: " + usernameOrEmail);
+
+                // 2️⃣ KIỂM TRA VI PHẠM (nếu >= 5 lần sẽ thông báo admin)
+                OrderViolationService.getInstance().checkLoginFailureViolation(usernameOrEmail);
+
                 request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
                 request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
             }
         } else {
+            // ========================================
+            // ❌ KHÔNG TÌM THẤY USER
+            // ========================================
+            System.out.println("❌ [Login] Không tìm thấy user: " + usernameOrEmail);
             request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
         }

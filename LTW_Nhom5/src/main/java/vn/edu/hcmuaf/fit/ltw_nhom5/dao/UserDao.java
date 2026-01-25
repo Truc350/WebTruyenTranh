@@ -4,8 +4,6 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +11,18 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserDao {
+    private static UserDao instance;
     private final Jdbi jdbi;
 
     public UserDao(Jdbi jdbi) {
         this.jdbi = jdbi;
+    }
+
+    public static UserDao getInstance() {
+        if (instance == null) {
+            instance = new UserDao(JdbiConnector.get());
+        }
+        return instance;
     }
 
     // Tìm user theo username hoặc email
@@ -40,7 +46,7 @@ public class UserDao {
         );
     }
 
-//   2 cái này cho đăng kí nó trùng username hay mail nó khỏi error 500
+    //   2 cái này cho đăng kí nó trùng username hay mail nó khỏi error 500
     public Optional<User> findByUsername(String username) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM Users WHERE username = :username")
@@ -71,38 +77,38 @@ public class UserDao {
     }
 
 
-
     //cái này để chỉnh sủa thoogn tin user ở profile
 
-        // Cập nhật thông tin user
-        public boolean updateUser(User user) {
-            return jdbi.withHandle(handle ->
-                    handle.createUpdate("UPDATE users SET full_name = :fullName, phone = :phone, email = :email, gender = :gender, birthdate = :birthdate, address = :address, updated_at = :updatedAt WHERE id = :id")
-                            .bind("fullName", user.getFullName())
-                            .bind("phone", user.getPhone())
-                            .bind("email", user.getEmail())
-                            .bind("gender", user.getGender())
-                            .bind("birthdate", user.getBirthdate())
-                            .bind("address", user.getAddress())
-                            .bind("updatedAt", LocalDateTime.now())
-                            .bind("id", user.getId())
-                            .execute() > 0
-            );
-        }
+    // Cập nhật thông tin user
+    public boolean updateUser(User user) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate("UPDATE users SET full_name = :fullName, phone = :phone, email = :email, gender = :gender, birthdate = :birthdate, address = :address, updated_at = :updatedAt WHERE id = :id")
+                        .bind("fullName", user.getFullName())
+                        .bind("phone", user.getPhone())
+                        .bind("email", user.getEmail())
+                        .bind("gender", user.getGender())
+                        .bind("birthdate", user.getBirthdate())
+                        .bind("address", user.getAddress())
+                        .bind("updatedAt", LocalDateTime.now())
+                        .bind("id", user.getId())
+                        .execute() > 0
+        );
+    }
 
-        // Lấy user theo ID
-        public User getUserById(int id) {
-            return jdbi.withHandle(handle ->
-                    handle.createQuery("SELECT * FROM users WHERE id = :id")
-                            .bind("id", id)
-                            .mapToBean(User.class)
-                            .findOne()
-                            .orElse(null)
-            );
-        }
+    // Lấy user theo ID
+    public User getUserById(int id) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM users WHERE id = :id")
+                        .bind("id", id)
+                        .mapToBean(User.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
 
     /**
      * Cap nhat diem thuong cua user
+     *
      * @param userId
      * @param newPoints
      */
@@ -119,7 +125,8 @@ public class UserDao {
 
     /**
      * Thêm điểm cho user (tích lũy)
-     * @param userId ID của user
+     *
+     * @param userId      ID của user
      * @param pointsToAdd Số điểm cần thêm
      * @return true nếu thành công
      */
@@ -136,7 +143,8 @@ public class UserDao {
 
     /**
      * Trừ điểm của user
-     * @param userId ID của user
+     *
+     * @param userId           ID của user
      * @param pointsToSubtract Số điểm cần trừ
      * @return true nếu thành công
      */
@@ -153,6 +161,7 @@ public class UserDao {
 
     /**
      * Lấy số điểm hiện tại của user
+     *
      * @param userId ID của user
      * @return Số điểm của user
      */
@@ -165,7 +174,7 @@ public class UserDao {
                         .orElse(0)
         );
     }
-    // Trong UserDao.java
+
     public boolean updatePassword(int userId, String newPasswordHash) {
         return JdbiConnector.get().withHandle(handle ->
                 handle.createUpdate("UPDATE users SET password_hash = :hash, updated_at = NOW() WHERE id = :id")
@@ -186,6 +195,7 @@ public class UserDao {
 
     /**
      * Lấy tất cả users (chỉ customer, không lấy admin)
+     *
      * @return Danh sách user
      */
     public List<User> getAllCustomers() {
@@ -199,6 +209,7 @@ public class UserDao {
 
     /**
      * Đếm tổng số customer
+     *
      * @return Tổng số customer
      */
     public int countAllCustomers() {
@@ -211,6 +222,7 @@ public class UserDao {
 
     /**
      * Tìm kiếm user theo tên hoặc email
+     *
      * @param keyword từ khóa tìm kiếm
      * @return Danh sách user tìm được
      */
@@ -273,6 +285,7 @@ public class UserDao {
 
     /**
      * Lọc user theo cấp độ thành viên
+     *
      * @param membershipLevel cấp độ (Normal, Silver, Gold, Platinum)
      * @return Danh sách user theo cấp độ
      */
@@ -291,7 +304,8 @@ public class UserDao {
 
     /**
      * Tìm kiếm và lọc kết hợp
-     * @param keyword từ khóa tìm kiếm
+     *
+     * @param keyword         từ khóa tìm kiếm
      * @param membershipLevel cấp độ thành viên
      * @return Danh sách user
      */
@@ -327,7 +341,8 @@ public class UserDao {
 
     /**
      * Nâng cấp membership level của user
-     * @param userId ID của user
+     *
+     * @param userId   ID của user
      * @param newLevel cấp độ mới (Normal, Silver, Gold, Platinum)
      * @return true nếu thành công
      */
@@ -342,6 +357,7 @@ public class UserDao {
 
     /**
      * Khóa tài khoản user (soft delete)
+     *
      * @param userId ID của user cần khóa
      * @return true nếu thành công
      */
@@ -356,6 +372,7 @@ public class UserDao {
 
     /**
      * Mở khóa tài khoản user
+     *
      * @param userId ID của user
      * @return true nếu thành công
      */
@@ -370,6 +387,7 @@ public class UserDao {
 
     /**
      * Lấy thống kê số lượng user theo membership level
+     *
      * @return Map với key là level, value là số lượng
      */
     public List<MembershipStats> getMembershipStatistics() {
@@ -382,6 +400,47 @@ public class UserDao {
                                 rs.getInt("count")
                         ))
                         .list()
+        );
+    }
+
+    /**
+     * Reset số lần đăng nhập thất bại về 0
+     */
+    public boolean resetFailedLoginAttempts(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(
+                                "UPDATE users SET failed_login_attempts = 0, " +
+                                        "updated_at = NOW() WHERE id = :id"
+                        )
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Tăng số lần đăng nhập thất bại
+     */
+    public boolean incrementFailedLoginAttempts(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(
+                                "UPDATE users SET failed_login_attempts = failed_login_attempts + 1, " +
+                                        "updated_at = NOW() WHERE id = :id"
+                        )
+                        .bind("id", userId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Lấy số lần đăng nhập thất bại hiện tại
+     */
+    public int getFailedLoginAttempts(int userId) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT failed_login_attempts FROM users WHERE id = :id")
+                        .bind("id", userId)
+                        .mapTo(Integer.class)
+                        .findOne()
+                        .orElse(0)
         );
     }
 
@@ -408,6 +467,7 @@ public class UserDao {
 
     /**
      * Cập nhật tổng chi tiêu của user
+     *
      * @param userId ID của user
      * @param amount số tiền cần cộng thêm
      * @return true nếu thành công
@@ -424,6 +484,7 @@ public class UserDao {
 
     /**
      * Lấy danh sách user đã bị khóa
+     *
      * @return Danh sách user bị khóa
      */
     public List<User> getLockedUsers() {
@@ -437,6 +498,7 @@ public class UserDao {
 
     /**
      * Đồng bộ total_spent từ orders đã completed
+     *
      * @param userId ID của user
      * @return true nếu thành công
      */
@@ -460,6 +522,7 @@ public class UserDao {
 
     /**
      * Đồng bộ total_spent cho TẤT CẢ users
+     *
      * @return Số lượng user được cập nhật
      */
     public int syncAllUsersTotalSpent() {
@@ -480,7 +543,8 @@ public class UserDao {
 
     /**
      * Kiểm tra xem user có đủ điều kiện để nâng cấp lên level mới không
-     * @param userId ID của user
+     *
+     * @param userId   ID của user
      * @param newLevel Cấp độ muốn nâng lên
      * @return Map chứa kết quả: {eligible: true/false, message: "...", currentSpent: 0.0, requiredSpent: 0.0}
      */

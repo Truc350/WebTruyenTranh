@@ -386,43 +386,30 @@ public class OrderDAO extends ADao {
 
                 // Tính xu được cộng (1% tổng đơn hàng, làm tròn xuống)
                 // Ví dụ: đơn 150,000đ = 1 xu, 250,000đ = 2 xu
-                int earnedPoints = 200;
+                int earnedPoints = (int) (order.getTotalAmount() / 100000);
 
-                // Cập nhật xu cho user
-                handle.createUpdate("UPDATE users SET points = points + ? WHERE id = ?")
-                        .bind(0, earnedPoints)
-                        .bind(1, order.getUserId())
-                        .execute();
+                if (earnedPoints > 0) {
+                    // Cập nhật xu cho user
+                    handle.createUpdate("UPDATE users SET points = points + ? WHERE id = ?")
+                            .bind(0, earnedPoints)
+                            .bind(1, order.getUserId())
+                            .execute();
 
-                // Ghi log giao dịch xu
-                String insertTransactionSql = "INSERT INTO PointTransactions " +
-                        "(user_id, order_id, points, transaction_type, description, created_at) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)";
+                    // Ghi log giao dịch xu
+                    String insertTransactionSql = "INSERT INTO PointTransactions " +
+                            "(user_id, order_id, points, transaction_type, description, created_at) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)";
 
-                handle.createUpdate(insertTransactionSql)
-                        .bind(0, order.getUserId())
-                        .bind(1, orderId)
-                        .bind(2, earnedPoints)
-                        .bind(3, "EARN")
-                        .bind(4, "Nhận " + earnedPoints + " xu từ đơn hàng #" + orderId +
-                                " (Giá trị đơn: " + String.format("%,.0f", order.getTotalAmount()) + "đ)")
-                        .bind(5, LocalDateTime.now())
-                        .execute();
-
-                // THÊM: CẬP NHẬT TOTAL_SPENT
-                handle.createUpdate(
-                                "UPDATE users u " +
-                                        "SET u.total_spent = (" +
-                                        "    SELECT COALESCE(SUM(o.total_amount), 0) " +
-                                        "    FROM orders o " +
-                                        "    WHERE o.user_id = u.id AND o.status = 'Completed'" +
-                                        "), " +
-                                        "u.updated_at = NOW() " +
-                                        "WHERE u.id = ?"
-                        )
-                        .bind(0, order.getUserId())
-                        .execute();
-
+                    handle.createUpdate(insertTransactionSql)
+                            .bind(0, order.getUserId())
+                            .bind(1, orderId)
+                            .bind(2, earnedPoints)
+                            .bind(3, "EARN")
+                            .bind(4, "Nhận " + earnedPoints + " xu từ đơn hàng #" + orderId +
+                                    " (Giá trị đơn: " + String.format("%,.0f", order.getTotalAmount()) + "đ)")
+                            .bind(5, LocalDateTime.now())
+                            .execute();
+                }
             }
 
             // 4. Nếu hủy đơn hàng, hoàn xu (nếu đã sử dụng xu)
@@ -466,20 +453,6 @@ public class OrderDAO extends ADao {
                             .bind(1, item.getComicId())
                             .execute();
                 }
-
-                // THÊM: CẬP NHẬT TOTAL_SPENT
-                handle.createUpdate(
-                                "UPDATE users u " +
-                                        "SET u.total_spent = (" +
-                                        "    SELECT COALESCE(SUM(o.total_amount), 0) " +
-                                        "    FROM orders o " +
-                                        "    WHERE o.user_id = u.id AND o.status = 'Completed'" +
-                                        "), " +
-                                        "u.updated_at = NOW() " +
-                                        "WHERE u.id = ?"
-                        )
-                        .bind(0, order.getUserId())
-                        .execute();
             }
 
             return true;
@@ -592,41 +565,41 @@ public class OrderDAO extends ADao {
 
         // ✅ DÙNG POSITIONAL PARAMETERS (?)
         String sqlById = """
-                    SELECT 
-                        o.id, o.user_id, o.order_date, o.total_amount,
-                        o.recipient_name, o.shipping_phone, o.shipping_address,
-                        o.shipping_provider, o.shipping_fee, o.points_used, o.status,
-                        p.payment_method, p.payment_status, p.transaction_id
-                    FROM orders o
-                    LEFT JOIN payments p ON o.id = p.order_id
-                    WHERE o.status = ? AND o.id = ?
-                    ORDER BY o.order_date DESC
-                """;
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ? AND o.id = ?
+                ORDER BY o.order_date DESC
+            """;
 
         String sqlByName = """
-                    SELECT 
-                        o.id, o.user_id, o.order_date, o.total_amount,
-                        o.recipient_name, o.shipping_phone, o.shipping_address,
-                        o.shipping_provider, o.shipping_fee, o.points_used, o.status,
-                        p.payment_method, p.payment_status, p.transaction_id
-                    FROM orders o
-                    LEFT JOIN payments p ON o.id = p.order_id
-                    WHERE o.status = ? 
-                      AND LOWER(o.recipient_name) LIKE LOWER(?)
-                    ORDER BY o.order_date DESC
-                """;
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ? 
+                  AND LOWER(o.recipient_name) LIKE LOWER(?)
+                ORDER BY o.order_date DESC
+            """;
 
         String sqlAll = """
-                    SELECT 
-                        o.id, o.user_id, o.order_date, o.total_amount,
-                        o.recipient_name, o.shipping_phone, o.shipping_address,
-                        o.shipping_provider, o.shipping_fee, o.points_used, o.status,
-                        p.payment_method, p.payment_status, p.transaction_id
-                    FROM orders o
-                    LEFT JOIN payments p ON o.id = p.order_id
-                    WHERE o.status = ?
-                    ORDER BY o.order_date DESC
-                """;
+                SELECT 
+                    o.id, o.user_id, o.order_date, o.total_amount,
+                    o.recipient_name, o.shipping_phone, o.shipping_address,
+                    o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                    p.payment_method, p.payment_status, p.transaction_id
+                FROM orders o
+                LEFT JOIN payments p ON o.id = p.order_id
+                WHERE o.status = ?
+                ORDER BY o.order_date DESC
+            """;
 
         String finalStatus = status;
         return jdbi.withHandle(handle -> {
@@ -651,7 +624,6 @@ public class OrderDAO extends ADao {
             }
         });
     }
-
     /**
      * Tìm kiếm đơn hàng bị hủy (lấy thêm thông tin từ order_history)
      *
@@ -773,9 +745,9 @@ public class OrderDAO extends ADao {
 
             // 3. Lưu vào order_history
             String insertHistorySql = """
-                        INSERT INTO order_history (order_id, status_from, status_to, changed_by, reason, changed_at)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                    """;
+            INSERT INTO order_history (order_id, status_from, status_to, changed_by, reason, changed_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """;
 
             handle.createUpdate(insertHistorySql)
                     .bind(0, orderId)
@@ -794,10 +766,10 @@ public class OrderDAO extends ADao {
                         .execute();
 
                 String insertTransactionSql = """
-                            INSERT INTO PointTransactions 
-                            (user_id, order_id, points, transaction_type, description, created_at) 
-                            VALUES (?, ?, ?, ?, ?, ?)
-                        """;
+                INSERT INTO PointTransactions 
+                (user_id, order_id, points, transaction_type, description, created_at) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            """;
 
                 handle.createUpdate(insertTransactionSql)
                         .bind(0, order.getUserId())
@@ -826,67 +798,6 @@ public class OrderDAO extends ADao {
 
             return true;
         });
-    }
-
-    /**
-     * Tính tổng chi tiêu của user từ các đơn hàng đã hoàn thành
-     *
-     * @param userId ID của user
-     * @return Tổng số tiền đã chi tiêu
-     */
-    public double getTotalSpentByUserId(int userId) {
-        return jdbi.withHandle(handle -> {
-            Double total = handle.createQuery(
-                            "SELECT COALESCE(SUM(total_amount), 0) " +
-                                    "FROM orders " +
-                                    "WHERE user_id = :userId AND status = 'Completed'"
-                    )
-                    .bind("userId", userId)
-                    .mapTo(Double.class)
-                    .one();
-
-            return total != null ? total : 0.0;
-        });
-    }
-
-    /**
-     * Cập nhật total_spent cho user dựa trên đơn hàng đã hoàn thành
-     *
-     * @param userId ID của user
-     * @return true nếu thành công
-     */
-    public boolean updateUserTotalSpent(int userId) {
-        double totalSpent = getTotalSpentByUserId(userId);
-
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(
-                                "UPDATE users SET total_spent = :totalSpent, updated_at = NOW() WHERE id = :userId"
-                        )
-                        .bind("totalSpent", totalSpent)
-                        .bind("userId", userId)
-                        .execute() > 0
-        );
-    }
-
-    /**
-     * Cập nhật total_spent cho TẤT CẢ users
-     *
-     * @return Số lượng user được cập nhật
-     */
-    public int updateAllUsersTotalSpent() {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(
-                                "UPDATE users u " +
-                                        "SET u.total_spent = (" +
-                                        "    SELECT COALESCE(SUM(o.total_amount), 0) " +
-                                        "    FROM orders o " +
-                                        "    WHERE o.user_id = u.id AND o.status = 'Completed'" +
-                                        "), " +
-                                        "u.updated_at = NOW() " +
-                                        "WHERE u.role = 'user'"
-                        )
-                        .execute()
-        );
     }
 
 
