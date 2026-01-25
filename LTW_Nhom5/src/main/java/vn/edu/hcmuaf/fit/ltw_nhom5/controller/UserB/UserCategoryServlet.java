@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
@@ -40,6 +41,10 @@ public class UserCategoryServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+
+        // Cập nhật Flash Sale statuses
+        FlashSaleDAO flashSaleDAO = new FlashSaleDAO();
+        flashSaleDAO.updateStatuses();
 
         // ========== LẤY USER ID TỪ SESSION ==========
         Integer userId = null;
@@ -85,14 +90,15 @@ public class UserCategoryServlet extends HttpServlet {
             List<String> publishers = publisherFilters != null ? Arrays.asList(publisherFilters) : new ArrayList<>();
             List<String> years = yearFilters != null ? Arrays.asList(yearFilters) : new ArrayList<>();
 
-            // Lấy danh sách comics với filter
+            // Lấy danh sách comics với filter VÀ FLASH SALE
             List<Comic> comicList;
             if (priceRanges.isEmpty() && authors.isEmpty() && publishers.isEmpty() && years.isEmpty()) {
                 // Không có filter, lấy tất cả
-                comicList = comicDAO.getComicsByCategory1(categoryId);
+                comicList = comicDAO.getComicsByCategory1WithFlashSale(categoryId);
             } else {
                 // Có filter
-                comicList = comicDAO.getComicsByCategoryWithFilters(categoryId, priceRanges, authors, publishers, years);
+                comicList = comicDAO.getComicsByCategoryWithFiltersAndFlashSale(
+                        categoryId, priceRanges, authors, publishers, years);
             }
 
             // Lấy danh sách tác giả và nhà xuất bản cho category này
@@ -102,25 +108,20 @@ public class UserCategoryServlet extends HttpServlet {
             // Lấy danh sách categories cho header
             List<Category> listCategories = categoriesDao.listCategories();
 
-            // ========== GỢI Ý THÔNG MINH ==========
+            // ========== GỢI Ý THÔNG MINH VỚI FLASH SALE ==========
             Map<String, List<Comic>> recommendations = new LinkedHashMap<>();
 
             try {
                 if (userId != null) {
                     // User đã login → Gợi ý cá nhân hóa
                     System.out.println("🎯 Tạo gợi ý cá nhân hóa cho user ID: " + userId);
-                    recommendations = recommendationService.getCategorizedRecommendations(userId);
+                    recommendations = recommendationService.getCategorizedRecommendationsWithFlashSale(userId);
                     System.out.println("✅ Đã tạo " + recommendations.size() + " nhóm gợi ý");
-
-                    // Debug: In ra số lượng mỗi nhóm
-                    recommendations.forEach((key, value) ->
-                            System.out.println("   - " + key + ": " + value.size() + " sản phẩm")
-                    );
 
                 } else {
                     // User chưa login → Gợi ý phổ biến
                     System.out.println("🔥 Tạo gợi ý phổ biến (chưa login)");
-                    List<Comic> popularComics = comicDAO.getPopularComics(24);
+                    List<Comic> popularComics = comicDAO.getPopularComicsWithFlashSale(24);
 
                     if (!popularComics.isEmpty()) {
                         // Chia thành 3 nhóm
@@ -143,7 +144,6 @@ public class UserCategoryServlet extends HttpServlet {
             } catch (Exception e) {
                 System.err.println("❌ Lỗi khi tạo gợi ý: " + e.getMessage());
                 e.printStackTrace();
-                // Nếu lỗi, để recommendations trống, không ảnh hưởng trang chính
             }
 
             // Set attributes cho view
@@ -156,8 +156,6 @@ public class UserCategoryServlet extends HttpServlet {
             request.setAttribute("selectedAuthors", authors);
             request.setAttribute("selectedPublishers", publishers);
             request.setAttribute("selectedYears", years);
-
-            // ========== GỬI DỮ LIỆU GỢI Ý ==========
             request.setAttribute("recommendations", recommendations);
             request.setAttribute("isPersonalized", userId != null);
 
