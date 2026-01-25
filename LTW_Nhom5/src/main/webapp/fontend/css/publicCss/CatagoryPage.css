@@ -581,3 +581,94 @@ section[aria-label] article img {
   transition: transform 0.4s ease-in-out;
   will-change: transform;
 }
+/* Flash Sale Badge trong lưới sản phẩm */
+.flash-sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: bold;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+  animation: flashPulse 2s infinite;
+}
+
+.flash-sale-badge i {
+  margin-right: 3px;
+}
+
+/* Flash Sale Badge nhỏ trong slider */
+.flash-sale-badge-small {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(255, 59, 48, 0.4);
+}
+
+@keyframes flashPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Giá Flash Sale */
+.product-price.flash {
+  color: #ff3b30 !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+.original-price-small {
+  font-size: 13px;
+  color: #999;
+  margin: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+
+.original-price-slider {
+  font-size: 12px;
+  color: #999;
+  margin: 3px 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.discount-badge-small {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.discount-badge-small.flash {
+  animation: flashPulse 2s infinite;
+}
+
+.discount-tag-slider {
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+}

@@ -185,7 +185,14 @@
                         <c:forEach var="comic" items="${comicList}">
                             <article>
                                 <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
-                                    <div>
+                                    <div style="position: relative;">
+                                        <!-- Badge Flash Sale -->
+                                        <c:if test="${comic.hasFlashSale}">
+                                            <div class="flash-sale-badge">
+                                                <i class="fas fa-bolt"></i> FLASH SALE
+                                            </div>
+                                        </c:if>
+
                                         <img src="${comic.thumbnailUrl}"
                                              alt="${comic.nameComics}"
                                              onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
@@ -195,15 +202,37 @@
                                                     Tập ${comic.volume}
                                                 </c:if>
                                             </p>
-                                            <p class="product-price">
-                                                <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
-                                            </p>
-                                            <c:if test="${comic.stockQuantity > 0}">
-                                                <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
-                                            </c:if>
-                                            <c:if test="${comic.stockQuantity == 0}">
-                                                <p class="sold out-of-stock">Hết hàng</p>
-                                            </c:if>
+
+                                            <!-- Giá -->
+                                            <c:choose>
+                                                <c:when test="${comic.hasFlashSale}">
+                                                    <!-- Có Flash Sale -->
+                                                    <p class="product-price flash">
+                                                        <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/>₫
+                                                    </p>
+                                                    <p class="original-price-small">
+                                                        <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫</s>
+                                                        <span class="discount-badge-small flash">
+                                                -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
+                                            </span>
+                                                    </p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <!-- Giá thường -->
+                                                    <p class="product-price">
+                                                        <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                                                    </p>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <c:choose>
+                                                <c:when test="${comic.stockQuantity > 0}">
+                                                    <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p class="sold out-of-stock">Hết hàng</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </a>
@@ -239,29 +268,7 @@
                 <c:if test="${not empty entry.value}">
                     <div class="recommendation-section">
                         <h3 class="recommendation-title">
-                            <c:choose>
-                                <c:when test="${entry.key == 'Tập tiếp theo'}">
-                                    <i class="fas fa-book-open"></i> ${entry.key}
-                                </c:when>
-                                <c:when test="${entry.key == 'Cùng thể loại'}">
-                                    <i class="fas fa-layer-group"></i> ${entry.key}
-                                </c:when>
-                                <c:when test="${entry.key == 'Phổ biến'}">
-                                    <i class="fas fa-fire"></i> ${entry.key}
-                                </c:when>
-                                <c:when test="${entry.key == 'Phổ biến nhất'}">
-                                    <i class="fas fa-crown"></i> ${entry.key}
-                                </c:when>
-                                <c:when test="${entry.key == 'Bán chạy'}">
-                                    <i class="fas fa-chart-line"></i> ${entry.key}
-                                </c:when>
-                                <c:when test="${entry.key == 'Mới cập nhật'}">
-                                    <i class="fas fa-clock"></i> ${entry.key}
-                                </c:when>
-                                <c:otherwise>
-                                    <i class="fas fa-bookmark"></i> ${entry.key}
-                                </c:otherwise>
-                            </c:choose>
+                            <!-- Icons như cũ -->
                         </h3>
 
                         <div class="product-slider">
@@ -271,24 +278,54 @@
                                     <c:forEach var="comic" items="${entry.value}">
                                         <div class="product-item">
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
-                                                <img src="${comic.thumbnailUrl}"
-                                                     alt="${comic.nameComics}"
-                                                     onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
+                                                <div style="position: relative;">
+                                                    <!-- Badge Flash Sale -->
+                                                    <c:if test="${comic.hasFlashSale}">
+                                                        <div class="flash-sale-badge-small">
+                                                            <i class="fas fa-bolt"></i>
+                                                        </div>
+                                                    </c:if>
+
+                                                    <img src="${comic.thumbnailUrl}"
+                                                         alt="${comic.nameComics}"
+                                                         onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
+                                                </div>
+
                                                 <p class="product-name">
                                                         ${comic.nameComics}
                                                     <c:if test="${comic.volume != null}">
                                                         Tập ${comic.volume}
                                                     </c:if>
                                                 </p>
-                                                <p class="product-price">
-                                                    <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
-                                                </p>
-                                                <c:if test="${comic.stockQuantity > 0}">
-                                                    <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
-                                                </c:if>
-                                                <c:if test="${comic.stockQuantity == 0}">
-                                                    <p class="sold out-of-stock">Hết hàng</p>
-                                                </c:if>
+
+                                                <!-- Giá -->
+                                                <c:choose>
+                                                    <c:when test="${comic.hasFlashSale}">
+                                                        <p class="product-price flash">
+                                                            <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/>₫
+                                                        </p>
+                                                        <p class="original-price-slider">
+                                                            <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫</s>
+                                                            <span class="discount-tag-slider">
+                                                    -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
+                                                </span>
+                                                        </p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <p class="product-price">
+                                                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                                                        </p>
+                                                    </c:otherwise>
+                                                </c:choose>
+
+                                                <c:choose>
+                                                    <c:when test="${comic.stockQuantity > 0}">
+                                                        <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <p class="sold out-of-stock">Hết hàng</p>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </a>
                                         </div>
                                     </c:forEach>

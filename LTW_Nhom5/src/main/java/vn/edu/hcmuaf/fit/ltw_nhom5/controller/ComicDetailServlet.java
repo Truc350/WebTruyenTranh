@@ -32,7 +32,8 @@ public class ComicDetailServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -47,7 +48,7 @@ public class ComicDetailServlet extends HttpServlet {
 
             int comicId = Integer.parseInt(idParam);
 
-            // Lấy thông tin chi tiết truyện
+            // ========== LẤY THÔNG TIN CHI TIẾT TRUYỆN (ĐÃ CÓ FLASH SALE) ==========
             Comic comic = comicService.getComicById(comicId);
 
             if (comic == null) {
@@ -58,7 +59,7 @@ public class ComicDetailServlet extends HttpServlet {
             // Lấy danh sách ảnh của truyện
             var images = comicService.getComicImages(comicId);
 
-            // Lấy danh sách truyện tương tự (cùng thể loại hoặc tác giả)
+            // Lấy danh sách truyện tương tự (ĐÃ CÓ FLASH SALE)
             var relatedComics = comicService.getRelatedComics(comicId);
 
             // Lấy đánh giá của truyện
@@ -71,18 +72,15 @@ public class ComicDetailServlet extends HttpServlet {
             String seriesName = null;
             if (comic.getSeriesId() != null && comic.getSeriesId() > 0) {
                 try {
-                    // Cách 1: Sử dụng ComicService nếu có method
                     seriesName = comicService.getSeriesName(comic.getSeriesId());
                 } catch (Exception e) {
                     System.out.println("⚠️ ComicService.getSeriesName() failed: " + e.getMessage());
 
-                    // Cách 2: Fallback - Sử dụng SeriesDAO trực tiếp
                     try {
                         Optional<Series> seriesOpt = seriesDAO.getSeriesById(comic.getSeriesId());
                         if (seriesOpt.isPresent()) {
                             seriesName = seriesOpt.get().getSeriesName();
                             System.out.println("✅ Series name from SeriesDAO: " + seriesName);
-                        } else {
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -92,65 +90,30 @@ public class ComicDetailServlet extends HttpServlet {
                 if (seriesName == null && comic.getSeriesName() != null) {
                     seriesName = comic.getSeriesName();
                 }
-            } else {
-                System.out.println("⚠️ Comic has no series_id or series_id <= 0");
             }
 
-
-
-            // Lấy DS gợi ý truyện
-            // Lấy user từ session
+            // ========== GỢI Ý TRUYỆN (ĐÃ TÍCH HỢP FLASH SALE) ==========
             User currentUser = (User) request.getSession().getAttribute("currentUser");
             Integer userId = (currentUser != null) ? currentUser.getId() : null;
 
-            // Lấy danh sách gợi ý
-            List<Comic> suggestedComics = new ArrayList<>();
-            String suggestionType;
+            // Lấy danh sách gợi ý với Flash Sale
+            List<Comic> suggestedComics = recommendationService.getDetailPageSuggestions(
+                    userId,
+                    comicId,
+                    24
+            );
 
-            if (userId == null) {
-                // Chưa đăng nhập → Gợi ý phổ biến
-                List<Comic> temp = recommendationService.getRecommendations(null, 24);
-                if (temp != null) {
-                    suggestedComics = temp;
-                }
+            // Xác định loại gợi ý
+            String suggestionType = recommendationService.getSuggestionType(userId, comicId);
 
-                suggestionType = "popular";
-
-
-            } else {
-                // Đã đăng nhập
-                int wishlistCount = wishlistDAO.getWishlistCount(userId);
-
-                if (wishlistCount > 0) {
-                    // Có wishlist → Gợi ý cá nhân hóa
-                    List<Comic> temp = recommendationService.getRecommendations(userId, 24);
-
-                    if (temp != null) {
-                        suggestedComics = temp;
-                    }
-                    suggestionType = "personalized";
-                } else {
-                    // Chưa có wishlist → Gợi ý cùng thể loại
-                    List<Comic> temp = recommendationService.getSimilarComics(comic.getId(), 24);
-
-                    if (temp != null) {
-                        suggestedComics = temp;
-                    }
-
-                    suggestionType = "similar";
-                }
-            }
+            // Fallback nếu không có gợi ý
             if (suggestedComics.isEmpty()) {
-                List<Comic> fallback = recommendationService.getRecommendations(null, 24);
-                if (fallback != null) {
-                    suggestedComics = fallback;
-                    suggestionType = "popular";
-                }
+                suggestedComics = recommendationService.getRecommendations(null, 24);
+                suggestionType = "popular";
             }
 
-
+            // ========== SET ATTRIBUTES ==========
             request.setAttribute("seriesName", seriesName);
-            // Set attributes
             request.setAttribute("comic", comic);
             request.setAttribute("images", images);
             request.setAttribute("relatedComics", relatedComics);

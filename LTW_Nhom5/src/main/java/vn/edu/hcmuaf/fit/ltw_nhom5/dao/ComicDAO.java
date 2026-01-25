@@ -24,20 +24,21 @@ public class ComicDAO extends ADao {
     }
 
     public List<Comic> searchCandidate(String keyword) {
-
         System.out.println("=== DEBUG searchCandidate ===");
         System.out.println("Input keyword: " + keyword);
         String normalized = TextUtils.normalize(keyword.toLowerCase());
         String number = keyword.replaceAll("\\D+", "");
 
         String sql = """
-                    SELECT DISTINCT c.*
-                    FROM Comics c
-                    WHERE c.is_deleted = 0 AND c.is_hidden = 0
-                      AND c.status = 'available'
-                    ORDER BY c.name_comics
-                    LIMIT 500
-                """;
+        SELECT DISTINCT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.is_deleted = 0 AND c.is_hidden = 0
+          AND c.status = 'available'
+        ORDER BY c.name_comics
+        LIMIT 500
+    """;
 
         List<Comic> allComics = new ArrayList<>(
                 jdbi.withHandle(h ->
@@ -49,7 +50,7 @@ public class ComicDAO extends ADao {
 
         System.out.println("✅ Total comics from DB: " + allComics.size());
 
-        // ===== TÁCH TỪ =====
+        // Phần filter giữ nguyên như cũ
         String[] words = normalized.split("\\s+");
         List<String> meaningfulWords = new ArrayList<>();
         for (String word : words) {
@@ -60,7 +61,6 @@ public class ComicDAO extends ADao {
 
         int volumeNum = number.isEmpty() ? -1 : Integer.parseInt(number);
 
-        // ===== FILTER THỦ CÔNG (KHÔNG STREAM) =====
         List<Comic> result = new ArrayList<>();
 
         for (Comic c : allComics) {
@@ -101,8 +101,6 @@ public class ComicDAO extends ADao {
         }
 
         System.out.println("✅ After filter: " + result.size());
-        System.out.println("===========================\n");
-
         return result;
     }
 
@@ -342,18 +340,19 @@ public class ComicDAO extends ADao {
 
     // Tìm các tập khác trong cùng series
     public List<Comic> findBySeriesId(int seriesId, int excludeId) {
-
         String sql = """
-                    SELECT *
-                    FROM Comics
-                    WHERE series_id = :sid
-                      AND id != :id
-                      AND is_deleted = 0
-                      AND status = 'available' AND is_hidden = 0
-                    ORDER BY 
-                        CASE WHEN volume IS NOT NULL THEN volume ELSE 999999 END,
-                        name_comics
-                """;
+        SELECT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.series_id = :sid
+          AND c.id != :id
+          AND c.is_deleted = 0
+          AND c.status = 'available' AND c.is_hidden = 0
+        ORDER BY 
+            CASE WHEN c.volume IS NOT NULL THEN c.volume ELSE 999999 END,
+            c.name_comics
+    """;
 
         return new ArrayList<>(
                 jdbi.withHandle(h ->
@@ -464,18 +463,20 @@ public class ComicDAO extends ADao {
 
     public List<Comic> getTop5BestSellerThisWeek() {
         String sql = """
-                    SELECT c.*,
-                           SUM(oi.quantity) AS totalSold
-                    FROM Order_Items oi
-                    JOIN Orders o ON oi.order_id = o.id
-                    JOIN Comics c ON oi.comic_id = c.id
-                    WHERE c.is_deleted = 0
-                      AND c.status = 'available' AND c.is_hidden = 0
-                      AND YEARWEEK(o.order_date, 1) = YEARWEEK(CURDATE(), 1)
-                    GROUP BY c.id
-                    ORDER BY totalSold DESC
-                    LIMIT 5
-                """;
+        SELECT c.*,
+               SUM(oi.quantity) AS totalSold
+        """ + buildFlashSaleColumns() + """
+        FROM Order_Items oi
+        JOIN Orders o ON oi.order_id = o.id
+        JOIN Comics c ON oi.comic_id = c.id
+        """ + buildFlashSaleJoin() + """
+        WHERE c.is_deleted = 0
+          AND c.status = 'available' AND c.is_hidden = 0
+          AND YEARWEEK(o.order_date, 1) = YEARWEEK(CURDATE(), 1)
+        GROUP BY c.id
+        ORDER BY totalSold DESC
+        LIMIT 5
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -498,30 +499,30 @@ public class ComicDAO extends ADao {
         List<Comic> suggested = new ArrayList<>();
 
         if (userId != null) {
-            // -----------------------------
             // 1. Gợi ý tập tiếp theo của series trong wishlist
-            // -----------------------------
             String sqlNextVolume = """
-                    SELECT c.*
-                    FROM comics c
-                    WHERE c.series_id IN (
-                        SELECT DISTINCT c2.series_id
-                        FROM comics c2
-                        JOIN wishlist w ON c2.id = w.comic_id
-                        WHERE w.user_id = :userId
-                          AND c2.is_deleted = 0
-                    )
-                    AND c.volume = (
-                        SELECT MAX(c3.volume) + 1
-                        FROM comics c3
-                        JOIN wishlist w2 ON c3.id = w2.comic_id
-                        WHERE c3.series_id = c.series_id
-                          AND w2.user_id = :userId
-                          AND c3.is_deleted = 0
-                    )
-                    AND c.is_deleted = 0 AND c.is_hidden = 0
-                    LIMIT 8
-                    """;
+            SELECT c.*
+            """ + buildFlashSaleColumns() + """
+            FROM comics c
+            """ + buildFlashSaleJoin() + """
+            WHERE c.series_id IN (
+                SELECT DISTINCT c2.series_id
+                FROM comics c2
+                JOIN wishlist w ON c2.id = w.comic_id
+                WHERE w.user_id = :userId
+                  AND c2.is_deleted = 0
+            )
+            AND c.volume = (
+                SELECT MAX(c3.volume) + 1
+                FROM comics c3
+                JOIN wishlist w2 ON c3.id = w2.comic_id
+                WHERE c3.series_id = c.series_id
+                  AND w2.user_id = :userId
+                  AND c3.is_deleted = 0
+            )
+            AND c.is_deleted = 0 AND c.is_hidden = 0
+            LIMIT 8
+        """;
 
             List<Comic> nextVolumes = jdbi.withHandle(handle ->
                     handle.createQuery(sqlNextVolume)
@@ -532,31 +533,31 @@ public class ComicDAO extends ADao {
 
             suggested.addAll(nextVolumes);
 
-            // -----------------------------
             // 2. Bổ sung truyện cùng thể loại (không trùng wishlist)
-            // -----------------------------
             if (suggested.size() < 12) {
                 int need = 12 - suggested.size();
 
                 String sqlSameCategory = """
-                        SELECT c.*
-                        FROM comics c
-                        WHERE c.category_id IN (
-                            SELECT DISTINCT c2.category_id
-                            FROM comics c2
-                            JOIN wishlist w ON c2.id = w.comic_id
-                            WHERE w.user_id = :userId
-                              AND c2.is_deleted = 0
-                        )
-                        AND c.id NOT IN (
-                            SELECT comic_id 
-                            FROM wishlist 
-                            WHERE user_id = :userId
-                        )
-                        AND c.is_deleted = 0
-                        ORDER BY RAND()
-                        LIMIT :limit
-                        """;
+                SELECT c.*
+                """ + buildFlashSaleColumns() + """
+                FROM comics c
+                """ + buildFlashSaleJoin() + """
+                WHERE c.category_id IN (
+                    SELECT DISTINCT c2.category_id
+                    FROM comics c2
+                    JOIN wishlist w ON c2.id = w.comic_id
+                    WHERE w.user_id = :userId
+                      AND c2.is_deleted = 0
+                )
+                AND c.id NOT IN (
+                    SELECT comic_id 
+                    FROM wishlist 
+                    WHERE user_id = :userId
+                )
+                AND c.is_deleted = 0
+                ORDER BY RAND()
+                LIMIT :limit
+            """;
 
                 List<Comic> sameCategory = jdbi.withHandle(handle ->
                         handle.createQuery(sqlSameCategory)
@@ -570,17 +571,17 @@ public class ComicDAO extends ADao {
             }
         }
 
-        // -----------------------------
         // 3. Fallback: Chưa login hoặc Wishlist rỗng → lấy truyện mới nhất
-        // -----------------------------
         if (suggested.isEmpty()) {
             String sqlLatest = """
-                    SELECT *
-                    FROM comics
-                    WHERE is_deleted = 0
-                    ORDER BY created_at DESC
-                    LIMIT 12
-                    """;
+            SELECT c.*
+            """ + buildFlashSaleColumns() + """
+            FROM comics c
+            """ + buildFlashSaleJoin() + """
+            WHERE c.is_deleted = 0
+            ORDER BY c.created_at DESC
+            LIMIT 12
+        """;
 
             suggested = jdbi.withHandle(handle ->
                     handle.createQuery(sqlLatest)
@@ -596,7 +597,13 @@ public class ComicDAO extends ADao {
      * Lấy thông tin chi tiết truyện theo ID
      */
     public Comic getComicById(int id) {
-        String sql = "SELECT * FROM comics WHERE id = :id AND is_deleted = 0 AND is_hidden = 0";
+        String sql = """
+        SELECT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.id = :id AND c.is_deleted = 0 AND c.is_hidden = 0
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -610,14 +617,19 @@ public class ComicDAO extends ADao {
     /**
      * Lấy thông tin chi tiết một truyện theo ID
      */
+
     public Comic getComicById2(int comicId) {
-        String sql = "SELECT c.*, " +
-                "cat.name_categories AS categoryName, " +
-                "s.series_name AS seriesName " +
-                "FROM comics c " +
-                "LEFT JOIN categories cat ON c.category_id = cat.id " +
-                "LEFT JOIN series s ON c.series_id = s.id " +
-                "WHERE c.id = ? AND c.is_deleted = 0 AND c.is_hidden = 0";
+        String sql = """
+        SELECT c.*, 
+               cat.name_categories AS categoryName, 
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c 
+        LEFT JOIN categories cat ON c.category_id = cat.id 
+        LEFT JOIN series s ON c.series_id = s.id 
+        """ + buildFlashSaleJoin() + """
+        WHERE c.id = ? AND c.is_deleted = 0 AND c.is_hidden = 0
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -651,15 +663,14 @@ public class ComicDAO extends ADao {
      * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
      */
     public List<Comic> getRelatedComics(int comicId) {
-
         final int LIMIT = 9;
 
         Comic current = jdbi.withHandle(h ->
                 h.createQuery("""
-                                    SELECT id, series_id, volume, category_id
-                                    FROM Comics
-                                    WHERE id = :comicId and is_hidden = 0
-                                """)
+            SELECT id, series_id, volume, category_id
+            FROM Comics
+            WHERE id = :comicId and is_hidden = 0
+        """)
                         .bind("comicId", comicId)
                         .mapToBean(Comic.class)
                         .one()
@@ -667,20 +678,22 @@ public class ComicDAO extends ADao {
 
         List<Comic> result = new ArrayList<>();
 
-        // 1️⃣ Cùng series
+        // 1️⃣ Cùng series - THÊM FLASH SALE
         if (current.getSeriesId() != null && current.getVolume() != null) {
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                                        SELECT *
-                                        FROM Comics
-                                        WHERE series_id = :seriesId
-                                          AND volume > :volume
-                                          AND id != :comicId
-                                          AND is_deleted = 0
-                                          AND status = 'available' and is_hidden = 0
-                                        ORDER BY volume ASC
-                                        LIMIT 9
-                                    """)
+                SELECT c.*
+                """ + buildFlashSaleColumns() + """
+                FROM Comics c
+                """ + buildFlashSaleJoin() + """
+                WHERE c.series_id = :seriesId
+                  AND c.volume > :volume
+                  AND c.id != :comicId
+                  AND c.is_deleted = 0
+                  AND c.status = 'available' and c.is_hidden = 0
+                ORDER BY c.volume ASC
+                LIMIT 9
+            """)
                             .bind("seriesId", current.getSeriesId())
                             .bind("volume", current.getVolume())
                             .bind("comicId", comicId)
@@ -689,26 +702,28 @@ public class ComicDAO extends ADao {
             ));
         }
 
-        // 2️⃣ Build Excluded IDs (LUÔN CÓ ÍT NHẤT 1 PHẦN TỬ)
+        // 2️⃣ Build Excluded IDs
         List<Integer> excludedIds = new ArrayList<>();
-        excludedIds.add(comicId); // ← Luôn có ít nhất comicId
+        excludedIds.add(comicId);
         result.forEach(c -> excludedIds.add(c.getId()));
 
-        // 3️⃣ Cùng thể loại (CHECK SIZE TRƯỚC KHI QUERY)
+        // 3️⃣ Cùng thể loại - THÊM FLASH SALE
         if (result.size() < LIMIT) {
             int need = LIMIT - result.size();
 
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                                        SELECT *
-                                        FROM Comics
-                                        WHERE category_id = :categoryId
-                                          AND id NOT IN (<excludedIds>)
-                                          AND is_deleted = 0
-                                          AND status = 'available' and is_hidden = 0
-                                        ORDER BY created_at DESC
-                                        LIMIT :limit
-                                    """)
+                SELECT c.*
+                """ + buildFlashSaleColumns() + """
+                FROM Comics c
+                """ + buildFlashSaleJoin() + """
+                WHERE c.category_id = :categoryId
+                  AND c.id NOT IN (<excludedIds>)
+                  AND c.is_deleted = 0
+                  AND c.status = 'available' and c.is_hidden = 0
+                ORDER BY c.created_at DESC
+                LIMIT :limit
+            """)
                             .bind("categoryId", current.getCategoryId())
                             .bind("limit", need)
                             .bindList("excludedIds", excludedIds)
@@ -717,25 +732,26 @@ public class ComicDAO extends ADao {
             ));
         }
 
-        // UPDATE excludedIds sau mỗi lần thêm
+        // 4️⃣ Random nếu vẫn chưa đủ
         List<Integer> finalExcludedIds = new ArrayList<>();
         finalExcludedIds.add(comicId);
         result.forEach(c -> finalExcludedIds.add(c.getId()));
 
-        // 4️⃣ Random (NẾU VẪN CHƯA ĐỦ)
         if (result.size() < LIMIT) {
             int need = LIMIT - result.size();
 
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
-                                        SELECT *
-                                        FROM Comics
-                                        WHERE id NOT IN (<excludedIds>)
-                                          AND is_deleted = 0
-                                          AND status = 'available'
-                                        ORDER BY RAND()
-                                        LIMIT :limit
-                                    """)
+                SELECT c.*
+                """ + buildFlashSaleColumns() + """
+                FROM Comics c
+                """ + buildFlashSaleJoin() + """
+                WHERE c.id NOT IN (<excludedIds>)
+                  AND c.is_deleted = 0
+                  AND c.status = 'available'
+                ORDER BY RAND()
+                LIMIT :limit
+            """)
                             .bind("limit", need)
                             .bindList("excludedIds", finalExcludedIds)
                             .mapToBean(Comic.class)
@@ -743,10 +759,7 @@ public class ComicDAO extends ADao {
             ));
         }
 
-        // 5️⃣ CẮT CỨNG 9
-        return result.size() > LIMIT
-                ? result.subList(0, LIMIT)
-                : result;
+        return result.size() > LIMIT ? result.subList(0, LIMIT) : result;
     }
 
     /**
@@ -798,75 +811,123 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getRecommendedComics(int userId, int limit) {
         String sql = """
-                WITH wishlist_series AS (
-                    SELECT DISTINCT 
-                        c.series_id,
-                        MAX(c.volume) as max_volume
-                    FROM Wishlist w
-                    JOIN Comics c ON w.comic_id = c.id
-                    WHERE w.user_id = :userId 
-                    AND c.is_deleted = 0
-                    AND c.series_id IS NOT NULL
-                    GROUP BY c.series_id
-                ),
-                wishlist_categories AS (
-                    SELECT DISTINCT c.category_id
-                    FROM Wishlist w
-                    JOIN Comics c ON w.comic_id = c.id
-                    WHERE w.user_id = :userId 
-                    AND c.is_deleted = 0
-                    AND c.category_id IS NOT NULL
-                ),
-                next_volumes AS (
-                    SELECT 
-                        c.*,
-                        COALESCE(SUM(oi.quantity), 0) as totalSold,
-                        1 as priority
-                    FROM Comics c
-                    INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
-                    LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-                    LEFT JOIN Orders o ON oi.order_id = o.id 
-                        AND o.status NOT IN ('cancelled', 'returned')
-                        AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                    WHERE c.volume = ws.max_volume + 1
-                    AND c.is_deleted = 0
-                    AND c.stock_quantity > 0
-                    AND NOT EXISTS (
-                        SELECT 1 FROM Wishlist w2 
-                        WHERE w2.user_id = :userId AND w2.comic_id = c.id
-                    )
-                    GROUP BY c.id
-                ),
-                same_category AS (
-                    SELECT 
-                        c.*,
-                        COALESCE(SUM(oi.quantity), 0) as totalSold,
-                        2 as priority
-                    FROM Comics c
-                    INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
-                    LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-                    LEFT JOIN Orders o ON oi.order_id = o.id 
-                        AND o.status NOT IN ('cancelled', 'returned')
-                        AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                    WHERE c.is_deleted = 0
-                    AND c.stock_quantity > 0
-                    AND NOT EXISTS (
-                        SELECT 1 FROM Wishlist w2 
-                        WHERE w2.user_id = :userId AND w2.comic_id = c.id
-                    )
-                    AND c.id NOT IN (SELECT id FROM next_volumes)
-                    GROUP BY c.id
-                    ORDER BY RAND()
-                    LIMIT :limit
-                )
-                SELECT * FROM (
-                    SELECT * FROM next_volumes
-                    UNION ALL
-                    SELECT * FROM same_category
-                ) as final_result
-                ORDER BY priority, RAND()
-                LIMIT :limit
-                """;
+        WITH wishlist_series AS (
+            SELECT DISTINCT 
+                c.series_id,
+                MAX(c.volume) as max_volume
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.series_id IS NOT NULL
+            GROUP BY c.series_id
+        ),
+        wishlist_categories AS (
+            SELECT DISTINCT c.category_id
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.category_id IS NOT NULL
+        ),
+        next_volumes AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                1 as priority,
+                flash_sale.flash_sale_id,
+                flash_sale.flash_sale_name,
+                flash_sale.flash_sale_discount,
+                CASE WHEN flash_sale.flash_sale_id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+                CASE 
+                    WHEN flash_sale.flash_sale_id IS NOT NULL 
+                    THEN ROUND(c.price * (1 - flash_sale.flash_sale_discount / 100), 0)
+                    ELSE NULL
+                END AS flash_sale_price
+            FROM Comics c
+            INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            LEFT JOIN (
+                SELECT 
+                    fsc.comic_id,
+                    fs.id AS flash_sale_id,
+                    fs.name AS flash_sale_name,
+                    fs.discount_percent AS flash_sale_discount,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY fsc.comic_id 
+                        ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                    ) AS rn
+                FROM flashsale_comics fsc
+                JOIN flashsale fs ON fsc.flashsale_id = fs.id
+                WHERE fs.status = 'active'
+                  AND NOW() BETWEEN fs.start_time AND fs.end_time
+            ) AS flash_sale ON c.id = flash_sale.comic_id AND flash_sale.rn = 1
+            WHERE c.volume = ws.max_volume + 1
+            AND c.is_deleted = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
+            )
+            GROUP BY c.id
+        ),
+        same_category AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                2 as priority,
+                flash_sale.flash_sale_id,
+                flash_sale.flash_sale_name,
+                flash_sale.flash_sale_discount,
+                CASE WHEN flash_sale.flash_sale_id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+                CASE 
+                    WHEN flash_sale.flash_sale_id IS NOT NULL 
+                    THEN ROUND(c.price * (1 - flash_sale.flash_sale_discount / 100), 0)
+                    ELSE NULL
+                END AS flash_sale_price
+            FROM Comics c
+            INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            LEFT JOIN (
+                SELECT 
+                    fsc.comic_id,
+                    fs.id AS flash_sale_id,
+                    fs.name AS flash_sale_name,
+                    fs.discount_percent AS flash_sale_discount,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY fsc.comic_id 
+                        ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                    ) AS rn
+                FROM flashsale_comics fsc
+                JOIN flashsale fs ON fsc.flashsale_id = fs.id
+                WHERE fs.status = 'active'
+                  AND NOW() BETWEEN fs.start_time AND fs.end_time
+            ) AS flash_sale ON c.id = flash_sale.comic_id AND flash_sale.rn = 1
+            WHERE c.is_deleted = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
+            )
+            AND c.id NOT IN (SELECT id FROM next_volumes)
+            GROUP BY c.id
+            ORDER BY RAND()
+            LIMIT :limit
+        )
+        SELECT * FROM (
+            SELECT * FROM next_volumes
+            UNION ALL
+            SELECT * FROM same_category
+        ) as final_result
+        ORDER BY priority, RAND()
+        LIMIT :limit
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -882,20 +943,22 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getPopularComics(int limit) {
         String sql = """
-                SELECT 
-                    c.*,
-                    COALESCE(SUM(oi.quantity), 0) as totalSold
-                FROM Comics c
-                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-                LEFT JOIN Orders o ON oi.order_id = o.id 
-                    AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-                    AND o.status NOT IN ('cancelled', 'returned')
-                WHERE c.is_deleted = 0
-                AND c.stock_quantity > 0
-                GROUP BY c.id
-                ORDER BY totalSold DESC, c.created_at DESC
-                LIMIT :limit
-                """;
+        SELECT 
+            c.*,
+            COALESCE(SUM(oi.quantity), 0) as totalSold
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+        LEFT JOIN Orders o ON oi.order_id = o.id 
+            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            AND o.status NOT IN ('cancelled', 'returned')
+        """ + buildFlashSaleJoin() + """
+        WHERE c.is_deleted = 0
+        AND c.stock_quantity > 0
+        GROUP BY c.id
+        ORDER BY totalSold DESC, c.created_at DESC
+        LIMIT :limit
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -910,13 +973,16 @@ public class ComicDAO extends ADao {
      */
     public Comic getNextVolume(int seriesId, int currentVolume) {
         String sql = """
-                SELECT * FROM Comics
-                WHERE series_id = :seriesId
-                AND volume = :nextVolume
-                AND is_deleted = 0
-                AND stock_quantity > 0
-                LIMIT 1
-                """;
+        SELECT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.series_id = :seriesId
+        AND c.volume = :nextVolume
+        AND c.is_deleted = 0
+        AND c.stock_quantity > 0
+        LIMIT 1
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -933,14 +999,17 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getComicsByCategory(int categoryId, int excludeComicId, int limit) {
         String sql = """
-                SELECT * FROM Comics
-                WHERE category_id = :categoryId
-                AND id != :excludeId
-                AND is_deleted = 0
-                AND stock_quantity > 0
-                ORDER BY RAND()
-                LIMIT :limit
-                """;
+        SELECT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.category_id = :categoryId
+        AND c.id != :excludeId
+        AND c.is_deleted = 0
+        AND c.stock_quantity > 0
+        ORDER BY RAND()
+        LIMIT :limit
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -957,18 +1026,20 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getTopSellingComics(int limit) {
         String sql = """
-                SELECT c.*, 
-                    COALESCE(SUM(oi.quantity), 0) as totalSold
-                FROM Comics c
-                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-                LEFT JOIN Orders o ON oi.order_id = o.id
-                    AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-                    AND o.status NOT IN ('cancelled', 'returned')
-                WHERE c.is_deleted = 0
-                GROUP BY c.id
-                ORDER BY totalSold DESC, c.created_at DESC
-                LIMIT :limit
-                """;
+        SELECT c.*, 
+            COALESCE(SUM(oi.quantity), 0) as totalSold
+        """ + buildFlashSaleColumns() + """
+        FROM Comics c
+        LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+        LEFT JOIN Orders o ON oi.order_id = o.id
+            AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            AND o.status NOT IN ('cancelled', 'returned')
+        """ + buildFlashSaleJoin() + """
+        WHERE c.is_deleted = 0
+        GROUP BY c.id
+        ORDER BY totalSold DESC, c.created_at DESC
+        LIMIT :limit
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -1187,15 +1258,19 @@ public class ComicDAO extends ADao {
     public List<Comic> getAllComicsAdmin(int page, int limit) {
         int offset = (page - 1) * limit;
 
-        String sql = "SELECT c.*, " +
-                "cat.name_categories AS categoryName, " +
-                "s.series_name AS seriesName " +
-                "FROM comics c " +
-                "LEFT JOIN categories cat ON c.category_id = cat.id " +
-                "LEFT JOIN series s ON c.series_id = s.id " +
-                "WHERE c.is_deleted = 0 " +
-                "ORDER BY c.created_at DESC " +
-                "LIMIT ? OFFSET ?";
+        String sql = """
+        SELECT c.*, 
+               cat.name_categories AS categoryName, 
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c 
+        LEFT JOIN categories cat ON c.category_id = cat.id 
+        LEFT JOIN series s ON c.series_id = s.id 
+        """ + buildFlashSaleJoin() + """
+        WHERE c.is_deleted = 0 
+        ORDER BY c.created_at DESC 
+        LIMIT ? OFFSET ?
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -1205,7 +1280,6 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
-
     /**
      * Đếm tổng số truyện
      */
@@ -1887,18 +1961,22 @@ public class ComicDAO extends ADao {
 
     public List<Comic> getComicsByCategory1(int categoryId) {
         String sql = """
-                    SELECT c.id, c.name_comics,c.author,c.publisher, c.description, c.price,c.stock_quantity,c.status, c.thumbnail_url, c.category_id, c.series_id, c.is_deleted, 
-                           cat.name_categories AS categoryName,
-                           s.series_name AS seriesName
-                    FROM comics c
-                    LEFT JOIN categories cat ON c.category_id = cat.id
-                    LEFT JOIN series s ON c.series_id = s.id
-                    WHERE c.category_id = :categoryId
-                      AND c.is_deleted = 0
-                      AND c.is_hidden = 0
-                      AND c.status = 'available'
-                    ORDER BY c.created_at DESC, c.name_comics ASC
-                """;
+        SELECT c.id, c.name_comics, c.author, c.publisher, c.description, 
+               c.price, c.stock_quantity, c.status, c.thumbnail_url, 
+               c.category_id, c.series_id, c.is_deleted, 
+               cat.name_categories AS categoryName,
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        LEFT JOIN series s ON c.series_id = s.id
+        """ + buildFlashSaleJoin() + """
+        WHERE c.category_id = :categoryId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND c.status = 'available'
+        ORDER BY c.created_at DESC, c.name_comics ASC
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -1907,7 +1985,6 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
-
     /**
      * Lấy danh sách comics theo category với các bộ lọc
      */
@@ -2076,15 +2153,19 @@ public class ComicDAO extends ADao {
     }
 
     public List<Comic> getComicsBySeriesId(int seriesId) {
+        String sql = """
+        SELECT c.*
+        """ + buildFlashSaleColumns() + """
+        FROM comics c
+        """ + buildFlashSaleJoin() + """
+        WHERE c.series_id = :seriesId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+        ORDER BY c.volume ASC
+    """;
+
         return jdbi.withHandle(handle ->
-                handle.createQuery("""
-                                    SELECT *
-                                    FROM comics
-                                    WHERE series_id = :seriesId
-                                      AND is_deleted = 0
-                                      AND is_hidden = 0
-                                    ORDER BY volume ASC
-                                """)
+                handle.createQuery(sql)
                         .bind("seriesId", seriesId)
                         .mapToBean(Comic.class)
                         .list()
@@ -2123,24 +2204,25 @@ public class ComicDAO extends ADao {
      * Lấy danh sách truyện theo tên tác giả
      */
     public List<Comic> getComicsByAuthor(String authorName) {
-
         String sql = """
-               SELECT c.*,
-                      s.series_name AS seriesName
-               FROM comics c
-               LEFT JOIN series s ON c.series_id = s.id
-               WHERE c.id IN (
-                   SELECT DISTINCT ca.comic_id
-                   FROM comic_authors ca
-                   JOIN authors a ON ca.author_id = a.id
-                   WHERE a.name LIKE :authorName
-                     AND a.is_deleted = 0
-               )
-               AND c.is_deleted = 0
-               AND (c.is_hidden IS NULL OR c.is_hidden = 0)
-               ORDER BY c.created_at DESC
-               LIMIT 50;
-            """;
+        SELECT c.*,
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c
+        LEFT JOIN series s ON c.series_id = s.id
+        """ + buildFlashSaleJoin() + """
+        WHERE c.id IN (
+            SELECT DISTINCT ca.comic_id
+            FROM comic_authors ca
+            JOIN authors a ON ca.author_id = a.id
+            WHERE a.name LIKE :authorName
+              AND a.is_deleted = 0
+        )
+        AND c.is_deleted = 0
+        AND (c.is_hidden IS NULL OR c.is_hidden = 0)
+        ORDER BY c.created_at DESC
+        LIMIT 50
+    """;
 
         try {
             return jdbi.withHandle(handle ->
@@ -2161,22 +2243,24 @@ public class ComicDAO extends ADao {
      */
     public List<Comic> getComicsByPublisher(String publisherName) {
         String sql = """
-                SELECT DISTINCT c.*,
-                       s.series_name AS seriesName
-                FROM comics c
-                LEFT JOIN series s ON c.series_id = s.id
-                WHERE c.id IN (
-                     SELECT DISTINCT cp.comic_id
-                     FROM comic_publishers cp
-                     JOIN publishers p ON cp.publisher_id = p.id
-                     WHERE p.name LIKE :publisherName
-                       AND p.is_deleted = 0
-                 )
-                AND c.is_deleted = 0
-                AND (c.is_hidden IS NULL OR c.is_hidden = 0)
-                ORDER BY c.created_at DESC
-                LIMIT 50;
-                """;
+        SELECT DISTINCT c.*,
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c
+        LEFT JOIN series s ON c.series_id = s.id
+        """ + buildFlashSaleJoin() + """
+        WHERE c.id IN (
+             SELECT DISTINCT cp.comic_id
+             FROM comic_publishers cp
+             JOIN publishers p ON cp.publisher_id = p.id
+             WHERE p.name LIKE :publisherName
+               AND p.is_deleted = 0
+         )
+        AND c.is_deleted = 0
+        AND (c.is_hidden IS NULL OR c.is_hidden = 0)
+        ORDER BY c.created_at DESC
+        LIMIT 50
+    """;
 
         try {
             return jdbi.withHandle(handle ->
@@ -2190,6 +2274,1222 @@ public class ComicDAO extends ADao {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * lay sanh sach comics với thông tin Flash Sale (nếu có)
+     */
+
+    public List<Comic> getComicsWithFlashSale(int limit, int offset) {
+        String sql = """
+                    SELECT 
+                        c.*,
+                        c.name_comics,
+                        c.thumbnail_url,
+                        c.price,
+                        c.stock_quantity,
+                
+                        -- Flash Sale Info (chỉ lấy Flash Sale có discount cao nhất)
+                        fs.id AS flash_sale_id,
+                        fs.name AS flash_sale_name,
+                        fs.discount_percent AS flash_sale_discount,
+                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+                
+                        -- Flag có Flash Sale không
+                        CASE 
+                            WHEN fs.id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS has_flash_sale,
+                
+                        -- Số lượng đã bán
+                        COALESCE(
+                            (SELECT SUM(oi.quantity) 
+                             FROM order_items oi
+                             JOIN orders o ON oi.order_id = o.id
+                             WHERE oi.comic_id = c.id 
+                               AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                            0
+                        ) AS totalSold
+                
+                    FROM comics c
+                
+                    -- LEFT JOIN để lấy Flash Sale (nếu có)
+                    LEFT JOIN (
+                        SELECT 
+                            fsc.comic_id,
+                            fs.id,
+                            fs.name,
+                            fs.discount_percent,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY fsc.comic_id 
+                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                            ) AS rn
+                        FROM flashsale_comics fsc
+                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
+                        WHERE fs.status = 'active'
+                          AND fs.start_time <= NOW()
+                          AND fs.end_time >= NOW()
+                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+                
+                    WHERE c.is_deleted = 0 
+                      AND c.is_hidden = 0
+                      AND c.stock_quantity > 0
+                
+                    ORDER BY c.created_at DESC
+                    LIMIT ? OFFSET ?
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, limit)
+                        .bind(1, offset)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Lấy chi tiết comic với thông tin Flash Sale
+     */
+    public Comic getComicByIdWithFlashSale(int id) {
+        String sql = """
+                    SELECT 
+                        c.*,
+                        cat.name_categories,
+                        s.series_name,
+                
+                        -- Flash Sale Info
+                        fs.id AS flash_sale_id,
+                        fs.name AS flash_sale_name,
+                        fs.discount_percent AS flash_sale_discount,
+                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+                
+                        -- Flag có Flash Sale không
+                        CASE 
+                            WHEN fs.id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS has_flash_sale
+                
+                    FROM comics c
+                    LEFT JOIN categories cat ON c.category_id = cat.id
+                    LEFT JOIN series s ON c.series_id = s.id
+                
+                    -- LEFT JOIN Flash Sale
+                    LEFT JOIN (
+                        SELECT 
+                            fsc.comic_id,
+                            fs.id,
+                            fs.name,
+                            fs.discount_percent,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY fsc.comic_id 
+                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                            ) AS rn
+                        FROM flashsale_comics fsc
+                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
+                        WHERE fs.status = 'active'
+                          AND fs.start_time <= NOW()
+                          AND fs.end_time >= NOW()
+                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+                
+                    WHERE c.id = ? 
+                      AND c.is_deleted = 0
+                """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, id)
+                        .mapToBean(Comic.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
+    /**
+     * Lấy popular comics với Flash Sale (đã có từ trước)
+     */
+    public List<Comic> getPopularComicsWithFlashSale(int limit) {
+        String sql = """
+        SELECT 
+            c.*,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND c.stock_quantity > 0
+        
+        ORDER BY totalSold DESC
+        LIMIT ?
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Search comics với Flash Sale
+     */
+    public List<Comic> searchComicsWithFlashSale(String keyword, int limit, int offset) {
+        String sql = """
+                    SELECT 
+                        c.*,
+                        cat.name_categories,
+                
+                        -- Flash Sale Info
+                        fs.id AS flash_sale_id,
+                        fs.name AS flash_sale_name,
+                        fs.discount_percent AS flash_sale_discount,
+                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+                
+                        CASE 
+                            WHEN fs.id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS has_flash_sale
+                
+                    FROM comics c
+                    LEFT JOIN categories cat ON c.category_id = cat.id
+                
+                    LEFT JOIN (
+                        SELECT 
+                            fsc.comic_id,
+                            fs.id,
+                            fs.name,
+                            fs.discount_percent,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY fsc.comic_id 
+                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                            ) AS rn
+                        FROM flashsale_comics fsc
+                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
+                        WHERE fs.status = 'active'
+                          AND fs.start_time <= NOW()
+                          AND fs.end_time >= NOW()
+                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+                
+                    WHERE c.is_deleted = 0 
+                      AND c.is_hidden = 0
+                      AND (
+                          c.name_comics LIKE ? 
+                          OR c.author LIKE ? 
+                          OR cat.name_categories LIKE ?
+                      )
+                
+                    ORDER BY c.name_comics
+                    LIMIT ? OFFSET ?
+                """;
+
+        String searchPattern = "%" + keyword + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .bind(1, searchPattern)
+                        .bind(2, searchPattern)
+                        .bind(3, limit)
+                        .bind(4, offset)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+    /**
+     * JOIN với Flash Sale active
+     * Chỉ lấy Flash Sale đang active (trong khung giờ start_time -> end_time)
+     */
+    private String buildFlashSaleJoin() {
+        return """
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id AS flash_sale_id,
+                fs.name AS flash_sale_name,
+                fs.discount_percent AS flash_sale_discount,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND NOW() BETWEEN fs.start_time AND fs.end_time
+        ) AS flash_sale ON c.id = flash_sale.comic_id AND flash_sale.rn = 1
+    """;
+    }
+
+    /**
+     * SELECT columns cho Flash Sale
+     * Map các column này vào các field trong Comic model
+     */
+    private String buildFlashSaleColumns() {
+        return """
+        ,
+        flash_sale.flash_sale_id,
+        flash_sale.flash_sale_name,
+        flash_sale.flash_sale_discount,
+        CASE WHEN flash_sale.flash_sale_id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+        CASE 
+            WHEN flash_sale.flash_sale_id IS NOT NULL 
+            THEN ROUND(c.price * (1 - flash_sale.flash_sale_discount / 100), 0)
+            ELSE NULL
+        END AS flash_sale_price
+    """;
+    }
+
+    /**
+     * Gợi ý comics dựa trên wishlist của user (ĐÃ TÍCH HỢP FLASH SALE)
+     * Ưu tiên:
+     * 1. Tập tiếp theo của series đang có trong wishlist
+     * 2. Comics cùng thể loại với wishlist
+     * 3. Comics phổ biến (fallback nếu wishlist trống)
+     */
+    public List<Comic> getRecommendedComicsWithFlashSale(int userId, int limit) {
+        String sql = """
+        WITH wishlist_series AS (
+            SELECT DISTINCT 
+                c.series_id,
+                MAX(c.volume) as max_volume
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.series_id IS NOT NULL
+            GROUP BY c.series_id
+        ),
+        wishlist_categories AS (
+            SELECT DISTINCT c.category_id
+            FROM Wishlist w
+            JOIN Comics c ON w.comic_id = c.id
+            WHERE w.user_id = :userId 
+            AND c.is_deleted = 0
+            AND c.category_id IS NOT NULL
+        ),
+        next_volumes AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                1 as priority
+            """ + buildFlashSaleColumns() + """
+            FROM Comics c
+            INNER JOIN wishlist_series ws ON c.series_id = ws.series_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            """ + buildFlashSaleJoin() + """
+            WHERE c.volume = ws.max_volume + 1
+            AND c.is_deleted = 0
+            AND c.is_hidden = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
+            )
+            GROUP BY c.id
+        ),
+        same_category AS (
+            SELECT 
+                c.*,
+                COALESCE(SUM(oi.quantity), 0) as totalSold,
+                2 as priority
+            """ + buildFlashSaleColumns() + """
+            FROM Comics c
+            INNER JOIN wishlist_categories wc ON c.category_id = wc.category_id
+            LEFT JOIN Order_Items oi ON c.id = oi.comic_id
+            LEFT JOIN Orders o ON oi.order_id = o.id 
+                AND o.status NOT IN ('cancelled', 'returned')
+                AND o.order_date >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            """ + buildFlashSaleJoin() + """
+            WHERE c.is_deleted = 0
+            AND c.is_hidden = 0
+            AND c.stock_quantity > 0
+            AND NOT EXISTS (
+                SELECT 1 FROM Wishlist w2 
+                WHERE w2.user_id = :userId AND w2.comic_id = c.id
+            )
+            AND c.id NOT IN (SELECT id FROM next_volumes)
+            GROUP BY c.id
+            ORDER BY RAND()
+            LIMIT :limit
+        )
+        SELECT * FROM (
+            SELECT * FROM next_volumes
+            UNION ALL
+            SELECT * FROM same_category
+        ) as final_result
+        ORDER BY priority, RAND()
+        LIMIT :limit
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("userId", userId)
+                        .bind("limit", limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+
+    /**
+     * Lấy comics theo category với Flash Sale
+     */
+    public List<Comic> getComicsByCategoryWithFlashSale(int categoryId, int excludeId, int limit) {
+        String sql = """
+        SELECT 
+            c.*,
+            cat.name_categories,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.category_id = ?
+          AND c.id != ?
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND c.stock_quantity > 0
+        
+        ORDER BY totalSold DESC, c.created_at DESC
+        LIMIT ?
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, categoryId)
+                        .bind(1, excludeId)
+                        .bind(2, limit)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+
+    /**
+     * Lấy danh sách gợi ý truyện cá nhân hóa (ĐÃ TÍCH HỢP FLASH SALE)
+     */
+    public List<Comic> getSuggestedComicsWithFlashSale(Integer userId) {
+        List<Comic> suggested = new ArrayList<>();
+
+        if (userId != null) {
+            // 1. Gợi ý tập tiếp theo của series trong wishlist
+            String sqlNextVolume = """
+            SELECT c.*
+            """ + buildFlashSaleColumns() + """
+            FROM comics c
+            """ + buildFlashSaleJoin() + """
+            WHERE c.series_id IN (
+                SELECT DISTINCT c2.series_id
+                FROM comics c2
+                JOIN wishlist w ON c2.id = w.comic_id
+                WHERE w.user_id = :userId
+                  AND c2.is_deleted = 0
+            )
+            AND c.volume = (
+                SELECT MAX(c3.volume) + 1
+                FROM comics c3
+                JOIN wishlist w2 ON c3.id = w2.comic_id
+                WHERE c3.series_id = c.series_id
+                  AND w2.user_id = :userId
+                  AND c3.is_deleted = 0
+            )
+            AND c.is_deleted = 0 
+            AND c.is_hidden = 0
+            AND c.stock_quantity > 0
+            LIMIT 8
+        """;
+
+            List<Comic> nextVolumes = jdbi.withHandle(handle ->
+                    handle.createQuery(sqlNextVolume)
+                            .bind("userId", userId)
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+
+            suggested.addAll(nextVolumes);
+
+            // 2. Bổ sung truyện cùng thể loại
+            if (suggested.size() < 12) {
+                int need = 12 - suggested.size();
+
+                String sqlSameCategory = """
+                SELECT c.*
+                """ + buildFlashSaleColumns() + """
+                FROM comics c
+                """ + buildFlashSaleJoin() + """
+                WHERE c.category_id IN (
+                    SELECT DISTINCT c2.category_id
+                    FROM comics c2
+                    JOIN wishlist w ON c2.id = w.comic_id
+                    WHERE w.user_id = :userId
+                      AND c2.is_deleted = 0
+                )
+                AND c.id NOT IN (
+                    SELECT comic_id 
+                    FROM wishlist 
+                    WHERE user_id = :userId
+                )
+                AND c.is_deleted = 0
+                AND c.is_hidden = 0
+                AND c.stock_quantity > 0
+                ORDER BY RAND()
+                LIMIT :limit
+            """;
+
+                List<Comic> sameCategory = jdbi.withHandle(handle ->
+                        handle.createQuery(sqlSameCategory)
+                                .bind("userId", userId)
+                                .bind("limit", need)
+                                .mapToBean(Comic.class)
+                                .list()
+                );
+
+                suggested.addAll(sameCategory);
+            }
+        }
+
+        // 3. Fallback: Truyện mới nhất
+        if (suggested.isEmpty()) {
+            String sqlLatest = """
+            SELECT c.*
+            """ + buildFlashSaleColumns() + """
+            FROM comics c
+            """ + buildFlashSaleJoin() + """
+            WHERE c.is_deleted = 0
+            AND c.is_hidden = 0
+            AND c.stock_quantity > 0
+            ORDER BY c.created_at DESC
+            LIMIT 12
+        """;
+
+            suggested = jdbi.withHandle(handle ->
+                    handle.createQuery(sqlLatest)
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+        }
+
+        return suggested;
+    }
+
+
+    /**
+     * Tìm kiếm tất cả với Flash Sale
+     */
+    public List<Comic> smartSearchAllWithFlashSale(String keyword) {
+        String sql = """
+        SELECT 
+            c.*,
+            cat.name_categories,
+            s.series_name,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE 
+                WHEN fs.id IS NOT NULL THEN 1 
+                ELSE 0 
+            END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        LEFT JOIN series s ON c.series_id = s.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND (
+              c.name_comics LIKE ? 
+              OR c.author LIKE ? 
+              OR c.publisher LIKE ?
+              OR cat.name_categories LIKE ?
+          )
+        
+        ORDER BY c.name_comics
+    """;
+
+        String searchPattern = "%" + keyword + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .bind(1, searchPattern)
+                        .bind(2, searchPattern)
+                        .bind(3, searchPattern)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+
+    /**
+     * Tìm theo tên với Flash Sale
+     */
+    public List<Comic> smartSearchWithFlashSale(String keyword) {
+        String sql = """
+        SELECT 
+            c.*,
+            
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND c.name_comics LIKE ?
+        
+        ORDER BY c.name_comics
+    """;
+
+        String searchPattern = "%" + keyword + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Tìm theo tác giả với Flash Sale
+     */
+    public List<Comic> findByAuthorWithFlashSale(String author) {
+        String sql = """
+        SELECT 
+            c.*,
+            
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND c.author LIKE ?
+        
+        ORDER BY c.name_comics
+    """;
+
+        String searchPattern = "%" + author + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+
+    /**
+     * Tìm theo nhà xuất bản với Flash Sale
+     */
+    public List<Comic> findByPublisherWithFlashSale(String publisher) {
+        String sql = """
+        SELECT 
+            c.*,
+            
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND c.publisher LIKE ?
+        
+        ORDER BY c.name_comics
+    """;
+
+        String searchPattern = "%" + publisher + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Tìm theo category với Flash Sale
+     */
+    public List<Comic> findByCategoryWithFlashSale(String categoryName) {
+        String sql = """
+        SELECT 
+            c.*,
+            cat.name_categories,
+            
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        JOIN categories cat ON c.category_id = cat.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.is_deleted = 0 
+          AND c.is_hidden = 0
+          AND cat.name_categories LIKE ?
+        
+        ORDER BY c.name_comics
+    """;
+
+        String searchPattern = "%" + categoryName + "%";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, searchPattern)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+    /**
+     * Tìm theo series với Flash Sale
+     */
+    public List<Comic> findBySeriesIdWithFlashSale(int seriesId, int excludeId) {
+        String sql = """
+        SELECT 
+            c.*,
+            
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.series_id = ?
+          AND c.id != ?
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+        
+        ORDER BY c.volume
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, seriesId)
+                        .bind(1, excludeId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+    /**
+     * Lấy comics theo category với Flash Sale
+     */
+    public List<Comic> getComicsByCategory1WithFlashSale(int categoryId) {
+        String sql = """
+        SELECT 
+            c.*,
+            cat.name_categories,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.category_id = ?
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+        
+        ORDER BY c.name_comics
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, categoryId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
+
+
+    /**
+     * Lấy comics theo category với filters và Flash Sale
+     */
+    public List<Comic> getComicsByCategoryWithFiltersAndFlashSale(
+            int categoryId,
+            List<String> priceRanges,
+            List<String> authors,
+            List<String> publishers,
+            List<String> years) {
+
+        StringBuilder sql = new StringBuilder("""
+        SELECT 
+            c.*,
+            cat.name_categories,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        LEFT JOIN categories cat ON c.category_id = cat.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.category_id = :categoryId
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+    """);
+
+        List<String> conditions = new ArrayList<>();
+
+        // Price filters
+        if (priceRanges != null && !priceRanges.isEmpty()) {
+            List<String> priceConditions = new ArrayList<>();
+            for (String range : priceRanges) {
+                switch (range) {
+                    case "0-15000":
+                        priceConditions.add("c.price BETWEEN 0 AND 15000");
+                        break;
+                    case "15000-30000":
+                        priceConditions.add("c.price BETWEEN 15000 AND 30000");
+                        break;
+                    case "30000-50000":
+                        priceConditions.add("c.price BETWEEN 30000 AND 50000");
+                        break;
+                    case "50000-70000":
+                        priceConditions.add("c.price BETWEEN 50000 AND 70000");
+                        break;
+                    case "70000-100000":
+                        priceConditions.add("c.price BETWEEN 70000 AND 100000");
+                        break;
+                    case "100000+":
+                        priceConditions.add("c.price > 100000");
+                        break;
+                }
+            }
+            if (!priceConditions.isEmpty()) {
+                conditions.add("(" + String.join(" OR ", priceConditions) + ")");
+            }
+        }
+
+        // Author filters
+        if (authors != null && !authors.isEmpty()) {
+            List<String> authorConditions = new ArrayList<>();
+            for (int i = 0; i < authors.size(); i++) {
+                authorConditions.add("c.author = :author" + i);
+            }
+            conditions.add("(" + String.join(" OR ", authorConditions) + ")");
+        }
+
+        // Publisher filters
+        if (publishers != null && !publishers.isEmpty()) {
+            List<String> publisherConditions = new ArrayList<>();
+            for (int i = 0; i < publishers.size(); i++) {
+                publisherConditions.add("c.publisher = :publisher" + i);
+            }
+            conditions.add("(" + String.join(" OR ", publisherConditions) + ")");
+        }
+
+        // Year filters
+        if (years != null && !years.isEmpty()) {
+            List<String> yearConditions = new ArrayList<>();
+            for (String year : years) {
+                if ("recent".equals(year)) {
+                    yearConditions.add("YEAR(c.created_at) = YEAR(CURDATE())");
+                } else if ("before2020".equals(year)) {
+                    yearConditions.add("YEAR(c.created_at) < 2020");
+                } else {
+                    yearConditions.add("YEAR(c.created_at) = " + year);
+                }
+            }
+            if (!yearConditions.isEmpty()) {
+                conditions.add("(" + String.join(" OR ", yearConditions) + ")");
+            }
+        }
+
+        if (!conditions.isEmpty()) {
+            sql.append(" AND ").append(String.join(" AND ", conditions));
+        }
+
+        sql.append(" ORDER BY c.name_comics");
+
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(sql.toString())
+                    .bind("categoryId", categoryId);
+
+            if (authors != null) {
+                for (int i = 0; i < authors.size(); i++) {
+                    query.bind("author" + i, authors.get(i));
+                }
+            }
+
+            if (publishers != null) {
+                for (int i = 0; i < publishers.size(); i++) {
+                    query.bind("publisher" + i, publishers.get(i));
+                }
+            }
+
+            return query.mapToBean(Comic.class).list();
+        });
+    }
+
+    /**
+     * Lấy tập tiếp theo với Flash Sale
+     */
+    public Comic getNextVolumeWithFlashSale(int seriesId, int currentVolume) {
+        String sql = """
+        SELECT 
+            c.*,
+            s.series_name,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale
+            
+        FROM comics c
+        LEFT JOIN series s ON c.series_id = s.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.series_id = ?
+          AND c.volume > ?
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+          AND c.stock_quantity > 0
+        
+        ORDER BY c.volume ASC
+        LIMIT 1
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, seriesId)
+                        .bind(1, currentVolume)
+                        .mapToBean(Comic.class)
+                        .findOne()
+                        .orElse(null)
+        );
     }
 
 }

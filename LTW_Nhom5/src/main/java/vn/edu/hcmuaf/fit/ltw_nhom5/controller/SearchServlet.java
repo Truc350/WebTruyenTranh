@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 
 import java.io.IOException;
@@ -17,11 +18,13 @@ import java.util.Set;
 public class SearchServlet extends HttpServlet {
 
     private ComicDAO comicDAO;
+    private FlashSaleDAO flashSaleDAO;
     private static final int ITEMS_PER_PAGE = 20;
 
     @Override
     public void init() {
         comicDAO = new ComicDAO();
+        flashSaleDAO = new FlashSaleDAO();
     }
 
     @Override
@@ -30,6 +33,9 @@ public class SearchServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        // Cập nhật trạng thái Flash Sale
+        flashSaleDAO.updateStatuses();
 
         String keyword = request.getParameter("keyword");
         String searchType = request.getParameter("type");
@@ -63,34 +69,33 @@ public class SearchServlet extends HttpServlet {
         // Kết quả tìm kiếm
         List<Comic> comics = new ArrayList<>();
 
-        // Tìm kiếm theo loại
+        // Tìm kiếm theo loại - SỬ DỤNG METHOD CÓ FLASH SALE
         switch (searchType != null ? searchType : "all") {
             case "author":
-                List<Comic> authorResult = comicDAO.findByAuthor(keyword);
+                List<Comic> authorResult = comicDAO.findByAuthorWithFlashSale(keyword);
                 if (authorResult != null) comics.addAll(authorResult);
                 break;
 
             case "publisher":
-                List<Comic> publisherResult = comicDAO.findByPublisher(keyword);
+                List<Comic> publisherResult = comicDAO.findByPublisherWithFlashSale(keyword);
                 if (publisherResult != null) comics.addAll(publisherResult);
                 break;
 
             case "category":
-                List<Comic> categoryResult = comicDAO.findByCategory(keyword);
+                List<Comic> categoryResult = comicDAO.findByCategoryWithFlashSale(keyword);
                 if (categoryResult != null) comics.addAll(categoryResult);
                 break;
 
             case "name":
-                List<Comic> nameResult = comicDAO.smartSearch(keyword);
+                List<Comic> nameResult = comicDAO.smartSearchWithFlashSale(keyword);
                 if (nameResult != null) comics.addAll(nameResult);
                 break;
 
             default: // "all" - tìm tất cả
-                List<Comic> allResults = comicDAO.smartSearchAll(keyword);
+                List<Comic> allResults = comicDAO.smartSearchAllWithFlashSale(keyword);
                 if (allResults != null) comics.addAll(allResults);
                 break;
         }
-
 
         // Thêm các tập cùng series (nếu có kết quả)
         if (!comics.isEmpty()) {
@@ -100,7 +105,7 @@ public class SearchServlet extends HttpServlet {
             Comic first = comics.get(0);
 
             if (first.getSeriesId() != null) {
-                List<Comic> sameSeries = comicDAO.findBySeriesId(
+                List<Comic> sameSeries = comicDAO.findBySeriesIdWithFlashSale(
                         first.getSeriesId(),
                         first.getId()
                 );
@@ -137,9 +142,9 @@ public class SearchServlet extends HttpServlet {
 
         request.setAttribute("keyword", keyword);
         request.setAttribute("searchType", searchType != null ? searchType : "all");
-        request.setAttribute("comics", comicsForPage); // Chỉ truyền truyện của trang hiện tại
-        request.setAttribute("resultCount", comicsForPage.size()); // Số truyện hiện tại
-        request.setAttribute("totalComics", totalComics); // Tổng số truyện tìm thấy
+        request.setAttribute("comics", comicsForPage);
+        request.setAttribute("resultCount", comicsForPage.size());
+        request.setAttribute("totalComics", totalComics);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
 
@@ -147,4 +152,3 @@ public class SearchServlet extends HttpServlet {
                 .forward(request, response);
     }
 }
-
