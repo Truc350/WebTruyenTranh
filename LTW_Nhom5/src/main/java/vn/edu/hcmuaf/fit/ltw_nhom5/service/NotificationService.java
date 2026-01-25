@@ -115,4 +115,37 @@ public class NotificationService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Thông báo cho admin khi user vi phạm rule
+     */
+    public void notifyAdminUserViolation(int violatorUserId, String violatorName, String ruleType, String detail) {
+        String title = "⚠️ User vi phạm quy định";
+        String message = String.format(
+                "User %s (ID: %d) vi phạm [%s]. %s",
+                violatorName, violatorUserId, ruleType, detail
+        );
+
+        Notification noti = new Notification();
+        noti.setUserId(1); // admin
+        noti.setTitle(title);
+        noti.setMessage(message);
+        noti.setType("USER_VIOLATION");
+        noti.setRelatedId(violatorUserId);
+        noti.setRelatedType("USER");
+
+        NotificationDAO.getInstance().insertForAdmin(noti);
+
+        // Push realtime
+        String token = FCMTokenDAO.getInstance().getToken(1);
+        if (token != null && !token.isEmpty()) {
+            sendFCMPush(
+                    token,
+                    title,
+                    message,
+                    BASE_URL + "/fontend/admin/userManagement.jsp?id=" + violatorUserId
+            );
+        }
+    }
+
 }
