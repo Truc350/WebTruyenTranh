@@ -69,14 +69,16 @@
                                 <div class="item-info">
                                     <div class="item-title">${item.comic.nameComics}</div>
                                     <div class="item-subtitle">${item.comic.nameComics}</div>
-                                    <div class="item-price"
-                                         data-price="${item.comic.discountPrice}">
-                                        <fmt:formatNumber value="${item.comic.discountPrice}" type="number"
-                                                          groupingUsed="true"/> đ
+                                    <div class="item-price" data-price="${item.comic.discountPrice}">
+                                        <fmt:formatNumber value="${item.comic.discountPrice}" type="number" groupingUsed="true"/> đ
+
+                                        <c:if test="${item.flashSaleId != null}">
+                                            <span class="flash-sale-badge">⚡ Flash Sale</span>
+                                        </c:if>
+
                                         <c:if test="${item.comic.discountPrice < item.comic.price}">
                                             <del>
-                                                <fmt:formatNumber value="${item.comic.price}" type="number"
-                                                                  groupingUsed="true"/> đ
+                                                <fmt:formatNumber value="${item.comic.price}" type="number" groupingUsed="true"/> đ
                                             </del>
                                         </c:if>
                                     </div>
@@ -382,6 +384,28 @@
             loginModal.style.display = "none";
         }
     });
+
+    <c:if test="${not empty cartItems}">
+    <c:set var="hasFlashSale" value="false" />
+    <c:forEach var="item" items="${cartItems}">
+    <c:if test="${item.flashSaleId != null}">
+    <c:set var="hasFlashSale" value="true" />
+    </c:if>
+    </c:forEach>
+
+    <c:if test="${hasFlashSale}">
+    // Có sản phẩm Flash Sale trong giỏ, tự động refresh mỗi 1 phút
+    console.log('⚡ Giỏ hàng có sản phẩm Flash Sale, sẽ tự động cập nhật giá');
+
+    setInterval(function() {
+        console.log(' Đang cập nhật giá Flash Sale...');
+        location.reload();
+    }, 60000); // Refresh mỗi 60 giây (1 phút)
+
+    // Hiển thị thông báo cho người dùng
+    console.log('💡 Giá sản phẩm Flash Sale sẽ được cập nhật tự động');
+    </c:if>
+    </c:if>
 </script>
 </body>
 </html>

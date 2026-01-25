@@ -7,18 +7,24 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Banner;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.FlashSale;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.FlashSaleService;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet({"/home"})
 public class HomeServlet extends HttpServlet {
     private ComicDAO comicDAO;
     private FlashSaleDAO flashSaleDAO;
+    private FlashSaleComicsDAO flashSaleComicsDAO;
+    private FlashSaleService flashSaleService;
     private ComicService comicService;
     private BannerDao bannerDao;
     private WishlistDAO wishlistDAO;
@@ -28,13 +34,10 @@ public class HomeServlet extends HttpServlet {
     public void init() throws ServletException {
         comicDAO = new ComicDAO();
         flashSaleDAO = new FlashSaleDAO();
+        flashSaleComicsDAO = new FlashSaleComicsDAO();
+        flashSaleService = new FlashSaleService();
         comicService = new ComicService(JdbiConnector.get());
         bannerDao = new BannerDao(JdbiConnector.get());
-//        Jdbi jdbi = Jdbi.create(
-//                "jdbc:mysql://localhost:3306/comic_shop?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
-//                "root",
-//                ""  // password rỗng
-//        );
         wishlistDAO = new WishlistDAO();
         recommendationService = new RecommendationService(comicDAO, wishlistDAO);
     }
@@ -42,13 +45,13 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
+        // Cập nhật trạng thái Flash Sale
+        flashSaleDAO.updateStatuses();
 
         HttpSession session = request.getSession(false);
         User currentUser = null;
         Integer userId = null;
         if (session != null) {
-            // Lấy từ "currentUser" (như LoginServlet đang lưu)
             currentUser = (User) session.getAttribute("currentUser");
 
             if (currentUser != null) {
@@ -63,49 +66,50 @@ public class HomeServlet extends HttpServlet {
             System.out.println("⚠️ No session found (Guest user)");
         }
 
-
         // Top 5 truyện bán chạy trong tuần
-        request.setAttribute(
-                "topComics",
-                comicDAO.getTop5BestSellerThisWeek()
-        );
+        request.setAttribute("topComics", comicDAO.getTop5BestSellerThisWeek());
 
-        // Flash sale đang diễn ra & sắp kết thúc
-        request.setAttribute(
-                "flashSale",
-                flashSaleDAO.getActiveFlashSaleEndingSoon()
-        );
+        // Flash Sale đang diễn ra & sắp kết thúc
+        // Flash Sale đang diễn ra & sắp kết thúc
+        FlashSale activeFlashSale = flashSaleDAO.getActiveFlashSaleEndingSoon();
 
-//        //gợi ý truyện theo wishlist + số tập
-//        HttpSession session = request.getSession();
-//        Integer userId = (Integer) session.getAttribute("userId");// null nnếu chưa login
-//        // Goij server để lấy gợi ý.,
-//        List<Comic> suggestedComics = comicService.getSuggestedComics(userId);
-//        // Đưa dữ liệu vào request
-//        request.setAttribute("suggestedComics", suggestedComics);
+        if (activeFlashSale != null) {
+            request.setAttribute("flashSale", activeFlashSale);
 
+            // Chuyển endTime sang milliseconds cho JavaScript countdown
+            long endTimeMillis = activeFlashSale.getEndTime()
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli();
+            request.setAttribute("flashSaleEndTimeMillis", endTimeMillis);
 
-        //chỗ này của banner
+            // DEBUG LOG
+            System.out.println("==================== FLASH SALE DEBUG ====================");
+            System.out.println("Flash Sale Name: " + activeFlashSale.getName());
+            System.out.println("Flash Sale Status: " + activeFlashSale.getStatus());
+            System.out.println("End Time: " + activeFlashSale.getEndTime());
+            System.out.println("End Time Millis: " + endTimeMillis);
+            System.out.println("Current Time Millis: " + System.currentTimeMillis());
+            System.out.println("=========================================================");
+
+            // Lấy 4 comics đầu tiên từ Flash Sale (độc quyền)
+            List<Map<String, Object>> flashSaleComics =
+                    flashSaleService.getExclusiveComicsForFlashSale(activeFlashSale.getId());
+
+            // Chỉ lấy 4 sản phẩm đầu
+            if (flashSaleComics.size() > 4) {
+                flashSaleComics = flashSaleComics.subList(0, 4);
+            }
+
+            request.setAttribute("flashSaleComics", flashSaleComics);
+
+            System.out.println("✅ Flash Sale Comics (first 4): " + flashSaleComics.size());
+        }
+
+        // Banner
         Timestamp now = new Timestamp(System.currentTimeMillis());
         List<Banner> banners = bannerDao.findActiveBanners(now);
-
-//        System.out.println(now);
-//            if (banners == null) {
-//                System.out.println("No banners found");
-//            }else{
-//                System.out.println("Banners size = " + banners.size());
-//                for (Banner b : banners) {
-//                    System.out.println("Banner id = " + b.getId() + ", url = " + b.getImageUrl());
-//                }
-//        }
-
-        request.setAttribute("banners", banners); //hết phần banner
-
-        //cái này bỏ rồi nha
-//        CategoriesDao categoriesDao = new CategoriesDao();
-//        List<Category> listCategories = categoriesDao.listCategories();
-//        request.setAttribute("listCategories", listCategories);
-
+        request.setAttribute("banners", banners);
 
         // Lấy comics gợi ý
         List<Comic> recommendedComics;
@@ -114,26 +118,23 @@ public class HomeServlet extends HttpServlet {
 
             if (wishlistCount > 0) {
                 recommendedComics = comicDAO.getRecommendedComics(currentUser.getId(), 16);
-
             } else {
                 recommendedComics = comicDAO.getPopularComics(16);
             }
         } else {
-            //chua dang nhap
             recommendedComics = comicDAO.getPopularComics(16);
         }
+
         // Lấy top comics bán chạy trong tuần
         List<Comic> topComics = comicDAO.getTopSellingComics(5);
+
         // Set attributes
         request.setAttribute("recommendedComics", recommendedComics);
         request.setAttribute("topComics", topComics);
         request.setAttribute("isLoggedIn", currentUser != null);
 
-
         request.getRequestDispatcher("/fontend/public/homePage.jsp")
                 .forward(request, response);
-
-
     }
 
     @Override
@@ -141,7 +142,3 @@ public class HomeServlet extends HttpServlet {
         doGet(req, resp);
     }
 }
-
-
-
-

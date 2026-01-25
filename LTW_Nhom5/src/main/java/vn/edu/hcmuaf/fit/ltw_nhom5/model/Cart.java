@@ -15,13 +15,35 @@ public class Cart {
         data = new HashMap<>();
     }
 
+    /**
+     * Add item không có flash sale
+     */
     public void addItem(Comic comic, int quantity) {
-        if(quantity <= 0) quantity = 1;
-        if(get(comic.getId()) != null)
-            data.get(comic.getId()).updateQuantity(quantity);
-        else
-            data.put(comic.getId(), new CartItem(comic, quantity, comic.getPrice()));
+        addItem(comic, quantity, null, null);
+    }
 
+    /**
+     * Add item CÓ flash sale (method chính)
+     */
+    public void addItem(Comic comic, int quantity, Integer flashSaleId, Double flashSalePrice) {
+        if(quantity <= 0) quantity = 1;
+
+        CartItem existingItem = get(comic.getId());
+
+        if(existingItem != null) {
+            // Đã có trong giỏ, cập nhật số lượng
+            existingItem.updateQuantity(quantity);
+
+            // Cập nhật Flash Sale info nếu có
+            if (flashSaleId != null && flashSalePrice != null) {
+                existingItem.setFlashSaleId(flashSaleId);
+                existingItem.setPriceAtPurchase(flashSalePrice);
+            }
+        } else {
+            // Chưa có, thêm mới
+            CartItem newItem = new CartItem(comic, quantity, flashSaleId, flashSalePrice);
+            data.put(comic.getId(), newItem);
+        }
     }
 
     public boolean updateItem(int comicId, int quantity) {
@@ -52,25 +74,48 @@ public class Cart {
 
     public int totalQuantity() {
         AtomicInteger total = new AtomicInteger();
-        getItems().forEach(item->{
-            total.addAndGet(item.getQuantity());});
-        return total.get();
-    }
-
-    public double total() {
-        AtomicReference<Double> total = new AtomicReference<>((double) 0);
-        getItems().forEach(item->{
-            total.updateAndGet(v -> v.doubleValue() + (item.getQuantity() * item.getPriceAtPurchase()));
+        getItems().forEach(item -> {
+            total.addAndGet(item.getQuantity());
         });
         return total.get();
     }
 
+    public double total() {
+        AtomicReference<Double> total = new AtomicReference<>(0.0);
+        getItems().forEach(item -> {
+            total.updateAndGet(v -> v + item.getTotalPrice());
+        });
+        return total.get();
+    }
 
-    // tuy theo thong tin muon update
+    /**
+     * Xóa Flash Sale info khỏi một item cụ thể
+     */
+    public void removeFlashSaleFromItem(int comicId) {
+        CartItem item = get(comicId);
+        if (item != null) {
+            item.removeFlashSale();
+        }
+    }
+
+    /**
+     * Xóa tất cả Flash Sale info khỏi giỏ hàng
+     */
+    public void clearAllFlashSales() {
+        for (CartItem item : getItems()) {
+            item.removeFlashSale();
+        }
+    }
+
     public void updateCustomerInfo(User user) {
         this.user = user;
     }
 
+    public User getUser() {
+        return user;
+    }
 
-
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

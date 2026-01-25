@@ -255,4 +255,6 @@ public class Comic {
     public void setPublisherName(String publisherName) {
         this.publisherName = publisherName;
     }
+
+
 }
