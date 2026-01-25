@@ -241,166 +241,571 @@
 </div>
 
 
+<%--<script>--%>
+<%--    // Tìm kiếm khi nhấn Enter--%>
+<%--    document.getElementById('searchInput').addEventListener('keypress', function (e) {--%>
+<%--        if (e.key === 'Enter') {--%>
+<%--            e.preventDefault();--%>
+<%--            document.getElementById('searchForm').submit();--%>
+<%--        }--%>
+<%--    });--%>
+
+<%--    // Tìm kiếm khi click vào icon--%>
+<%--    document.querySelector('.fa-magnifying-glass').addEventListener('click', function () {--%>
+<%--        document.getElementById('searchForm').submit();--%>
+<%--    });--%>
+
+<%--    // Lọc theo level--%>
+<%--    document.getElementById('levelFilter').addEventListener('change', function () {--%>
+<%--        document.getElementById('searchForm').submit();--%>
+<%--    });--%>
+
+
+<%--    // Xem chi tiết--%>
+<%--    document.querySelectorAll('.view-detail').forEach(item => {--%>
+<%--        item.addEventListener('click', e => {--%>
+<%--            e.preventDefault();--%>
+<%--            e.stopPropagation();--%>
+
+<%--            const name = item.dataset.name;--%>
+<%--            const email = item.dataset.email;--%>
+<%--            const phone = item.dataset.phone || 'Chưa cập nhật';--%>
+<%--            const level = item.dataset.level;--%>
+<%--            // Format số tiền--%>
+<%--            const spent = parseFloat(item.dataset.spent) || 0;--%>
+<%--            const spentFormatted = spent.toLocaleString('vi-VN') + 'đ';--%>
+<%--            // Format điểm--%>
+<%--            const points = parseInt(item.dataset.points) || 0;--%>
+<%--            const pointsFormatted = points.toLocaleString('vi-VN') + ' xu';--%>
+
+<%--            // Format ngày tháng--%>
+<%--            let createdAt = 'Chưa có thông tin';--%>
+<%--            if (item.dataset.createdAt && item.dataset.createdAt !== 'null') {--%>
+<%--                try {--%>
+<%--                    const date = new Date(item.dataset.createdAt);--%>
+<%--                    createdAt = date.toLocaleDateString('vi-VN');--%>
+<%--                } catch (e) {--%>
+<%--                    createdAt = 'Chưa có thông tin';--%>
+<%--                }--%>
+<%--            }--%>
+
+
+<%--            document.getElementById('detailName').textContent = name;--%>
+<%--            document.getElementById('detailEmail').textContent = email;--%>
+<%--            document.getElementById('detailPhone').textContent = phone;--%>
+<%--            document.getElementById('detailSpent').textContent = spentFormatted;--%>
+<%--            document.getElementById('detailPoints').textContent = pointsFormatted;--%>
+<%--            document.getElementById('detailCreatedAt').textContent = createdAt;--%>
+
+<%--            // Badge cấp độ--%>
+<%--            const badge = document.getElementById('detailLevelBadge');--%>
+<%--            badge.textContent = level;--%>
+<%--            badge.className = 'level-badge level-' + level;--%>
+
+<%--            // Đóng menu trước khi hiện popup--%>
+<%--            document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                menu.classList.remove('show');--%>
+<%--            });--%>
+
+<%--            // Hiện popup--%>
+<%--            document.getElementById('detailPopup').style.display = 'flex';--%>
+<%--        });--%>
+<%--    });--%>
+
+<%--    // Nâng cấp - hiện popup--%>
+<%--    document.querySelectorAll('.upgrade-user').forEach(item => {--%>
+<%--        item.addEventListener('click', e => {--%>
+<%--            e.preventDefault();--%>
+<%--            e.stopPropagation();--%>
+
+<%--            const userId = item.dataset.id;--%>
+<%--            const userName = item.dataset.name;--%>
+<%--            const currentLevel = item.dataset.currentLevel;--%>
+
+<%--            document.getElementById('upgradeUserId').value = userId;--%>
+<%--            document.getElementById('popupUserName').innerText = "Tên: " + userName;--%>
+<%--            document.getElementById('upgradeSelect').value = currentLevel;--%>
+
+<%--            // ✅ Đóng menu kebab trước khi hiện popup--%>
+<%--            document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                menu.classList.remove('show');--%>
+<%--            });--%>
+
+<%--            document.getElementById('upgradePopup').style.display = 'flex';--%>
+<%--        });--%>
+<%--    });--%>
+
+<%--    // Hủy nâng cấp--%>
+<%--    document.getElementById('upgradeCancel').onclick = function () {--%>
+<%--        document.getElementById('upgradePopup').style.display = 'none';--%>
+<%--    };--%>
+
+
+<%--    // Xác nhận nâng cấp--%>
+<%--    document.getElementById('upgradeConfirm').addEventListener('click', function () {--%>
+<%--        const userId = document.getElementById('upgradeUserId').value;--%>
+<%--        const newLevel = document.getElementById('upgradeSelect').value;--%>
+
+<%--        fetch('${pageContext.request.contextPath}/admin/user-management', {--%>
+<%--            method: 'POST',--%>
+<%--            headers: {--%>
+<%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
+<%--            },--%>
+<%--            body: 'action=upgrade&userId=' + userId + '&newLevel=' + newLevel--%>
+<%--        })--%>
+<%--            .then(response => response.json())--%>
+<%--            .then(data => {--%>
+<%--                if (data.status === 'success') {--%>
+<%--                    alert(data.message);--%>
+<%--                    location.reload();--%>
+<%--                } else {--%>
+<%--                    alert('Lỗi: ' + data.message);--%>
+<%--                }--%>
+<%--            })--%>
+<%--            .catch(error => {--%>
+<%--                console.error('Error:', error);--%>
+<%--                alert('Có lỗi xảy ra khi nâng cấp');--%>
+<%--            });--%>
+
+<%--        document.getElementById('upgradePopup').style.display = 'none';--%>
+<%--    });--%>
+
+<%--    // Khóa vĩnh viễn - hiện popup--%>
+<%--    document.querySelectorAll('.permanent-lock').forEach(item => {--%>
+<%--        item.addEventListener('click', e => {--%>
+<%--            e.preventDefault();--%>
+<%--            e.stopPropagation();--%>
+
+<%--            const userId = item.dataset.id;--%>
+<%--            const userName = item.dataset.name;--%>
+
+<%--            document.getElementById('lockUserId').value = userId;--%>
+<%--            document.getElementById('lockMessage').textContent =--%>
+<%--                `KHÓA VĨNH VIỄN tài khoản "${userName}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`;--%>
+
+<%--            // Đóng menu trước khi hiện popup--%>
+<%--            document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                menu.classList.remove('show');--%>
+<%--            });--%>
+<%--            document.getElementById('lockPopup').style.display = 'flex';--%>
+<%--        });--%>
+<%--    });--%>
+
+<%--    // Xác nhận khóa--%>
+<%--    document.getElementById('confirmLock').addEventListener('click', function () {--%>
+<%--        const userId = document.getElementById('lockUserId').value;--%>
+
+<%--        fetch('${pageContext.request.contextPath}/admin/user-management', {--%>
+<%--            method: 'POST',--%>
+<%--            headers: {--%>
+<%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
+<%--            },--%>
+<%--            body: 'action=lock&userId=' + userId--%>
+<%--        })--%>
+<%--            .then(response => response.json())--%>
+<%--            .then(data => {--%>
+<%--                if (data.status === 'success') {--%>
+<%--                    alert(data.message);--%>
+<%--                    location.reload();--%>
+<%--                } else {--%>
+<%--                    alert('Lỗi: ' + data.message);--%>
+<%--                }--%>
+<%--            })--%>
+<%--            .catch(error => {--%>
+<%--                console.error('Error:', error);--%>
+<%--                alert('Có lỗi xảy ra khi khóa tài khoản');--%>
+<%--            });--%>
+
+<%--        document.getElementById('lockPopup').style.display = 'none';--%>
+<%--    });--%>
+
+
+<%--    // Phân trang--%>
+<%--    (function () {--%>
+<%--        const ROWS_PER_PAGE = 10;--%>
+<%--        const tbody = document.getElementById('userTableBody');--%>
+<%--        const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row') && r.cells.length > 1);--%>
+<%--        const pageButtons = document.querySelectorAll('.user-page');--%>
+
+<%--        function showPage(page) {--%>
+<%--            const start = (page - 1) * ROWS_PER_PAGE;--%>
+<%--            const end = start + ROWS_PER_PAGE;--%>
+
+<%--            rows.forEach((r, idx) => {--%>
+<%--                r.style.display = (idx >= start && idx < end) ? "" : "none";--%>
+<%--            });--%>
+
+<%--            pageButtons.forEach(btn => btn.classList.remove('active'));--%>
+<%--            document.querySelector(`.user-page[data-page="${page}"]`)?.classList.add('active');--%>
+<%--        }--%>
+
+<%--        pageButtons.forEach(btn => {--%>
+<%--            btn.addEventListener('click', () => {--%>
+<%--                showPage(Number(btn.dataset.page));--%>
+<%--            });--%>
+<%--        });--%>
+
+<%--        showPage(1);--%>
+<%--    })();--%>
+
+<%--    // Active sidebar--%>
+<%--    document.addEventListener("DOMContentLoaded", function () {--%>
+<%--        const current = window.location.pathname.split("/").pop();--%>
+<%--        const links = document.querySelectorAll(".sidebar li a");--%>
+
+<%--        links.forEach(link => {--%>
+<%--            const linkPage = link.getAttribute("href");--%>
+<%--            if (linkPage === current) {--%>
+<%--                link.classList.add("active");--%>
+<%--            }--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+
+<%--<script>--%>
+<%--    document.addEventListener("DOMContentLoaded", function () {--%>
+<%--        const current = window.location.pathname.split("/").pop();--%>
+<%--        const links = document.querySelectorAll(".sidebar li a");--%>
+
+<%--        links.forEach(link => {--%>
+<%--            const linkPage = link.getAttribute("href");--%>
+
+<%--            if (linkPage === current) {--%>
+<%--                link.classList.add("active");--%>
+<%--            }--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+
+<%--<script>--%>
+<%--    // TỰ ĐỘNG CẬP NHẬT DỮ LIỆU SAU MỖI 30 GIÂY--%>
+<%--    (function autoRefreshUserData() {--%>
+<%--        setInterval(function() {--%>
+<%--            // ✅ KIỂM TRA: Nếu có popup đang mở thì KHÔNG reload--%>
+<%--            const hasOpenPopup = document.querySelector('.popup-overlay[style*="display: flex"]');--%>
+
+<%--            if (hasOpenPopup) {--%>
+<%--                console.log('Popup đang mở, bỏ qua auto-reload');--%>
+<%--                return; // Không reload--%>
+<%--            }--%>
+
+<%--            // Lưu trạng thái tìm kiếm hiện tại--%>
+<%--            const currentSearch = document.getElementById('searchInput').value;--%>
+<%--            const currentLevel = document.getElementById('levelFilter').value;--%>
+
+<%--            // Reload trang với params hiện tại--%>
+<%--            let url = '${pageContext.request.contextPath}/admin/user-management';--%>
+<%--            let params = [];--%>
+
+<%--            if (currentSearch) params.push('search=' + encodeURIComponent(currentSearch));--%>
+<%--            if (currentLevel) params.push('level=' + encodeURIComponent(currentLevel));--%>
+
+<%--            if (params.length > 0) {--%>
+<%--                url += '?' + params.join('&');--%>
+<%--            }--%>
+
+<%--            // Reload silent (không thông báo)--%>
+<%--            window.location.href = url;--%>
+<%--        }, 5000); // 30 giây = 30,000 ms--%>
+<%--    })();--%>
+<%--</script>--%>
+
+<%--<script>--%>
+<%--    // XỬ LÝ KEBAB MENU - FIXED HOÀN TOÀN--%>
+<%--    document.addEventListener('DOMContentLoaded', function() {--%>
+<%--        const kebabButtons = document.querySelectorAll('.kebab-btn');--%>
+
+<%--        // Xử lý click vào nút kebab--%>
+<%--        kebabButtons.forEach(btn => {--%>
+<%--            btn.addEventListener('click', function(e) {--%>
+<%--                e.stopPropagation();--%>
+
+<%--                // Đóng tất cả menu khác--%>
+<%--                document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                    if (menu !== this.nextElementSibling) {--%>
+<%--                        menu.classList.remove('show');--%>
+<%--                    }--%>
+<%--                });--%>
+
+<%--                // Toggle menu hiện tại--%>
+<%--                const dropdown = this.nextElementSibling;--%>
+<%--                dropdown.classList.toggle('show');--%>
+<%--            });--%>
+<%--        });--%>
+
+<%--        // ✅ Đóng menu kebab khi click ra ngoài--%>
+<%--        document.addEventListener('click', function(e) {--%>
+<%--            // KHÔNG đóng nếu click vào popup--%>
+<%--            if (!e.target.closest('.popup-overlay') &&--%>
+<%--                !e.target.closest('.kebab-menu')) {--%>
+<%--                document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                    menu.classList.remove('show');--%>
+<%--                });--%>
+<%--            }--%>
+<%--        });--%>
+
+<%--        // ✅ Ngăn menu kebab đóng khi click vào item--%>
+<%--        document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--            menu.addEventListener('click', function(e) {--%>
+<%--                e.stopPropagation();--%>
+<%--            });--%>
+<%--        });--%>
+
+<%--        // ✅ Xử lý popup overlay - click vào nền đen để đóng--%>
+<%--        document.querySelectorAll('.popup-overlay').forEach(popup => {--%>
+<%--            popup.addEventListener('click', function(e) {--%>
+<%--                if (e.target === this) {--%>
+<%--                    this.style.display = 'none';--%>
+<%--                    // Đóng menu kebab khi đóng popup--%>
+<%--                    document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                        menu.classList.remove('show');--%>
+<%--                    });--%>
+<%--                }--%>
+<%--            });--%>
+<%--        });--%>
+
+<%--        // ✅ Ngăn click vào popup-box đóng popup--%>
+<%--        document.querySelectorAll('.popup-box').forEach(box => {--%>
+<%--            box.addEventListener('click', function(e) {--%>
+<%--                e.stopPropagation();--%>
+<%--            });--%>
+<%--        });--%>
+
+<%--        // ✅ QUAN TRỌNG: Đóng menu kebab khi mở popup--%>
+<%--        document.querySelectorAll('.upgrade-user, .view-detail, .permanent-lock').forEach(item => {--%>
+<%--            item.addEventListener('click', function() {--%>
+<%--                // Đóng tất cả menu kebab--%>
+<%--                document.querySelectorAll('.menu-dropdown').forEach(menu => {--%>
+<%--                    menu.classList.remove('show');--%>
+<%--                });--%>
+<%--            });--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
+
 <script>
-    // Tìm kiếm khi nhấn Enter
-    document.getElementById('searchInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('searchForm').submit();
-        }
-    });
-
-    // Tìm kiếm khi click vào icon
-    document.querySelector('.fa-magnifying-glass').addEventListener('click', function () {
-        document.getElementById('searchForm').submit();
-    });
-
-    // Lọc theo level
-    document.getElementById('levelFilter').addEventListener('change', function () {
-        document.getElementById('searchForm').submit();
-    });
-
-
-    // Xem chi tiết
-    document.querySelectorAll('.view-detail').forEach(item => {
-        item.addEventListener('click', e => {
-            e.preventDefault();
-
-            const name = item.dataset.name;
-            const email = item.dataset.email;
-            const phone = item.dataset.phone || 'Chưa cập nhật';
-            const level = item.dataset.level;
-            // Format số tiền
-            const spent = parseFloat(item.dataset.spent) || 0;
-            const spentFormatted = spent.toLocaleString('vi-VN') + 'đ';
-            // Format điểm
-            const points = parseInt(item.dataset.points) || 0;
-            const pointsFormatted = points.toLocaleString('vi-VN') + ' xu';
-
-            // Format ngày tháng
-            let createdAt = 'Chưa có thông tin';
-            if (item.dataset.createdAt && item.dataset.createdAt !== 'null') {
-                try {
-                    const date = new Date(item.dataset.createdAt);
-                    createdAt = date.toLocaleDateString('vi-VN');
-                } catch (e) {
-                    createdAt = 'Chưa có thông tin';
-                }
+    document.addEventListener("DOMContentLoaded", function () {
+        // ========== PHẦN 1: TÌM KIẾM VÀ LỌC ==========
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('searchForm').submit();
             }
-
-
-            document.getElementById('detailName').textContent = name;
-            document.getElementById('detailEmail').textContent = email;
-            document.getElementById('detailPhone').textContent = phone;
-            document.getElementById('detailSpent').textContent = spentFormatted;
-            document.getElementById('detailPoints').textContent = pointsFormatted;
-            document.getElementById('detailCreatedAt').textContent = createdAt;
-
-            // Badge cấp độ
-            const badge = document.getElementById('detailLevelBadge');
-            badge.textContent = level;
-            badge.className = 'level-badge level-' + level;
-
-            // Hiện popup
-            document.getElementById('detailPopup').style.display = 'flex';
         });
-    });
 
-    // Nâng cấp - hiện popup
-    document.querySelectorAll('.upgrade-user').forEach(item => {
-        item.addEventListener('click', e => {
-            e.preventDefault();
-            const userId = item.dataset.id;
-            const userName = item.dataset.name;
-            const currentLevel = item.dataset.currentLevel;
-
-            document.getElementById('upgradeUserId').value = userId;
-            document.getElementById('popupUserName').innerText = "Tên: " + userName;
-            document.getElementById('upgradeSelect').value = currentLevel;
-            document.getElementById('upgradePopup').style.display = 'flex';
+        document.querySelector('.fa-magnifying-glass').addEventListener('click', function () {
+            document.getElementById('searchForm').submit();
         });
-    });
 
-    // Hủy nâng cấp
-    document.getElementById('upgradeCancel').onclick = function () {
-        document.getElementById('upgradePopup').style.display = 'none';
-    };
+        document.getElementById('levelFilter').addEventListener('change', function () {
+            document.getElementById('searchForm').submit();
+        });
 
+        // ========== PHẦN 2: XỬ LÝ KEBAB MENU ==========
+        const kebabButtons = document.querySelectorAll('.kebab-btn');
 
-    // Xác nhận nâng cấp
-    document.getElementById('upgradeConfirm').addEventListener('click', function () {
-        const userId = document.getElementById('upgradeUserId').value;
-        const newLevel = document.getElementById('upgradeSelect').value;
+        kebabButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
 
-        fetch('${pageContext.request.contextPath}/admin/user-management', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=upgrade&userId=' + userId + '&newLevel=' + newLevel
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert('Lỗi: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi nâng cấp');
+                document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                    if (menu !== this.nextElementSibling) {
+                        menu.classList.remove('show');
+                    }
+                });
+
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('show');
             });
-
-        document.getElementById('upgradePopup').style.display = 'none';
-    });
-
-    // Khóa vĩnh viễn - hiện popup
-    document.querySelectorAll('.permanent-lock').forEach(item => {
-        item.addEventListener('click', e => {
-            e.preventDefault();
-            const userId = item.dataset.id;
-            const userName = item.dataset.name;
-
-            document.getElementById('lockUserId').value = userId;
-            document.getElementById('lockMessage').textContent =
-                `KHÓA VĨNH VIỄN tài khoản "${userName}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`;
-            document.getElementById('lockPopup').style.display = 'flex';
         });
-    });
 
-    // Xác nhận khóa
-    document.getElementById('confirmLock').addEventListener('click', function () {
-        const userId = document.getElementById('lockUserId').value;
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.popup-overlay') && !e.target.closest('.kebab-menu')) {
+                document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
 
-        fetch('${pageContext.request.contextPath}/admin/user-management', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=lock&userId=' + userId
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(data.message);
-                    location.reload();
-                } else {
-                    alert('Lỗi: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi khóa tài khoản');
+        document.querySelectorAll('.menu-dropdown').forEach(menu => {
+            menu.addEventListener('click', function(e) {
+                e.stopPropagation();
             });
+        });
 
-        document.getElementById('lockPopup').style.display = 'none';
-    });
+        // ========== PHẦN 3: XỬ LÝ POPUP ==========
+        document.querySelectorAll('.popup-overlay').forEach(popup => {
+            popup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+        });
 
+        document.querySelectorAll('.popup-box').forEach(box => {
+            box.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        });
 
-    // Phân trang
-    (function () {
+        // ========== PHẦN 4: XEM CHI TIẾT ==========
+        document.querySelectorAll('.view-detail').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const name = this.dataset.name;
+                const email = this.dataset.email;
+                const phone = this.dataset.phone || 'Chưa cập nhật';
+                const level = this.dataset.level;
+                const spent = parseFloat(this.dataset.spent) || 0;
+                const spentFormatted = spent.toLocaleString('vi-VN') + 'đ';
+                const points = parseInt(this.dataset.points) || 0;
+                const pointsFormatted = points.toLocaleString('vi-VN') + ' xu';
+
+                let createdAt = 'Chưa có thông tin';
+                if (this.dataset.createdAt && this.dataset.createdAt !== 'null') {
+                    try {
+                        const date = new Date(this.dataset.createdAt);
+                        createdAt = date.toLocaleDateString('vi-VN');
+                    } catch (e) {
+                        createdAt = 'Chưa có thông tin';
+                    }
+                }
+
+                document.getElementById('detailName').textContent = name;
+                document.getElementById('detailEmail').textContent = email;
+                document.getElementById('detailPhone').textContent = phone;
+                document.getElementById('detailSpent').textContent = spentFormatted;
+                document.getElementById('detailPoints').textContent = pointsFormatted;
+                document.getElementById('detailCreatedAt').textContent = createdAt;
+
+                const badge = document.getElementById('detailLevelBadge');
+                badge.textContent = level;
+                badge.className = 'level-badge level-' + level;
+
+                document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+
+                document.getElementById('detailPopup').style.display = 'flex';
+            });
+        });
+
+        // ========== PHẦN 5: NÂNG CẤP ==========
+        document.querySelectorAll('.upgrade-user').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const userId = this.dataset.id;
+                const userName = this.dataset.name;
+                const currentLevel = this.dataset.currentLevel;
+
+                document.getElementById('upgradeUserId').value = userId;
+                document.getElementById('popupUserName').innerText = "Tên: " + userName;
+                document.getElementById('upgradeSelect').value = currentLevel;
+
+                document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+
+                document.getElementById('upgradePopup').style.display = 'flex';
+            });
+        });
+
+        document.getElementById('upgradeCancel').onclick = function () {
+            document.getElementById('upgradePopup').style.display = 'none';
+        };
+
+        document.getElementById('upgradeConfirm').addEventListener('click', function () {
+            const userId = document.getElementById('upgradeUserId').value;
+            const newLevel = document.getElementById('upgradeSelect').value;
+
+            // ✅ THÊM: Hiện loading
+            this.disabled = true;
+            this.textContent = 'Đang xử lý...';
+
+            fetch('${pageContext.request.contextPath}/admin/user-management', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=upgrade&userId=' + userId + '&newLevel=' + newLevel
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                        this.disabled = false;
+                        this.textContent = 'Xác nhận';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi nâng cấp');
+                    this.disabled = false;
+                    this.textContent = 'Xác nhận';
+                });
+
+            document.getElementById('upgradePopup').style.display = 'none';
+        });
+
+        // ========== PHẦN 6: KHÓA TÀI KHOẢN ==========
+        document.querySelectorAll('.permanent-lock').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const userId = this.dataset.id;
+                const userName = this.dataset.name;
+
+                document.getElementById('lockUserId').value = userId;
+                document.getElementById('lockMessage').textContent =
+                    `KHÓA VĨNH VIỄN tài khoản "${userName}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`;
+
+                document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+
+                document.getElementById('lockPopup').style.display = 'flex';
+            });
+        });
+
+        document.getElementById('confirmLock').addEventListener('click', function () {
+            const userId = document.getElementById('lockUserId').value;
+
+            fetch('${pageContext.request.contextPath}/admin/user-management', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=lock&userId=' + userId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi khóa tài khoản');
+                });
+
+            document.getElementById('lockPopup').style.display = 'none';
+        });
+
+        // ========== PHẦN 7: PHÂN TRANG ==========
         const ROWS_PER_PAGE = 10;
         const tbody = document.getElementById('userTableBody');
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row') && r.cells.length > 1);
@@ -425,10 +830,8 @@
         });
 
         showPage(1);
-    })();
 
-    // Active sidebar
-    document.addEventListener("DOMContentLoaded", function () {
+        // ========== PHẦN 8: ACTIVE SIDEBAR ==========
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
 
@@ -442,29 +845,17 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
-        const links = document.querySelectorAll(".sidebar li a");
-
-        links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-
-            if (linkPage === current) {
-                link.classList.add("active");
-            }
-        });
-    });
-</script>
-
-<script>
-    // ✅ TỰ ĐỘNG CẬP NHẬT DỮ LIỆU SAU MỖI 30 GIÂY
+    // ✅ AUTO-RELOAD - KHÔNG RELOAD KHI CÓ POPUP
     (function autoRefreshUserData() {
         setInterval(function() {
-            // Lưu trạng thái tìm kiếm hiện tại
+            const hasOpenPopup = document.querySelector('.popup-overlay[style*="display: flex"]');
+
+            if (hasOpenPopup) {
+                return;
+            }
+
             const currentSearch = document.getElementById('searchInput').value;
             const currentLevel = document.getElementById('levelFilter').value;
-
-            // Reload trang với params hiện tại
             let url = '${pageContext.request.contextPath}/admin/user-management';
             let params = [];
 
@@ -475,9 +866,8 @@
                 url += '?' + params.join('&');
             }
 
-            // Reload silent (không thông báo)
             window.location.href = url;
-        }, 5000); // 30 giây = 30,000 ms
+        }, 30000); // 30 giây
     })();
 </script>
 

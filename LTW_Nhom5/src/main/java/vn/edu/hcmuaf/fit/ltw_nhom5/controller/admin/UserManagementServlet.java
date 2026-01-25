@@ -10,6 +10,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/user-management")
 public class UserManagementServlet extends HttpServlet {
@@ -72,12 +73,27 @@ public class UserManagementServlet extends HttpServlet {
                 int userId = Integer.parseInt(request.getParameter("userId"));
                 String newLevel = request.getParameter("newLevel");
 
-                boolean success = userDao.upgradeMembershipLevel(userId, newLevel);
+                // Kiểm tra xem user có đủ điều kiện không
+                Map<String, Object> eligibility = userDao.checkUpgradeEligibility(userId, newLevel);
 
-                if (success) {
-                    response.getWriter().write("{\"status\":\"success\",\"message\":\"Nâng cấp thành công\"}");
+                if ((boolean) eligibility.get("eligible")) {
+                    // Đủ điều kiện -> Nâng cấp
+                    boolean success = userDao.upgradeMembershipLevel(userId, newLevel);
+
+                    if (success) {
+                        response.getWriter().write(
+                                "{\"status\":\"success\",\"message\":\"Nâng cấp thành công lên " + newLevel + "\"}"
+                        );
+                    } else {
+                        response.getWriter().write(
+                                "{\"status\":\"error\",\"message\":\"Nâng cấp thất bại\"}"
+                        );
+                    }
                 } else {
-                    response.getWriter().write("{\"status\":\"error\",\"message\":\"Nâng cấp thất bại\"}");
+                    // CHƯA ĐỦ ĐIỀU KIỆN
+                    response.getWriter().write(
+                            "{\"status\":\"error\",\"message\":\"" + eligibility.get("message") + "\"}"
+                    );
                 }
 
             } else if ("lock".equals(action)) {

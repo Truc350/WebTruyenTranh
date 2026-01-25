@@ -7,7 +7,9 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class UserDao {
@@ -474,6 +476,105 @@ public class UserDao {
                         )
                         .execute()
         );
+    }
+
+    /**
+     * Kiểm tra xem user có đủ điều kiện để nâng cấp lên level mới không
+     * @param userId ID của user
+     * @param newLevel Cấp độ muốn nâng lên
+     * @return Map chứa kết quả: {eligible: true/false, message: "...", currentSpent: 0.0, requiredSpent: 0.0}
+     */
+    public Map<String, Object> checkUpgradeEligibility(int userId, String newLevel) {
+        return jdbi.withHandle(handle -> {
+            Map<String, Object> result = new HashMap<>();
+
+            // Lấy thông tin user
+            User user = handle.createQuery("SELECT * FROM users WHERE id = :id")
+                    .bind("id", userId)
+                    .mapToBean(User.class)
+                    .findOne()
+                    .orElse(null);
+
+            if (user == null) {
+                result.put("eligible", false);
+                result.put("message", "Không tìm thấy user");
+                return result;
+            }
+
+            double currentSpent = user.getTotalSpent() != null
+                    ? user.getTotalSpent().doubleValue()
+                    : 0.0;
+            String currentLevel = user.getMembershipLevel() != null ? user.getMembershipLevel() : "Normal";
+
+            // Xác định mức chi tiêu tối thiểu cho từng cấp
+            double requiredSpent = getRequiredSpentForLevel(newLevel);
+
+            result.put("currentLevel", currentLevel);
+            result.put("currentSpent", currentSpent);
+            result.put("requiredSpent", requiredSpent);
+
+            // Kiểm tra điều kiện
+            if (currentSpent >= requiredSpent) {
+                result.put("eligible", true);
+                result.put("message", "Đủ điều kiện nâng cấp");
+            } else {
+                result.put("eligible", false);
+                double shortage = requiredSpent - currentSpent;
+                result.put("shortage", shortage);
+                result.put("message", String.format(
+                        "Chưa đủ điều kiện! Cần chi tiêu thêm %s để đạt cấp %s (Hiện tại: %s / Yêu cầu: %s)",
+                        formatCurrency(shortage),
+                        getLevelName(newLevel),
+                        formatCurrency(currentSpent),
+                        formatCurrency(requiredSpent)
+                ));
+            }
+
+            return result;
+        });
+    }
+
+    /**
+     * Lấy mức chi tiêu tối thiểu cho từng cấp
+     */
+    private double getRequiredSpentForLevel(String level) {
+        switch (level) {
+            case "Normal":
+                return 0;
+            case "Silver":
+                return 500_000;
+            case "Gold":
+                return 1_000_000;
+            case "Platinum":
+                return 2_000_000;
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Lấy tên tiếng Việt của cấp độ
+     */
+    private String getLevelName(String level) {
+        switch (level) {
+            case "Normal":
+                return "Thường";
+            case "Silver":
+                return "Bạc";
+            case "Gold":
+                return "Vàng";
+            case "Platinum":
+                return "Kim cương";
+            default:
+                return level;
+        }
+    }
+
+    /**
+     * Format tiền Việt
+     */
+    private String formatCurrency(double amount) {
+        return String.format("%,.0fđ", amount).replace(",", ".");
     }
 
 

@@ -407,24 +407,49 @@ body {
 
 /* Menu 3 chấm */
 .action-cell { position: relative; text-align: center; }
-.kebab-menu { display: inline-block; }
-.kebab-btn {
-    background: none; border: none; font-size: 26px; cursor: pointer;
-    padding: 4px 8px; border-radius: 6px;
+.kebab-menu {
+    position: relative;
 
+}
+.kebab-btn {
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 5px 10px;
 }
 .kebab-btn:hover { background: #f5f5f5; }
 .menu-dropdown {
-    display: none; position: absolute; right: 0; top: 36px;
-    background: white; min-width: 180px; border-radius: 8px;
-    z-index: 100;
-    border: 1px solid #eee; overflow: hidden;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    min-width: 180px;
+    border-radius: 8px;
+    z-index: 1000;
+    border: 1px solid #eee;
+    overflow: hidden;
 }
+
+.menu-dropdown.show {
+    display: block;
+}
+
 .menu-item {
-    display: block; padding: 12px 18px; text-decoration: none;
-    color: #333; font-size: 15px; transition: 0.2s;
+    display: block;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    transition: 0.2s;
 }
 .menu-item:hover { background: #f8f9fa; }
 .permanent-lock { color: #e74c3c !important; font-weight: 500; }
-.kebab-menu:hover .menu-dropdown { display: block; }
+
+/* Ẩn tất cả menu dropdown khi có popup đang mở */
+.popup-overlay[style*="display: flex"] ~ * .menu-dropdown,
+body:has(.popup-overlay[style*="display: flex"]) .menu-dropdown {
+    display: none !important;
+}
 
