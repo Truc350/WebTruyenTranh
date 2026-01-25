@@ -1,499 +1,140 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %><!DOCTYPE html>
-<html lang="en">
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Sale - Giảm Giá Khủng</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FlashSale.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <%-- Favicon --%>
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/favicon.ico">
 </head>
-
 <body>
 <jsp:include page="/fontend/public/header.jsp" />
 
-    <div class="container">
-        <div class="banner-header">
-            <img src="../../img/BannerFlashSale.png" alt="">
+<div class="container">
+    <div class="banner-header">
+        <img src="${pageContext.request.contextPath}/img/BannerFlashSale.png" alt="Flash Sale Banner">
+    </div>
+</div>
+
+<div class="flash-banner">
+    <div class="flash-title">
+        <span class="badge">FLASH SALE</span>
+    </div>
+
+    <div class="contain-flash">
+        <!-- Countdown -->
+        <div class="countdown-wrap">
+            <c:choose>
+                <c:when test="${activeFlashSale != null && flashSaleEndTimeMillis != null}">
+                    <span class="countdown-label">Kết thúc trong</span>
+                    <div class="countdown" id="countdown">
+                        <div class="time-box" id="hours">00</div>
+                        <span class="sep">:</span>
+                        <div class="time-box" id="minutes">00</div>
+                        <span class="sep">:</span>
+                        <div class="time-box" id="seconds">00</div>
+                    </div>
+
+                    <!-- Hidden input for JavaScript -->
+                    <input type="hidden" id="flashSaleEndTimeMillis" value="${flashSaleEndTimeMillis}">
+                </c:when>
+                <c:otherwise>
+                    <span class="countdown-label">Hiện không có Flash Sale nào đang diễn ra</span>
+                </c:otherwise>
+            </c:choose>
+        </div>
+
+        <!-- Slot thời gian -->
+        <div class="slot-row" id="slotRow">
+            <c:forEach items="${upcomingFlashSales}" var="fs" varStatus="status">
+                <div class="slot ${fs.active ? 'active' : ''}"
+                     data-flashsale-id="${fs.id}"
+                     data-status="${fs.status}">
+                    <div class="slot-time">
+                            ${fs.startTimeFormatted}
+                    </div>
+                    <div class="slot-status">
+                            ${fs.statusLabel}
+                    </div>
+                </div>
+            </c:forEach>
         </div>
     </div>
+</div>
 
-    <div class="flash-banner">
-        <div class="flash-title">
-            <span class="badge">FLASH SALE</span>
-        </div>
-
-        <div class="contain-flash">
-            <div class="countdown-wrap">
-                <span class="countdown-label">Kết thúc trong</span>
-                <div class="countdown" id="countdown">
-                    <div class="time-box" id="hh">02</div>
-                    <span class="sep">:</span>
-                    <div class="time-box" id="mm">00</div>
-                    <span class="sep">:</span>
-                    <div class="time-box" id="ss">00</div>
-                </div>
-            </div>
-
-            <div class="slot-row" id="slotRow">
-                <!-- Các khung giờ bán -->
-                <div class="slot" id="slot1" data-time="22:00">
-                    <div class="slot-time">22:00</div>
-                    <div class="slot-status">Đang bán</div>
-                </div>
-                <div class="slot" id="slot2" data-time="00:00" data-nextday="true">
-                    <div class="slot-time">00:00</div>
-                    <div class="slot-status">Ngày mai</div>
-                </div>
-                <div class="slot" data-time="06:00" data-nextday="true">
-                    <div class="slot-time">06:00</div>
-                    <div class="slot-status">Ngày mai</div>
-                </div>
-                <div class="slot" data-time="08:00" data-nextday="true">
-                    <div class="slot-time">08:00</div>
-                    <div class="slot-status">Ngày mai</div>
-                </div>
-                <div class="slot" data-time="10:00" data-nextday="true">
-                    <div class="slot-time">10:00</div>
-                    <div class="slot-status">Ngày mai</div>
-                </div>
-            </div>
-        </div>
+<c:if test="${activeFlashSale != null}">
+    <div class="flash-sale-header">
+        <h2 class="flash-sale-name">${activeFlashSale.name}</h2>
+        <p class="flash-sale-description">Giảm giá đến <strong><fmt:formatNumber value="${activeFlashSale.discountPercent}" pattern="#"/>%</strong></p>
     </div>
+</c:if>
+<!-- Danh sách sản phẩm Flash Sale -->
+<div class="container-item" id="flashSaleProducts">
 
+    <c:choose>
+        <c:when test="${not empty activeComics}">
+            <c:forEach items="${activeComics}" var="comic">
+                <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
+                    <div class="product-card">
+                        <img src="${comic.image_url}"
+<%--                        <img src="${pageContext.request.contextPath}${comic.image_url}"--%>
+                             alt="${comic.name}"
+                             class="product-image"
+                             onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'" />
 
-    <div class="container-item">
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://tse2.mm.bing.net/th/id/OIP.9XM2JUuE0llfp0orZz18qwHaLg?rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="" class="product-image" />
+                        <h3 class="product-title">${comic.name}</h3>
 
-                <h3 class="product-title">
-                    Thám tử Conan Tập 100
-                </h3>
+                        <div class="price-section">
+    <span class="price">
+        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/>₫
+    </span>
+                            <span class="discount">
+        -<fmt:formatNumber value="${comic.discount_percent}" pattern="#" maxFractionDigits="0"/>%
+    </span>
+                        </div>
 
-                <div class="price-section">
-                    <span class="price">18.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">30.000₫</span>
-                </div>
+                        <div class="price-section">
+                            <span class="old-price">
+                                <fmt:formatNumber value="${comic.original_price}" pattern="#,###"/>₫
+                            </span>
+                        </div>
 
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 196</div>
+                        <div class="progress-bar">
+                            <c:set var="soldPercent" value="${(comic.sold_count / 100) * 100}" />
+                            <c:if test="${soldPercent > 100}">
+                                <c:set var="soldPercent" value="100" />
+                            </c:if>
+                            <div class="progress-fill" style="width: ${soldPercent}%;"></div>
+                        </div>
+                        <div class="sold-text">Đã bán ${comic.sold_count}</div>
 
-                <button class="add-to-cart">Thêm giỏ hàng</button>
+                        <button class="add-to-cart" onclick="addToCart(${comic.id}, event)">
+                            <i class="fas fa-cart-plus"></i> Thêm giỏ hàng
+                        </button>
+                    </div>
+                </a>
+            </c:forEach>
+        </c:when>
+        <c:otherwise>
+            <div class="no-products">
+                <i class="fas fa-box-open"></i>
+                <p>Không có sản phẩm Flash Sale nào đang diễn ra</p>
             </div>
+        </c:otherwise>
+    </c:choose>
+</div>
 
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://m.media-amazon.com/images/I/81hguFrRGYL._SL1500_.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Naruto Tập 74
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">24.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://newshop.vn/public/uploads/products/18649/conan-tap-17.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    One-Punch Tâp 25
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://1.bp.blogspot.com/-jvKRlAvLy2g/YVMRkp8KVnI/AAAAAAABWnc/8-3hUdKcezYo0Gx7bbHE5lFj32rcUXD2gCNcBGAsYHQ/s0/Dragon-Ball-Full-Color---Volume-02---Chapter-015---Page-01.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Dragon Ball Tập 15
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">20.000₫</span>
-                    <span class="discount">-33%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">30.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://tse3.mm.bing.net/th/id/OIP.UYXVfw_z4MzfvIEod7Gh7QAAAA?cb=ucfimg2ucfimg=1&w=400&h=629&rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Naruto Tập 123
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">24.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://th.bing.com/th/id/OIP.T0Xbq4rZnls95XvoWldF-gHaLH?o=7&cb=ucfimg2rm=3&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    One-Punch Man Tập 24
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Naruto Tập 128
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">26.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://cdn0.fahasa.com/media/catalog/product/v/u/vua_sang_che___tap3.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Vua sáng chế Tập 3
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">26.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://yzgeneration.com/wp-content/uploads/2023/07/One-Punch-Man-Tome-27.webp"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    One-Punch Man Tập 27
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Doraemon Tập 6
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-
-    </div>
-
-    <div class="container-item2">
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://th.bing.com/th/id/OIP.T0Xbq4rZnls95XvoWldF-gHaLH?o=7&cb=ucfimg2rm=3&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    One-Punch Man Tập 24
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://tse4.mm.bing.net/th/id/OIP.ITHf6RrUo34b34N0miyxlQAAAA?cb=ucfimg2ucfimg=1&w=385&h=600&rs=1&pid=ImgDetMain&o=7&rm=3"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Vua sáng chế Tập 17
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">26.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://i.pinimg.com/originals/3a/a9/47/3aa9473f3ce582ddfcc0cf8cf2a12edf.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Naruto Tập 128
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">26.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://online.pubhtml5.com/anvq/hidy/files/large/1.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Doraemon Tập 6
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-        <a href="detail.jsp">
-            <div class="product-card">
-                <img src="https://media.vov.vn/sites/default/files/styles/large/public/2021-04/conan_98.jpg"
-                    alt="" class="product-image" />
-
-                <h3 class="product-title">
-                    Thám tử Conan Tập 98
-                </h3>
-
-                <div class="price-section">
-                    <span class="price">16.000₫</span>
-                    <span class="discount">-40%</span>
-                </div>
-                <div class="price-section">
-                    <span class="old-price">40.000₫</span>
-                </div>
-
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 40%;"></div>
-                </div>
-                <div class="sold-text">Đã bán 11</div>
-
-                <button class="add-to-cart">Thêm giỏ hàng</button>
-            </div>
-
-        </a>
-
-    </div>
-
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 
-    <script>
-        document.querySelectorAll('.slot').forEach(slot => {
-            slot.addEventListener('click', () => {
-                // Xóa border vàng khỏi tất cả slot
-                document.querySelectorAll('.slot').forEach(s => {
-                    s.style.border = '1px solid rgba(255,255,255,0.3)';
-                });
-
-                // Gán border vàng cho slot được nhấn
-                slot.style.border = '2px solid #ffd60a';
-            });
-        });
-
-        //nhấn slot 2 thì qua 2
-        document.getElementById("slot2").addEventListener("click", function (event) {
-            event.preventDefault();
-            document.querySelector(".container-item2").style.display = "flex";
-            document.querySelector(".container-item").style.display = "none";
-        });
-        //nhấn slot 1 thì qua 1
-        document.getElementById("slot1").addEventListener("click", function (event) {
-            event.preventDefault();
-           document.querySelector(".container-item").style.display = "flex";
-            document.querySelector(".container-item2").style.display = "none";
-        });
-
-    </script>
+<script src="${pageContext.request.contextPath}/js/flash-sale.js"></script>
 
 
 </body>
-
 </html>

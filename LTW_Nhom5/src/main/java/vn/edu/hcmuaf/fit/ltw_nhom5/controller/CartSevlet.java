@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleComicsDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Cart;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.CartItem;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
@@ -11,6 +12,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "Cart", value = "/cart")
 public class CartSevlet extends HttpServlet {
@@ -146,18 +148,12 @@ public class CartSevlet extends HttpServlet {
             int comicId = Integer.parseInt(request.getParameter("comicId"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
-            String returnUrl = request.getParameter("returnUrl"); // của wishlist
+            boolean isAjax = "true".equals(request.getParameter("ajax"));
+            String returnUrl = request.getParameter("returnUrl");
 
-
-            // ===== DEBUG =====
-            User currentUser = (User) session.getAttribute("currentUser");
             System.out.println("===== THÊM VÀO GIỎ HÀNG =====");
             System.out.println("Comic ID: " + comicId);
             System.out.println("Số lượng: " + quantity);
-            System.out.println("Đã đăng nhập: " + (currentUser != null ? currentUser.getUsername() : "CHƯA"));
-            System.out.println("Session ID: " + session.getId());
-            System.out.println("Giỏ hàng trước khi thêm: " + cart.getItems().size() + " sản phẩm");
-            System.out.println("============================");
 
             if (quantity <= 0) {
                 quantity = 1;
@@ -167,53 +163,101 @@ public class CartSevlet extends HttpServlet {
             Comic comic = comicService.getComicById(comicId);
 
             if (comic != null) {
-                // ktra SL trong giỏ hiện tại
+                // Kiểm tra SL trong giỏ hiện tại
                 CartItem existingItem = cart.get(comicId);
                 int totalQuantity = (existingItem != null) ? existingItem.getQuantity() + quantity : quantity;
+
                 // Kiểm tra tồn kho
                 if (comic.getStockQuantity() < totalQuantity) {
                     session.setAttribute("errorMsg", "Sản phẩm không đủ hàng. Chỉ còn " +
                             comic.getStockQuantity() + " sản phẩm.");
+
+                    if (isAjax) {
+                        response.setContentType("application/json");
+                        response.setCharacterEncoding("UTF-8");
+                        response.getWriter().write("{\"success\": false, \"message\": \"Sản phẩm không đủ hàng\"}");
+                        return;
+                    }
+
                     response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
                     return;
                 }
 
-                // Thêm vào giỏ
-                cart.addItem(comic, quantity);
+                // ===== KIỂM TRA FLASH SALE =====
+                FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
+                Map<String, Object> flashSaleInfo = flashSaleComicsDAO.getFlashSaleInfoByComicId(comicId);
+
+                Integer flashSaleId = null;
+                Double flashSalePrice = null;
+
+                if (flashSaleInfo != null) {
+                    flashSaleId = (Integer) flashSaleInfo.get("flashsale_id");
+                    Object discountObj = flashSaleInfo.get("discount_percent");
+                    Double discountPercent = (discountObj instanceof Number)
+                            ? ((Number) discountObj).doubleValue()
+                            : null;
+
+
+
+                    // Tính giá Flash Sale
+                    if (discountPercent != null) {
+                        flashSalePrice = comic.getPrice() * (1 - discountPercent / 100.0);
+                    }
+
+                    System.out.println("✅ Comic trong Flash Sale!");
+                    System.out.println("Flash Sale ID: " + flashSaleId);
+                    System.out.println("Giá gốc: " + comic.getPrice() + "₫");
+                    System.out.println("Giảm giá: " + discountPercent + "%");
+                    System.out.println("Giá Flash Sale: " + flashSalePrice + "₫");
+                } else {
+                    System.out.println("ℹ️ Comic không trong Flash Sale, dùng giá gốc");
+                }
+
+                // Thêm vào giỏ với thông tin Flash Sale (nếu có)
+                cart.addItem(comic, quantity, flashSaleId, flashSalePrice);
                 session.setAttribute("cart", cart);
 
-                session.setAttribute("successMsg", "Đã thêm \"" + comic.getNameComics() +
-                        "\" vào giỏ hàng!");
+                String successMsg = "Đã thêm \"" + comic.getNameComics() + "\" vào giỏ hàng!";
+                if (flashSalePrice != null) {
+                    successMsg += " (Giá Flash Sale: " + String.format("%,.0f", flashSalePrice) + "₫)";
+                }
 
-                // Kiểm tra buyNow
+                session.setAttribute("successMsg", successMsg);
+
+                // Nếu là AJAX request
+                if (isAjax) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"success\": true, \"message\": \"" + successMsg + "\"}");
+                    return;
+                }
+
                 boolean buyNow = "true".equals(request.getParameter("buyNow"));
 
                 if (buyNow) {
-                    // Mua ngay -> chuyển đến giỏ hàng
                     response.sendRedirect(request.getContextPath() + "/cart");
                 } else {
-
-                    // Quay về trang chi tiết hoặc trang wishlist
-//                  response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
                     if ("wishlist".equals(returnUrl)) {
                         response.sendRedirect(request.getContextPath() + "/wishlist");
                     } else {
                         response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
                     }
-
                 }
             } else {
                 session.setAttribute("errorMsg", "Không tìm thấy sản phẩm");
-//              response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
-                // REDIRECT DỰA VÀO returnUrl
+
+                if (isAjax) {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"success\": false, \"message\": \"Không tìm thấy sản phẩm\"}");
+                    return;
+                }
+
                 if ("wishlist".equals(returnUrl)) {
                     response.sendRedirect(request.getContextPath() + "/wishlist");
                 } else {
                     response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
                 }
-
-
-
             }
 
         } catch (NumberFormatException e) {
@@ -221,9 +265,7 @@ public class CartSevlet extends HttpServlet {
             session.setAttribute("errorMsg", "Dữ liệu không hợp lệ");
             response.sendRedirect(request.getContextPath() + "/");
         }
-
     }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

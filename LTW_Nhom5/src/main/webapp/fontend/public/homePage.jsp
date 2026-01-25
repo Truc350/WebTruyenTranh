@@ -144,61 +144,65 @@
             <div class="titile-flash-sale">
                 <h2>FLASH SALE</h2>
 
-                <c:if test="${not empty flashSale}">
-                    <p id="flash-sale-countdown"
-                       data-end-time="${flashSale.endTime}">
-                        Đang tải thời gian...
-                    </p>
-                </c:if>
+                <c:choose>
+                    <c:when test="${not empty flashSale && flashSale.status == 'active'}">
+                        <p id="flash-sale-countdown"
+                           data-end-time="${flashSaleEndTimeMillis}">
+                            Đang tải thời gian...
+                        </p>
 
-                <c:if test="${empty flashSale}">
-                    <p>Hiện không có Flash Sale</p>
-                </c:if>
+                        <%-- DEBUG: Kiểm tra giá trị --%>
+                        <script>
+                            console.log("Flash Sale End Time Millis: ${flashSaleEndTimeMillis}");
+                            console.log("Flash Sale Status: ${flashSale.status}");
+                        </script>
+                    </c:when>
+                    <c:otherwise>
+                        <p>Hiện không có Flash Sale</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="list-product-sale">
-                <div>
-                    <a href="detail.jsp">
-                        <h3>Thám Tử Lừng Danh Conan Tập 100</h3>
-                        <p>Giá khuyến mãi: 18.000₫</p>
-                        <p>Giá gốc: <s>30,000₫</s></p>
-                        <p>Giảm giá: 40%</p>
-                    </a>
-                </div>
-
-                <div>
-
-                    <h3>Kiếm sĩ mạnh nhất (Tái Bản)</h3>
-                    <p>Tác giả: Jared Diamond</p>
-                    <p>Giá khuyến mãi: 47,650₫</p>
-                    <p>Giá gốc: <s>75,000₫</s></p>
-                    <p>Giảm giá: 37%</p>
-
-                </div>
-
-                <div>
-
-                    <h3>Oggy và những chú gián - Sân Băng</h3>
-                    <p>Giá khuyến mãi: 134,000₫</p>
-                    <p>Giá gốc: <s>213,000₫</s></p>
-                    <p>Giảm giá: 37%</p>
-
-                </div>
-
-                <div>
-
-                    <h3>Tấm Cám (2025)</h3>
-                    <p>Giá khuyến mãi: 119,000₫</p>
-                    <p>Giá gốc: <s>189,000₫</s></p>
-                    <p>Giảm giá: 37%</p>
-
-                </div>
-
+                <c:choose>
+                    <c:when test="${not empty flashSaleComics}">
+                        <c:forEach var="comic" items="${flashSaleComics}" varStatus="status">
+                            <div>
+                                <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
+                                    <img src="${comic.image_url}"
+                                         alt="${comic.name}"
+                                         style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;"
+                                         onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
+                                    <h3>${comic.name}</h3>
+                                    <p class="flash-price">
+                                        Giá khuyến mãi:
+                                        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/>₫
+                                    </p>
+                                    <p class="original-price">
+                                        Giá gốc:
+                                        <s><fmt:formatNumber value="${comic.original_price}" pattern="#,###"/>₫</s>
+                                    </p>
+                                    <p class="discount-tag">
+                                        Giảm giá:
+                                        <fmt:formatNumber value="${comic.discount_percent}" pattern="#" maxFractionDigits="0"/>%
+                                    </p>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                            <p style="color: #999; font-size: 16px;">
+                                <i class="fa-solid fa-box-open" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+                                Hiện không có sản phẩm Flash Sale
+                            </p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
-
             <div class="more-btn">
-                <a href="FlashSale.jsp">
+                <a href="${pageContext.request.contextPath}/flash-sale">
                     <button>Xem thêm</button>
                 </a>
             </div>

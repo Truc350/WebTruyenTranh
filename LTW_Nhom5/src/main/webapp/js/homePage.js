@@ -1,4 +1,4 @@
-//banner
+
 document.addEventListener("DOMContentLoaded", function () {
     const banner = document.querySelector('.banner');
     const listImage = document.querySelector('.list-images');
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let interval;
 
     function updateSlider() {
-        const width = banner.clientWidth;  // luôn lấy mới, chính xác
+        const width = banner.clientWidth;
         listImage.style.transform = `translateX(${-width * index}px)`;
 
         dots.forEach((dot, i) => {
@@ -31,10 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
         updateSlider();
     }
 
-    // Auto play
     interval = setInterval(nextSlide, 3000);
 
-    // Nút
     if (btnNext) btnNext.addEventListener('click', () => {
         nextSlide();
         clearInterval(interval);
@@ -47,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
         interval = setInterval(nextSlide, 3000);
     });
 
-    // Dot click
     dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
             index = i;
@@ -57,10 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Quan trọng: resize cửa sổ + chờ ảnh load
     window.addEventListener('resize', updateSlider);
 
-    // Chờ tất cả ảnh load xong mới start (tránh width sai ban đầu)
     let loaded = 0;
     imgs.forEach(img => {
         if (img.complete) loaded++;
@@ -71,9 +66,86 @@ document.addEventListener("DOMContentLoaded", function () {
     else imgs.forEach(img => img.addEventListener('load', () => { if (++loaded === imgs.length) { updateSlider(); interval = setInterval(nextSlide, 3000); } }));
 });
 
+// ============================================
+// FLASH SALE COUNTDOWN (TRANG CHỦ)
+// ============================================
+function initFlashSaleCountdown() {
+    const countdownElement = document.getElementById('flash-sale-countdown');
 
+    if (!countdownElement) {
+        console.log('⚠️ No flash sale countdown element found');
+        return;
+    }
 
+    const endTimeStr = countdownElement.getAttribute('data-end-time');
 
+    if (!endTimeStr) {
+        console.error('❌ No end time data attribute found');
+        countdownElement.innerHTML = 'Không có thông tin thời gian';
+        return;
+    }
+
+    const endTimeMillis = parseInt(endTimeStr);
+
+    if (!endTimeMillis || isNaN(endTimeMillis)) {
+        console.error('❌ Invalid end time:', endTimeStr);
+        countdownElement.innerHTML = 'Thời gian không hợp lệ';
+        return;
+    }
+
+    console.log('⏰ Flash Sale Countdown initialized');
+    console.log('   End time millis:', endTimeMillis);
+    console.log('   End time date:', new Date(endTimeMillis));
+    console.log('   Current time:', new Date());
+
+    let countdownInterval;
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = endTimeMillis - now;
+
+        console.log('⏱️ Distance:', distance, 'ms');
+
+        if (distance < 0) {
+            countdownElement.innerHTML = '<span style="color: #f44336;">⏰ Flash Sale đã kết thúc!</span>';
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            // Reload trang sau 3 giây
+            setTimeout(() => {
+                console.log('🔄 Reloading page...');
+                location.reload();
+            }, 3000);
+            return;
+        }
+
+        // Tính toán thời gian
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Hiển thị
+        let timeString = '';
+        if (days > 0) {
+            timeString = `${days} ngày ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        countdownElement.innerHTML = `⏰ Kết thúc sau: <strong style="font-size: 18px;">${timeString}</strong>`;
+    }
+
+    // Cập nhật ngay lập tức
+    updateCountdown();
+
+    // Cập nhật mỗi giây
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Gọi hàm countdown khi DOM đã sẵn sàng
+document.addEventListener("DOMContentLoaded", initFlashSaleCountdown);
 
 //slider
 document.addEventListener("DOMContentLoaded", function () {
@@ -88,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let currentPosition = 0;
 
         function recalc() {
-            const itemWidth = items[0].offsetWidth + 10; // khoảng cách giữa các item
+            const itemWidth = items[0].offsetWidth + 10;
             const totalItems = items.length;
             const trackWidth = totalItems * itemWidth;
             const containerWidth = slider.offsetWidth;
@@ -100,77 +172,30 @@ document.addEventListener("DOMContentLoaded", function () {
             track.style.transform = `translateX(${position}px)`;
         }
 
-        // Nút prev
         prevBtn.addEventListener('click', () => {
             const { itemWidth } = recalc();
             currentPosition += itemWidth;
-            if (currentPosition > 0) currentPosition = 0; // không vượt quá đầu
+            if (currentPosition > 0) currentPosition = 0;
             moveSlider(currentPosition);
         });
 
-        // Nút next
         nextBtn.addEventListener('click', () => {
             const { itemWidth, maxPosition } = recalc();
             currentPosition -= itemWidth;
-            if (currentPosition < maxPosition) currentPosition = maxPosition; // không vượt quá cuối
+            if (currentPosition < maxPosition) currentPosition = maxPosition;
             moveSlider(currentPosition);
         });
 
-        // Khởi tạo
         moveSlider(currentPosition);
     });
 
-    document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
-         document.querySelector("#product-slider-popup").style.display = "block";
-
+    const moreBtn = document.getElementById("more-btn-popup-slider");
+    if (moreBtn) {
+        moreBtn.addEventListener("click", function () {
+            const popup = document.querySelector("#product-slider-popup");
+            if (popup) {
+                popup.style.display = "block";
+            }
+        });
+    }
 });
-
-});
-
-
-// // top truyện
-// document.getElementById("item-pop-1").addEventListener("mouseover", function () {
-//     document.querySelector(".pop-detail-home1").style.display = "flex";
-//     document.querySelector(".pop-detail-home2").style.display = "none";
-//     document.querySelector(".pop-detail-home3").style.display = "none";
-//     document.querySelector(".pop-detail-home4").style.display = "none";
-//     document.querySelector(".pop-detail-home5").style.display = "none";
-// });
-//
-// document.getElementById("item-pop-2").addEventListener("mouseover", function () {
-//     document.querySelector(".pop-detail-home2").style.display = "flex";
-//     document.querySelector(".pop-detail-home1").style.display = "none";
-//     document.querySelector(".pop-detail-home3").style.display = "none";
-//     document.querySelector(".pop-detail-home4").style.display = "none";
-//     document.querySelector(".pop-detail-home5").style.display = "none";
-// });
-//
-// document.getElementById("item-pop-3").addEventListener("mouseover", function () {
-//     document.querySelector(".pop-detail-home3").style.display = "flex";
-//     document.querySelector(".pop-detail-home1").style.display = "none";
-//     document.querySelector(".pop-detail-home2").style.display = "none";
-//     document.querySelector(".pop-detail-home4").style.display = "none";
-//     document.querySelector(".pop-detail-home5").style.display = "none";
-// });
-//
-// document.getElementById("item-pop-4").addEventListener("mouseover", function () {
-//     document.querySelector(".pop-detail-home4").style.display = "flex";
-//     document.querySelector(".pop-detail-home1").style.display = "none";
-//     document.querySelector(".pop-detail-home2").style.display = "none";
-//     document.querySelector(".pop-detail-home3").style.display = "none";
-//     document.querySelector(".pop-detail-home5").style.display = "none";
-// });
-// document.getElementById("item-pop-5").addEventListener("mouseover", function () {
-//     document.querySelector(".pop-detail-home5").style.display = "flex";
-//     document.querySelector(".pop-detail-home1").style.display = "none";
-//     document.querySelector(".pop-detail-home2").style.display = "none";
-//     document.querySelector(".pop-detail-home3").style.display = "none";
-//     document.querySelector(".pop-detail-home4").style.display = "none";
-// });
-//
-//
-// document.getElementById("more-btn-popup-slider").addEventListener("click", function () {
-//     document.querySelector("#product-slider-popup").style.display = "block";
-//
-// });
-
