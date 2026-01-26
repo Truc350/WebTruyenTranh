@@ -3491,5 +3491,67 @@ public class ComicDAO extends ADao {
                         .orElse(null)
         );
     }
+    /**
+     * Lấy comics theo series với thông tin Flash Sale
+     */
+    /**
+     * Lấy comics theo series ID với Flash Sale
+     */
+    public List<Comic> getComicsBySeriesIdWithFlashSale(int seriesId) {
+        String sql = """
+        SELECT 
+            c.*,
+            s.series_name,
+            
+            -- Flash Sale Info
+            fs.id AS flash_sale_id,
+            fs.name AS flash_sale_name,
+            fs.discount_percent AS flash_sale_discount,
+            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
+            
+            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
+            
+            COALESCE(
+                (SELECT SUM(oi.quantity) 
+                 FROM order_items oi
+                 JOIN orders o ON oi.order_id = o.id
+                 WHERE oi.comic_id = c.id 
+                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
+                0
+            ) AS totalSold
+            
+        FROM comics c
+        LEFT JOIN series s ON c.series_id = s.id
+        
+        LEFT JOIN (
+            SELECT 
+                fsc.comic_id,
+                fs.id,
+                fs.name,
+                fs.discount_percent,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fsc.comic_id 
+                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
+                ) AS rn
+            FROM flashsale_comics fsc
+            JOIN flashsale fs ON fsc.flashsale_id = fs.id
+            WHERE fs.status = 'active'
+              AND fs.start_time <= NOW()
+              AND fs.end_time >= NOW()
+        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
+        
+        WHERE c.series_id = ?
+          AND c.is_deleted = 0
+          AND c.is_hidden = 0
+        
+        ORDER BY c.volume ASC
+    """;
 
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, seriesId)
+                        .mapToBean(Comic.class)
+                        .list()
+        );
+    }
 }

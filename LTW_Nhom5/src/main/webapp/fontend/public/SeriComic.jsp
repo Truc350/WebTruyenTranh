@@ -84,17 +84,44 @@
                     <c:forEach var="comic" items="${comicsInSeries}">
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
-                                <img src="${comic.thumbnailUrl}"
-                                     alt="${comic.nameComics}"
-                                     onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                                <div style="position: relative;">
+                                    <!-- Badge Flash Sale -->
+                                    <c:if test="${comic.hasFlashSale}">
+                                        <div class="flash-sale-badge">
+                                            <i class="fas fa-bolt"></i> FLASH SALE
+                                        </div>
+                                    </c:if>
+
+                                    <img src="${comic.thumbnailUrl}"
+                                         alt="${comic.nameComics}"
+                                         onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                                </div>
+
                                 <p class="product-name">${comic.nameComics}</p>
 
-                                <fmt:formatNumber value="${comic.price}"
-                                                  type="number"
-                                                  groupingUsed="true"
-                                                  var="formattedPrice"/>
-                                <p class="product-price">${formattedPrice} đ</p>
+                                <!-- Giá với Flash Sale -->
+                                <c:choose>
+                                    <c:when test="${comic.hasFlashSale}">
+                                        <!-- Có Flash Sale -->
+                                        <p class="product-price flash">
+                                            <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
+                                        </p>
+                                        <p class="original-price">
+                                            <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ</s>
+                                            <span class="discount-badge flash">
+                                                -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
+                                            </span>
+                                        </p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- Giá thường -->
+                                        <p class="product-price">
+                                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
+                                        </p>
+                                    </c:otherwise>
+                                </c:choose>
 
+                                <!-- Sold count -->
                                 <c:choose>
                                     <c:when test="${comic.totalSold != null && comic.totalSold > 0}">
                                         <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
@@ -117,6 +144,27 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+
+
+
+<!-- DEBUG INFO (Remove in production) -->
+<c:if test="${pageContext.request.serverName == 'localhost'}">
+    <div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 8px; font-size: 12px; max-width: 300px; z-index: 9999;">
+        <strong>🔍 Debug Info:</strong><br>
+        Series ID: ${series.id}<br>
+        Total Comics: ${totalComics}<br>
+        Comics with Flash Sale:
+        <c:set var="flashSaleCount" value="0" />
+        <c:forEach var="comic" items="${comicsInSeries}">
+            <c:if test="${comic.hasFlashSale}">
+                <c:set var="flashSaleCount" value="${flashSaleCount + 1}" />
+            </c:if>
+        </c:forEach>
+            ${flashSaleCount}
+    </div>
+</c:if>
+
 
 <!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp"/>

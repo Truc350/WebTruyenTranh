@@ -36,11 +36,16 @@ public class Cart {
 
             // Cập nhật Flash Sale info nếu có
             if (flashSaleId != null && flashSalePrice != null) {
-                existingItem.setFlashSaleId(flashSaleId);
-                existingItem.setPriceAtPurchase(flashSalePrice);
+                existingItem.updateFlashSale(flashSaleId, flashSalePrice);
+            } else {
+                // Không có Flash Sale → Đảm bảo dùng giá discount
+                if (existingItem.getFlashSaleId() == null) {
+                    existingItem.setPriceAtPurchase(comic.getDiscountPrice());
+                }
             }
         } else {
-            // Chưa có, thêm mới
+            // ✅ Chưa có, thêm mới
+            // Constructor sẽ tự động dùng comic.getDiscountPrice() nếu không có Flash Sale
             CartItem newItem = new CartItem(comic, quantity, flashSaleId, flashSalePrice);
             data.put(comic.getId(), newItem);
         }

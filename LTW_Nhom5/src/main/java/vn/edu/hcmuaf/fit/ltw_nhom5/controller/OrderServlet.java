@@ -28,7 +28,6 @@ public class OrderServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         Jdbi jdbi = JdbiConnector.get();
-
         orderDAO = new OrderDAO(jdbi);
         userDAO = new UserDao(jdbi);
         userShippingAddressDAO = new UserShippingAddressDAO(jdbi);
@@ -191,7 +190,7 @@ public class OrderServlet extends HttpServlet {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setComicId(item.getComic().getId());
                 orderItem.setQuantity(item.getQuantity());
-                orderItem.setPriceAtPurchase(item.getComic().getDiscountPrice());
+                orderItem.setPriceAtPurchase(item.getFinalPrice());
                 orderItems.add(orderItem);
             }
 

@@ -101,6 +101,9 @@ public class OrderService {
     /**
      * Xây dựng dữ liệu đơn hàng đầy đủ
      */
+    /**
+     * Xây dựng dữ liệu đơn hàng đầy đủ
+     */
     private Map<String, Object> buildOrderData(Order order) {
         Map<String, Object> data = new HashMap<>();
 
@@ -115,7 +118,6 @@ public class OrderService {
             String formattedDate = "";
 
             if (orderDate == null) {
-                // Trường hợp NULL - set giá trị mặc định
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
                 System.out.println("⚠️ Order " + order.getId() + " has NULL orderDate");
@@ -132,7 +134,6 @@ public class OrderService {
                         localDateTime.atZone(java.time.ZoneId.systemDefault()).toInstant()
                 ));
             } else if (orderDate instanceof java.sql.Timestamp) {
-                // THÊM XỬ LÝ CHO TIMESTAMP
                 java.sql.Timestamp timestamp = (java.sql.Timestamp) orderDate;
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
                 formattedDate = sdf.format(timestamp);
@@ -142,7 +143,6 @@ public class OrderService {
                 formattedDate = sdf.format(orderDate);
                 data.put("orderDate", orderDate);
             } else {
-                // Kiểu dữ liệu không xác định
                 System.out.println("❌ Unknown date type for order " + order.getId() + ": " + orderDate.getClass().getName());
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
@@ -159,8 +159,6 @@ public class OrderService {
 
         data.put("status", order.getStatus());
         data.put("totalAmount", order.getTotalAmount());
-
-        // SỬ DỤNG CurrencyFormatter ĐỂ FORMAT TIỀN
         data.put("formattedAmount", CurrencyFormatter.format(order.getTotalAmount()));
 
         data.put("recipientName", order.getRecipientName());
@@ -182,12 +180,8 @@ public class OrderService {
         }
 
         data.put("shippingProvider", shippingProviderDisplay);
-
         data.put("shippingFee", order.getShippingFee());
-
-        //  FORMAT PHÍ VẬN CHUYỂN
         data.put("formattedShippingFee", CurrencyFormatter.format(order.getShippingFee()));
-
         data.put("pointUsed", order.getPointUsed());
 
         // LẤY LÝ DO HỦY TỪ ORDER_HISTORY (NẾU ĐƠN BỊ HỦY)
@@ -197,7 +191,6 @@ public class OrderService {
                 if (history.isPresent()) {
                     data.put("cancellationReason", history.get().getReason() != null ? history.get().getReason() : "Không có lý do");
                     data.put("cancelledBy", history.get().getChangedBy());
-                    // CONVERT LocalDateTime sang java.util.Date cho JSTL
                     LocalDateTime cancelledAt = history.get().getChangedAt();
                     if (cancelledAt != null) {
                         java.util.Date cancelledDate = java.util.Date.from(
@@ -237,7 +230,6 @@ public class OrderService {
             data.put("paymentStatus", payment.getPaymentStatus());
             data.put("transactionId", payment.getTransactionId());
 
-            // Format hiển thị phương thức thanh toán
             if ("COD".equals(payment.getPaymentMethod())) {
                 data.put("paymentMethodDisplay", "COD");
             } else if ("Completed".equals(payment.getPaymentStatus())) {
@@ -246,7 +238,6 @@ public class OrderService {
                 data.put("paymentMethodDisplay", payment.getPaymentMethod());
             }
 
-            // Format hiển thị trạng thái thanh toán
             switch (payment.getPaymentStatus()) {
                 case "Completed":
                     data.put("paymentStatusDisplay", "Đã thanh toán");
@@ -266,10 +257,15 @@ public class OrderService {
             data.put("paymentStatusDisplay", "—");
         }
 
-        // Lấy danh sách sản phẩm
+        // ============================================================
+        // ✅ PHẦN QUAN TRỌNG: XỬ LÝ DANH SÁCH SẢN PHẨM VỚI FLASH SALE
+        // ============================================================
         List<OrderItem> orderItems = orderDAO.getOrderItems(order.getId());
         List<Map<String, Object>> itemsData = new ArrayList<>();
         StringBuilder productSummary = new StringBuilder();
+
+        // ✅ KHỞI TẠO FlashSaleComicsDAO
+        FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
 
         for (int i = 0; i < orderItems.size(); i++) {
             OrderItem item = orderItems.get(i);
@@ -278,10 +274,10 @@ public class OrderService {
             itemData.put("id", item.getId());
             itemData.put("comicId", item.getComicId());
             itemData.put("quantity", item.getQuantity());
-            itemData.put("priceAtPurchase", item.getPriceAtPurchase());
 
-            // SỬ DỤNG CurrencyFormatter ĐỂ FORMAT GIÁ SẢN PHẨM
-            itemData.put("formattedPrice", CurrencyFormatter.format(item.getPriceAtPurchase()));
+            // ✅ GIÁ ĐÃ MUA (KHÔNG THAY ĐỔI) - Dùng cho tính tổng tiền
+            itemData.put("priceAtPurchase", item.getPriceAtPurchase());
+            itemData.put("formattedPriceAtPurchase", CurrencyFormatter.format(item.getPriceAtPurchase()));
 
             // Lấy thông tin comic
             try {
@@ -289,6 +285,43 @@ public class OrderService {
                 if (comic != null) {
                     itemData.put("comicName", comic.getNameComics());
                     itemData.put("comicImage", comic.getThumbnailUrl());
+
+                    // ✅ KIỂM TRA FLASH SALE HIỆN TẠI
+                    Map<String, Object> flashSaleInfo = flashSaleComicsDAO.getFlashSaleInfoByComicId(item.getComicId());
+
+                    double displayPrice = item.getPriceAtPurchase(); // Mặc định là giá đã mua
+                    boolean hasActiveFlashSale = false;
+
+                    if (flashSaleInfo != null) {
+                        // ✅ CÓ FLASH SALE ĐANG HOẠT ĐỘNG
+                        hasActiveFlashSale = true;
+
+                        Object discountObj = flashSaleInfo.get("discount_percent");
+                        if (discountObj instanceof Number) {
+                            double discountPercent = ((Number) discountObj).doubleValue();
+                            // Tính giá Flash Sale hiện tại từ GIÁ GỐC
+                            displayPrice = comic.getPrice() * (1 - discountPercent / 100.0);
+
+                            itemData.put("flashSaleName", flashSaleInfo.get("flashsale_name"));
+                            itemData.put("flashSaleDiscount", discountPercent);
+                        }
+                    } else {
+                        // ✅ KHÔNG CÓ FLASH SALE → Dùng giá discount hiện tại
+                        if (comic.hasDiscount()) {
+                            displayPrice = comic.getDiscountPrice();
+                        } else {
+                            displayPrice = comic.getPrice(); // Giá gốc
+                        }
+                    }
+
+                    // ✅ GIÁ HIỂN THỊ (TỰ ĐỘNG CẬP NHẬT)
+                    itemData.put("currentDisplayPrice", displayPrice);
+                    itemData.put("formattedDisplayPrice", CurrencyFormatter.format(displayPrice));
+                    itemData.put("hasActiveFlashSale", hasActiveFlashSale);
+
+                    // ✅ KIỂM TRA XEM GIÁ CÓ THAY ĐỔI SO VỚI LÚC MUA KHÔNG
+                    boolean priceChanged = Math.abs(displayPrice - item.getPriceAtPurchase()) > 0.01;
+                    itemData.put("priceChanged", priceChanged);
 
                     // Thêm vào product summary
                     if (i > 0) productSummary.append(", ");
@@ -299,10 +332,18 @@ public class OrderService {
                 } else {
                     itemData.put("comicName", "Sản phẩm #" + item.getComicId());
                     itemData.put("comicImage", "");
+                    itemData.put("hasActiveFlashSale", false);
+                    itemData.put("priceChanged", false);
+                    itemData.put("currentDisplayPrice", item.getPriceAtPurchase());
+                    itemData.put("formattedDisplayPrice", CurrencyFormatter.format(item.getPriceAtPurchase()));
                 }
             } catch (Exception e) {
                 itemData.put("comicName", "Sản phẩm #" + item.getComicId());
                 itemData.put("comicImage", "");
+                itemData.put("hasActiveFlashSale", false);
+                itemData.put("priceChanged", false);
+                itemData.put("currentDisplayPrice", item.getPriceAtPurchase());
+                itemData.put("formattedDisplayPrice", CurrencyFormatter.format(item.getPriceAtPurchase()));
             }
 
             itemsData.add(itemData);
@@ -557,8 +598,9 @@ public class OrderService {
 
     /**
      * Tìm kiếm đơn hàng theo tab cụ thể
+     *
      * @param keyword Từ khóa tìm kiếm (mã đơn hoặc tên khách)
-     * @param status Trạng thái đơn hàng (tab hiện tại)
+     * @param status  Trạng thái đơn hàng (tab hiện tại)
      * @return Danh sách đơn hàng đã format
      */
     public List<Map<String, Object>> searchOrdersByTab(String keyword, String status) {
@@ -640,7 +682,8 @@ public class OrderService {
 
     /**
      * Cập nhật trạng thái đơn hàng và tự động cập nhật total_spent
-     * @param orderId ID đơn hàng
+     *
+     * @param orderId   ID đơn hàng
      * @param newStatus Trạng thái mới
      * @return true nếu thành công
      */
