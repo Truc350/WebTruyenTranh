@@ -20,7 +20,7 @@
 
 
     <div class="main-content">
-        <jsp:include page="/fontend/admin/HeaderAdmin.jsp"/>
+        <%@ include file="HeaderAdmin.jsp" %>
         <h2 class="page-title">Quản lý người dùng</h2>
 
         <div class="user-management">
@@ -219,7 +219,7 @@
                 <!-- Footer -->
                 <div class="popup-footer">
                     <button class="btn-close" onclick="document.getElementById('detailPopup').style.display='none'">
-                         Đóng
+                        Đóng
                     </button>
                 </div>
             </div>
@@ -605,7 +605,7 @@
         const kebabButtons = document.querySelectorAll('.kebab-btn');
 
         kebabButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
                 e.stopPropagation();
 
                 document.querySelectorAll('.menu-dropdown').forEach(menu => {
@@ -619,7 +619,7 @@
             });
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('.popup-overlay') && !e.target.closest('.kebab-menu')) {
                 document.querySelectorAll('.menu-dropdown').forEach(menu => {
                     menu.classList.remove('show');
@@ -628,14 +628,14 @@
         });
 
         document.querySelectorAll('.menu-dropdown').forEach(menu => {
-            menu.addEventListener('click', function(e) {
+            menu.addEventListener('click', function (e) {
                 e.stopPropagation();
             });
         });
 
         // ========== PHẦN 3: XỬ LÝ POPUP ==========
         document.querySelectorAll('.popup-overlay').forEach(popup => {
-            popup.addEventListener('click', function(e) {
+            popup.addEventListener('click', function (e) {
                 if (e.target === this) {
                     this.style.display = 'none';
                     document.querySelectorAll('.menu-dropdown').forEach(menu => {
@@ -646,14 +646,14 @@
         });
 
         document.querySelectorAll('.popup-box').forEach(box => {
-            box.addEventListener('click', function(e) {
+            box.addEventListener('click', function (e) {
                 e.stopPropagation();
             });
         });
 
         // ========== PHẦN 4: XEM CHI TIẾT ==========
         document.querySelectorAll('.view-detail').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -697,7 +697,7 @@
 
         // ========== PHẦN 5: NÂNG CẤP ==========
         document.querySelectorAll('.upgrade-user').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -757,29 +757,95 @@
             document.getElementById('upgradePopup').style.display = 'none';
         });
 
-        // ========== PHẦN 6: KHÓA TÀI KHOẢN ==========
+        // ========== PHẦN 6: KHÓA TÀI KHOẢN (IMPROVED) ==========
         document.querySelectorAll('.permanent-lock').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 const userId = this.dataset.id;
                 const userName = this.dataset.name;
 
-                document.getElementById('lockUserId').value = userId;
-                document.getElementById('lockMessage').textContent =
-                    `KHÓA VĨNH VIỄN tài khoản "${userName}"?\n\nHành động này KHÔNG THỂ HOÀN TÁC!`;
+                // ✅ Hiện loading khi đang kiểm tra
+                const loadingAlert = document.createElement('div');
+                loadingAlert.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.3);z-index:9999;';
+                loadingAlert.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang kiểm tra vi phạm...';
+                document.body.appendChild(loadingAlert);
 
-                document.querySelectorAll('.menu-dropdown').forEach(menu => {
-                    menu.classList.remove('show');
-                });
+                // ✅ GỌI API KIỂM TRA VI PHẠM
+                fetch('${pageContext.request.contextPath}/admin/user-management', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'action=check-violation&userId=' + userId
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Xóa loading
+                        document.body.removeChild(loadingAlert);
 
-                document.getElementById('lockPopup').style.display = 'flex';
+                        if (data.hasViolation) {
+                            // ✅ User đã vi phạm → Cho phép khóa
+                            const violations = data.violations.join('\n• ');
+
+                            document.getElementById('lockUserId').value = userId;
+                            document.getElementById('lockMessage').innerHTML =
+                                '<strong style="color: #dc3545;">⚠️ KHÓA VĨNH VIỄN TÀI KHOẢN<' + '/strong>' +
+                                '<div style="margin: 15px 0; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">' +
+                                '<strong>Người dùng:<' + '/strong> ' + userName + '<br>' +
+                                '<strong style="color: #dc3545;">Vi phạm phát hiện (' + data.violationCount + '):<' + '/strong><br>' +
+                                '• ' + violations.replace(/\\n/g, '<br>• ') +
+                                '<' + '/div>' +
+                                '<div style="background: #f8d7da; padding: 10px; border-radius: 4px; margin-top: 10px;">' +
+                                '<strong style="color: #721c24;">⚠️ CẢNH BÁO:<' + '/strong> Hành động này KHÔNG THỂ HOÀN TÁC!' +
+                                '<' + '/div>';
+
+                            // Đóng menu kebab
+                            document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                                menu.classList.remove('show');
+                            });
+
+                            // Hiện popup
+                            document.getElementById('lockPopup').style.display = 'flex';
+
+                        } else {
+                            // ❌ User chưa vi phạm → Không cho khóa
+                            alert(
+                                '❌ KHÔNG THỂ KHÓA TÀI KHOẢN\n\n' +
+                                '👤 Người dùng: ' + userName + '\n\n' +
+                                '📋 Lý do: Chưa có vi phạm nào được ghi nhận\n\n' +
+                                '📌 Điều kiện khóa tài khoản:\n' +
+                                '   • Hủy ≥ 5 đơn hàng trong 1 giờ\n' +
+                                '   • Đăng nhập thất bại ≥ 5 lần liên tiếp\n\n' +
+                                '💡 Hệ thống chỉ cho phép khóa tài khoản có hành vi vi phạm rõ ràng.'
+                            );
+
+                            // Đóng menu kebab
+                            document.querySelectorAll('.menu-dropdown').forEach(menu => {
+                                menu.classList.remove('show');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        // Xóa loading nếu có lỗi
+                        if (document.body.contains(loadingAlert)) {
+                            document.body.removeChild(loadingAlert);
+                        }
+
+                        console.error('Error:', error);
+                        alert('⚠️ Có lỗi xảy ra khi kiểm tra vi phạm.\n\nVui lòng thử lại sau.');
+                    });
             });
         });
 
+// ✅ XÁC NHẬN KHÓA (Improved với loading state)
         document.getElementById('confirmLock').addEventListener('click', function () {
             const userId = document.getElementById('lockUserId').value;
+
+            // Disable button và hiện loading
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang khóa...';
 
             fetch('${pageContext.request.contextPath}/admin/user-management', {
                 method: 'POST',
@@ -791,15 +857,19 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        alert(data.message);
+                        alert('✅ KHÓA THÀNH CÔNG\n\n' + data.message);
                         location.reload();
                     } else {
-                        alert('Lỗi: ' + data.message);
+                        alert('❌ KHÓA THẤT BẠI\n\n' + data.message);
+                        this.disabled = false;
+                        this.textContent = 'Khóa vĩnh viễn';
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Có lỗi xảy ra khi khóa tài khoản');
+                    alert('⚠️ Có lỗi xảy ra khi khóa tài khoản.\n\nVui lòng thử lại sau.');
+                    this.disabled = false;
+                    this.textContent = 'Khóa vĩnh viễn';
                 });
 
             document.getElementById('lockPopup').style.display = 'none';
@@ -847,7 +917,7 @@
 <script>
     // ✅ AUTO-RELOAD - KHÔNG RELOAD KHI CÓ POPUP
     (function autoRefreshUserData() {
-        setInterval(function() {
+        setInterval(function () {
             const hasOpenPopup = document.querySelector('.popup-overlay[style*="display: flex"]');
 
             if (hasOpenPopup) {

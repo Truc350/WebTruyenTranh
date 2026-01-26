@@ -1,6 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Notification {
     private int id;
@@ -12,12 +13,12 @@ public class Notification {
     private long relatedId;
     private String relatedType;
     private LocalDateTime createdAt;
-    private LocalDateTime raedAt;
+    private LocalDateTime readAt;
 
     public Notification() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -90,10 +91,30 @@ public class Notification {
     }
 
     public LocalDateTime getRaedAt() {
-        return raedAt;
+        return readAt;
     }
 
     public void setRaedAt(LocalDateTime raedAt) {
-        this.raedAt = raedAt;
+        this.readAt = raedAt;
+    }
+
+    public boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
+    // THÊM METHOD NÀY - Format createdAt cho JSP
+    public String getFormattedCreatedAt() {
+        if (createdAt == null) return "";
+        return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    // THÊM METHOD NÀY - Format readAt cho JSP (nếu cần)
+    public String getFormattedReadAt() {
+        if (readAt == null) return "";
+        return readAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }
