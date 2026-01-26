@@ -226,4 +226,37 @@ public class ComicService {
     public List<Category> getAllCategories() {
         return categoriesDao.listCategories();
     }
+
+
+
+    /**
+     * Tìm kiếm với filter ẩn/hiện
+     */
+    public List<Comic> searchComicsAdminWithFilter(String keyword, String author,
+                                                   Integer categoryId, Integer hiddenFilter,
+                                                   int page, int limit) {
+        return comicDAO.searchComicsAdminWithFilter(keyword, author, categoryId, hiddenFilter, page, limit);
+    }
+
+    /**
+     * Đếm với filter ẩn/hiện
+     */
+    public int countComicsAdminWithFilter(String keyword, String author,
+                                          Integer categoryId, Integer hiddenFilter) {
+        return comicDAO.countComicsAdminWithFilter(keyword, author, categoryId, hiddenFilter);
+    }
+
+    /**
+     * Lấy tất cả với filter ẩn/hiện
+     */
+    public List<Comic> getAllComicsAdminWithFilter(int page, int limit, Integer hiddenFilter) {
+        return comicDAO.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
+    }
+
+    /**
+     * Đếm tất cả với filter ẩn/hiện
+     */
+    public int countAllComicsWithFilter(Integer hiddenFilter) {
+        return comicDAO.countAllComicsWithFilter(hiddenFilter);
+    }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-@WebServlet("/admin/products/search")
+@WebServlet({"/admin/products/search"})
 public class AdminProductManagementServlet extends HttpServlet {
     private ComicService comicService;
     private Gson gson;
@@ -41,6 +41,7 @@ public class AdminProductManagementServlet extends HttpServlet {
             // Lấy parameters
             String keyword = request.getParameter("keyword");
             String pageStr = request.getParameter("page");
+            String hiddenFilterStr = request.getParameter("hiddenFilter");
 
             int page = 1;
             if (pageStr != null && !pageStr.isEmpty()) {
@@ -52,6 +53,16 @@ public class AdminProductManagementServlet extends HttpServlet {
                 }
             }
 
+            //XỬ LÝ hiddenFilter
+            Integer hiddenFilter = null;
+            if (hiddenFilterStr != null && !hiddenFilterStr.trim().isEmpty()) {
+                try {
+                    hiddenFilter = Integer.parseInt(hiddenFilterStr);
+                } catch (NumberFormatException e) {
+                    hiddenFilter = null;
+                }
+            }
+
             int limit = 8;
 
             // Tìm kiếm
@@ -59,12 +70,21 @@ public class AdminProductManagementServlet extends HttpServlet {
             int totalComics;
 
             if (keyword != null && !keyword.trim().isEmpty()) {
-                comics = comicService.searchComicsAdmin(keyword.trim(), null, null, page, limit);
-                totalComics = comicService.countComicsAdmin(keyword.trim(), null, null);
+                //GỌI METHOD MỚI CÓ FILTER
+                comics = comicService.searchComicsAdminWithFilter(keyword.trim(), null, null, hiddenFilter, page, limit);
+                totalComics = comicService.countComicsAdminWithFilter(keyword.trim(), null, null, hiddenFilter);
             } else {
-                comics = comicService.getAllComicsAdmin(page, limit);
-                totalComics = comicService.countAllComics();
+                // GỌI METHOD MỚI CÓ FILTER
+                comics = comicService.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
+                totalComics = comicService.countAllComicsWithFilter(hiddenFilter);
             }
+//            if (keyword != null && !keyword.trim().isEmpty()) {
+//                comics = comicService.searchComicsAdmin(keyword.trim(), null, null, page, limit);
+//                totalComics = comicService.countComicsAdmin(keyword.trim(), null, null);
+//            } else {
+//                comics = comicService.getAllComicsAdmin(page, limit);
+//                totalComics = comicService.countAllComics();
+//            }
 
             // Tính số trang
             int totalPages = (int) Math.ceil((double) totalComics / limit);
@@ -80,6 +100,7 @@ public class AdminProductManagementServlet extends HttpServlet {
                 dto.put("author", comic.getAuthor());
                 dto.put("price", comic.getPrice());
                 dto.put("stockQuantity", comic.getStockQuantity());
+                dto.put("isHidden", comic.getIsHidden());
                 simplifiedComics.add(dto);
             }
 
@@ -97,7 +118,7 @@ public class AdminProductManagementServlet extends HttpServlet {
             response.getWriter().flush();
 
         } catch (Exception e) {
-            System.err.println("❌ ERROR:");
+            System.err.println("ERROR:");
             e.printStackTrace();
 
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

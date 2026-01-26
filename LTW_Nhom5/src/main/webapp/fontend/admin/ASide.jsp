@@ -17,13 +17,13 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/seriesManagement.jsp">
+                <a href="${pageContext.request.contextPath}/fontend/admin/productManagement.jsp">
                     <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/productManagement.jsp">
+                <a href="${pageContext.request.contextPath}/SeriesManagement?filter=all">
                     <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
                     <span>Quản lý series</span>
                 </a>
