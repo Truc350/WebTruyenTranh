@@ -41,7 +41,7 @@ public class OrderService {
             ordersByStatus.put("Pending", getOrdersWithDetailsByStatus("Pending"));
             ordersByStatus.put("AwaitingPickup", getOrdersWithDetailsByStatus("AwaitingPickup"));
             ordersByStatus.put("Shipping", getOrdersWithDetailsByStatus("Shipping"));
-            ordersByStatus.put("Completed", getOrdersWithDetailsByStatus("Completed"));
+            ordersByStatus.put("Completed", searchCompletedOrders(""));
             ordersByStatus.put("Returned", getOrdersWithDetailsByStatus("Returned"));
             ordersByStatus.put("Cancelled", getOrdersWithDetailsByStatus("Cancelled"));
 
@@ -659,12 +659,12 @@ public class OrderService {
         return searchOrdersByTab(keyword, "Shipping");
     }
 
-    /**
-     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
-     */
-    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
-        return searchOrdersByTab(keyword, "Completed");
-    }
+//    /**
+//     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
+//     */
+//    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+//        return searchOrdersByTab(keyword, "Completed");
+//    }
 
     /**
      * Tìm kiếm đơn hàng cho tab TRẢ HÀNG/HOÀN TIỀN
@@ -705,5 +705,79 @@ public class OrderService {
             }
         }
         return true;
+    }
+
+    /**
+     * Tìm kiếm đơn hàng đã giao với thông tin đánh giá
+     */
+    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+        try {
+            // Lấy danh sách đơn hàng đã giao kèm rating từ DAO
+            List<Map<String, Object>> orders = orderDAO.searchCompletedOrdersWithRating(keyword);
+
+            // Format dữ liệu cho từng đơn hàng
+            for (Map<String, Object> order : orders) {
+                // ✅ Format số tiền
+                Object totalAmountObj = order.get("total_amount");
+                if (totalAmountObj != null) {
+                    double totalAmount = 0.0;
+                    if (totalAmountObj instanceof Number) {
+                        totalAmount = ((Number) totalAmountObj).doubleValue();
+                    }
+                    order.put("formattedAmount", CurrencyFormatter.format(totalAmount));
+                }
+
+                // ✅ LẤY payment_method TỪ MAP TRƯỚC KHI DÙNG
+                String paymentMethod = (String) order.get("payment_method");
+
+                // ✅ Format payment method
+                String paymentMethodDisplay = "COD";
+                if ("COD".equalsIgnoreCase(paymentMethod)) {
+                    paymentMethodDisplay = "COD";
+                } else if ("VNPay".equalsIgnoreCase(paymentMethod)) {
+                    paymentMethodDisplay = "VNPay";
+                } else if (paymentMethod != null) {
+                    paymentMethodDisplay = paymentMethod;
+                }
+                order.put("paymentMethodDisplay", paymentMethodDisplay);
+
+                // ✅ Xử lý thông tin rating
+                Object avgRatingObj = order.get("average_rating");
+                Object reviewCountObj = order.get("review_count");
+
+                int reviewCount = reviewCountObj != null ?
+                        ((Number) reviewCountObj).intValue() : 0;
+
+                boolean hasReview = reviewCount > 0;
+                order.put("hasReview", hasReview);
+
+                if (hasReview && avgRatingObj != null) {
+                    double avgRating = ((Number) avgRatingObj).doubleValue();
+                    order.put("averageRating", avgRating);
+                    order.put("formattedRating", String.format("%.1f", avgRating));
+
+                    // Tính số sao đầy và sao nửa
+                    int fullStars = (int) avgRating;
+                    boolean hasHalfStar = (avgRating - fullStars) >= 0.5;
+
+                    order.put("fullStars", fullStars);
+                    order.put("hasHalfStar", hasHalfStar);
+                    order.put("emptyStars", 5 - fullStars - (hasHalfStar ? 1 : 0));
+                } else {
+                    order.put("averageRating", null);
+                    order.put("formattedRating", "-");
+                    order.put("fullStars", 0);
+                    order.put("hasHalfStar", false);
+                    order.put("emptyStars", 0);
+                }
+            }
+
+            return orders;
+
+        } catch (Exception e) {
+            System.err.println("Error in searchCompletedOrders: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

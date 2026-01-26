@@ -1506,3 +1506,50 @@ tr:not([data-status="pending"]) .btn-reject {
     border-bottom: none !important;
     background: white !important;
 }
+
+/* ========== RATING STYLES - TAB ĐÃ GIAO ========== */
+
+#tab-delivered .stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 18px;
+}
+
+#tab-delivered .stars i {
+    color: #FFD43B;
+}
+
+#tab-delivered .stars .fa-regular {
+    color: #ddd;
+}
+
+#tab-delivered .stars .rating-text {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+#tab-delivered .stars .no-rating {
+    font-size: 16px;
+    color: #999;
+    font-weight: 400;
+}
+
+/* Hover effect cho sao */
+#tab-delivered .order-table tbody tr:hover .stars i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Responsive cho rating */
+@media (max-width: 768px) {
+    #tab-delivered .stars {
+        font-size: 14px;
+    }
+
+    #tab-delivered .stars .rating-text {
+        font-size: 12px;
+    }
+}

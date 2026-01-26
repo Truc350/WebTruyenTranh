@@ -433,7 +433,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     break;
                 case "Completed":
                     System.out.println("→ Searching Completed orders...");
-                    orders = orderService.searchCompletedOrders(keyword);
+                    orders = orderService.searchCompletedOrders("");
                     break;
                 case "Returned":
                     System.out.println("→ Searching Returned orders...");

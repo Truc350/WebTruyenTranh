@@ -252,25 +252,43 @@
                     <tbody id="deliveredTableBody">
                     <c:forEach items="${ordersByStatus['Completed']}" var="order">
                         <tr>
-                            <td>${order.orderCode}</td>
+                            <td>${order.id}</td>
                             <td>${order.userName}</td>
                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
                             <td>${order.formattedAmount}</td>
                             <td>${order.paymentMethodDisplay}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${not empty order.transactionId}">
+                                    <c:when test="${not empty order.transaction_id}">
                                         ${order.transactionId}
                                     </c:when>
                                     <c:otherwise>-</c:otherwise>
                                 </c:choose>
                             </td>
                             <td class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star-half-stroke"></i>
+                                <c:choose>
+                                    <c:when test="${order.hasReview}">
+                                        <!-- Hiển thị sao đầy -->
+                                        <c:forEach begin="1" end="${order.fullStars}">
+                                            <i class="fa-solid fa-star"></i>
+                                        </c:forEach>
+
+                                        <!-- Hiển thị sao nửa (nếu có) -->
+                                        <c:if test="${order.hasHalfStar}">
+                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                        </c:if>
+
+                                        <!-- Hiển thị sao rỗng -->
+                                        <c:forEach begin="1" end="${order.emptyStars}">
+                                            <i class="fa-regular fa-star"></i>
+                                        </c:forEach>
+
+                                        <span class="rating-text">(${order.formattedRating})</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="no-rating">-</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                     </c:forEach>
