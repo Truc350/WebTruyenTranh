@@ -118,31 +118,105 @@ public class CartSevlet extends HttpServlet {
 
     }
 
-    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws ServletException, IOException {
+    private void viewCart(HttpServletRequest request, HttpServletResponse response, Cart cart)
+            throws ServletException, IOException {
         // Tắt cache
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
 
+        // ===== KIỂM TRA VÀ CẬP NHẬT GIÁ FLASH SALE =====
+        FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
+        HttpSession session = request.getSession();
+        boolean hasUpdates = false;
+
+        for (CartItem item : cart.getItems()) {
+            int comicId = item.getComic().getId();
+
+            System.out.println("🔍 Checking comic " + comicId);
+            System.out.println("   Current price in cart: " + item.getPriceAtPurchase() + "₫");
+            System.out.println("   Comic original price: " + item.getComic().getPrice() + "₫");
+            System.out.println("   Comic discount price: " + item.getComic().getDiscountPrice() + "₫");
+
+            // Kiểm tra xem comic còn trong Flash Sale không
+            Map<String, Object> flashSaleInfo = flashSaleComicsDAO.getFlashSaleInfoByComicId(comicId);
+
+            if (flashSaleInfo != null) {
+                // ✅ Còn trong Flash Sale
+                Integer currentFlashSaleId = (Integer) flashSaleInfo.get("flashsale_id");
+                Object discountObj = flashSaleInfo.get("discount_percent");
+                Double discountPercent = (discountObj instanceof Number)
+                        ? ((Number) discountObj).doubleValue()
+                        : null;
+
+                if (discountPercent != null) {
+                    // Tính giá Flash Sale từ GIÁ GỐC
+                    double originalPrice = item.getComic().getPrice();
+                    double newFlashSalePrice = originalPrice * (1 - discountPercent / 100.0);
+
+                    System.out.println("   ⚡ Flash Sale active: " + discountPercent + "% off");
+                    System.out.println("   Flash Sale price should be: " + newFlashSalePrice + "₫");
+
+                    // Cập nhật nếu giá Flash Sale thay đổi hoặc chưa có
+                    if (item.getFlashSalePrice() == null ||
+                            !currentFlashSaleId.equals(item.getFlashSaleId()) ||
+                            Math.abs(item.getFlashSalePrice() - newFlashSalePrice) > 0.01) {
+
+                        item.updateFlashSale(currentFlashSaleId, newFlashSalePrice);
+                        hasUpdates = true;
+
+                        System.out.println("   ✅ Updated to Flash Sale price: " + newFlashSalePrice + "₫");
+                    }
+                }
+            } else {
+                // ⏰ Hết Flash Sale hoặc không có Flash Sale
+                if (item.getFlashSaleId() != null) {
+                    // Đang có Flash Sale nhưng đã hết
+                    double discountPrice = item.getComic().getDiscountPrice();
+
+                    System.out.println("   ⏰ Flash Sale ended");
+                    System.out.println("   Reverting to discount price: " + discountPrice + "₫");
+
+                    item.removeFlashSale(); // Sẽ set về comic.getDiscountPrice()
+                    hasUpdates = true;
+                } else {
+                    // Không có Flash Sale từ đầu, kiểm tra giá discount có thay đổi không
+                    double currentDiscountPrice = item.getComic().getDiscountPrice();
+
+                    if (Math.abs(item.getPriceAtPurchase() - currentDiscountPrice) > 0.01) {
+                        System.out.println("   🔄 Discount price changed");
+                        System.out.println("   Old: " + item.getPriceAtPurchase() + "₫");
+                        System.out.println("   New: " + currentDiscountPrice + "₫");
+
+                        item.setPriceAtPurchase(currentDiscountPrice);
+                        hasUpdates = true;
+                    }
+                }
+            }
+        }
+
+        // Lưu lại giỏ hàng nếu có thay đổi
+        if (hasUpdates) {
+            session.setAttribute("cart", cart);
+            System.out.println("✅ Cart updated with latest prices");
+        }
+
         List<CartItem> cartItems = cart.getItems();
         double totalAmount = cart.total();
         int totalQuantity = cart.totalQuantity();
 
-        // LƯU VÀO SESSION thay vì request
-        HttpSession session = request.getSession();
         session.setAttribute("cart", cart);
         session.setAttribute("cartItems", cartItems);
 
         request.setAttribute("totalAmount", totalAmount);
         request.setAttribute("totalQuantity", totalQuantity);
 
-        // Kiểm tra trạng thái đăng nhập để hiển thị giao diện
-        User currentUser = (User) request.getSession().getAttribute("currentUser");
+        // Kiểm tra trạng thái đăng nhập
+        User currentUser = (User) session.getAttribute("currentUser");
         request.setAttribute("isLoggedIn", currentUser != null);
 
         request.getRequestDispatcher("/fontend/nguoiB/cart.jsp").forward(request, response);
     }
-
     private void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart, HttpSession session) throws ServletException, IOException {
         try {
             int comicId = Integer.parseInt(request.getParameter("comicId"));
@@ -197,9 +271,7 @@ public class CartSevlet extends HttpServlet {
                             ? ((Number) discountObj).doubleValue()
                             : null;
 
-
-
-                    // Tính giá Flash Sale
+                    // Tính giá Flash Sale từ GIÁ GỐC
                     if (discountPercent != null) {
                         flashSalePrice = comic.getPrice() * (1 - discountPercent / 100.0);
                     }
@@ -207,19 +279,25 @@ public class CartSevlet extends HttpServlet {
                     System.out.println("✅ Comic trong Flash Sale!");
                     System.out.println("Flash Sale ID: " + flashSaleId);
                     System.out.println("Giá gốc: " + comic.getPrice() + "₫");
-                    System.out.println("Giảm giá: " + discountPercent + "%");
+                    System.out.println("Giảm giá Flash Sale: " + discountPercent + "%");
                     System.out.println("Giá Flash Sale: " + flashSalePrice + "₫");
                 } else {
-                    System.out.println("ℹ️ Comic không trong Flash Sale, dùng giá gốc");
+                    // ✅ KHÔNG CÓ FLASH SALE → Dùng giá đã discount (nếu có)
+                    System.out.println("ℹ️ Comic không trong Flash Sale");
+                    System.out.println("Giá gốc: " + comic.getPrice() + "₫");
+                    System.out.println("Giá sau discount: " + comic.getDiscountPrice() + "₫");
                 }
 
-                // Thêm vào giỏ với thông tin Flash Sale (nếu có)
+                // ✅ Thêm vào giỏ với thông tin Flash Sale (nếu có)
+                // Nếu không có Flash Sale, CartItem constructor sẽ dùng comic.getDiscountPrice()
                 cart.addItem(comic, quantity, flashSaleId, flashSalePrice);
                 session.setAttribute("cart", cart);
 
                 String successMsg = "Đã thêm \"" + comic.getNameComics() + "\" vào giỏ hàng!";
                 if (flashSalePrice != null) {
                     successMsg += " (Giá Flash Sale: " + String.format("%,.0f", flashSalePrice) + "₫)";
+                } else if (comic.getDiscountPrice() < comic.getPrice()) {
+                    successMsg += " (Giá ưu đãi: " + String.format("%,.0f", comic.getDiscountPrice()) + "₫)";
                 }
 
                 session.setAttribute("successMsg", successMsg);

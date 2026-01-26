@@ -3,15 +3,17 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 public class CartItem {
     private Comic comic;
     private int quantity;
-    private double priceAtPurchase; // Giá tại thời điểm thêm vào giỏ
+    private Double priceAtPurchase; // Giá tại thời điểm thêm vào giỏ
     private Integer flashSaleId;    // ID của Flash Sale (nếu có)
+    private Double flashSalePrice;  // Giá Flash Sale (nếu có)
 
     // Constructor cũ (không có Flash Sale)
-    public CartItem(Comic comic, int quantity, double priceAtPurchase) {
+    public CartItem(Comic comic, int quantity, Double priceAtPurchase) {
         this.comic = comic;
         this.quantity = quantity;
         this.priceAtPurchase = priceAtPurchase;
         this.flashSaleId = null;
+        this.flashSalePrice = null;
     }
 
     // Constructor mới (có Flash Sale)
@@ -19,28 +21,60 @@ public class CartItem {
         this.comic = comic;
         this.quantity = quantity;
         this.flashSaleId = flashSaleId;
-        this.priceAtPurchase = (flashSalePrice != null) ? flashSalePrice : comic.getPrice();
+        this.flashSalePrice = flashSalePrice;
+
+        // ✅ ƯU TIÊN: Flash Sale > Discount thường > Giá gốc
+        if (flashSalePrice != null) {
+            this.priceAtPurchase = flashSalePrice;
+        } else {
+            // Lấy giá đã giảm (nếu có) thay vì giá gốc
+            this.priceAtPurchase = comic.getDiscountPrice();
+        }
     }
 
     /**
      * Kiểm tra xem item này có đang trong Flash Sale không
      */
     public boolean isInFlashSale() {
-        return flashSaleId != null;
+        return flashSaleId != null && flashSalePrice != null;
     }
 
     /**
-     * Lấy giá hiện tại (đã bao gồm Flash Sale nếu có)
+     * Lấy giá hiện tại (ưu tiên Flash Sale > Discount > Giá gốc)
      */
     public double getCurrentPrice() {
+        if (flashSalePrice != null) {
+            return flashSalePrice;
+        }
         return priceAtPurchase;
+    }
+
+    /**
+     * Lấy giá cuối cùng (tương tự getCurrentPrice nhưng rõ ràng hơn)
+     */
+    public double getFinalPrice() {
+        if (flashSalePrice != null) {
+            return flashSalePrice;
+        }
+        if (priceAtPurchase != null) {
+            return priceAtPurchase;
+        }
+        // Fallback về giá có discount của comic
+        return comic.getDiscountPrice();
     }
 
     /**
      * Tổng tiền của item này
      */
     public double getTotalPrice() {
-        return priceAtPurchase * quantity;
+        return getFinalPrice() * quantity;
+    }
+
+    /**
+     * Tổng tiền (alias cho getTotalPrice)
+     */
+    public double getSubtotal() {
+        return getTotalPrice();
     }
 
     /**
@@ -52,12 +86,25 @@ public class CartItem {
 
     /**
      * Xóa thông tin Flash Sale (khi Flash Sale kết thúc)
-     * và đặt lại giá về giá gốc
+     * và đặt lại giá về giá có discount (nếu có) hoặc giá gốc
      */
     public void removeFlashSale() {
         if (flashSaleId != null) {
             this.flashSaleId = null;
-            this.priceAtPurchase = comic.getPrice(); // Về giá gốc
+            this.flashSalePrice = null;
+            // ✅ Về giá discount (nếu có) thay vì giá gốc
+            this.priceAtPurchase = comic.getDiscountPrice();
+        }
+    }
+
+    /**
+     * Cập nhật Flash Sale mới
+     */
+    public void updateFlashSale(Integer flashSaleId, Double flashSalePrice) {
+        this.flashSaleId = flashSaleId;
+        this.flashSalePrice = flashSalePrice;
+        if (flashSalePrice != null) {
+            this.priceAtPurchase = flashSalePrice;
         }
     }
 
@@ -78,11 +125,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public double getPriceAtPurchase() {
+    public Double getPriceAtPurchase() {
         return priceAtPurchase;
     }
 
-    public void setPriceAtPurchase(double priceAtPurchase) {
+    public void setPriceAtPurchase(Double priceAtPurchase) {
         this.priceAtPurchase = priceAtPurchase;
     }
 
@@ -94,7 +141,15 @@ public class CartItem {
         this.flashSaleId = flashSaleId;
     }
 
+    public Double getFlashSalePrice() {
+        return flashSalePrice;
+    }
+
     public void setFlashSalePrice(Double flashSalePrice) {
-        this.priceAtPurchase = flashSalePrice;
+        this.flashSalePrice = flashSalePrice;
+        // Cập nhật luôn priceAtPurchase
+        if (flashSalePrice != null) {
+            this.priceAtPurchase = flashSalePrice;
+        }
     }
 }

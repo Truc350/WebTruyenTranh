@@ -107,10 +107,57 @@
                                     <div class="product-info">
                                         <h3>${comic.nameComics}</h3>
                                         <p class="product-quantity">Số lượng: x${item.quantity}</p>
+
                                         <div class="price-details">
-                                    <span class="discount-price">
-                                        <fmt:formatNumber value="${item.priceAtPurchase}" pattern="#,###" />đ
-                                    </span>
+                                            <c:choose>
+                                                <%-- Ưu tiên 1: Có Flash Sale --%>
+                                                <c:when test="${itemData.hasActiveFlashSale}">
+                                                    <%-- Giá gốc bị gạch (nếu có) --%>
+                                                    <c:if test="${item.priceAtPurchase < comic.price}">
+                                                        <del class="original-price">
+                                                            <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true"/>đ
+                                                        </del>
+                                                    </c:if>
+                                                    <%-- Giá Flash Sale (màu đỏ) --%>
+                                                    <span class="discount-price" style="color: #ff4444; font-weight: 600;">
+                ${itemData.formattedDisplayPrice}đ
+            </span>
+                                                    <%-- Badge Flash Sale --%>
+                                                    <%--                                                    <span class="flash-sale-badge">--%>
+                                                    <%--                ⚡ Flash Sale -${itemData.flashSaleDiscount}%--%>
+                                                    <%--            </span>--%>
+                                                </c:when>
+
+                                                <%-- Ưu tiên 2: Giá đã thay đổi (không phải Flash Sale) --%>
+                                                <c:when test="${itemData.priceChanged && !itemData.hasActiveFlashSale}">
+                                                    <%-- Giá gốc bị gạch --%>
+                                                    <del class="original-price">
+                                                        <fmt:formatNumber value="${item.priceAtPurchase}" type="number" groupingUsed="true"/>đ
+                                                    </del>
+                                                    <%-- Giá mới (màu xanh) --%>
+                                                    <span class="discount-price" style="color: #28a745;">
+                ${itemData.formattedDisplayPrice}đ
+            </span>
+                                                    <%-- Badge giá mới --%>
+                                                    <span class="price-changed-badge">
+                Giá mới
+            </span>
+                                                </c:when>
+
+                                                <%-- Giá không đổi --%>
+                                                <c:otherwise>
+                                                    <%-- Giá gốc bị gạch (nếu có giảm giá) --%>
+                                                    <c:if test="${comic.discountPrice < comic.price}">
+                                                        <del class="original-price">
+                                                            <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true"/>đ
+                                                        </del>
+                                                    </c:if>
+                                                    <%-- Giá hiện tại --%>
+                                                    <span class="discount-price">
+                ${itemData.formattedDisplayPrice}đ
+            </span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </div>

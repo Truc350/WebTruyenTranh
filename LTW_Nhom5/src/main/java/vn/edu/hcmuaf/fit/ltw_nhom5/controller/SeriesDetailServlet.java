@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Series;
@@ -15,26 +16,30 @@ import java.util.*;
 public class SeriesDetailServlet extends HttpServlet {
     private SeriesDAO seriesDAO;
     private ComicDAO comicDAO;
+    private FlashSaleDAO flashSaleDAO;
 
     @Override
     public void init() throws ServletException {
         System.out.println("✅ SeriesDetailServlet initialized");
         seriesDAO = new SeriesDAO();
         comicDAO = new ComicDAO();
+        flashSaleDAO = new FlashSaleDAO();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         System.out.println("\n========================================");
         System.out.println("🔍 SeriesDetailServlet.doGet() called");
         System.out.println("📍 Request URI: " + request.getRequestURI());
-        System.out.println("📍 Context Path: " + request.getContextPath());
-        System.out.println("📍 Query String: " + request.getQueryString());
         System.out.println("========================================\n");
 
         response.setContentType("text/html; charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+
+        // Cập nhật Flash Sale statuses
+        flashSaleDAO.updateStatuses();
 
         try {
             // Lấy series ID từ parameter
@@ -65,24 +70,25 @@ public class SeriesDetailServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy danh sách comic thuộc series này
-            List<Comic> comicsInSeries = comicDAO.getComicsBySeriesId(seriesId);
+            // Lấy danh sách comic thuộc series này VỚI FLASH SALE
+            List<Comic> comicsInSeries = comicDAO.getComicsBySeriesIdWithFlashSale(seriesId);
 
+            // Lấy totalSold
             Map<Integer, Integer> soldMap = comicDAO.getTotalSoldBySeriesId(seriesId);
+
             // Gán totalSold cho từng comic
             for (Comic comic : comicsInSeries) {
                 int totalSold = soldMap.getOrDefault(comic.getId(), 0);
                 comic.setTotalSold(totalSold);
             }
 
-            // TỔNG HỢP TÁC GIẢ VÀ NHÀ XUẤT BẢN TỪ TẤT CẢ COMICS
+            // TỔNG HỢP TÁC GIẢ VÀ NHÀ XUẤT BẢN
             Set<String> authorSet = new HashSet<>();
             Set<String> publisherSet = new HashSet<>();
 
             for (Comic comic : comicsInSeries) {
                 // Thêm tác giả
                 if (comic.getAuthor() != null && !comic.getAuthor().trim().isEmpty()) {
-                    // Tách các tác giả nếu có dấu phân cách (ví dụ: "Author A, Author B")
                     String[] authors = comic.getAuthor().split("[,;]");
                     for (String author : authors) {
                         String trimmed = author.trim();
@@ -94,7 +100,6 @@ public class SeriesDetailServlet extends HttpServlet {
 
                 // Thêm nhà xuất bản
                 if (comic.getPublisher() != null && !comic.getPublisher().trim().isEmpty()) {
-                    // Tách các NXB nếu có dấu phân cách
                     String[] publishers = comic.getPublisher().split("[,;]");
                     for (String publisher : publishers) {
                         String trimmed = publisher.trim();
@@ -109,6 +114,19 @@ public class SeriesDetailServlet extends HttpServlet {
             String authors = authorSet.isEmpty() ? null : String.join(", ", authorSet);
             String publishers = publisherSet.isEmpty() ? null : String.join(", ", publisherSet);
 
+            // DEBUG LOG
+            System.out.println("📊 Series Comics with Flash Sale Info:");
+            for (Comic comic : comicsInSeries) {
+                System.out.println("  - " + comic.getNameComics());
+                System.out.println("    Has Flash Sale: " + comic.isHasFlashSale());
+                if (comic.isHasFlashSale()) {
+                    System.out.println("    Flash Sale: " + comic.getFlashSaleName());
+                    System.out.println("    Discount: " + comic.getFlashSaleDiscount() + "%");
+                    System.out.println("    Flash Price: " + comic.getFlashSalePrice());
+                }
+                System.out.println("    Normal Price: " + comic.getPrice());
+            }
+
             // Set attributes để hiển thị
             request.setAttribute("series", series);
             request.setAttribute("comicsInSeries", comicsInSeries);
@@ -116,11 +134,10 @@ public class SeriesDetailServlet extends HttpServlet {
             request.setAttribute("seriesAuthors", authors);
             request.setAttribute("seriesPublishers", publishers);
 
-
             // Forward đến trang SeriComic.jsp
             RequestDispatcher dispatcher = request.getRequestDispatcher("/fontend/public/SeriComic.jsp");
-
             dispatcher.forward(request, response);
+
             System.out.println("✅ Forward completed successfully!");
 
         } catch (NumberFormatException e) {
@@ -134,9 +151,9 @@ public class SeriesDetailServlet extends HttpServlet {
         }
     }
 
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Implementation if needed
     }
 }
