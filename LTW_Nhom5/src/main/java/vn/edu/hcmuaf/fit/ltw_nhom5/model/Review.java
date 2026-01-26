@@ -20,6 +20,8 @@ public class Review {
 
     @ColumnName("created_at")
     private Timestamp createdAt;
+    @ColumnName("order_id")
+    private int orderId;
 
     // Danh sách ảnh review
     private List<ReviewImage> images = new ArrayList<>();
@@ -89,5 +91,13 @@ public class Review {
 
     public void setImages(List<ReviewImage> images) {
         this.images = images;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

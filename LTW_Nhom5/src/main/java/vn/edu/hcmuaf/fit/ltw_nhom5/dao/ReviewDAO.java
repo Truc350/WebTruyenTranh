@@ -21,8 +21,8 @@ public class ReviewDAO {
      * Thêm review mới
      */
     public int addReview(Review review) {
-        String sql = "INSERT INTO reviews (comic_id, user_id, rating, comment, created_at) " +
-                "VALUES (:comicId, :userId, :rating, :comment, NOW())";
+        String sql = "INSERT INTO reviews (comic_id, user_id, rating, comment, created_at, order_id) " +
+                "VALUES (:comicId, :userId, :rating, :comment, NOW(), :orderId)";
 
         return jdbi.withHandle(handle -> {
             int reviewId = handle.createUpdate(sql)
@@ -30,6 +30,7 @@ public class ReviewDAO {
                     .bind("userId", review.getUserId())
                     .bind("rating", review.getRating())
                     .bind("comment", review.getComment())
+                    .bind("orderId", review.getOrderId())
                     .executeAndReturnGeneratedKeys("id")
                     .mapTo(Integer.class)
                     .one();
@@ -57,9 +58,11 @@ public class ReviewDAO {
      * Kiểm tra user đã review order này chưa
      */
     public boolean hasUserReviewedOrder(int userId, int orderId) {
-        String sql = "SELECT COUNT(*) FROM reviews r " +
-                "INNER JOIN order_items oi ON r.comic_id = oi.comic_id " +
-                "WHERE oi.order_id = ? AND r.user_id = ?";
+//        String sql = "SELECT COUNT(*) FROM reviews r " +
+//                "INNER JOIN order_items oi ON r.comic_id = oi.comic_id " +
+//                "WHERE oi.order_id = ? AND r.user_id = ?";
+        String sql = "SELECT COUNT(*) FROM reviews " +
+                "WHERE order_id = ? AND user_id = ?";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -85,7 +88,6 @@ public class ReviewDAO {
                         .list()
         );
 
-        // QUAN TRỌNG: Lấy ảnh cho mỗi review
         for (Review review : reviews) {
             List<ReviewImage> images = getReviewImages(review.getId());
             review.setImages(images);

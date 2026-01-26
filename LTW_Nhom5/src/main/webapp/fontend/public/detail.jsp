@@ -336,20 +336,43 @@
             <div class="score-count">(${totalReviews} đánh giá)</div>
         </div>
 
+        <%--        <div class="rating-bars">--%>
+        <%--            &lt;%&ndash; SỬA: Không dùng step="-1", thay bằng cách khác &ndash;%&gt;--%>
+        <%--            <c:set var="starLevels" value="5,4,3,2,1"/>--%>
+        <%--            <c:forTokens items="${starLevels}" delims="," var="star">--%>
+        <%--                <c:set var="count" value="${ratingDistribution[star]}"/>--%>
+        <%--                <c:set var="percentage" value="${totalReviews > 0 ? (count * 100.0 / totalReviews) : 0}"/>--%>
+        <%--                <div class="bar-row">--%>
+        <%--                    <span>${star} sao</span>--%>
+        <%--                    <div class="bar">--%>
+        <%--                        <div class="fill" style="width:${percentage}%"></div>--%>
+        <%--                    </div>--%>
+        <%--                    <span><fmt:formatNumber value="${percentage}" maxFractionDigits="0"/>%</span>--%>
+        <%--                </div>--%>
+        <%--            </c:forTokens>--%>
+        <%--        </div>--%>
+        <%--        DEBUG--%>
         <div class="rating-bars">
-            <%-- SỬA: Không dùng step="-1", thay bằng cách khác --%>
-            <c:set var="starLevels" value="5,4,3,2,1"/>
-            <c:forTokens items="${starLevels}" delims="," var="star">
-                <c:set var="count" value="${ratingDistribution[star]}"/>
-                <c:set var="percentage" value="${totalReviews > 0 ? (count * 100.0 / totalReviews) : 0}"/>
-                <div class="bar-row">
-                    <span>${star} sao</span>
-                    <div class="bar">
-                        <div class="fill" style="width:${percentage}%"></div>
-                    </div>
-                    <span><fmt:formatNumber value="${percentage}" maxFractionDigits="0"/>%</span>
+            <%
+                java.util.Map<Integer, Integer> dist = (java.util.Map<Integer, Integer>) request.getAttribute("ratingDistribution");
+                Integer total = (Integer) request.getAttribute("totalReviews");
+
+                if (dist == null) dist = new java.util.HashMap<>();
+                if (total == null) total = 0;
+
+                for (int star = 5; star >= 1; star--) {
+                    Integer count = dist.get(star);
+                    if (count == null) count = 0;
+                    double percentage = (total > 0) ? (count * 100.0 / total) : 0;
+            %>
+            <div class="bar-row">
+                <span><%= star %> sao</span>
+                <div class="bar">
+                    <div class="fill" style="width: <%= String.format("%.0f", percentage) %>%;"></div>
                 </div>
-            </c:forTokens>
+                <span><%= String.format("%.0f", percentage) %>%</span>
+            </div>
+            <% } %>
         </div>
     </div>
 </div>
