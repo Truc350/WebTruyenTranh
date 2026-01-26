@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "SeriesManagement", urlPatterns = {"/SeriesManagement", "/admin/series"})
+@WebServlet("/SeriesManagement")
 public class SeriesManagementServlet extends HttpServlet {
 
     private SeriesDAO seriesDAO;
@@ -21,7 +21,7 @@ public class SeriesManagementServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         seriesDAO = new SeriesDAO();
-        System.out.println("✅ SeriesManagementServlet initialized successfully!");
+        System.out.println("SeriesManagementServlet initialized successfully!");
     }
 
     @Override
@@ -167,7 +167,7 @@ public class SeriesManagementServlet extends HttpServlet {
             request.setAttribute("totalPages", 1);
             request.setAttribute("filter", "all");
 
-            request.getRequestDispatcher("/fontend/admin/seriesManagement.jsp").forward(request, response);
+//            request.getRequestDispatcher("/fontend/admin/seriesManagement.jsp").forward(request, response);
         }
     }
 
@@ -232,3 +232,4 @@ public class SeriesManagementServlet extends HttpServlet {
         }
     }
 }
+

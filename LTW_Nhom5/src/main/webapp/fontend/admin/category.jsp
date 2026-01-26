@@ -71,63 +71,7 @@
 <div class="container">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="<%=request.getContextPath()%>/img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-
-        <ul>
-            <li>
-                <a href="dashboard.jsp">
-                    <img src="<%=request.getContextPath()%>/img/home.png" class="icon">
-                    <span>Trang chủ</span>
-                </a>
-            </li>
-            <li>
-                <a href="seriesManagement.jsp">
-                    <img src="<%=request.getContextPath()%>/img/series.png" class="icon">
-                    <span>Quản lý series</span>
-                </a>
-            </li>
-            <li>
-                <a href="productManagement.jsp">
-                    <img src="<%=request.getContextPath()%>/img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="category.jsp" class="active">
-                    <img src="<%=request.getContextPath()%>/img/category.png" class="icon">
-                    <span>Quản lý thể loại</span>
-                </a>
-            </li>
-            <li>
-                <a href="order.jsp">
-                    <img src="<%=request.getContextPath()%>/img/order.png" class="icon">
-                    <span>Quản lý đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="userManagement.jsp">
-                    <img src="<%=request.getContextPath()%>/img/user.png" class="icon">
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="flashSaleMan.jsp">
-                    <img src="<%=request.getContextPath()%>/img/flashSale.png" class="icon">
-                    <span>Quản lý Flash Sale</span>
-                </a>
-            </li>
-            <li>
-                <a href="report.jsp">
-                    <img src="<%=request.getContextPath()%>/img/report.png" class="icon">
-                    <span>Thống kê</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+    <jsp:include page="/fontend/admin/ASide.jsp"/>
 
     <div class="main-content">
         <header class="admin-header">

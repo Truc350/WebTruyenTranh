@@ -19,7 +19,8 @@ import java.util.Map;
  * Servlet chuyên dụng để load trang Product Management
  * Đảm bảo JSP luôn được load qua Servlet thay vì truy cập trực tiếp
  */
-@WebServlet(name = "ProductManagement", urlPatterns = {"/ProductManagement", "/admin/products/manage"})
+//@WebServlet(name = "ProductManagement", urlPatterns = {"/ProductManagement", "/admin/products/manage"})
+@WebServlet("/ProductManagement")
 public class ProductManagementServlet extends HttpServlet {
 
     private ComicDAO comicDAO;

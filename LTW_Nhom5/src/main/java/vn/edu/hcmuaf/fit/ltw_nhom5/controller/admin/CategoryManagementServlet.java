@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "CategoryManagement", urlPatterns = {"/CategoryManagement", "/admin/categories/manage"})
+@WebServlet("/CategoryManagement")
 public class CategoryManagementServlet extends HttpServlet {
 
     @Override

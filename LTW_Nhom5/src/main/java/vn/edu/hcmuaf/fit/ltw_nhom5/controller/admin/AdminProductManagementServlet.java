@@ -29,6 +29,7 @@ public class AdminProductManagementServlet extends HttpServlet {
 
     }
 
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -95,6 +96,7 @@ public class AdminProductManagementServlet extends HttpServlet {
 
             response.getWriter().write(jsonResponse);
             response.getWriter().flush();
+
 
         } catch (Exception e) {
             System.err.println("❌ ERROR:");

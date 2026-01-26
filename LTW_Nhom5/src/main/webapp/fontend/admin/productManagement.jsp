@@ -9,7 +9,6 @@
 <c:set var="categories" value="${categoryDAO.allCategories}"/>
 <c:set var="seriesList" value="${seriesDAO.allSeries}"/>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,69 +23,7 @@
 <div class="container">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="../../img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-
-        <ul>
-            <li>
-                <a href="dashboard.jsp">
-                    <img src="../../img/home.png" class="icon">
-                    <span>Trang chủ</span>
-                </a>
-            </li>
-            <li>
-                <a href="seriesManagement.jsp">
-                    <img src="../../img/series.png" class="icon">
-                    <span>Quản lý series</span>
-                </a>
-            </li>
-            <li>
-                <a href="productManagement.jsp">
-                    <img src="../../img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="category.jsp">
-                    <img src="../../img/category.png" class="icon">
-                    <span>Quản lý thể loại</span>
-                </a>
-            </li>
-            <li>
-                <a href="order.jsp">
-                    <img src="../../img/order.png" class="icon">
-                    <span>Quản lý đơn hàng</span>
-                </a>
-            </li>
-            <li>
-                <a href="userManagement.jsp">
-                    <img src="../../img/user.png" class="icon">
-                    <span>Quản lý người dùng</span>
-                </a>
-            </li>
-            <li>
-                <a href="flashSaleMan.jsp">
-                    <img src="../../img/flashSale.png" class="icon">
-                    <span>Quản lý Flash Sale</span>
-                </a>
-            </li>
-            <%--            <li>--%>
-            <%--                <a href="promotion.jsp">--%>
-            <%--                    <img src="../../img/promo.png" class="icon">--%>
-            <%--                    <span>Quản lý khuyến mãi</span>--%>
-            <%--                </a>--%>
-            <%--            </li>--%>
-            <li>
-                <a href="report.jsp">
-                    <img src="../../img/report.png" class="icon">
-                    <span>Thống kê</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+    <jsp:include page="/fontend/admin/ASide.jsp"/>
 
     <!-- Main content -->
     <main class="main-content">
@@ -1050,7 +987,6 @@
 </script>
 
 
-<!-- ===== LOAD DANH SÁCH BAN ĐẦU ===== -->
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -1058,8 +994,6 @@
         console.log('Loading initial comics list...');
         loadInitialComicsList();
     });
-
-
 
     async function loadInitialComicsList() {
         const tbody = document.getElementById('productTableBody');
@@ -1069,7 +1003,7 @@
             '<p style="margin-top: 10px;">Đang tải danh sách truyện...</p></td></tr>';
 
         try {
-            // ✅ LẤY FILTER HIỆN TẠI
+
             const filterSelect = document.getElementById('displayFilter');
             const filterValue = filterSelect.value;
 
@@ -1080,7 +1014,6 @@
                 hiddenFilter = 1;
             }
 
-            // ✅ BUILD URL VỚI FILTER
             let url = contextPath + '/admin/products/list?page=1';
             if (hiddenFilter !== null) {
                 url += '&hiddenFilter=' + hiddenFilter;

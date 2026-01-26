@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/admin/orders")
+@WebServlet("/OrderManagement")
 public class AdminOrderManagementServlet extends HttpServlet {
     private OrderService orderService;
     private Gson gson;
@@ -109,6 +109,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             }
 
             resp.getWriter().write(gson.toJson(result));
+            req.getRequestDispatcher("fontend/admin/order.jsp").forward(req, resp);
 
         } catch (Exception e) {
             e.printStackTrace();
