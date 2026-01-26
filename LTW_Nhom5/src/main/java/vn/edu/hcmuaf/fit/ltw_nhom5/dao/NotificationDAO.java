@@ -28,7 +28,7 @@ public class NotificationDAO {
     }
 
     public int countUnread(int userId) {
-        String sql = "SELECT COUNT(*) FROM Notifications WHERE user_id = ? AND is_read = 0";
+        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0";
         return JdbiConnector.get().withHandle(handle ->
                 handle.createQuery(sql)
                         .bind(0, userId)
@@ -39,8 +39,8 @@ public class NotificationDAO {
 
     public List<Notification> getRecent(int userId, int limit) {
         String sql = """
-                SELECT id, user_id, title, message, type, is_read, related_id, related_type, created_at, read_at
-                FROM Notifications
+                SELECT id, user_id, message, type, is_read, created_at
+                FROM notifications
                 WHERE user_id = ?
                 ORDER BY created_at DESC
                 LIMIT ?
@@ -56,11 +56,11 @@ public class NotificationDAO {
 
     public List<Notification> getList(int userId, String typeFilter, int page, int pageSize) {
         StringBuilder sql = new StringBuilder("""
-                SELECT id, user_id, title, message, type, is_read, related_id, related_type, created_at, read_at
-                FROM Notifications
+                SELECT id, user_id, message, type, is_read, created_at
+                FROM notifications
                 WHERE user_id = ?
                 """);
-        if (typeFilter != null) { // ĐÃ BỎ ĐIỀU KIỆN !typeFilter.equals("ALL") ĐỂ TRÁNH NULL
+        if (typeFilter != null) {
             sql.append(" AND type = ?");
         }
         sql.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
@@ -77,31 +77,28 @@ public class NotificationDAO {
         });
     }
 
-    public void markAsread(long notiId) {
-        String sql = "UPDATE Notifications SET is_read = 1, read_at = NOW() WHERE id = ?";
+    public void markAsread(int notiId) {
+        String sql = "UPDATE notifications SET is_read = 1 WHERE id = ?";
         JdbiConnector.get().useHandle(handle ->
                 handle.createUpdate(sql).bind(0, notiId).execute());
     }
 
     public void markAllAsRead(int userId) {
-        String sql = "UPDATE Notifications SET is_read = 1, read_at = NOW() WHERE user_id = ? AND is_read = 0"; // ĐÃ SỬA TYPO
+        String sql = "UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0";
         JdbiConnector.get().useHandle(handle ->
                 handle.createUpdate(sql).bind(0, userId).execute());
     }
 
     public void insert(Notification noti) {
         String sql = """
-                INSERT INTO Notifications (user_id, title, message, type, is_read, related_id, related_type, created_at)
-                VALUES (?, ?, ?, ?, 0, ?, ?, NOW())
+                INSERT INTO notifications (user_id, message, type, is_read, created_at)
+                VALUES (?, ?, ?, 0, NOW())
                 """;
         JdbiConnector.get().useHandle(handle ->
                 handle.createUpdate(sql)
                         .bind(0, noti.getUserId())
-                        .bind(1, noti.getTitle())
-                        .bind(2, noti.getMessage())
-                        .bind(3, noti.getType())
-                        .bind(4, noti.getRelatedId())
-                        .bind(5, noti.getRelatedType())
+                        .bind(1, noti.getMessage())
+                        .bind(2, noti.getType())
                         .execute()
         );
     }

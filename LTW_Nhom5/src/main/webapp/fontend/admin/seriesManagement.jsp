@@ -11,47 +11,11 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar (giữ nguyên) -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <img src="${pageContext.request.contextPath}/img/logo.png" alt="Logo" class="logo">
-            <h2>Comic Store</h2>
-        </div>
-        <ul>
-            <li><a href="dashboard.jsp"><img src="${pageContext.request.contextPath}/img/home.png" class="icon"><span>Trang chủ</span></a>
-            </li>
-            <li><a href="${pageContext.request.contextPath}/SeriesManagement"><img
-                    src="${pageContext.request.contextPath}/img/series.png" class="icon"><span>Quản lý series</span></a>
-            </li>
-            <li><a href="productManagement.jsp"><img src="${pageContext.request.contextPath}/img/product.png"
-                                                     class="icon"><span>Quản lý sản phẩm</span></a></li>
-            <li><a href="category.jsp"><img src="${pageContext.request.contextPath}/img/category.png"
-                                            class="icon"><span>Quản lý thể loại</span></a></li>
-            <li><a href="order.jsp"><img src="${pageContext.request.contextPath}/img/order.png" class="icon"><span>Quản lý đơn hàng</span></a>
-            </li>
-            <li><a href="userManagement.html"><img src="${pageContext.request.contextPath}/img/user.png"
-                                                   class="icon"><span>Quản lý người dùng</span></a></li>
-            <li><a href="flashSaleMan.jsp"><img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon"><span>Quản lý Flash Sale</span></a>
-            </li>
-            <li><a href="report.jsp"><img src="${pageContext.request.contextPath}/img/report.png" class="icon"><span>Thống kê</span></a>
-            </li>
-        </ul>
-    </aside>
+    <jsp:include page="/fontend/admin/ASide.jsp"/>
+
 
     <div class="main-content">
-        <header class="admin-header">
-            <div class="header-right">
-                <a href="chatWithCus.jsp"><i class="fa-solid fa-comment"></i></a>
-                <div class="admin-profile">
-                    <a href="profileAdmin.jsp"><img src="${pageContext.request.contextPath}/img/admin.png"
-                                                    class="admin-avatar" alt="Admin"></a>
-                    <span class="admin-name">Admin</span>
-                </div>
-                <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login_bo.jsp"><i class="fa-solid fa-right-from-bracket"></i></a>
-                </button>
-            </div>
-        </header>
+        <%@ include file="HeaderAdmin.jsp" %>
 
         <h2 class="page-title">Quản lý series</h2>
 

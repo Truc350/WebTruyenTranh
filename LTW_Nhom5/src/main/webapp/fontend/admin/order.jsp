@@ -28,7 +28,7 @@
 
 
     <div class="main-content">
-        <jsp:include page="/fontend/admin/HeaderAdmin.jsp"/>
+        <%@ include file="HeaderAdmin.jsp" %>
         <h2 class="page-title">Quản lý đơn hàng</h2>
 
         <!-- Thanh trạng thái đơn hàng -->
