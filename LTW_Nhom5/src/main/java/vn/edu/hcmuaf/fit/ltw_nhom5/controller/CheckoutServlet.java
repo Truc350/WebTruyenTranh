@@ -22,7 +22,7 @@ public class CheckoutServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-       Jdbi jdbi = JdbiConnector.get();
+        Jdbi jdbi = JdbiConnector.get();
         shippingAddressDAO = new UserShippingAddressDAO(jdbi);
     }
 
@@ -109,12 +109,25 @@ public class CheckoutServlet extends HttpServlet {
             for (CartItem item : cartItems) {
                 if (item.getComic().getId() == id) {
                     selectedItems.add(item);
-                    subtotal += item.getComic().getDiscountPrice() * item.getQuantity();
+
+
+                    // debug
+                    System.out.println("=== CHECKOUT ITEM ===");
+                    System.out.println("Comic: " + item.getComic().getNameComics());
+                    System.out.println("Original Price: " + item.getComic().getPrice());
+                    System.out.println("Discount Price: " + item.getComic().getDiscountPrice());
+                    System.out.println("Flash Sale Price: " + item.getFlashSalePrice());
+                    System.out.println("Final Price: " + item.getFinalPrice());
+                    System.out.println("Quantity: " + item.getQuantity());
+                    System.out.println("Subtotal: " + (item.getFinalPrice() * item.getQuantity()));
+                    System.out.println("====================");
+                    subtotal += item.getFinalPrice() * item.getQuantity();
                     break;
                 }
             }
         }
 
+        System.out.println("Total Subtotal: " + subtotal);
         // Tính phí vận chuyển mặc định (Tiêu chuẩn)
         double shippingFee = 25000;
 

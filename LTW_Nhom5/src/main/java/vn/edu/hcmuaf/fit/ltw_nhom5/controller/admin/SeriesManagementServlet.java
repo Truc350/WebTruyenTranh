@@ -1,4 +1,3 @@
-
 package vn.edu.hcmuaf.fit.ltw_nhom5.controller.admin;
 
 import jakarta.servlet.ServletException;
@@ -10,6 +9,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Series;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "SeriesManagement", urlPatterns = {"/SeriesManagement", "/admin/series"})
@@ -37,15 +37,36 @@ public class SeriesManagementServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Lấy số trang hiện tại
+            // Lấy số trang hiện tại (mặc định là 1)
             String pageParam = request.getParameter("page");
-            int currentPage = (pageParam != null && !pageParam.isEmpty()) ? Integer.parseInt(pageParam) : 1;
+            int currentPage = 1;
+            if (pageParam != null && !pageParam.trim().isEmpty()) {
+                try {
+                    currentPage = Integer.parseInt(pageParam);
+                    if (currentPage < 1) currentPage = 1;
+                } catch (NumberFormatException e) {
+                    currentPage = 1;
+                }
+            }
+            System.out.println("📄 Current page: " + currentPage);
 
             // Lấy từ khóa tìm kiếm
             String keyword = request.getParameter("keyword");
+            if (keyword != null) {
+                keyword = keyword.trim();
+                if (keyword.isEmpty()) {
+                    keyword = null;
+                }
+            }
+            System.out.println("🔍 Keyword: " + (keyword != null ? "'" + keyword + "'" : "null"));
 
-            // LẤY FILTER
+            // LẤY FILTER (mặc định là "all")
             String filterParam = request.getParameter("filter");
+            if (filterParam == null || filterParam.trim().isEmpty()) {
+                filterParam = "all";
+            }
+            System.out.println("🎯 Filter param: " + filterParam);
+
             Boolean isHidden = null;
 
             if ("visible".equals(filterParam)) {
@@ -55,32 +76,53 @@ public class SeriesManagementServlet extends HttpServlet {
                 isHidden = true;   // is_hidden = 1
                 System.out.println("🔍 Filter: HIDDEN (is_hidden = 1)");
             } else {
-                System.out.println("🔍 Filter: ALL");
+                System.out.println("🔍 Filter: ALL (no filter)");
             }
 
             List<Series> seriesList;
             int totalSeries;
 
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                System.out.println("🔍 Searching for: '" + keyword + "' with filter");
+            // Xử lý tìm kiếm hoặc load thông thường
+            if (keyword != null && !keyword.isEmpty()) {
+                System.out.println("🔍 Mode: SEARCH with filter");
                 // Tìm kiếm với filter
-                seriesList = seriesDAO.searchSeriesByNameAndVisibility(keyword.trim(), isHidden);
+                seriesList = seriesDAO.searchSeriesByNameAndVisibility(keyword, isHidden);
                 totalSeries = seriesList.size();
+
+                System.out.println("📊 Search results: " + totalSeries + " series found");
+
+                // Phân trang cho kết quả tìm kiếm
+                int startIndex = (currentPage - 1) * PAGE_SIZE;
+                int endIndex = Math.min(startIndex + PAGE_SIZE, totalSeries);
+
+                if (startIndex < totalSeries && startIndex >= 0) {
+                    seriesList = new ArrayList<>(seriesList.subList(startIndex, endIndex));
+                    System.out.println("📊 Showing results from " + startIndex + " to " + endIndex);
+                } else {
+                    seriesList = new ArrayList<>();
+                    System.out.println("⚠️ Start index out of range, returning empty list");
+                }
             } else {
-                // Lấy với filter và phân trang
-                System.out.println("📚 Loading series with filter and pagination");
+                // LOAD THÔNG THƯỜNG VỚI PHÂN TRANG
+                System.out.println("📚 Mode: LOAD ALL with pagination and filter");
                 seriesList = seriesDAO.getSeriesByVisibility(currentPage, PAGE_SIZE, isHidden);
                 totalSeries = seriesDAO.countSeriesByVisibility(isHidden);
-            }
 
-            System.out.println("📊 Found " + seriesList.size() + " series on this page");
-            System.out.println("📊 Total series: " + totalSeries);
+                System.out.println("📊 Total series in DB: " + totalSeries);
+                System.out.println("📊 Series on this page: " + seriesList.size());
+            }
 
             // Tính tổng số trang
             int totalPages = (int) Math.ceil((double) totalSeries / PAGE_SIZE);
             if (totalPages == 0) totalPages = 1;
 
+            // Đảm bảo currentPage không vượt quá totalPages
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
             System.out.println("📄 Total pages: " + totalPages);
+            System.out.println("📄 Adjusted current page: " + currentPage);
 
             // Lấy message từ session
             String successMessage = (String) request.getSession().getAttribute("successMessage");
@@ -89,11 +131,13 @@ public class SeriesManagementServlet extends HttpServlet {
             if (successMessage != null) {
                 request.setAttribute("successMessage", successMessage);
                 request.getSession().removeAttribute("successMessage");
+                System.out.println("✅ Success message: " + successMessage);
             }
 
             if (errorMessage != null) {
                 request.setAttribute("errorMessage", errorMessage);
                 request.getSession().removeAttribute("errorMessage");
+                System.out.println("❌ Error message: " + errorMessage);
             }
 
             // Đưa dữ liệu vào request
@@ -101,14 +145,28 @@ public class SeriesManagementServlet extends HttpServlet {
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("keyword", keyword);
+            request.setAttribute("filter", filterParam);
 
+            System.out.println("✅ Request attributes set successfully");
             System.out.println("➡️ Forwarding to JSP");
+            System.out.println("========================================");
+
             request.getRequestDispatcher("/fontend/admin/seriesManagement.jsp").forward(request, response);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
+            System.err.println("========================================");
+            System.err.println("❌ ERROR in doGet:");
+            System.err.println("❌ Message: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
+            System.err.println("========================================");
+
+            // Đảm bảo luôn có dữ liệu để hiển thị (tránh lỗi null)
+            request.setAttribute("errorMessage", "Có lỗi xảy ra khi tải dữ liệu: " + e.getMessage());
+            request.setAttribute("seriesList", new ArrayList<Series>());
+            request.setAttribute("currentPage", 1);
+            request.setAttribute("totalPages", 1);
+            request.setAttribute("filter", "all");
+
             request.getRequestDispatcher("/fontend/admin/seriesManagement.jsp").forward(request, response);
         }
     }
@@ -123,6 +181,7 @@ public class SeriesManagementServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
 
         try {
             // Lấy action từ form (show/hide)
@@ -135,6 +194,14 @@ public class SeriesManagementServlet extends HttpServlet {
             if (idParam == null || idParam.isEmpty()) {
                 System.err.println("❌ Missing series ID");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"success\": false, \"error\": \"Missing ID\"}");
+                return;
+            }
+
+            if (action == null || action.isEmpty()) {
+                System.err.println("❌ Missing action");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("{\"success\": false, \"error\": \"Missing action\"}");
                 return;
             }
 
@@ -150,13 +217,13 @@ public class SeriesManagementServlet extends HttpServlet {
             } else {
                 System.err.println("❌ Failed to update visibility for series " + seriesId);
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                response.getWriter().write("{\"success\": false}");
+                response.getWriter().write("{\"success\": false, \"error\": \"Update failed\"}");
             }
 
         } catch (NumberFormatException e) {
             System.err.println("❌ Invalid series ID: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"success\": false, \"error\": \"Invalid ID\"}");
+            response.getWriter().write("{\"success\": false, \"error\": \"Invalid ID format\"}");
         } catch (Exception e) {
             System.err.println("❌ Error updating series visibility: " + e.getMessage());
             e.printStackTrace();

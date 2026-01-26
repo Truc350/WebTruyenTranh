@@ -1714,3 +1714,48 @@ main {
     border-radius: 6px;
     border: 1px solid #ddd;
 }
+/* Flash Sale Badge */
+.flash-sale-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff4444, #ff6b6b);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+    box-shadow: 0 2px 4px rgba(255, 68, 68, 0.3);
+    animation: flashPulse 2s infinite;
+}
+
+/* Price Changed Badge */
+.price-changed-badge {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Original Price Note */
+.original-price-note {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    margin-left: 8px;
+}
+
+@keyframes flashPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.price-details {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}

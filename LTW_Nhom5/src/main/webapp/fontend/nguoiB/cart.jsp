@@ -59,8 +59,8 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                    <c:forEach var="item" items="${cartItems}">
-                            <!--Sản phẩm -->
+                        <!-- SẢN PHẨM TRONG GIỎ HÀNG -->
+                        <c:forEach var="item" items="${cartItems}">
                             <div class="cart-item" data-comic-id="${item.comic.id}">
                                 <input type="checkbox" class="item-checkbox" name="selectedComics" value="${item.comic.id}"
                                        form="checkoutForm"/>
@@ -69,20 +69,28 @@
                                 <div class="item-info">
                                     <div class="item-title">${item.comic.nameComics}</div>
                                     <div class="item-subtitle">${item.comic.nameComics}</div>
-                                    <div class="item-price" data-price="${item.comic.discountPrice}">
-                                        <fmt:formatNumber value="${item.comic.discountPrice}" type="number" groupingUsed="true"/> đ
 
+                                        <%-- ✅ THAY ĐỔI QUAN TRỌNG: Dùng item.finalPrice thay vì item.comic.discountPrice --%>
+                                    <div class="item-price" data-price="${item.finalPrice}">
+    <span class="discount-price">
+        <fmt:formatNumber value="${item.finalPrice}" type="number" groupingUsed="true"/> đ
+    </span>
+
+                                            <%-- Hiển thị badge Flash Sale nếu có --%>
                                         <c:if test="${item.flashSaleId != null}">
                                             <span class="flash-sale-badge">⚡ Flash Sale</span>
                                         </c:if>
 
-                                        <c:if test="${item.comic.discountPrice < item.comic.price}">
-                                            <del>
+                                            <%-- Hiển thị giá gốc bị gạch nếu có giảm giá --%>
+                                        <c:if test="${item.finalPrice < item.comic.price}">
+                                            <del class="original-price">
                                                 <fmt:formatNumber value="${item.comic.price}" type="number" groupingUsed="true"/> đ
                                             </del>
                                         </c:if>
                                     </div>
                                 </div>
+
+                                    <%-- Số lượng --%>
                                 <div class="quantity-control">
                                     <button type="button" class="quantity-btn minus">-</button>
                                     <input type="text" value="${item.quantity}" class="quantity-input" readonly/>
@@ -90,9 +98,9 @@
                                 </div>
 
                                 <div class="item-footer">
+                                        <%-- ✅ THAY ĐỔI: Dùng item.subtotal hoặc item.totalPrice --%>
                                     <div class="item-total">
-                                        <fmt:formatNumber value="${item.comic.discountPrice * item.quantity}"
-                                                          type="number" groupingUsed="true"/> đ
+                                        <fmt:formatNumber value="${item.subtotal}" type="number" groupingUsed="true"/> đ
                                     </div>
                                     <button type="button" class="delete-btn">
                                         <i class="fa-solid fa-trash"></i>
@@ -152,9 +160,9 @@
 
         <!-- Thanh toán -->
         <div class="checkout-section">
-                <button type="submit" id="btnCheckout" form="checkoutForm" class="btn-checkout ${not empty cartItems ? 'active' : ''}">THANH
-                    TOÁN
-                </button>
+            <button type="submit" id="btnCheckout" form="checkoutForm" class="btn-checkout ${not empty cartItems ? 'active' : ''}">THANH
+                TOÁN
+            </button>
             <!--            <div class="checkout-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</div>-->
         </div>
     </div>
@@ -217,13 +225,24 @@
         cartItems.forEach(item => {
             const checkbox = item.querySelector(".item-checkbox");
             if (checkbox && checkbox.checked) {
+                // ✅ Lấy giá từ data-price (đã là finalPrice)
                 const priceText = item.querySelector(".item-price").dataset.price;
                 const quantity = parseInt(item.querySelector(".quantity-input").value);
-                const price = parseInt(priceText);
+                const price = parseFloat(priceText);
+
+                console.log('Item:', {
+                    name: item.querySelector('.item-title').textContent,
+                    price: price,
+                    quantity: quantity,
+                    subtotal: price * quantity
+                });
+
                 total += price * quantity;
                 count++;
             }
         });
+
+        console.log('Total:', total, 'Count:', count);
 
         if (totalPriceElement) {
             totalPriceElement.textContent = total.toLocaleString('vi-VN') + ' đ';
