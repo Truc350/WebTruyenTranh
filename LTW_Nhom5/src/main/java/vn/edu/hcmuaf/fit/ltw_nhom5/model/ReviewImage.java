@@ -1,8 +1,12 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 public class ReviewImage {
     private int id;
+    @ColumnName("review_id")
     private int reviewId;
+    @ColumnName("image_url")
     private String imageUrl;
 
     // Constructor mặc định
