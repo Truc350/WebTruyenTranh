@@ -106,7 +106,7 @@
                         <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1">
                             <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                         </a>
-                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1&buyNow=true">
+                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1&buyNow=true" id="buy-now-link">
                             <button class="btn buy-now">Mua ngay</button>
                         </a>
                     </c:otherwise>
@@ -335,23 +335,6 @@
             </div>
             <div class="score-count">(${totalReviews} đánh giá)</div>
         </div>
-
-        <%--        <div class="rating-bars">--%>
-        <%--            &lt;%&ndash; SỬA: Không dùng step="-1", thay bằng cách khác &ndash;%&gt;--%>
-        <%--            <c:set var="starLevels" value="5,4,3,2,1"/>--%>
-        <%--            <c:forTokens items="${starLevels}" delims="," var="star">--%>
-        <%--                <c:set var="count" value="${ratingDistribution[star]}"/>--%>
-        <%--                <c:set var="percentage" value="${totalReviews > 0 ? (count * 100.0 / totalReviews) : 0}"/>--%>
-        <%--                <div class="bar-row">--%>
-        <%--                    <span>${star} sao</span>--%>
-        <%--                    <div class="bar">--%>
-        <%--                        <div class="fill" style="width:${percentage}%"></div>--%>
-        <%--                    </div>--%>
-        <%--                    <span><fmt:formatNumber value="${percentage}" maxFractionDigits="0"/>%</span>--%>
-        <%--                </div>--%>
-        <%--            </c:forTokens>--%>
-        <%--        </div>--%>
-        <%--        DEBUG--%>
         <div class="rating-bars">
             <%
                 java.util.Map<Integer, Integer> dist = (java.util.Map<Integer, Integer>) request.getAttribute("ratingDistribution");
@@ -579,13 +562,15 @@
         function updateCartLinks() {
             const contextPath = window.contextPath || '';
 
-            const addToCartLink = document.querySelector('a[href*="action=add"]:not([href*="buyNow"])');
+            // Update "Thêm vào giỏ"
+            const addToCartLink = document.getElementById('add-to-cart-link');
             if (addToCartLink) {
                 addToCartLink.setAttribute('href',
                     contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity);
             }
 
-            const buyNowLink = document.querySelector('a[href*="buyNow=true"]');
+            // ✅ Update "Mua ngay"
+            const buyNowLink = document.getElementById('buy-now-link');
             if (buyNowLink) {
                 buyNowLink.setAttribute('href',
                     contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity + '&buyNow=true');
