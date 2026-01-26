@@ -177,19 +177,19 @@ public class OrderHistoryServlet extends HttpServlet {
         switch (filter) {
             case "pending":
                 return "Pending";
-            case "shipping":  // ✅ Shipping = Vận chuyển
+            case "shipping":  // Shipping = Vận chuyển
                 return "AwaitingPickup";
-            case "delivery":  // ✅ Delivery = Chờ giao hàng
+            case "delivery":  // Delivery = Chờ giao hàng
                 return "Shipping";
             case "completed":
                 return "Completed";
 //          case "cancelled":
 //              return "Cancelled";
-            case "canceled":  // ✅ Đã hủy
+            case "canceled":  // Đã hủy
                 return "Cancelled";
 //          case "returned":
 //              return "Returned";
-            case "refund":    // ✅ Trả hàng/Hoàn tiền
+            case "refund":    // Trả hàng/Hoàn tiền
                 return "Returned";
             default:
                 return "Pending";

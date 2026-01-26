@@ -128,12 +128,9 @@
                     <div class="order-actions">
                         <c:choose>
                             <c:when test="${order.status == 'Completed'}">
-                                <a href="${pageContext.request.contextPath}/cart.jsp">
-                                    <button class="action-btn buy-again">Mua lại</button>
-                                </a>
-<%--                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">--%>
-<%--                                    Đánh giá--%>
-<%--                                </button>--%>
+
+                                <button class="action-btn buy-again" onclick="buyAgain(${order.id})">Mua lại</button>
+
                                 <button class="action-btn contact-seller ${orderDetail.hasReviewed ? 'disabled' : ''}"
                                         onclick="openReviewPopup(${order.id})"
                                     ${orderDetail.hasReviewed ? 'disabled' : ''}>
@@ -145,7 +142,6 @@
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
-<%--                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">--%>
                                 <button class="action-btn cancel-order" onclick="openCancelPopup(${order.id})">
                                     Hủy đơn hàng
                                 </button>
@@ -167,9 +163,9 @@
                             </c:when>
 
                             <c:when test="${order.status == 'Cancelled' || order.status == 'Returned'}">
-                                <a href="${pageContext.request.contextPath}/cart.jsp">
-                                    <button class="action-btn buy-again">Mua lại</button>
-                                </a>
+
+                                <button class="action-btn buy-again" onclick="buyAgain(${order.id})">Mua lại</button>
+
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
@@ -193,6 +189,7 @@
 
     </div>
 
+</main>
     <!-- Popup đánh giá -->
     <div class="popup-backdrop-review" style="display: none;"></div>
     <div class="container-write-review" style="display: none;">
@@ -252,15 +249,15 @@
             <p id="title">HỦY ĐƠN HÀNG</p>
         </div>
         <div class="field">
-            <label for="cancel-reason" class="nameDisplay">Lý do hủy đơn hàng</label>
-            <textarea id="cancel-reason" placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy đơn hàng này"></textarea>
+            <label for="cancel-reason" class="nameDisplay"></label>
+            <textarea id="cancel-reason" placeholder="Vui lòng nhập lý do hủy đơn"></textarea>
         </div>
         <div class="actions-write-review">
             <button class="cancel-cancel btn-reivew">Đóng</button>
             <button class="submit-cancel btn-reivew primary">Xác nhận hủy</button>
         </div>
     </div>
-</main>
+
 
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
@@ -665,32 +662,6 @@
         }
     }
 
-    <%--function cancelOrder(orderId) {--%>
-    <%--    if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {--%>
-    <%--        fetch('${pageContext.request.contextPath}/order-history', {--%>
-    <%--            method: 'POST',--%>
-    <%--            headers: {--%>
-    <%--                'Content-Type': 'application/x-www-form-urlencoded',--%>
-    <%--            },--%>
-    <%--            body: 'action=cancel&orderId=' + orderId--%>
-    <%--        })--%>
-    <%--            .then(response => response.json())--%>
-    <%--            .then(data => {--%>
-    <%--                if (data.success) {--%>
-    <%--                    alert('Hủy đơn hàng thành công!');--%>
-    <%--                    location.reload();--%>
-    <%--                } else {--%>
-    <%--                    alert('Có lỗi xảy ra, vui lòng thử lại!');--%>
-    <%--                }--%>
-    <%--            })--%>
-    <%--            .catch(error => {--%>
-    <%--                console.error('Error:', error);--%>
-    <%--                alert('Có lỗi xảy ra!');--%>
-    <%--            });--%>
-    <%--    }--%>
-    <%--}--%>
-
-
     function cancelOrder(orderId) {
         openCancelPopup(orderId);
     }
@@ -726,5 +697,49 @@
 
 </script>
 
+<script>
+    // Function mua lại - thêm tất cả sản phẩm trong đơn hàng vào giỏ
+    function buyAgain(orderId) {
+        if (!confirm('Bạn muốn thêm tất cả sản phẩm trong đơn hàng này vào giỏ hàng?')) {
+            return;
+        }
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.textContent = 'Đang xử lý...';
+
+        fetch('${pageContext.request.contextPath}/buy-again', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'orderId=' + orderId
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || 'Đã thêm ' + data.addedCount + ' sản phẩm vào giỏ hàng!');
+
+                    // Hỏi có muốn chuyển đến giỏ hàng không
+                    if (confirm('Bạn có muốn xem giỏ hàng không?')) {
+                        window.location.href = '${pageContext.request.contextPath}/cart';
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = 'Mua lại';
+                    }
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra!');
+                    btn.disabled = false;
+                    btn.textContent = 'Mua lại';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
+                btn.disabled = false;
+                btn.textContent = 'Mua lại';
+            });
+    }
+</script>
 </body>
 </html>
