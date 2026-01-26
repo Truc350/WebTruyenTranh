@@ -61,4 +61,11 @@ public class ResetPassServlet extends HttpServlet {
         request.setAttribute("success", true);
         request.getRequestDispatcher("/fontend/public/reset-password.jsp").forward(request, response);
     }
+
+//    @Override
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+//    }
+
 }

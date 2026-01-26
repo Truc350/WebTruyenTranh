@@ -27,27 +27,7 @@
 
     <!-- Main content -->
     <main class="main-content">
-        <header class="admin-header">
-            <div class="header-right">
-                <a href="chatWithCus.jsp">
-                    <i class="fa-solid fa-comment"></i>
-                </a>
-
-                <div class="admin-profile">
-                    <a href="profileAdmin.jsp">
-                        <img src="../../img/admin.png" class="admin-avatar" alt="Admin">
-                    </a>
-                    <span class="admin-name">Admin</span>
-                </div>
-
-                <!-- Nút đăng xuất -->
-                <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login_bo.jsp">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                </button>
-            </div>
-        </header>
+        <%@ include file="HeaderAdmin.jsp" %>
         <h2 class="page-title">Quản lý sản phẩm</h2>
 
         <div class="table-container">

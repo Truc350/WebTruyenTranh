@@ -26,17 +26,17 @@
                 <label for="oldPassword">Nhập mật khẩu mới:</label>
                 <div class="password-box">
                     <input type="password" name="oldPassword" id="oldPassword" placeholder="Mật khẩu mới" required>
-<%--                    <img src="${pageContext.request.contextPath}/img/eyePassword.png"--%>
-<%--                         class="eye toggle1"--%>
-<%--                         alt="Toggle password visibility">--%>
+                    <img src="${pageContext.request.contextPath}/img/eyePassword.png"
+                         class="eye toggle1"
+                         alt="Toggle password visibility">
                 </div>
 
                 <label for="newPassword">Xác nhận lại mật khẩu:</label>
                 <div class="password-box">
                     <input type="password" name="newPassword" id="newPassword" placeholder="Xác nhận mật khẩu" required>
-<%--                    <img src="${pageContext.request.contextPath}/img/eyePassword.png"--%>
-<%--                         class="eye toggle2"--%>
-<%--                         alt="Toggle password visibility">--%>
+                    <img src="${pageContext.request.contextPath}/img/eyePassword.png"
+                         class="eye toggle2"
+                         alt="Toggle password visibility">
                 </div>
 
                 <button type="submit">Xác nhận</button>
@@ -60,24 +60,24 @@
 
 <script>
     // Hàm toggle password visibility
-    <%--function togglePassword(eyeClass) {--%>
-    <%--    const eye = document.querySelector("." + eyeClass);--%>
-    <%--    const input = eye.previousElementSibling;--%>
+    function togglePassword(eyeClass) {
+        const eye = document.querySelector("." + eyeClass);
+        const input = eye.previousElementSibling;
 
-    <%--    eye.addEventListener("click", function() {--%>
-    <%--        if (input.type === "password") {--%>
-    <%--            input.type = "text";--%>
-    <%--            eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";--%>
-    <%--        } else {--%>
-    <%--            input.type = "password";--%>
-    <%--            eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";--%>
-    <%--        }--%>
-    <%--    });--%>
-    <%--}--%>
+        eye.addEventListener("click", function() {
+            if (input.type === "password") {
+                input.type = "text";
+                eye.src = "${pageContext.request.contextPath}/img/eyePasswordHide.png";
+            } else {
+                input.type = "password";
+                eye.src = "${pageContext.request.contextPath}/img/eyePassword.png";
+            }
+        });
+    }
 
-    <%--// Khởi tạo toggle cho cả 2 mật khẩu--%>
-    <%--togglePassword("toggle1");--%>
-    <%--togglePassword("toggle2");--%>
+    // Khởi tạo toggle cho cả 2 mật khẩu
+    togglePassword("toggle1");
+    togglePassword("toggle2");
 
     // Hiển thị popup thành công nếu có
     <c:if test="${success eq true}">

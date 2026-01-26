@@ -1,11 +1,13 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.controller.admin;
 
+import com.google.gson.Gson;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -137,13 +139,37 @@ public class UserManagementServlet extends HttpServlet {
                             "{\"status\":\"error\",\"message\":\"syncType không hợp lệ\"}"
                     );
                 }
-            } else {
+            }  else if ("check-violation".equals(action)) {
+                // ✅ THÊM: Endpoint kiểm tra vi phạm
+                handleCheckViolation(request, response);
+            }
+            else {
                 response.getWriter().write("{\"status\":\"error\",\"message\":\"Action không hợp lệ\"}");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().write("{\"status\":\"error\",\"message\":\"Lỗi xử lý: " + e.getMessage() + "\"}");
+        }
+    }
+
+    /**
+     * ✅ THÊM: Kiểm tra vi phạm trước khi cho phép khóa
+     */
+    private void handleCheckViolation(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+            int userId = Integer.parseInt(request.getParameter("userId"));
+
+            UserDao userDao = UserDao.getInstance();
+            Map<String, Object> violationInfo = userDao.checkUserViolation(userId);
+
+            // Trả về JSON
+            Gson gson = new Gson();
+            response.getWriter().write(gson.toJson(violationInfo));
+
+        } catch (Exception e) {
+            response.getWriter().write("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
         }
     }
 }
