@@ -170,3 +170,15 @@ button:hover{
         width: 100%;
     }
 }
+
+
+/* Ẩn nút con mắt mặc định trên Chrome, Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-password-toggle {
+    display: none;
+}

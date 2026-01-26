@@ -1,4 +1,4 @@
-package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
+package vn.edu.hcmuaf.fit.ltw_nhom5.controller.pubilc;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
@@ -63,14 +63,17 @@ public class RegisterServlet extends HttpServlet {
         user.setEmail(email);
         user.setPasswordHash(passwordHash);
         user.setFullName(username);
-//        request.getSession().setAttribute("currentUser", user);
 
-//        userDao.insert(user);
-//        response.sendRedirect(request.getContextPath() + "/login");
         // Sau khi insert user thành công
         userDao.insert(user);
         request.setAttribute("success", true);
         request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
 
+    }
+
+        @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
     }
 }

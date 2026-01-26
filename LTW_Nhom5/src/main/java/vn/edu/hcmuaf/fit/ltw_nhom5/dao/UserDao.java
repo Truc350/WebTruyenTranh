@@ -5,10 +5,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class UserDao {
     private static UserDao instance;
@@ -641,5 +638,33 @@ public class UserDao {
         return String.format("%,.0fđ", amount).replace(",", ".");
     }
 
+    /**
+     * Kiểm tra user có vi phạm quy định không
+     * @return Map chứa thông tin vi phạm
+     */
+    public Map<String, Object> checkUserViolation(int userId) {
+        Map<String, Object> result = new HashMap<>();
+        List<String> violations = new ArrayList<>();
 
+        // 1. Kiểm tra hủy đơn nhiều lần
+        int cancelCount = OrderHistoryDAO.countUserCancelledOrdersLastHour(userId);
+        if (cancelCount >= 5) {
+            violations.add(String.format("Hủy %d đơn hàng trong 1 giờ", cancelCount));
+        }
+
+        // 2. Kiểm tra đăng nhập thất bại
+        User userOpt = getUserById(userId);
+        if (userOpt != null) {
+            int failCount = userOpt.getFailedLoginAttempts();
+            if (failCount >= 5) {
+                violations.add(String.format("Đăng nhập thất bại %d lần liên tiếp", failCount));
+            }
+        }
+
+        result.put("hasViolation", !violations.isEmpty());
+        result.put("violations", violations);
+        result.put("violationCount", violations.size());
+
+        return result;
+    }
 }

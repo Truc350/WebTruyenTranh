@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/admin/productManagement.jsp" value="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/admin" />
+        <entry key="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/admin/userManagement.jsp" value="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/admin" />
         <entry key="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/nguoiB/cart.jsp" value="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/nguoiB" />
         <entry key="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/public/CatagoryPage.jsp" value="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/public" />
         <entry key="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/public/SeriComic.jsp" value="file://$PROJECT_DIR$/LTW_Nhom5/src/main/webapp/fontend/public" />

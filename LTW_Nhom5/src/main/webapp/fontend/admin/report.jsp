@@ -78,7 +78,7 @@
 <%--    </aside>--%>
 
     <div class="main-content">
-        <jsp:include page="/fontend/admin/HeaderAdmin.jsp"/>
+        <%@ include file="HeaderAdmin.jsp" %>
 <%--        <header class="admin-header">--%>
 <%--            <div class="header-right">--%>
 <%--                <a href="chatWithCus.jsp">--%>
