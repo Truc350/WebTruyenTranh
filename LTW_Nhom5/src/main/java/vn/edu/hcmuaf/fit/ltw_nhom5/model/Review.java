@@ -1,6 +1,9 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 public class Review {
@@ -17,6 +20,11 @@ public class Review {
 
     @ColumnName("created_at")
     private Timestamp createdAt;
+    @ColumnName("order_id")
+    private int orderId;
+
+    // Danh sách ảnh review
+    private List<ReviewImage> images = new ArrayList<>();
 
     public Review() {
     }
@@ -75,5 +83,21 @@ public class Review {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public List<ReviewImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ReviewImage> images) {
+        this.images = images;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 }

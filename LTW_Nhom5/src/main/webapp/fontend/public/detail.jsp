@@ -106,7 +106,7 @@
                         <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1">
                             <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                         </a>
-                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1&buyNow=true">
+                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1&buyNow=true" id="buy-now-link">
                             <button class="btn buy-now">Mua ngay</button>
                         </a>
                     </c:otherwise>
@@ -156,9 +156,9 @@
                 <c:choose>
                     <%-- Có Flash Sale --%>
                     <c:when test="${comic.hasFlashSale}">
-<%--                        <div class="flash-sale-badge-detail-page">--%>
-<%--                            <i class="fas fa-bolt"></i> FLASH SALE--%>
-<%--                        </div>--%>
+                        <%--                        <div class="flash-sale-badge-detail-page">--%>
+                        <%--                            <i class="fas fa-bolt"></i> FLASH SALE--%>
+                        <%--                        </div>--%>
                         <p id="giamdagiam">
                             <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/>₫
                         </p>
@@ -269,7 +269,8 @@
                                     <c:when test="${relatedComic.hasFlashSale}">
                                         <div class="price-section">
                                             <p class="flash-price">
-                                                <fmt:formatNumber value="${relatedComic.flashSalePrice}" pattern="#,###"/>₫
+                                                <fmt:formatNumber value="${relatedComic.flashSalePrice}"
+                                                                  pattern="#,###"/>₫
                                             </p>
                                             <p class="original-price">
                                                 <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/>₫
@@ -282,7 +283,8 @@
                                     <c:when test="${relatedComic.hasDiscount()}">
                                         <div class="price-section">
                                             <p class="discount-price">
-                                                <fmt:formatNumber value="${relatedComic.discountPrice}" pattern="#,###"/>₫
+                                                <fmt:formatNumber value="${relatedComic.discountPrice}"
+                                                                  pattern="#,###"/>₫
                                             </p>
                                             <p class="original-price">
                                                 <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/>₫
@@ -299,7 +301,8 @@
                                     </c:otherwise>
                                 </c:choose>
 
-                                <p class="sold">Đã bán: <strong>${relatedComic.totalSold != null ? relatedComic.totalSold : 0}</strong></p>
+                                <p class="sold">Đã bán:
+                                    <strong>${relatedComic.totalSold != null ? relatedComic.totalSold : 0}</strong></p>
                             </a>
                         </div>
                     </c:forEach>
@@ -324,85 +327,55 @@
             <div class="score-stars">
                 <c:set var="fullStars"
                        value="${avgRating >= 1 ? (avgRating >= 2 ? (avgRating >= 3 ? (avgRating >= 4 ? (avgRating >= 5 ? 5 : 4) : 3) : 2) : 1) : 0}"/>
-
                 <c:forEach begin="1" end="${fullStars}">★</c:forEach>
-
                 <c:set var="hasHalfStar" value="${avgRating - fullStars >= 0.5}"/>
                 <c:if test="${hasHalfStar}">★</c:if>
-
                 <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}"/>
                 <c:forEach begin="1" end="${emptyStars}">☆</c:forEach>
             </div>
-            <div class="score-count">(${not empty reviews ? reviews.size() : 0} đánh giá)</div>
+            <div class="score-count">(${totalReviews} đánh giá)</div>
         </div>
-
         <div class="rating-bars">
-            <div class="bar-row">
-                <span>5 sao</span>
-                <div class="bar">
-                    <div class="fill" style="width:100%"></div>
-                </div>
-                <span>100%</span>
-            </div>
+            <%
+                java.util.Map<Integer, Integer> dist = (java.util.Map<Integer, Integer>) request.getAttribute("ratingDistribution");
+                Integer total = (Integer) request.getAttribute("totalReviews");
 
-            <div class="bar-row">
-                <span>4 sao</span>
-                <div class="bar">
-                    <div class="fill" style="width:0%"></div>
-                </div>
-                <span>0%</span>
-            </div>
+                if (dist == null) dist = new java.util.HashMap<>();
+                if (total == null) total = 0;
 
+                for (int star = 5; star >= 1; star--) {
+                    Integer count = dist.get(star);
+                    if (count == null) count = 0;
+                    double percentage = (total > 0) ? (count * 100.0 / total) : 0;
+            %>
             <div class="bar-row">
-                <span>3 sao</span>
+                <span><%= star %> sao</span>
                 <div class="bar">
-                    <div class="fill" style="width:0%"></div>
+                    <div class="fill" style="width: <%= String.format("%.0f", percentage) %>%;"></div>
                 </div>
-                <span>0%</span>
+                <span><%= String.format("%.0f", percentage) %>%</span>
             </div>
-
-            <div class="bar-row">
-                <span>2 sao</span>
-                <div class="bar">
-                    <div class="fill" style="width:0%"></div>
-                </div>
-                <span>0%</span>
-            </div>
-
-            <div class="bar-row">
-                <span>1 sao</span>
-                <div class="bar">
-                    <div class="fill" style="width:0%"></div>
-                </div>
-                <span>0%</span>
-            </div>
+            <% } %>
         </div>
     </div>
-
-    <!-- Cột phải -->
-    <!-- <div class="rating-right">
-        <button class="write-btn">✎ Viết đánh giá</button>
-    </div> -->
+</div>
 
 </div>
 
 <!-- lời comment -->
 <div class="comment">
 
-    <!-- <div class="review-tabs">
-        <label class="tab1 active">Tất cả đánh giá</label>
-        <label class="tab2 active">Mới nhất</label>
-    </div> -->
-
     <div class="review-tabs">
-        <label id="tab1" class="tab active">Tất cả đánh giá</label>
-        <!-- <label id="tab2" class="tab">Mới nhất</label> -->
+        <label id="tab1" class="tab active">Tất cả đánh giá (${totalReviews})</label>
     </div>
 
     <div id="reviewed-person" class="reviewed-person">
         <c:choose>
             <c:when test="${empty reviews}">
-                <p>Chưa có đánh giá nào.</p>
+                <p style="text-align: center; padding: 40px; color: #999;">
+                    <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>
+                    Chưa có đánh giá nào.
+                </p>
             </c:when>
             <c:otherwise>
                 <c:forEach var="review" items="${reviews}">
@@ -411,7 +384,7 @@
                             <div class="avatar">
                                     ${fn:substring(review.username, 0, 2).toUpperCase()}
                             </div>
-                            <div class="review-date">${review.username}</div>
+                            <div class="review-username">${review.username}</div>
                             <div class="review-date">
                                 <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy"/>
                             </div>
@@ -425,72 +398,32 @@
 
                             <p class="review-text">${review.comment}</p>
 
-                            <div class="review-actions">
-                                <i class="fa-regular fa-heart"></i>
-                                <span class="action">Thích (0)</span>
-                                <i class="fa-solid fa-reply"></i>
-                                <span class="action"> Trả lời</span>
-                            </div>
+                                <%-- Hiển thị ảnh review --%>
+                            <c:if test="${not empty review.images}">
+                                <div class="review-images">
+                                    <c:forEach var="image" items="${review.images}">
+                                        <div class="review-image-wrapper">
+                                            <img src="${image.imageUrl}"
+                                                 alt="Review image"
+                                                 class="review-image"
+                                                 onclick="openImageModal('${image.imageUrl}')">
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </c:forEach>
             </c:otherwise>
         </c:choose>
-
     </div>
+</div>
 
-    <div id="reviewed-person-popup" class="reviewed-person-popup" style="display: none;">
-        <div class="review-item">
-            <div class="review-left">
-                <div class="avatar">HĐz</div>
-                <div class="review-date">Hưng Đoàn</div>
-                <div class="review-date">19/08/2020</div>
-            </div>
-
-            <div class="review-right">
-                <div class="review-stars">★★★★★</div>
-
-                <p class="review-text">
-                    Quả như mong đợi của mình, cuốn này không những hay mà còn hấp dẫn , khuyên mọi người nên mua để
-                    đọc
-                    thử, cuốn như bánh cuốn luôn ý.
-                    Tác giả còn bonus thêm quả boom cuối truyện như phim boom tấn ý mà tiết là nó tịt ngòi kkk.
-                </p>
-
-                <div class="review-actions">
-                    <i class="fa-regular fa-heart"></i>
-                    <span class="action">Thích (19)</span>
-                    <i class="fa-solid fa-reply"></i>
-                    <span class="action"> Trả lời</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="review-item">
-            <div class="review-left">
-                <div class="avatar">HĐz</div>
-                <div class="review-date">Bé heo</div>
-                <div class="review-date">19/08/2020</div>
-            </div>
-
-            <div class="review-right">
-                <div class="review-stars">★★★★★</div>
-
-                <p class="review-text">
-                    Sách rất hay, nội dung hấp dẫn và in ấn chất lượng cao. Đóng gói cẩn thận, giao hàng nhanh. Rất
-                    hài
-                    lòng với lần mua này!
-                </p>
-
-                <div class="review-actions">
-                    <i id="heart" class="fa-regular fa-heart"></i>
-                    <span class="action">Thích (9)</span>
-                    <i class="fa-solid fa-reply"></i>
-                    <span class="action"> Trả lời</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<%--<--Modal xem ảnh phóng to -->--%>
+<div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalImage">
+</div>
 </div>
 
 <!-- phần này gợi ý cho bạn -->
@@ -526,7 +459,8 @@
                                                 <c:if test="${suggested.hasFlashSale}">
                                                     <div class="flash-sale-badge-small">
                                                         <i class="fas fa-bolt"></i>
-                                                        -<fmt:formatNumber value="${suggested.flashSaleDiscount}" pattern="#"/>%
+                                                        -<fmt:formatNumber value="${suggested.flashSaleDiscount}"
+                                                                           pattern="#"/>%
                                                     </div>
                                                 </c:if>
 
@@ -538,31 +472,38 @@
                                                     <c:when test="${suggested.hasFlashSale}">
                                                         <div class="price-wrapper">
                                                             <p class="product-price flash">
-                                                                <fmt:formatNumber value="${suggested.flashSalePrice}" pattern="#,###"/>₫
+                                                                <fmt:formatNumber value="${suggested.flashSalePrice}"
+                                                                                  pattern="#,###"/>₫
                                                             </p>
                                                             <p class="original-price-small">
-                                                                <fmt:formatNumber value="${suggested.price}" pattern="#,###"/>₫
+                                                                <fmt:formatNumber value="${suggested.price}"
+                                                                                  pattern="#,###"/>₫
                                                             </p>
                                                         </div>
                                                     </c:when>
                                                     <c:when test="${suggested.hasDiscount()}">
                                                         <div class="price-wrapper">
                                                             <p class="product-price">
-                                                                <fmt:formatNumber value="${suggested.discountPrice}" pattern="#,###"/>₫
+                                                                <fmt:formatNumber value="${suggested.discountPrice}"
+                                                                                  pattern="#,###"/>₫
                                                             </p>
                                                             <p class="original-price-small">
-                                                                <fmt:formatNumber value="${suggested.price}" pattern="#,###"/>₫
+                                                                <fmt:formatNumber value="${suggested.price}"
+                                                                                  pattern="#,###"/>₫
                                                             </p>
                                                         </div>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <p class="product-price">
-                                                            <fmt:formatNumber value="${suggested.price}" pattern="#,###"/>₫
+                                                            <fmt:formatNumber value="${suggested.price}"
+                                                                              pattern="#,###"/>₫
                                                         </p>
                                                     </c:otherwise>
                                                 </c:choose>
 
-                                                <p class="sold">Đã bán: <strong>${suggested.totalSold != null ? suggested.totalSold : 0}</strong></p>
+                                                <p class="sold">Đã bán:
+                                                    <strong>${suggested.totalSold != null ? suggested.totalSold : 0}</strong>
+                                                </p>
                                             </a>
                                         </div>
                                     </c:forEach>
@@ -621,13 +562,15 @@
         function updateCartLinks() {
             const contextPath = window.contextPath || '';
 
-            const addToCartLink = document.querySelector('a[href*="action=add"]:not([href*="buyNow"])');
+            // Update "Thêm vào giỏ"
+            const addToCartLink = document.getElementById('add-to-cart-link');
             if (addToCartLink) {
                 addToCartLink.setAttribute('href',
                     contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity);
             }
 
-            const buyNowLink = document.querySelector('a[href*="buyNow=true"]');
+            // ✅ Update "Mua ngay"
+            const buyNowLink = document.getElementById('buy-now-link');
             if (buyNowLink) {
                 buyNowLink.setAttribute('href',
                     contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity + '&buyNow=true');
@@ -836,7 +779,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         console.log('🚀 SLIDER INIT');
 
         const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
@@ -894,7 +837,7 @@
                 console.log('🎯 Transform applied:', track.style.transform);
             }
 
-            nextBtn.addEventListener('click', function(e) {
+            nextBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -906,7 +849,7 @@
                 }
             });
 
-            prevBtn.addEventListener('click', function(e) {
+            prevBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
@@ -1002,55 +945,54 @@
                 });
         });
     });
+
     //tiem kiem
 
-    function searchCategories(page = 1) {
-        const keyword = document.getElementById('categorySearchInput').value.trim();
-        const tbody = document.getElementById('categoryTableBody');
+    <%--function searchCategories(page = 1) {--%>
+    <%--    const keyword = document.getElementById('categorySearchInput').value.trim();--%>
+    <%--    const tbody = document.getElementById('categoryTableBody');--%>
 
-        tbody.innerHTML = `
-        <tr>
-            <td colspan="3" style="text-align: center; padding: 40px;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>
-                <p style="margin-top: 10px;">Đang tìm kiếm...</p>
-            </td>
-        </tr>
-    `;
+    <%--    tbody.innerHTML = `--%>
+    <%--    <tr>--%>
+    <%--        <td colspan="3" style="text-align: center; padding: 40px;">--%>
+    <%--            <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>--%>
+    <%--            <p style="margin-top: 10px;">Đang tìm kiếm...</p>--%>
+    <%--        </td>--%>
+    <%--    </tr>--%>
+    <%--`;--%>
 
-        const contextPath = window.contextPath || '';
-        <%--const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;--%>
+    <%--    const contextPath = window.contextPath || '';--%>
+    <%--    &lt;%&ndash;const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;&ndash;%&gt;--%>
 
-        console.log('🔍 Searching categories:', { keyword, page, url });
+    <%--    console.log('🔍 Searching categories:', {keyword, page, url});--%>
 
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('✅ Search results:', data);
+    <%--    fetch(url)--%>
+    <%--        .then(response => {--%>
+    <%--            if (!response.ok) {--%>
+    <%--                throw new Error(`HTTP ${response.status}: ${response.statusText}`);--%>
+    <%--            }--%>
+    <%--            return response.json();--%>
+    <%--        })--%>
+    <%--        .then(data => {--%>
+    <%--            console.log('✅ Search results:', data);--%>
 
-                if (data.success) {
-                    currentCategoryPage = data.currentPage;
-                    updateCategoryTable(data.categories);
-                    updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);
+    <%--            if (data.success) {--%>
+    <%--                currentCategoryPage = data.currentPage;--%>
+    <%--                updateCategoryTable(data.categories);--%>
+    <%--                updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);--%>
 
-                    if (keyword) {
-                        showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');
-                    }
-                } else {
-                    showError(data.message || 'Có lỗi xảy ra');
-                }
-            })
-            .catch(error => {
-                console.error('❌ Search error:', error);
-                showError('Không thể kết nối đến server: ' + error.message);
-            });
-    }
-
-
+    <%--                if (keyword) {--%>
+    <%--                    showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');--%>
+    <%--                }--%>
+    <%--            } else {--%>
+    <%--                showError(data.message || 'Có lỗi xảy ra');--%>
+    <%--            }--%>
+    <%--        })--%>
+    <%--        .catch(error => {--%>
+    <%--            console.error('❌ Search error:', error);--%>
+    <%--            showError('Không thể kết nối đến server: ' + error.message);--%>
+    <%--        });--%>
+    <%--}--%>
 
 
     function showToast(message, type = 'success') {
@@ -1086,6 +1028,26 @@
     }
 </style>
 
+<script>
+    function openImageModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+
+        modal.style.display = 'block';
+        modalImg.src = imageUrl;
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // Đóng modal khi nhấn ESC
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeImageModal();
+        }
+    });
+</script>
 
 </body>
 
