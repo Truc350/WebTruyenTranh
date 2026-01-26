@@ -1,5 +1,6 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
+import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Notification;
 
@@ -8,6 +9,16 @@ import java.util.stream.Collectors;
 
 public class NotificationDAO {
     private static NotificationDAO instance;
+    private final Jdbi jdbi;
+    private static final int ADMIN_ID = 1;
+
+    public NotificationDAO(Jdbi jdbi) {
+        this.jdbi = JdbiConnector.get();
+    }
+
+    public NotificationDAO() {
+        this.jdbi = JdbiConnector.get();
+    }
 
     public static NotificationDAO getInstance() {
         if (instance == null) {
@@ -93,5 +104,19 @@ public class NotificationDAO {
                         .bind(5, noti.getRelatedType())
                         .execute()
         );
+    }
+
+    //THÔNG BÁO CỦA ADMIN VỀ VI PHẠM CỦA USER
+    public int countUnreadForAdmin() {
+        return countUnread(ADMIN_ID);
+    }
+
+    public List<Notification> getRecentForAdmin(int limit) {
+        return getRecent(ADMIN_ID, limit);
+    }
+
+    public void insertForAdmin(Notification noti) {
+        noti.setUserId(ADMIN_ID);
+        insert(noti);
     }
 }

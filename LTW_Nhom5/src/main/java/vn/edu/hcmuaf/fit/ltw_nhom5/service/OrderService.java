@@ -8,7 +8,6 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.utils.CurrencyFormatter;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class OrderService {
     private final Jdbi jdbi;
@@ -20,7 +19,7 @@ public class OrderService {
 
     public OrderService() {
         this.jdbi = JdbiConnector.get();
-        this.orderDAO = new OrderDAO();
+        this.orderDAO = new OrderDAO(jdbi);
         this.paymentDAO = new PaymentDAO();
         this.comicDAO = new ComicDAO();
         this.userDAO = new UserDao(jdbi);
@@ -637,5 +636,31 @@ public class OrderService {
      */
     public List<Map<String, Object>> searchCancelledOrders(String keyword) {
         return searchOrdersByTab(keyword, "Cancelled");
+    }
+
+    /**
+     * Cập nhật trạng thái đơn hàng và tự động cập nhật total_spent
+     * @param orderId ID đơn hàng
+     * @param newStatus Trạng thái mới
+     * @return true nếu thành công
+     */
+    public boolean updateOrderStatusAndSync(int orderId, String newStatus) {
+        // Cập nhật trạng thái đơn hàng
+        boolean orderUpdated = orderDAO.updateOrderStatus(orderId, newStatus);
+
+        if (!orderUpdated) {
+            return false;
+        }
+
+        // Nếu trạng thái mới là "completed", tự động cập nhật total_spent
+        if ("Completed".equalsIgnoreCase(newStatus)) {
+            Optional<Order> order = orderDAO.getOrderById(orderId);
+            if (order.isPresent() && order.get().getUserId() > 0) {
+                // Đồng bộ total_spent cho user
+                userDAO.syncTotalSpentFromOrders(order.get().getUserId());
+                System.out.println("Đã tự động cập nhật total_spent cho user ID: " + order.get().getUserId());
+            }
+        }
+        return true;
     }
 }

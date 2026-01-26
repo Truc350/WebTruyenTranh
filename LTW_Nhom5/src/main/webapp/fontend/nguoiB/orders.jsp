@@ -30,17 +30,23 @@
                 <button class="scroll-btn scroll-left" title="Cuộn trái">&lt;</button>
                 <div class="tabs-container">
                     <button class="filter-tab ${currentFilter == 'pending' ? 'active' : ''}"
-                            data-filter="pending">Chờ xác nhận</button>
+                            data-filter="pending">Chờ xác nhận
+                    </button>
                     <button class="filter-tab ${currentFilter == 'shipping' ? 'active' : ''}"
-                            data-filter="shipping">Vận chuyển</button>
+                            data-filter="shipping">Vận chuyển
+                    </button>
                     <button class="filter-tab ${currentFilter == 'delivery' ? 'active' : ''}"
-                            data-filter="delivery">Chờ giao hàng</button>
+                            data-filter="delivery">Chờ giao hàng
+                    </button>
                     <button class="filter-tab ${currentFilter == 'completed' ? 'active' : ''}"
-                            data-filter="completed">Hoàn thành</button>
+                            data-filter="completed">Hoàn thành
+                    </button>
                     <button class="filter-tab ${currentFilter == 'canceled' ? 'active' : ''}"
-                            data-filter="canceled">Đã hủy</button>
+                            data-filter="canceled">Đã hủy
+                    </button>
                     <button class="filter-tab ${currentFilter == 'refund' ? 'active' : ''}"
-                            data-filter="refund">Trả hàng/Hoàn tiền</button>
+                            data-filter="refund">Trả hàng/Hoàn tiền
+                    </button>
                 </div>
                 <button class="scroll-btn scroll-right" title="Cuộn phải">&gt;</button>
             </div>
@@ -50,36 +56,36 @@
         <div class="orders-list">
             <%-- Loop qua các đơn hàng đã được filter từ servlet --%>
             <c:forEach var="orderDetail" items="${orderDetails}">
-                <c:set var="order" value="${orderDetail.order}" />
-                <c:set var="items" value="${orderDetail.items}" />
+                <c:set var="order" value="${orderDetail.order}"/>
+                <c:set var="items" value="${orderDetail.items}"/>
 
                 <%-- Map status sang CSS class và text tiếng Việt --%>
-                <c:set var="statusClass" value="" />
-                <c:set var="statusText" value="" />
+                <c:set var="statusClass" value=""/>
+                <c:set var="statusText" value=""/>
                 <c:choose>
                     <c:when test="${order.status == 'Pending'}">
-                        <c:set var="statusClass" value="pending" />
-                        <c:set var="statusText" value="Chờ xác nhận" />
+                        <c:set var="statusClass" value="pending"/>
+                        <c:set var="statusText" value="Chờ xác nhận"/>
                     </c:when>
                     <c:when test="${order.status == 'AwaitingPickup'}">
-                        <c:set var="statusClass" value="shipping" />
-                        <c:set var="statusText" value="Vận chuyển" />
+                        <c:set var="statusClass" value="shipping"/>
+                        <c:set var="statusText" value="Vận chuyển"/>
                     </c:when>
                     <c:when test="${order.status == 'Shipping'}">
-                        <c:set var="statusClass" value="delivery" />
-                        <c:set var="statusText" value="Chờ giao hàng" />
+                        <c:set var="statusClass" value="delivery"/>
+                        <c:set var="statusText" value="Chờ giao hàng"/>
                     </c:when>
                     <c:when test="${order.status == 'Completed'}">
-                        <c:set var="statusClass" value="completed" />
-                        <c:set var="statusText" value="Hoàn thành" />
+                        <c:set var="statusClass" value="completed"/>
+                        <c:set var="statusText" value="Hoàn thành"/>
                     </c:when>
                     <c:when test="${order.status == 'Cancelled'}">
-                        <c:set var="statusClass" value="canceled" />
-                        <c:set var="statusText" value="Đã hủy" />
+                        <c:set var="statusClass" value="canceled"/>
+                        <c:set var="statusText" value="Đã hủy"/>
                     </c:when>
                     <c:when test="${order.status == 'Returned'}">
-                        <c:set var="statusClass" value="refund" />
-                        <c:set var="statusText" value="Trả hàng/Hoàn tiền" />
+                        <c:set var="statusClass" value="refund"/>
+                        <c:set var="statusText" value="Trả hàng/Hoàn tiền"/>
                     </c:when>
                 </c:choose>
 
@@ -95,8 +101,8 @@
                     <div class="order-content">
                             <%-- Loop qua các sản phẩm --%>
                         <c:forEach var="itemData" items="${items}">
-                            <c:set var="item" value="${itemData.item}" />
-                            <c:set var="comic" value="${itemData.comic}" />
+                            <c:set var="item" value="${itemData.item}"/>
+                            <c:set var="comic" value="${itemData.comic}"/>
 
                             <c:if test="${comic != null}">
                                 <div class="product-item">
@@ -109,7 +115,7 @@
                                         <p class="product-quantity">Số lượng: x${item.quantity}</p>
                                         <div class="price-details">
                                     <span class="discount-price">
-                                        <fmt:formatNumber value="${item.priceAtPurchase}" pattern="#,###" />đ
+                                        <fmt:formatNumber value="${item.priceAtPurchase}" pattern="#,###"/>đ
                                     </span>
                                         </div>
                                     </div>
@@ -120,7 +126,7 @@
 
                     <div class="order-total">
                 <span>Tổng tiền: <strong>
-                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###" />đ
+                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>đ
                 </strong></span>
                     </div>
 
@@ -131,9 +137,9 @@
                                 <a href="${pageContext.request.contextPath}/cart.jsp">
                                     <button class="action-btn buy-again">Mua lại</button>
                                 </a>
-<%--                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">--%>
-<%--                                    Đánh giá--%>
-<%--                                </button>--%>
+                                <%--                                <button class="action-btn contact-seller" onclick="openReviewPopup(${order.id})">--%>
+                                <%--                                    Đánh giá--%>
+                                <%--                                </button>--%>
                                 <button class="action-btn contact-seller ${orderDetail.hasReviewed ? 'disabled' : ''}"
                                         onclick="openReviewPopup(${order.id})"
                                     ${orderDetail.hasReviewed ? 'disabled' : ''}>
@@ -145,7 +151,7 @@
                                 <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
-<%--                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">--%>
+                                <%--                                <button class="action-btn cancel-order" onclick="cancelOrder(${order.id})">--%>
                                 <button class="action-btn cancel-order" onclick="openCancelPopup(${order.id})">
                                     Hủy đơn hàng
                                 </button>
@@ -159,8 +165,8 @@
 
                             <c:when test="${order.status == 'Shipping'}">
                                 <button class="action-btn contact-seller" onclick="returnOrder(${order.id})">
-                                        Trả hàng
-                                        </button>
+                                    Trả hàng
+                                </button>
                                 <button class="action-btn receive-order" onclick="receiveOrder(${order.id})">
                                     Đã nhận hàng
                                 </button>
@@ -244,7 +250,6 @@
     </div>
 
 
-
     <!--Popup hủy đơn hàng -->
     <div class="popup-backdrop-cancel" style="display: none;"></div>
     <div class="container-write-review" id="cancel-popup" style="display: none;">
@@ -253,7 +258,8 @@
         </div>
         <div class="field">
             <label for="cancel-reason" class="nameDisplay">Lý do hủy đơn hàng</label>
-            <textarea id="cancel-reason" placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy đơn hàng này"></textarea>
+            <textarea id="cancel-reason"
+                      placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy đơn hàng này"></textarea>
         </div>
         <div class="actions-write-review">
             <button class="cancel-cancel btn-reivew">Đóng</button>
@@ -317,13 +323,13 @@
         // Nút scroll trái/phải cho tabs
         if (scrollLeftBtn) {
             scrollLeftBtn.addEventListener('click', () => {
-                tabsContainer.scrollBy({ left: -150, behavior: 'smooth' });
+                tabsContainer.scrollBy({left: -150, behavior: 'smooth'});
             });
         }
 
         if (scrollRightBtn) {
             scrollRightBtn.addEventListener('click', () => {
-                tabsContainer.scrollBy({ left: 150, behavior: 'smooth' });
+                tabsContainer.scrollBy({left: 150, behavior: 'smooth'});
             });
         }
 
@@ -621,7 +627,9 @@
                     },
                     body: 'action=cancel&orderId=' + currentCancelOrderId + '&reason=' + encodeURIComponent(reason)
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             alert('Hủy đơn hàng thành công!');

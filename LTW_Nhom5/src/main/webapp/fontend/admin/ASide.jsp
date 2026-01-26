@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/userManagement.jsp">
+                <a href="${pageContext.request.contextPath}/admin/user-management">
                     <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
                     <span>Quản lý người dùng</span>
                 </a>
