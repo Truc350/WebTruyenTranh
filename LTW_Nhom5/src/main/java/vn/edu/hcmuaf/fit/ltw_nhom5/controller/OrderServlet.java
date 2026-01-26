@@ -164,7 +164,7 @@ public class OrderServlet extends HttpServlet {
             // Tạo đối tượng Order
             Order order = new Order();
             order.setUserId(user.getId());
-            order.setOrderDate(LocalDate.now());
+            order.setOrderDate(LocalDateTime.now());
             order.setStatus("Pending"); // Trạng thái: Đang chờ xử lý
             order.setTotalAmount(totalAmount);
             order.setShippingAddressId(shippingAddressId); // Nếu không dùng shipping_address_id thì set 0

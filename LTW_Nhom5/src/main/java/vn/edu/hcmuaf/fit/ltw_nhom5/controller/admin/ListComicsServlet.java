@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,12 +17,14 @@ public class ListComicsServlet extends HttpServlet {
     private ComicDAO comicDAO;
     private Gson gson;
 
+
     @Override
     public void init() throws ServletException {
         System.out.println("🔧 Initializing ListComicsServlet...");
         try {
             comicDAO = new ComicDAO();
             gson = new Gson();
+
             System.out.println("✅ ListComicsServlet initialized successfully!");
         } catch (Exception e) {
             System.err.println("❌ Error initializing servlet: " + e.getMessage());
@@ -71,9 +74,9 @@ public class ListComicsServlet extends HttpServlet {
                 }
             }
 
-            System.out.println("📋 List params: page=" + page + ", limit=" + limit + ", hiddenFilter=" + hiddenFilter);
+            System.out.println(" List params: page=" + page + ", limit=" + limit + ", hiddenFilter=" + hiddenFilter);
 
-            // ✅ GỌI DAO VỚI FILTER
+            //  GỌI DAO VỚI FILTER
             List<Comic> comics;
             int totalComics;
 

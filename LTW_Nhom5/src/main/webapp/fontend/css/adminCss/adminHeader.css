@@ -72,3 +72,54 @@
     transform: scale(1.1);
 }
 
+.admin-notification {
+    position: relative;
+    margin-right: 20px;
+}
+
+.admin-notification i {
+    font-size: 22px;
+    color: #333;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    width: 320px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+.notification-item:hover {
+    background: #fff1f1;
+}
+
+.notification-empty {
+    padding: 15px;
+    text-align: center;
+    color: #999;
+}
+
+

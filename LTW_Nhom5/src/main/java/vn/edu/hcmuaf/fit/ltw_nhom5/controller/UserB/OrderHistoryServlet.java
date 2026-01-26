@@ -3,7 +3,9 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller.UserB;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+
 import java.io.IOException;
+
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.OrderDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ReviewDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Order;
@@ -11,6 +13,8 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.OrderItem;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.OrderViolationService;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +106,7 @@ public class OrderHistoryServlet extends HttpServlet {
                 itemData.put("item", item);
 
                 Comic comic = comicDAO.getComicById(item.getComicId());
-                System.out.println("item.getComicId() "+ item.getComicId());
+                System.out.println("item.getComicId() " + item.getComicId());
                 if (comic != null) {
                     System.out.println("    ✓ Comic found: " + comic.getNameComics());
                     System.out.println("      Thumbnail: " + comic.getThumbnailUrl());
@@ -129,8 +133,8 @@ public class OrderHistoryServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
-        int orderId = Integer.parseInt(request.getParameter("orderId"));
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("currentUser");
@@ -141,36 +145,70 @@ public class OrderHistoryServlet extends HttpServlet {
         }
 
         boolean success = false;
+        String message = "";
+        try {
+            String action = request.getParameter("action");
+            int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-        switch (action) {
-            case "cancel":
-                String cancelReason = request.getParameter("reason");
-                // Hủy đơn hàng - sử dụng updateOrderStatusWithPoints để hoàn xu và tồn kho
-                success = orderDAO.cancelOrderWithHistory(orderId, user.getId(), cancelReason);
-                System.out.println("Cancel order #" + orderId + " with reason: " + cancelReason + " - " + success);
-                break;
+            switch (action) {
+                case "cancel":
+                    String cancelReason = request.getParameter("reason");
+                    // Hủy đơn hàng - sử dụng updateOrderStatusWithPoints để hoàn xu và tồn kho
+                    success = orderDAO.cancelOrderWithHistory(orderId, user.getId(), cancelReason);
+                    System.out.println("Cancel order #" + orderId + " with reason: " + cancelReason + " - " + success);
 
-            case "receive":
-                // Xác nhận đã nhận hàng
-                success = orderDAO.updateOrderStatusWithPoints(orderId, "Completed");
-                System.out.println("Receive order #" + orderId + ": " + success);
-                break;
+                    // KIỂM TRA VI PHẠM NGAY SAU KHI HỦY ĐƠN THÀNH CÔNG
+                    if (success) {
+                        OrderViolationService.getInstance().checkCancelViolation(user.getId());
+                        message = "Hủy đơn thành công";
+                    } else {
+                        message = "Không thể hủy đơn hàng";
+                    }
+                    break;
 
-            case "return":
-                // Trả hàng -> cập nhật trạng thái Returned
-                success = orderDAO.updateOrderStatus(orderId, "Returned");
-                System.out.println("Return order #" + orderId + ": " + success);
-                break;
+                case "receive":
+                    // Xác nhận đã nhận hàng
+                    success = orderDAO.updateOrderStatusWithPoints(orderId, "Completed");
+                    message = success ? "Đã xác nhận nhận hàng" : "Không thể cập nhật";
+                    System.out.println("Receive order #" + orderId + ": " + success);
+                    break;
 
-            default:
-                System.out.println("Unknown action: " + action);
-                break;
+                case "return":
+                    // Trả hàng -> cập nhật trạng thái Returned
+                    success = orderDAO.updateOrderStatus(orderId, "Returned");
+                    message = success ? "Đã yêu cầu trả hàng" : "Không thể trả hàng";
+                    System.out.println("Return order #" + orderId + ": " + success);
+                    break;
+
+                default:
+                    message = "Hành động không hợp lệ";
+                    System.out.println("Unknown action: " + action);
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            success = false;
+            message = "Mã đơn hàng không hợp lệ";
+            e.printStackTrace();
+        } catch (Exception e) {
+            success = false;
+            message = "Lỗi: " + e.getMessage();
+            e.printStackTrace();
         }
 
-        // Trả về JSON response
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"success\":" + success + "}");
+        // TẠO JSON AN TOÀN
+        String jsonResponse = String.format(
+                "{\"success\":%b,\"message\":\"%s\"}",
+                success,
+                message.replace("\"", "\\\"").replace("\n", " ")
+        );
+
+        System.out.println("📤 Response JSON: " + jsonResponse);
+        response.getWriter().write(jsonResponse);
+
+//        // Trả về JSON response
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write("{\"success\":" + success + "}");
     }
 
     private String mapFilterToStatus(String filter) {

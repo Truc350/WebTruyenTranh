@@ -10,7 +10,7 @@ public class Order {
     @ColumnName("user_id")
     private int userId;
     @ColumnName("order_date")
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
     private String status;
     @ColumnName("total_amount")
     private double totalAmount;
@@ -49,11 +49,11 @@ public class Order {
         this.id = id;
     }
 
-    public LocalDate getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDate orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 

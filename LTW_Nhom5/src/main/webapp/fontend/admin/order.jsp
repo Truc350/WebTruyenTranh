@@ -927,19 +927,14 @@
 
         // Kiểm tra CSS
         const wrapperStyle = window.getComputedStyle(wrapper);
-        console.log('🎨 CSS WRAPPER:');
-        console.log('  overflow-x:', wrapperStyle.overflowX);
-        console.log('  width:', wrapperStyle.width);
+
 
         const tableStyle = window.getComputedStyle(table);
-        console.log('🎨 CSS TABLE:');
-        console.log('  width:', tableStyle.width);
-        console.log('  min-width:', tableStyle.minWidth);
-        console.log('  table-layout:', tableStyle.tableLayout);
+
 
         // Đếm số cột
         const columns = table.querySelectorAll('thead th').length;
-        console.log('📋 SỐ CỘT:', columns);
+
 
         // Tính tổng width các cột
         let totalWidth = 0;
@@ -948,16 +943,12 @@
             totalWidth += w;
             console.log(`  Cột ${i + 1}: ${w}px - ${th.textContent.trim()}`);
         });
-        console.log('📊 TỔNG WIDTH:', totalWidth + 'px');
+
 
         // GỢI Ý FIX
         console.log('');
-        console.log('💡 GIẢI PHÁP:');
         if (!hasOverflow) {
             const suggestedWidth = wrapper.clientWidth + 500;
-            console.log(`1. Tăng width của table lên ít nhất: ${suggestedWidth}px`);
-            console.log('2. Hoặc giảm width của container');
-            console.log('3. Hoặc tăng width từng cột');
         }
     }
 </script>

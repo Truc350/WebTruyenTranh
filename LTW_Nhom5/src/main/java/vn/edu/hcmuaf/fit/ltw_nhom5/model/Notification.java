@@ -3,7 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 import java.time.LocalDateTime;
 
 public class Notification {
-    private long id;
+    private int id;
     private int userId;
     private String title;
     private String message;
@@ -21,7 +21,7 @@ public class Notification {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

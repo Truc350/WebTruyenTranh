@@ -56,6 +56,60 @@ public class Comic {
     @ColumnName("is_hidden")
     private int isHidden;
 
+    @ColumnName("flash_sale_id")
+    private Integer flashSaleId;
+
+    @ColumnName("flash_sale_name")
+    private String flashSaleName;
+
+    @ColumnName("flash_sale_discount")
+    private Double flashSaleDiscount;
+
+    @ColumnName("flash_sale_price")
+    private Double flashSalePrice;
+
+    @ColumnName("has_flash_sale")
+    private boolean hasFlashSale;
+
+    public Integer getFlashSaleId() {
+        return flashSaleId;
+    }
+
+    public void setFlashSaleId(Integer flashSaleId) {
+        this.flashSaleId = flashSaleId;
+    }
+
+    public String getFlashSaleName() {
+        return flashSaleName;
+    }
+
+    public void setFlashSaleName(String flashSaleName) {
+        this.flashSaleName = flashSaleName;
+    }
+
+    public Double getFlashSaleDiscount() {
+        return flashSaleDiscount;
+    }
+
+    public void setFlashSaleDiscount(Double flashSaleDiscount) {
+        this.flashSaleDiscount = flashSaleDiscount;
+    }
+
+    public Double getFlashSalePrice() {
+        return flashSalePrice;
+    }
+
+    public void setFlashSalePrice(Double flashSalePrice) {
+        this.flashSalePrice = flashSalePrice;
+    }
+
+    public boolean isHasFlashSale() {
+        return hasFlashSale;
+    }
+
+    public void setHasFlashSale(boolean hasFlashSale) {
+        this.hasFlashSale = hasFlashSale;
+    }
 
     public Comic() {
     }
@@ -255,4 +309,39 @@ public class Comic {
     public void setPublisherName(String publisherName) {
         this.publisherName = publisherName;
     }
+
+    /**
+     * lay gia cuoi cung
+     *
+     * @return
+     */
+    public double getFinalPrice() {
+        if (hasFlashSale && flashSalePrice != null) {
+            return flashSalePrice;
+        }
+        return getDiscountPrice();
+    }
+
+    /**
+     * lay phan tram giam gia cuoi cung
+     */
+    public double getFinalDiscountPercent() {
+        if (hasFlashSale && flashSaleDiscount != null) {
+            return flashSaleDiscount;
+        }
+        if (discountPercent != null) {
+            return discountPercent;
+        }
+        return 0;
+    }
+
+    /**
+     * Kiểm tra có giảm giá không (Flash Sale hoặc discount thường)
+     */
+
+    public boolean hasAnyDiscount() {
+        return hasFlashSale || hasDiscount();
+    }
+
+
 }

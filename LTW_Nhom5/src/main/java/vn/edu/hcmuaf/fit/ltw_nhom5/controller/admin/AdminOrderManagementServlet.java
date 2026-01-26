@@ -19,15 +19,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("========================================");
-        System.out.println("=== AdminOrderManagementServlet INIT ===");
-        System.out.println("========================================");
+
         try {
             orderService = new OrderService();
             gson = new Gson();
-            System.out.println("✅ OrderService and Gson initialized successfully");
         } catch (Exception e) {
-            System.out.println("❌ ERROR during init:");
             e.printStackTrace();
             throw e;
         }
@@ -103,7 +99,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     result = confirmDelivered(req);
                     break;
                 case "updateStatus":
-                    result = updateOrderStatus(req);
+                    result = updateOrderStatusWithSync(req);
                     break;
                 case "processRefund":
                     result = processRefund(req);
@@ -130,18 +126,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
             // Lấy tất cả đơn hàng với chi tiết đầy đủ từ SERVICE
             Map<String, Object> data = orderService.getAllOrdersWithDetails();
 
-            System.out.println("=== DEBUG ORDER MANAGEMENT ===");
-            System.out.println("Success: " + data.get("success"));
-            System.out.println("Error: " + data.get("error"));
 
             if ((Boolean) data.get("success")) {
                 @SuppressWarnings("unchecked")
                 Map<String, List<Map<String, Object>>> ordersByStatus =
                         (Map<String, List<Map<String, Object>>>) data.get("ordersByStatus");
-
-                System.out.println("Pending orders: " + ordersByStatus.get("Pending").size());
-                System.out.println("AwaitingPickup orders: " + ordersByStatus.get("AwaitingPickup").size());
-                System.out.println("Shipping orders: " + ordersByStatus.get("Shipping").size());
 
                 req.setAttribute("ordersByStatus", ordersByStatus);
 
@@ -150,7 +139,6 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 req.setAttribute("stats", stats);
 
             } else {
-                System.out.println("Failed to load orders: " + data.get("error"));
                 req.setAttribute("error", data.get("error"));
             }
 
@@ -160,7 +148,6 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Exception in displayOrderManagement: " + e.getMessage());
             req.setAttribute("error", "Lỗi khi tải danh sách đơn hàng: " + e.getMessage());
             req.getRequestDispatcher("/fontend/admin/order.jsp")
                     .forward(req, resp);
@@ -401,11 +388,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
     private void searchOrdersByTab(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        // ✅ SET CONTENT TYPE NGAY TỪ ĐẦU - TRƯỚC KHI XỬ LÝ BẤT KỲ LOGIC NÀO
+        //SET CONTENT TYPE NGAY TỪ ĐẦU - TRƯỚC KHI XỬ LÝ BẤT KỲ LOGIC NÀO
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // ✅ THÊM HEADER ĐỂ TRÁNH CACHE
+        // THÊM HEADER ĐỂ TRÁNH CACHE
         resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         resp.setHeader("Pragma", "no-cache");
         resp.setHeader("Expires", "0");
@@ -414,14 +401,8 @@ public class AdminOrderManagementServlet extends HttpServlet {
             String keyword = req.getParameter("keyword");
             String status = req.getParameter("status");
 
-            // ✅ LOG ĐỂ DEBUG
-            System.out.println("=== SEARCH BY TAB ===");
-            System.out.println("Keyword: " + keyword);
-            System.out.println("Status: " + status);
-
-            // ✅ VALIDATE INPUT
+            // VALIDATE INPUT
             if (status == null || status.isEmpty()) {
-                System.err.println("❌ Missing status parameter");
                 resp.getWriter().write(gson.toJson(Map.of(
                         "success", false,
                         "error", "Missing status parameter"
@@ -429,14 +410,14 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ XỬ LÝ KEYWORD NULL
+            // XỬ LÝ KEYWORD NULL
             if (keyword == null) {
                 keyword = "";
             }
 
             List<Map<String, Object>> orders;
 
-            // ✅ SWITCH CASE VỚI LOG
+            // SWITCH CASE VỚI LOG
             switch (status) {
                 case "Pending":
                     System.out.println("→ Searching Pending orders...");
@@ -467,27 +448,24 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     orders = new ArrayList<>();
             }
 
-            System.out.println("✅ Found " + orders.size() + " orders");
-
-            // ✅ TẠO RESPONSE
+            // TẠO RESPONSE
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("orders", orders);
             response.put("count", orders.size());
 
-            // ✅ CONVERT TO JSON VÀ GHI RESPONSE
+            // CONVERT TO JSON VÀ GHI RESPONSE
             String jsonResponse = gson.toJson(response);
-            System.out.println("📤 Response length: " + jsonResponse.length() + " chars");
 
             resp.getWriter().write(jsonResponse);
             resp.getWriter().flush();
 
         } catch (Exception e) {
-            // ✅ XỬ LÝ LỖI AN TOÀN
+            //  XỬ LÝ LỖI AN TOÀN
             System.err.println("❌ ERROR in searchOrdersByTab:");
             e.printStackTrace();
 
-            // ✅ ĐẢM BẢO RESPONSE VẪN LÀ JSON
+            // ĐẢM BẢO RESPONSE VẪN LÀ JSON
             try {
                 Map<String, Object> errorResponse = new HashMap<>();
                 errorResponse.put("success", false);
@@ -497,9 +475,36 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 resp.getWriter().write(gson.toJson(errorResponse));
                 resp.getWriter().flush();
             } catch (IOException ioException) {
-                System.err.println("❌ Failed to send error response:");
+                System.err.println("Failed to send error response:");
                 ioException.printStackTrace();
             }
+        }
+    }
+
+    private Map<String, Object> updateOrderStatusWithSync(HttpServletRequest req) {
+        try {
+            int orderId = Integer.parseInt(req.getParameter("orderId"));
+            String newStatus = req.getParameter("status");
+
+            // Sử dụng OrderService.updateOrderStatusAndSync
+            boolean success = orderService.updateOrderStatusAndSync(orderId, newStatus);
+
+            if (success) {
+                return Map.of(
+                        "success", true,
+                        "message", "Đã cập nhật trạng thái đơn hàng"
+                );
+            } else {
+                return Map.of(
+                        "success", false,
+                        "message", "Cập nhật thất bại"
+                );
+            }
+
+        } catch (NumberFormatException e) {
+            return Map.of("success", false, "error", "Invalid order ID");
+        } catch (Exception e) {
+            return Map.of("success", false, "error", e.getMessage());
         }
     }
 }
