@@ -60,10 +60,6 @@
                      alt="Google"
                      style="cursor: pointer;">
 
-                <img class="facebook" id="facebookLogin"
-                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/500px-Facebook_Logo_%282019%29.png"
-                     alt="Facebook"
-                     style="cursor: pointer;">
             </div>
 
         </div>
