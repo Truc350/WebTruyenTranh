@@ -61,8 +61,11 @@ public class AuthorPublisherInforServlet extends HttpServlet {
 
             if ("author".equals(type)) {
                 result = service.getAuthorInfo(name.trim());
+                System.out.println("result 1: "+ result.size());
             } else if ("publisher".equals(type)) {
                 result = service.getPublisherInfo(name.trim());
+                System.out.println("result 2: "+ result.size());
+
             } else {
                 sendError(response, "Loại thông tin không hợp lệ");
                 return;

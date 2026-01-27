@@ -667,4 +667,11 @@ public class UserDao {
 
         return result;
     }
+
+    public boolean isUserActive(Optional<User> userOpt) {
+        return userOpt
+                .map(User::getIsActive) // hoặc User::isActive
+                .orElse(false);
+    }
+
 }
