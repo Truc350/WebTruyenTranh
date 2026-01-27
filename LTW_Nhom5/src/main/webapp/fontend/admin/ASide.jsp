@@ -11,25 +11,25 @@
 
         <ul>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/dashboard.jsp">
+                <a href="${pageContext.request.contextPath}/admin/dashboard">
                     <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/seriesManagement.jsp">
+                <a href="${pageContext.request.contextPath}/SeriesManagement">
                     <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
-                </a>
-            </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/productManagement.jsp">
-                    <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
                     <span>Quản lý series</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/category.jsp">
+                <a href="${pageContext.request.contextPath}/ProductManagement">
+                    <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
+                    <span>Quản lý sản phẩm</span>
+                </a>
+            </li>
+            <li>
+                <a href="${pageContext.request.contextPath}/CategoryManagement">
                     <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
                     <span>Quản lý thể loại</span>
                 </a>
@@ -41,20 +41,20 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/admin/user-management">
+                <a href="${pageContext.request.contextPath}/UserManagement">
                     <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
                     <span>Quản lý người dùng</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/admin/manage-flashsale">
+                <a href="${pageContext.request.contextPath}/FlashSaleManagement">
                     <img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon">
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/report.jsp">
+                <a href="${pageContext.request.contextPath}/ReportManagement">
                     <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
                     <span>Thống kê</span>
                 </a>

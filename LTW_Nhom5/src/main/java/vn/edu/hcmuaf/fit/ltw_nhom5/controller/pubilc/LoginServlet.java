@@ -83,7 +83,7 @@ public class LoginServlet extends HttpServlet {
                     response.setHeader("Pragma", "no-cache");
                     response.setDateHeader("Expires", 0);
 
-                    response.sendRedirect(request.getContextPath() + "/fontend/admin/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                     return;
                 }
 
