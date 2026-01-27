@@ -387,7 +387,7 @@ public class OrderDAO extends ADao {
 
                 // Tính xu được cộng (1% tổng đơn hàng, làm tròn xuống)
                 // Ví dụ: đơn 150,000đ = 1 xu, 250,000đ = 2 xu
-                int earnedPoints = 200;
+                int earnedPoints = (int) (order.getTotalAmount() / 100000);
 
                 if (earnedPoints > 0) {
                     // Cập nhật xu cho user
@@ -632,11 +632,15 @@ public class OrderDAO extends ADao {
      * @return Danh sách đơn hàng bị hủy
      */
     public List<Map<String, Object>> searchCancelledOrders(String keyword) {
+        System.out.println("=== searchCancelledOrders DEBUG ===");
+        System.out.println("📝 Input keyword: [" + keyword + "]");
 
         if (keyword == null) keyword = "";
 
         String trimmedKeyword = keyword.trim();
         boolean isNumber = trimmedKeyword.matches("\\d+");
+
+        System.out.println("📝 Trimmed keyword: [" + trimmedKeyword + "]");
 
         // SQL tìm kiếm đơn bị hủy theo ID
         String sqlById = """
@@ -685,21 +689,30 @@ public class OrderDAO extends ADao {
 
         List<Map<String, Object>> result = jdbi.withHandle(handle -> {
             if (isNumber && !trimmedKeyword.isEmpty()) {
+                System.out.println("🔍 Searching by ID: " + trimmedKeyword);
                 return handle.createQuery(sqlById)
                         .bind("orderId", Integer.parseInt(trimmedKeyword))
                         .mapToMap()
                         .list();
             } else if (!trimmedKeyword.isEmpty()) {
+                System.out.println("🔍 Searching by name: %" + trimmedKeyword + "%");
                 return handle.createQuery(sqlByName)
                         .bind("keyword", "%" + trimmedKeyword + "%")
                         .mapToMap()
                         .list();
             } else {
+                System.out.println("🔍 Loading all cancelled orders");
                 return handle.createQuery(sqlAll)
                         .mapToMap()
                         .list();
             }
         });
+
+        System.out.println("✅ Found " + result.size() + " cancelled orders");
+        if (result.size() > 0) {
+            System.out.println("📦 First result: " + result.get(0));
+        }
+        System.out.println("=================================");
 
         return result;
     }

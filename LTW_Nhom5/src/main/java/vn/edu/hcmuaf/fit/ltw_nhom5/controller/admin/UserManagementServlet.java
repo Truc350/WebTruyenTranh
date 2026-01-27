@@ -33,14 +33,18 @@ public class UserManagementServlet extends HttpServlet {
             if (search != null && !search.trim().isEmpty() && levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Tìm kiếm và lọc kết hợp
                 users = userDao.searchAndFilterCustomers(search, levelFilter);
+                System.out.println("user lấy số: "+1);
             } else if (search != null && !search.trim().isEmpty()) {
                 // Chỉ tìm kiếm
+                System.out.println("user lấy số: "+2);
                 users = userDao.searchCustomers(search);
             } else if (levelFilter != null && !levelFilter.trim().isEmpty()) {
                 // Chỉ lọc theo level
+                System.out.println("user lấy số: "+3);
                 users = userDao.filterCustomersByMembershipLevel(levelFilter);
             } else {
                 // Lấy tất cả
+                System.out.println("user lấy số: "+4);
                 users = userDao.getAllCustomers();
             }
 

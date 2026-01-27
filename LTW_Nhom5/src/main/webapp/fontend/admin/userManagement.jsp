@@ -64,10 +64,10 @@
                 <c:choose>
                     <c:when test="${not empty users}">
                         <c:forEach var="user" items="${users}">
-                            <tr data-user-id="${user.id}" class="${user.isActive == 0 ? 'locked-row' : ''}">
+                            <tr data-user-id="${user.id}" class="${!user.isActive ? 'locked-row' : ''}">
                                 <td>
                                         ${user.fullName != null ? user.fullName : 'Chưa cập nhật'}
-                                    <c:if test="${user.isActive == 0}">
+                                    <c:if test="${!user.isActive}">
                                         <br><span class="locked-badge">🔒 Tài khoản đã bị khóa</span>
                                     </c:if>
                                 </td>
@@ -88,7 +88,7 @@
                                 <td>${user.points} xu</td>
                                 <td class="action-cell">
                                     <c:choose>
-                                        <c:when test="${user.isActive == 0}">
+                                        <c:when test="${!user.isActive}">
                                             <!-- ✅ User đã bị khóa - KHÔNG hiển thị menu -->
                                             <span style="color: #999; font-size: 14px;">—</span>
                                         </c:when>

@@ -11,7 +11,7 @@
 
         <ul>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/dashboard.jsp">
+                <a href="${pageContext.request.contextPath}/admin/dashboard">
                     <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
