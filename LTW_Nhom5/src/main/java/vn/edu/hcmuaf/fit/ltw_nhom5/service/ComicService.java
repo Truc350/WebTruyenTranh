@@ -4,6 +4,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.service;
 import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ReviewDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
@@ -19,10 +20,12 @@ public class ComicService {
     private final ComicDAO comicDAO;
     private SeriesDAO seriesDAO = new SeriesDAO();
     private CategoriesDao categoriesDao = new CategoriesDao();
+    private ReviewDAO reviewDAO;
 
     public ComicService() {
         this.jdbi = JdbiConnector.get();
         this.comicDAO = new ComicDAO();
+        reviewDAO = new ReviewDAO();
     }
 
     // Constructor nhận Jdbi (sẽ được inject từ servlet hoặc class config)
@@ -147,13 +150,6 @@ public class ComicService {
     }
 
     /**
-     * Lấy danh sách đánh giá của truyện
-     */
-    public List<Review> getComicReviews(int comicId) {
-        return comicDAO.getComicReviews(comicId);
-    }
-
-    /**
      * Tính điểm đánh giá trung bình
      */
     public double getAverageRating(int comicId) {
@@ -225,5 +221,24 @@ public class ComicService {
      */
     public List<Category> getAllCategories() {
         return categoriesDao.listCategories();
+    }
+
+    /**
+     * Lấy danh sách review của comic (BAO GỒM ẢNH)
+     */
+    public List<Review> getComicReviews(int comicId) {
+        System.out.println("🔍 ComicService.getComicReviews() called for comic: " + comicId);
+
+        // ⭐ QUAN TRỌNG: Gọi ReviewDAO.getReviewsByComicId()
+        // Method này đã load ảnh cho mỗi review
+        List<Review> reviews = reviewDAO.getReviewsByComicId(comicId);
+
+        System.out.println("📦 ComicService returning " + reviews.size() + " reviews");
+        for (Review review : reviews) {
+            System.out.println("   Review #" + review.getId() + " has " +
+                    review.getImages().size() + " images");
+        }
+
+        return reviews;
     }
 }

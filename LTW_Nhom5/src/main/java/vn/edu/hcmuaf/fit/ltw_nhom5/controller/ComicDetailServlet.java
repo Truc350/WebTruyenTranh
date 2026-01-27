@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ReviewDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
@@ -14,6 +15,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.service.RecommendationService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/comic-detail")
@@ -64,9 +66,12 @@ public class ComicDetailServlet extends HttpServlet {
 
             // Lấy đánh giá của truyện
             var reviews = comicService.getComicReviews(comicId);
-
-            // Tính điểm trung bình
             double avgRating = comicService.getAverageRating(comicId);
+
+            // Lấy phân bố rating
+            ReviewDAO reviewDAO = new ReviewDAO();
+            Map<Integer, Integer> ratingDistribution = reviewDAO.getRatingDistribution(comicId);
+            int totalReviews = reviews.size();
 
             // ========== LẤY TÊN SERIES ==========
             String seriesName = null;
@@ -119,6 +124,8 @@ public class ComicDetailServlet extends HttpServlet {
             request.setAttribute("relatedComics", relatedComics);
             request.setAttribute("reviews", reviews);
             request.setAttribute("avgRating", avgRating);
+            request.setAttribute("ratingDistribution", ratingDistribution);
+            request.setAttribute("totalReviews", totalReviews);
             request.setAttribute("suggestedComics", suggestedComics);
             request.setAttribute("suggestionType", suggestionType);
 

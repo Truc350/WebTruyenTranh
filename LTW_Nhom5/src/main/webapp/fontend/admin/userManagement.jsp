@@ -64,13 +64,18 @@
                 <c:choose>
                     <c:when test="${not empty users}">
                         <c:forEach var="user" items="${users}">
-                            <tr data-user-id="${user.id}">
-                                <td>${user.fullName != null ? user.fullName : 'Chưa cập nhật'}</td>
+                            <tr data-user-id="${user.id}" class="${user.isActive == 0 ? 'locked-row' : ''}">
+                                <td>
+                                        ${user.fullName != null ? user.fullName : 'Chưa cập nhật'}
+                                    <c:if test="${user.isActive == 0}">
+                                        <br><span class="locked-badge">🔒 Tài khoản đã bị khóa</span>
+                                    </c:if>
+                                </td>
                                 <td>${user.email}</td>
                                 <td>
-                                    <span class="badge level-${user.membershipLevel != null ? user.membershipLevel : 'Normal'}">
-                                            ${user.membershipLevel != null ? user.membershipLevel : 'Normal'}
-                                    </span>
+            <span class="badge level-${user.membershipLevel != null ? user.membershipLevel : 'Normal'}">
+                    ${user.membershipLevel != null ? user.membershipLevel : 'Normal'}
+            </span>
                                 </td>
                                 <td>
                                     <c:set var="formattedSpent">
@@ -82,30 +87,42 @@
                                 </td>
                                 <td>${user.points} xu</td>
                                 <td class="action-cell">
-                                    <div class="kebab-menu">
-                                        <button class="kebab-btn">⋮</button>
-                                        <div class="menu-dropdown">
-                                            <a href="#" class="menu-item view-detail"
-                                               data-id="${user.id}"
-                                               data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
-                                               data-email="${user.email}"
-                                               data-phone="${user.phone != null ? user.phone : 'Chưa cập nhật'}"
-                                               data-level="${user.membershipLevel != null ? user.membershipLevel : 'Normal'}"
-                                               data-spent="${user.totalSpent != null ? user.totalSpent : 0}"
-                                               data-points="${user.points} xu"
-                                               data-created-at="${user.createdAt}">
-                                                Xem chi tiết</a>
-                                            <a href="#" class="menu-item upgrade-user"
-                                               data-id="${user.id}"
-                                               data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
-                                               data-current-level="${user.membershipLevel != null ? user.membershipLevel : 'Normal'}">Nâng
-                                                cấp</a>
-                                            <a href="#" class="menu-item permanent-lock"
-                                               data-id="${user.id}"
-                                               data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}">Khóa
-                                                vĩnh viễn</a>
-                                        </div>
-                                    </div>
+                                    <c:choose>
+                                        <c:when test="${user.isActive == 0}">
+                                            <!-- ✅ User đã bị khóa - KHÔNG hiển thị menu -->
+                                            <span style="color: #999; font-size: 14px;">—</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!-- ✅ User bình thường - Hiển thị menu đầy đủ -->
+                                            <div class="kebab-menu">
+                                                <button class="kebab-btn">⋮</button>
+                                                <div class="menu-dropdown">
+                                                    <a href="#" class="menu-item view-detail"
+                                                       data-id="${user.id}"
+                                                       data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
+                                                       data-email="${user.email}"
+                                                       data-phone="${user.phone != null ? user.phone : 'Chưa cập nhật'}"
+                                                       data-level="${user.membershipLevel != null ? user.membershipLevel : 'Normal'}"
+                                                       data-spent="${user.totalSpent != null ? user.totalSpent : 0}"
+                                                       data-points="${user.points}"
+                                                       data-created-at="${user.createdAt}">
+                                                        Xem chi tiết
+                                                    </a>
+                                                    <a href="#" class="menu-item upgrade-user"
+                                                       data-id="${user.id}"
+                                                       data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}"
+                                                       data-current-level="${user.membershipLevel != null ? user.membershipLevel : 'Normal'}">
+                                                        Nâng cấp
+                                                    </a>
+                                                    <a href="#" class="menu-item permanent-lock"
+                                                       data-id="${user.id}"
+                                                       data-name="${user.fullName != null ? user.fullName : 'Chưa cập nhật'}">
+                                                        Khóa vĩnh viễn
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </td>
                             </tr>
                         </c:forEach>
