@@ -227,12 +227,16 @@ nav[aria-label="Phân trang"] ul li a.active {
   font-size: 22px;
 }
 
-.product-slider {
-  position: relative;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
+/*.product-slider {*/
+/*  position: relative;*/
+/*  width: 100%;*/
+/*  margin: 0 auto;*/
+/*  padding: 0;*/
 
+/*}*/
+.product-slider {
+    position: relative;
+    padding: 0 50px;      /*  tạo khoảng trống cho nút */
 }
 
 /* Thanh trượt ngang chứa các sản phẩm */
@@ -572,7 +576,7 @@ section[aria-label] article img {
 .slider-viewport {
   overflow: hidden;
   width: 100%;
-  margin: 0 50px;
+  /*margin: 0 50px;*/
 }
 
 .slider-track {

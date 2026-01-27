@@ -16,6 +16,36 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/SuggesstItem.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="${pageContext.request.contextPath}/js/detail.js"></script>
+    <style>
+        .heart-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .heart-toggle i {
+            font-size: 22px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* Ẩn heart solid mặc định */
+        .heart-toggle .fa-solid {
+            display: none;
+            color: #e53935;
+        }
+
+        /* Khi checked */
+        .heart-toggle input:checked ~ .fa-regular {
+            display: none;
+        }
+
+        .heart-toggle input:checked ~ .fa-solid {
+            display: inline-block;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -114,7 +144,7 @@
 
                 <%--                Like--%>
                 <label class="heart-toggle" data-comic-id="${comic.id}">
-                    <input type="checkbox" hidden>
+                    <input id="hear_toggle" type="checkbox" hidden>
                     <i class="fa-regular fa-heart"></i>
                     <i class="fa-solid fa-heart"></i>
                     <p>Like</p>
@@ -523,9 +553,9 @@
                     <i class="fas fa-book" style="font-size: 48px; margin-bottom: 10px;"></i>
                     <p>Chưa có gợi ý phù hợp</p>
                 </div>
+                </div>
             </c:otherwise>
         </c:choose>
-    </div>
 </div>
 
 
@@ -778,94 +808,91 @@
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('🚀 SLIDER INIT');
+<%--<script>--%>
+<%--    document.addEventListener('DOMContentLoaded', function () {--%>
+<%--        console.log('🚀 SLIDER INIT');--%>
 
-        const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
-        console.log('Found sliders:', sliders.length);
+<%--        const sliders = document.querySelectorAll('#slider-suggestions .product-slider');--%>
+<%--        console.log('Found sliders:', sliders.length);--%>
 
-        sliders.forEach((slider, idx) => {
-            const track = slider.querySelector('.slider-track');
-            const items = slider.querySelectorAll('.product-item');
-            const prevBtn = slider.querySelector('.arrow.prev');
-            const nextBtn = slider.querySelector('.arrow.next');
-            const viewport = slider.querySelector('.slider-viewport');
+<%--        sliders.forEach((slider, idx) => {--%>
+<%--            const track = slider.querySelector('.slider-track');--%>
+<%--            const items = slider.querySelectorAll('.product-item');--%>
+<%--            const prevBtn = slider.querySelector('.arrow.prev');--%>
+<%--            const nextBtn = slider.querySelector('.arrow.next');--%>
+<%--            const viewport = slider.querySelector('.slider-viewport');--%>
 
-            console.log(`Slider ${idx}:`, {
-                track: !!track,
-                items: items.length,
-                prevBtn: !!prevBtn,
-                nextBtn: !!nextBtn,
-                viewport: !!viewport
-            });
+<%--            console.log(`Slider ${idx}:`, {--%>
+<%--                track: !!track,--%>
+<%--                items: items.length,--%>
+<%--                prevBtn: !!prevBtn,--%>
+<%--                nextBtn: !!nextBtn,--%>
+<%--                viewport: !!viewport--%>
+<%--            });--%>
 
-            if (!track || !prevBtn || !nextBtn || items.length === 0) {
-                console.error(`❌ Slider ${idx} missing elements`);
-                return;
-            }
+<%--            if (!track || !prevBtn || !nextBtn || items.length === 0) {--%>
+<%--                console.error(`❌ Slider ${idx} missing elements`);--%>
+<%--                return;--%>
+<%--            }--%>
 
-            let position = 0;
+<%--            let position = 0;--%>
 
-            function update() {
-                const itemWidth = 220;
-                const gap = 20;
-                const moveDistance = itemWidth + gap;
-                const viewportWidth = viewport.offsetWidth;
-                const visibleCount = Math.floor(viewportWidth / moveDistance);
-                const maxPosition = Math.max(0, items.length - visibleCount);
+<%--            function update() {--%>
+<%--                const item = items[0];--%>
+<%--                const itemStyle = getComputedStyle(item);--%>
 
-                position = Math.min(position, maxPosition);
+<%--                const itemWidth = item.offsetWidth;--%>
+<%--                const gap = parseInt(itemStyle.marginRight) || 0;--%>
+<%--                const moveDistance = itemWidth + gap;--%>
 
-                const translateValue = position * moveDistance;
+<%--                const viewportWidth = viewport.offsetWidth;--%>
+<%--                const trackWidth = track.scrollWidth;--%>
 
-                console.log(`📊 Slider ${idx} update:`, {
-                    position,
-                    maxPosition,
-                    visibleCount,
-                    translateValue,
-                    itemsLength: items.length
-                });
+<%--                const maxTranslate = Math.max(0, trackWidth - viewportWidth);--%>
 
-                // Set transform
-                track.style.transform = 'translateX(-' + translateValue + 'px)';
+<%--                let translateValue = position * moveDistance;--%>
 
-                // Update buttons
-                prevBtn.disabled = (position === 0);
-                nextBtn.disabled = (position >= maxPosition);
+<%--                // 🔥 CHỐT CUỐI – không cho thiếu--%>
+<%--                if (translateValue > maxTranslate) {--%>
+<%--                    translateValue = maxTranslate;--%>
+<%--                    position--; // khóa không cho đi thêm--%>
+<%--                }--%>
 
-                console.log('🎯 Transform applied:', track.style.transform);
-            }
+<%--                track.style.transform = `translateX(-${translateValue}px)`;--%>
 
-            nextBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+<%--                prevBtn.disabled = (translateValue <= 0);--%>
+<%--                nextBtn.disabled = (translateValue >= maxTranslate);--%>
+<%--            }--%>
 
-                console.log('▶️ NEXT clicked on slider', idx);
+<%--            nextBtn.addEventListener('click', function (e) {--%>
+<%--                e.preventDefault();--%>
+<%--                e.stopPropagation();--%>
 
-                if (!nextBtn.disabled) {
-                    position++;
-                    update();
-                }
-            });
+<%--                console.log('▶️ NEXT clicked on slider', idx);--%>
 
-            prevBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
+<%--                if (!nextBtn.disabled) {--%>
+<%--                    position++;--%>
+<%--                    update();--%>
+<%--                }--%>
+<%--            });--%>
 
-                console.log('◀️ PREV clicked on slider', idx);
+<%--            prevBtn.addEventListener('click', function (e) {--%>
+<%--                e.preventDefault();--%>
+<%--                e.stopPropagation();--%>
 
-                if (!prevBtn.disabled) {
-                    position--;
-                    update();
-                }
-            });
+<%--                console.log('◀️ PREV clicked on slider', idx);--%>
 
-            update();
-            console.log(`✅ Slider ${idx} initialized`);
-        });
-    });
-</script>
+<%--                if (!prevBtn.disabled) {--%>
+<%--                    position--;--%>
+<%--                    update();--%>
+<%--                }--%>
+<%--            });--%>
+
+<%--            update();--%>
+<%--            console.log(`✅ Slider ${idx} initialized`);--%>
+<%--        });--%>
+<%--    });--%>
+<%--</script>--%>
 
 
 <script>
@@ -945,54 +972,6 @@
                 });
         });
     });
-
-    //tiem kiem
-
-    <%--function searchCategories(page = 1) {--%>
-    <%--    const keyword = document.getElementById('categorySearchInput').value.trim();--%>
-    <%--    const tbody = document.getElementById('categoryTableBody');--%>
-
-    <%--    tbody.innerHTML = `--%>
-    <%--    <tr>--%>
-    <%--        <td colspan="3" style="text-align: center; padding: 40px;">--%>
-    <%--            <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>--%>
-    <%--            <p style="margin-top: 10px;">Đang tìm kiếm...</p>--%>
-    <%--        </td>--%>
-    <%--    </tr>--%>
-    <%--`;--%>
-
-    <%--    const contextPath = window.contextPath || '';--%>
-    <%--    &lt;%&ndash;const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;&ndash;%&gt;--%>
-
-    <%--    console.log('🔍 Searching categories:', {keyword, page, url});--%>
-
-    <%--    fetch(url)--%>
-    <%--        .then(response => {--%>
-    <%--            if (!response.ok) {--%>
-    <%--                throw new Error(`HTTP ${response.status}: ${response.statusText}`);--%>
-    <%--            }--%>
-    <%--            return response.json();--%>
-    <%--        })--%>
-    <%--        .then(data => {--%>
-    <%--            console.log('✅ Search results:', data);--%>
-
-    <%--            if (data.success) {--%>
-    <%--                currentCategoryPage = data.currentPage;--%>
-    <%--                updateCategoryTable(data.categories);--%>
-    <%--                updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);--%>
-
-    <%--                if (keyword) {--%>
-    <%--                    showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');--%>
-    <%--                }--%>
-    <%--            } else {--%>
-    <%--                showError(data.message || 'Có lỗi xảy ra');--%>
-    <%--            }--%>
-    <%--        })--%>
-    <%--        .catch(error => {--%>
-    <%--            console.error('❌ Search error:', error);--%>
-    <%--            showError('Không thể kết nối đến server: ' + error.message);--%>
-    <%--        });--%>
-    <%--}--%>
 
 
     function showToast(message, type = 'success') {
