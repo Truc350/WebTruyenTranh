@@ -115,7 +115,7 @@ public class SeriesDetailServlet extends HttpServlet {
             String publishers = publisherSet.isEmpty() ? null : String.join(", ", publisherSet);
 
             // DEBUG LOG
-            System.out.println("📊 Series Comics with Flash Sale Info:");
+            System.out.println("Series Comics with Flash Sale Info:");
             for (Comic comic : comicsInSeries) {
                 System.out.println("  - " + comic.getNameComics());
                 System.out.println("    Has Flash Sale: " + comic.isHasFlashSale());
