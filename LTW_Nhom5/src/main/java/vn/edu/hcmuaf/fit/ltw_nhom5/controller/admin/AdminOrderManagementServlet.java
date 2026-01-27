@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller.admin;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.NotificationService;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.OrderService;
 import com.google.gson.Gson;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.gson.GsonConfig;
@@ -16,6 +17,7 @@ import java.util.Map;
 @WebServlet("/admin/orders")
 public class AdminOrderManagementServlet extends HttpServlet {
     private OrderService orderService;
+    private NotificationService notificationService;
     private Gson gson;
 
     @Override
@@ -23,6 +25,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         try {
             orderService = new OrderService();
+            notificationService = NotificationService.getInstance();
             gson = GsonConfig.getGson();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,11 +48,9 @@ public class AdminOrderManagementServlet extends HttpServlet {
                         getOrderDetail(req, resp);
                         break;
                     case "search":
-                        // Tìm kiếm cũ (có thể giữ lại hoặc xóa)
                         searchOrders(req, resp);
                         break;
                     case "searchByTab":
-                        // Tìm kiếm mới theo tab
                         searchOrdersByTab(req, resp);
                         break;
                     case "stats":
@@ -121,7 +122,6 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     result = Map.of("success", false, "error", "Invalid action");
             }
 
-            // ✅ GHI RESPONSE VỚI GSON ĐÃ CONFIG
             resp.getWriter().write(gson.toJson(result));
 
         } catch (Exception e) {
@@ -183,6 +183,19 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
             Map<String, Object> result = orderService.rejectRefund(returnId, rejectReason);
 
+            // ✅ GỬI THÔNG BÁO CHO USER
+            if ((Boolean) result.get("success")) {
+                Map<String, Object> returnInfo = orderService.getReturnBasicInfo(returnId);
+
+                if (returnInfo != null) {
+                    int userId = (Integer) returnInfo.get("userId");
+                    String orderCode = (String) returnInfo.get("orderCode");
+
+                    notificationService.notifyRefundRejected(userId, orderCode, rejectReason);
+                    System.out.println("✅ Refund rejection notification sent to user " + userId);
+                }
+            }
+
             System.out.println("✅ Reject refund result: " + result.get("success"));
 
             return result;
@@ -204,6 +217,20 @@ public class AdminOrderManagementServlet extends HttpServlet {
             System.out.println("🔄 Confirming refund for return ID: " + returnId);
 
             Map<String, Object> result = orderService.confirmRefund(returnId);
+
+            // ✅ GỬI THÔNG BÁO CHO USER
+            if ((Boolean) result.get("success")) {
+                Map<String, Object> returnInfo = orderService.getReturnBasicInfo(returnId);
+
+                if (returnInfo != null) {
+                    int userId = (Integer) returnInfo.get("userId");
+                    String orderCode = (String) returnInfo.get("orderCode");
+                    String refundAmount = (String) returnInfo.get("formattedRefundAmount");
+
+                    notificationService.notifyRefundApproved(userId, orderCode, refundAmount);
+                    System.out.println("✅ Refund approval notification sent to user " + userId);
+                }
+            }
 
             System.out.println("✅ Confirm refund result: " + result.get("success"));
 
@@ -356,6 +383,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
                     if ((Boolean) result.get("success")) {
                         successCount++;
+
+                        // GỬI THÔNG BÁO
+                        int userId = (Integer) order.get("userId");
+                        String orderCode = (String) order.get("orderCode");
+                        notificationService.notifyOrderConfirmed(userId, orderCode);
                     } else {
                         failCount++;
                         errors.add("Đơn #" + orderId + ": " + result.get("message"));
@@ -383,6 +415,8 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 response.put("errors", errors);
             }
 
+            System.out.println("✅ Sent " + successCount + " order confirmation notifications");
+
             return response;
 
         } catch (Exception e) {
@@ -401,10 +435,41 @@ public class AdminOrderManagementServlet extends HttpServlet {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
             String shippingProvider = req.getParameter("shippingProvider");
 
-            return orderService.confirmOrder(orderId, shippingProvider);
+//            return orderService.confirmOrder(orderId, shippingProvider);
+            System.out.println("🔄 Confirming order ID: " + orderId);
+
+            Map<String, Object> result = orderService.confirmOrder(orderId, shippingProvider);
+
+            // ✅ GỬI THÔNG BÁO CHO USER
+            if ((Boolean) result.get("success")) {
+                System.out.println("📋 Getting order info for notification...");
+
+                Map<String, Object> orderInfo = orderService.getOrderBasicInfo(orderId);
+
+                System.out.println("📊 Order info: " + orderInfo);
+
+                if (orderInfo != null) {
+                    Object userIdObj = orderInfo.get("user_id");
+                    Object orderCodeObj = orderInfo.get("ordercode");
+
+                    if (userIdObj != null && orderCodeObj != null) {
+                        int userId = ((Number) userIdObj).intValue();
+                        String orderCode = String.valueOf(orderCodeObj);
+
+                        notificationService.notifyOrderConfirmed(userId, orderCode);
+
+                        System.out.println("✅ Notification sent successfully");
+                    }
+                }
+            }
+
+            return result;
 
         } catch (NumberFormatException e) {
             return Map.of("success", false, "error", "Invalid order ID");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
         }
     }
 
@@ -416,10 +481,33 @@ public class AdminOrderManagementServlet extends HttpServlet {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
             String reason = req.getParameter("reason");
 
-            return orderService.cancelOrder(orderId, reason);
+//            return orderService.cancelOrder(orderId, reason);
+            Map<String, Object> result = orderService.cancelOrder(orderId, reason);
+
+            if ((Boolean) result.get("success")) {
+                Map<String, Object> orderInfo = orderService.getOrderBasicInfo(orderId);
+
+                if (orderInfo != null) {
+                    Object userIdObj = orderInfo.get("user_id");
+                    Object orderCodeObj = orderInfo.get("ordercode");
+
+                    if (userIdObj != null && orderCodeObj != null) {
+                        int userId = ((Number) userIdObj).intValue();
+                        String orderCode = String.valueOf(orderCodeObj);
+
+                        notificationService.notifyOrderCancelled(userId, orderCode, reason);
+                        System.out.println("✅ Cancellation notification sent to user " + userId);
+                    }
+                }
+            }
+
+            return result;
 
         } catch (NumberFormatException e) {
             return Map.of("success", false, "error", "Invalid order ID");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
         }
     }
 
@@ -429,10 +517,37 @@ public class AdminOrderManagementServlet extends HttpServlet {
     private Map<String, Object> confirmShipped(HttpServletRequest req) {
         try {
             int orderId = Integer.parseInt(req.getParameter("orderId"));
-            return orderService.confirmShipped(orderId);
+            Map<String, Object> result = orderService.confirmShipped(orderId);
+
+            // ✅ GỬI THÔNG BÁO CHO USER
+            if ((Boolean) result.get("success")) {
+                Map<String, Object> orderInfo = orderService.getOrderBasicInfo(orderId);
+
+                if (orderInfo != null) {
+                    // ✅ SỬA: Dùng key đúng như trong Map
+                    Object userIdObj = orderInfo.get("user_id");  // Thay đổi từ "userId"
+                    Object orderCodeObj = orderInfo.get("ordercode");  // Thay đổi từ "orderCode"
+
+                    if (userIdObj != null && orderCodeObj != null) {
+                        int userId = ((Number) userIdObj).intValue();
+                        String orderCode = String.valueOf(orderCodeObj);
+
+                        // shipping_provider cũng cần sửa
+                        String shippingProvider = (String) orderInfo.get("shipping_provider");
+
+                        notificationService.notifyOrderShipped(userId, orderCode, shippingProvider);
+                        System.out.println("✅ Shipping notification sent to user " + userId);
+                    }
+                }
+            }
+
+            return result;
 
         } catch (NumberFormatException e) {
             return Map.of("success", false, "error", "Invalid order ID");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
         }
     }
 
