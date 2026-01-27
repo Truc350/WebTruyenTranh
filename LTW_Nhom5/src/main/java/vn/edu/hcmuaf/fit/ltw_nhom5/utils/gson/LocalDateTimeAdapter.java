@@ -19,7 +19,6 @@ public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
         } else {
             out.value(value.format(FORMATTER));
         }
-
     }
 
     @Override

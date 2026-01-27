@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.OrderItem;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -386,8 +387,7 @@ public class OrderDAO extends ADao {
 
                 // Tính xu được cộng (1% tổng đơn hàng, làm tròn xuống)
                 // Ví dụ: đơn 150,000đ = 1 xu, 250,000đ = 2 xu
-                int earnedPoints = 200;
-//                int earnedPoints = (int) (order.getTotalAmount() / 100000);
+                int earnedPoints = (int) (order.getTotalAmount() / 100000);
 
                 if (earnedPoints > 0) {
                     // Cập nhật xu cho user
@@ -798,6 +798,167 @@ public class OrderDAO extends ADao {
             }
 
             return true;
+        });
+    }
+
+    /**
+     * Lấy điểm đánh giá trung bình của đơn hàng
+     * @param orderId ID đơn hàng
+     * @return Map chứa averageRating và hasReview
+     */
+    public Map<String, Object> getOrderRatingInfo(int orderId) {
+        String sql = """
+        SELECT 
+            COUNT(r.id) as review_count,
+            AVG(r.rating) as avg_rating
+        FROM reviews r
+        WHERE r.order_id = ?
+    """;
+
+        return jdbi.withHandle(handle -> {
+            Map<String, Object> result = handle.createQuery(sql)
+                    .bind(0, orderId)
+                    .mapToMap()
+                    .findOne()
+                    .orElse(new HashMap<>());
+
+            int reviewCount = ((Number) result.getOrDefault("review_count", 0)).intValue();
+            Double avgRating = result.get("avg_rating") != null
+                    ? ((Number) result.get("avg_rating")).doubleValue()
+                    : null;
+
+            Map<String, Object> ratingInfo = new HashMap<>();
+            ratingInfo.put("hasReview", reviewCount > 0);
+            ratingInfo.put("averageRating", avgRating);
+            ratingInfo.put("reviewCount", reviewCount);
+
+            return ratingInfo;
+        });
+    }
+
+    /**
+     * Lấy danh sách đơn hàng với thông tin đánh giá
+     */
+    public List<Map<String, Object>> getCompletedOrdersWithRating() {
+        String sql = """
+        SELECT 
+            o.id,
+            o.user_id,
+            o.order_date,
+            o.total_amount,
+            o.recipient_name,
+            o.shipping_phone,
+            o.shipping_address,
+            o.shipping_provider,
+            o.shipping_fee,
+            o.points_used,
+            o.status,
+            p.payment_method,
+            p.payment_status,
+            p.transaction_id,
+            AVG(r.rating) as average_rating,
+            COUNT(r.id) as review_count
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        LEFT JOIN reviews r ON o.id = r.order_id
+        WHERE o.status = 'Completed'
+        GROUP BY o.id, o.user_id, o.order_date, o.total_amount, 
+                 o.recipient_name, o.shipping_phone, o.shipping_address,
+                 o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                 p.payment_method, p.payment_status, p.transaction_id
+        ORDER BY o.order_date DESC
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapToMap()
+                        .list()
+        );
+    }
+
+    /**
+     * Tìm kiếm đơn hàng đã giao với thông tin đánh giá
+     */
+    public List<Map<String, Object>> searchCompletedOrdersWithRating(String keyword) {
+        if (keyword == null) keyword = "";
+
+        String trimmedKeyword = keyword.trim();
+        boolean isNumber = trimmedKeyword.matches("\\d+");
+
+        String sqlById = """
+        SELECT 
+            o.id, o.user_id, o.order_date, o.total_amount,
+            o.recipient_name, o.shipping_phone, o.shipping_address,
+            o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+            p.payment_method, p.payment_status, p.transaction_id,
+            AVG(r.rating) as average_rating,
+            COUNT(r.id) as review_count
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        LEFT JOIN reviews r ON o.id = r.order_id
+        WHERE o.status = 'Completed' AND o.id = ?
+        GROUP BY o.id, o.user_id, o.order_date, o.total_amount,
+                 o.recipient_name, o.shipping_phone, o.shipping_address,
+                 o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                 p.payment_method, p.payment_status, p.transaction_id
+        ORDER BY o.order_date DESC
+    """;
+
+        String sqlByName = """
+        SELECT 
+            o.id, o.user_id, o.order_date, o.total_amount,
+            o.recipient_name, o.shipping_phone, o.shipping_address,
+            o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+            p.payment_method, p.payment_status, p.transaction_id,
+            AVG(r.rating) as average_rating,
+            COUNT(r.id) as review_count
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        LEFT JOIN reviews r ON o.id = r.order_id
+        WHERE o.status = 'Completed' 
+          AND LOWER(o.recipient_name) LIKE LOWER(?)
+        GROUP BY o.id, o.user_id, o.order_date, o.total_amount,
+                 o.recipient_name, o.shipping_phone, o.shipping_address,
+                 o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                 p.payment_method, p.payment_status, p.transaction_id
+        ORDER BY o.order_date DESC
+    """;
+
+        String sqlAll = """
+        SELECT 
+            o.id, o.user_id, o.order_date, o.total_amount,
+            o.recipient_name, o.shipping_phone, o.shipping_address,
+            o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+            p.payment_method, p.payment_status, p.transaction_id,
+            AVG(r.rating) as average_rating,
+            COUNT(r.id) as review_count
+        FROM orders o
+        LEFT JOIN payments p ON o.id = p.order_id
+        LEFT JOIN reviews r ON o.id = r.order_id
+        WHERE o.status = 'Completed'
+        GROUP BY o.id, o.user_id, o.order_date, o.total_amount,
+                 o.recipient_name, o.shipping_phone, o.shipping_address,
+                 o.shipping_provider, o.shipping_fee, o.points_used, o.status,
+                 p.payment_method, p.payment_status, p.transaction_id
+        ORDER BY o.order_date DESC
+    """;
+
+        return jdbi.withHandle(handle -> {
+            if (isNumber && !trimmedKeyword.isEmpty()) {
+                return handle.createQuery(sqlById)
+                        .bind(0, Integer.parseInt(trimmedKeyword))
+                        .mapToMap()
+                        .list();
+            } else if (!trimmedKeyword.isEmpty()) {
+                return handle.createQuery(sqlByName)
+                        .bind(0, "%" + trimmedKeyword + "%")
+                        .mapToMap()
+                        .list();
+            } else {
+                return handle.createQuery(sqlAll)
+                        .mapToMap()
+                        .list();
+            }
         });
     }
 

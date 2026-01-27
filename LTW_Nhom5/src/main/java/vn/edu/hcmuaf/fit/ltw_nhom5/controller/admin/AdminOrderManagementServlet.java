@@ -5,6 +5,7 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.OrderService;
 import com.google.gson.Gson;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.gson.GsonConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         try {
             orderService = new OrderService();
-            gson = new Gson();
+            gson = GsonConfig.getGson();
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
@@ -104,15 +105,117 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 case "processRefund":
                     result = processRefund(req);
                     break;
+                case "confirmRefund":
+                    result = handleConfirmRefund(req);
+                    break;
+                case "rejectRefund":
+                    result = handleRejectRefund(req);
+                    break;
+                case "searchReturns":
+                    result = handleSearchReturns(req);
+                    break;
+                case "getReturnDetail":
+                    result = handleGetReturnDetail(req);
+                    break;
                 default:
                     result = Map.of("success", false, "error", "Invalid action");
             }
 
+            // ✅ GHI RESPONSE VỚI GSON ĐÃ CONFIG
             resp.getWriter().write(gson.toJson(result));
 
         } catch (Exception e) {
             e.printStackTrace();
             sendJsonError(resp, e.getMessage());
+        }
+    }
+
+    private Map<String, Object> handleGetReturnDetail(HttpServletRequest req) {
+        try {
+            int returnId = Integer.parseInt(req.getParameter("returnId"));
+
+            System.out.println("📋 Getting return detail for ID: " + returnId);
+
+            return orderService.getReturnDetail(returnId);
+
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Invalid return ID format");
+            return Map.of("success", false, "error", "Invalid return ID");
+        } catch (Exception e) {
+            System.err.println("❌ Error getting return detail: " + e.getMessage());
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
+        }
+    }
+
+    private Map<String, Object> handleSearchReturns(HttpServletRequest req) {
+        try {
+            String keyword = req.getParameter("keyword");
+            if (keyword == null) keyword = "";
+
+            System.out.println("🔍 Searching returns with keyword: '" + keyword + "'");
+
+            List<Map<String, Object>> returns = orderService.searchReturns(keyword);
+
+            System.out.println("✅ Found " + returns.size() + " return orders");
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("returns", returns);
+            result.put("count", returns.size());
+
+            return result;
+
+        } catch (Exception e) {
+            System.err.println("❌ Error searching returns: " + e.getMessage());
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
+        }
+    }
+
+    private Map<String, Object> handleRejectRefund(HttpServletRequest req) {
+        try {
+            int returnId = Integer.parseInt(req.getParameter("returnId"));
+            String rejectReason = req.getParameter("reason");
+
+            System.out.println("🔄 Rejecting refund for return ID: " + returnId);
+            System.out.println("   Reason: " + rejectReason);
+
+            Map<String, Object> result = orderService.rejectRefund(returnId, rejectReason);
+
+            System.out.println("✅ Reject refund result: " + result.get("success"));
+
+            return result;
+
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Invalid return ID format");
+            return Map.of("success", false, "error", "Invalid return ID");
+        } catch (Exception e) {
+            System.err.println("❌ Error rejecting refund: " + e.getMessage());
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
+        }
+    }
+
+    private Map<String, Object> handleConfirmRefund(HttpServletRequest req) {
+        try {
+            int returnId = Integer.parseInt(req.getParameter("returnId"));
+
+            System.out.println("🔄 Confirming refund for return ID: " + returnId);
+
+            Map<String, Object> result = orderService.confirmRefund(returnId);
+
+            System.out.println("✅ Confirm refund result: " + result.get("success"));
+
+            return result;
+
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Invalid return ID format");
+            return Map.of("success", false, "error", "Invalid return ID");
+        } catch (Exception e) {
+            System.err.println("❌ Error confirming refund: " + e.getMessage());
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
         }
     }
 
@@ -133,6 +236,12 @@ public class AdminOrderManagementServlet extends HttpServlet {
                         (Map<String, List<Map<String, Object>>>) data.get("ordersByStatus");
 
                 req.setAttribute("ordersByStatus", ordersByStatus);
+
+                // ===== THÊM DỮ LIỆU TRẢ HÀNG/HOÀN TIỀN =====
+                List<Map<String, Object>> returnOrders = orderService.getAllReturnsWithDetails();
+                ordersByStatus.put("Returns", returnOrders);
+
+                System.out.println("✅ Loaded " + returnOrders.size() + " return orders");
 
                 // Lấy thống kê
                 Map<String, Object> stats = orderService.getOrderStatistics();
@@ -433,7 +542,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     break;
                 case "Completed":
                     System.out.println("→ Searching Completed orders...");
-                    orders = orderService.searchCompletedOrders(keyword);
+                    orders = orderService.searchCompletedOrders("");
                     break;
                 case "Returned":
                     System.out.println("→ Searching Returned orders...");
