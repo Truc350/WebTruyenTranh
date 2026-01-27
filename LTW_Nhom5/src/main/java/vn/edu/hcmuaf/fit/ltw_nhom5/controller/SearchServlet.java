@@ -16,7 +16,6 @@ import java.util.Set;
 
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
-
     private ComicDAO comicDAO;
     private FlashSaleDAO flashSaleDAO;
     private static final int ITEMS_PER_PAGE = 20;

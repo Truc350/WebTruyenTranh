@@ -4,7 +4,6 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 public class ReportDAO {
@@ -19,17 +18,19 @@ public class ReportDAO {
     }
 
     /**
-     * Lấy thống kê tổng quan theo khoảng thời gian
+     * ✅ FIX: Lấy thống kê tổng quan theo khoảng thời gian
      */
     public Map<String, Object> getOverviewStats(LocalDate startDate, LocalDate endDate) {
         return jdbi.withHandle(handle -> {
             Map<String, Object> stats = new HashMap<>();
 
-            // 1. Tổng doanh thu
+            System.out.println("🔍 Querying from: " + startDate + " to: " + endDate);
+
+            // 1. Tổng doanh thu THEO DATE RANGE
             Double totalRevenue = handle.createQuery(
                             "SELECT COALESCE(SUM(total_amount), 0) " +
                                     "FROM orders " +
-                                    "WHERE status = 'Completed' " +
+                                    "WHERE order_date IS NOT NULL " +
                                     "AND DATE(order_date) BETWEEN :start AND :end"
                     )
                     .bind("start", startDate)
@@ -37,27 +38,33 @@ public class ReportDAO {
                     .mapTo(Double.class)
                     .one();
 
-            // 2. Số đơn hàng
+            System.out.println("💰 Total Revenue in range: " + totalRevenue);
+
+            // 2. Số đơn hàng THEO DATE RANGE
             Integer orderCount = handle.createQuery(
                             "SELECT COUNT(*) " +
                                     "FROM orders " +
-                                    "WHERE DATE(order_date) BETWEEN :start AND :end"
+                                    "WHERE order_date IS NOT NULL " +
+                                    "AND DATE(order_date) BETWEEN :start AND :end"
                     )
                     .bind("start", startDate)
                     .bind("end", endDate)
                     .mapTo(Integer.class)
                     .one();
 
+            System.out.println("📦 Total Orders in range: " + orderCount);
+
             // 3. Giá trị đơn trung bình
             Double avgOrderValue = orderCount > 0 ? totalRevenue / orderCount : 0.0;
+            System.out.println("📊 Average Order Value: " + avgOrderValue);
 
-            // 4. Sản phẩm bán chạy nhất
+            // 4. Sản phẩm bán chạy nhất THEO DATE RANGE
             Map<String, Object> topProduct = handle.createQuery(
                             "SELECT c.name_comics, SUM(oi.quantity) as total_sold " +
                                     "FROM order_items oi " +
                                     "JOIN comics c ON oi.comic_id = c.id " +
                                     "JOIN orders o ON oi.order_id = o.id " +
-                                    "WHERE o.status = 'Completed' " +
+                                    "WHERE o.order_date IS NOT NULL " +
                                     "AND DATE(o.order_date) BETWEEN :start AND :end " +
                                     "GROUP BY c.id, c.name_comics " +
                                     "ORDER BY total_sold DESC " +
@@ -69,11 +76,14 @@ public class ReportDAO {
                     .findFirst()
                     .orElse(null);
 
-            stats.put("totalRevenue", totalRevenue);
-            stats.put("orderCount", orderCount);
+            if (topProduct != null) {
+                System.out.println("🏆 Best Product: " + topProduct.get("name_comics"));
+            }
+
+            stats.put("revenue", totalRevenue);
+            stats.put("totalOrders", orderCount);
             stats.put("avgOrderValue", avgOrderValue);
-            stats.put("topProduct", topProduct != null ? topProduct.get("name_comics") : "N/A");
-            stats.put("topProductSold", topProduct != null ? topProduct.get("total_sold") : 0);
+            stats.put("bestProduct", topProduct != null ? topProduct.get("name_comics") : "Chưa có dữ liệu");
 
             return stats;
         });
@@ -83,49 +93,69 @@ public class ReportDAO {
      * Lấy doanh thu theo ngày trong khoảng thời gian
      */
     public List<Map<String, Object>> getDailyRevenue(LocalDate startDate, LocalDate endDate) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery(
-                                "SELECT DATE(order_date) as date, " +
-                                        "COALESCE(SUM(total_amount), 0) as revenue, " +
-                                        "COUNT(*) as order_count " +
-                                        "FROM orders " +
-                                        "WHERE status = 'Completed' " +
-                                        "AND DATE(order_date) BETWEEN :start AND :end " +
-                                        "GROUP BY DATE(order_date) " +
-                                        "ORDER BY date ASC"
-                        )
-                        .bind("start", startDate)
-                        .bind("end", endDate)
-                        .mapToMap()
-                        .list()
-        );
+        return jdbi.withHandle(handle -> {
+            List<Map<String, Object>> result = handle.createQuery(
+                            "SELECT DATE(order_date) as date, " +
+                                    "COALESCE(SUM(total_amount), 0) as revenue, " +
+                                    "COUNT(*) as order_count " +
+                                    "FROM orders " +
+                                    "WHERE order_date IS NOT NULL " +
+                                    "AND DATE(order_date) BETWEEN :start AND :end " +
+                                    "GROUP BY DATE(order_date) " +
+                                    "ORDER BY date ASC"
+                    )
+                    .bind("start", startDate)
+                    .bind("end", endDate)
+                    .mapToMap()
+                    .list();
+
+            System.out.println("📊 getDailyRevenue returned " + result.size() + " rows");
+
+            // Debug: In ra từng dòng data
+            for (Map<String, Object> row : result) {
+                System.out.println("  - Date: " + row.get("date") +
+                        ", Revenue: " + row.get("revenue") +
+                        ", Orders: " + row.get("order_count"));
+            }
+
+            return result;
+        });
     }
 
     /**
      * Lấy top sản phẩm bán chạy
      */
     public List<Map<String, Object>> getTopSellingProducts(LocalDate startDate, LocalDate endDate, int limit) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery(
-                                "SELECT c.id, c.name_comics as product_name, " +
-                                        "c.thumbnail_url, " +
-                                        "SUM(oi.quantity) as total_sold, " +
-                                        "SUM(oi.quantity * oi.price_at_purchase) as total_revenue " +
-                                        "FROM order_items oi " +
-                                        "JOIN comics c ON oi.comic_id = c.id " +
-                                        "JOIN orders o ON oi.order_id = o.id " +
-                                        "WHERE o.status = 'Completed' " +
-                                        "AND DATE(o.order_date) BETWEEN :start AND :end " +
-                                        "GROUP BY c.id, c.name_comics, c.thumbnail_url " +
-                                        "ORDER BY total_sold DESC " +
-                                        "LIMIT :limit"
-                        )
-                        .bind("start", startDate)
-                        .bind("end", endDate)
-                        .bind("limit", limit)
-                        .mapToMap()
-                        .list()
-        );
+        return jdbi.withHandle(handle -> {
+            List<Map<String, Object>> result = handle.createQuery(
+                            "SELECT c.id, c.name_comics, " +
+                                    "SUM(oi.quantity) as total_sold, " +
+                                    "SUM(oi.quantity * oi.price_at_purchase) as total_revenue " +
+                                    "FROM order_items oi " +
+                                    "JOIN comics c ON oi.comic_id = c.id " +
+                                    "JOIN orders o ON oi.order_id = o.id " +
+                                    "WHERE o.order_date IS NOT NULL " +
+                                    "AND DATE(o.order_date) BETWEEN :start AND :end " +
+                                    "GROUP BY c.id, c.name_comics " +
+                                    "ORDER BY total_sold DESC " +
+                                    "LIMIT :limit"
+                    )
+                    .bind("start", startDate)
+                    .bind("end", endDate)
+                    .bind("limit", limit)
+                    .mapToMap()
+                    .list();
+
+            System.out.println("🏆 getTopSellingProducts returned " + result.size() + " products");
+
+            // Debug: In ra top products
+            for (Map<String, Object> product : result) {
+                System.out.println("  - Product: " + product.get("name_comics") +
+                        ", Sold: " + product.get("total_sold"));
+            }
+
+            return result;
+        });
     }
 
     /**
@@ -165,7 +195,7 @@ public class ReportDAO {
                                         "JOIN comics c ON oi.comic_id = c.id " +
                                         "JOIN categories cat ON c.category_id = cat.id " +
                                         "JOIN orders o ON oi.order_id = o.id " +
-                                        "WHERE o.status = 'Completed' " +
+                                        "WHERE o.order_date IS NOT NULL " +
                                         "AND DATE(o.order_date) BETWEEN :start AND :end " +
                                         "GROUP BY cat.id, cat.name_categories " +
                                         "ORDER BY revenue DESC"
@@ -223,7 +253,7 @@ public class ReportDAO {
                                         "COALESCE(SUM(p.amount), 0) as total_amount " +
                                         "FROM payments p " +
                                         "JOIN orders o ON p.order_id = o.id " +
-                                        "WHERE o.status = 'Completed' " +
+                                        "WHERE o.order_date IS NOT NULL " +
                                         "AND DATE(o.order_date) BETWEEN :start AND :end " +
                                         "GROUP BY p.payment_method " +
                                         "ORDER BY total_amount DESC"
@@ -245,7 +275,7 @@ public class ReportDAO {
                                         "DAYNAME(order_date) as day_name, " +
                                         "COALESCE(SUM(total_amount), 0) as revenue " +
                                         "FROM orders " +
-                                        "WHERE status = 'Completed' " +
+                                        "WHERE order_date IS NOT NULL " +
                                         "AND order_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) " +
                                         "GROUP BY DATE(order_date), DAYNAME(order_date) " +
                                         "ORDER BY date ASC"
@@ -267,7 +297,7 @@ public class ReportDAO {
                                         "COALESCE(SUM(total_amount), 0) as revenue, " +
                                         "COUNT(*) as order_count " +
                                         "FROM orders " +
-                                        "WHERE status = 'Completed' " +
+                                        "WHERE order_date IS NOT NULL " +
                                         "AND order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) " +
                                         "GROUP BY YEAR(order_date), MONTH(order_date) " +
                                         "ORDER BY year ASC, month ASC"
@@ -290,7 +320,7 @@ public class ReportDAO {
             // Doanh thu kỳ hiện tại
             Double currentRevenue = handle.createQuery(
                             "SELECT COALESCE(SUM(total_amount), 0) FROM orders " +
-                                    "WHERE status = 'Completed' " +
+                                    "WHERE order_date IS NOT NULL " +
                                     "AND DATE(order_date) BETWEEN :start AND :end"
                     )
                     .bind("start", startDate)
@@ -304,7 +334,7 @@ public class ReportDAO {
 
             Double previousRevenue = handle.createQuery(
                             "SELECT COALESCE(SUM(total_amount), 0) FROM orders " +
-                                    "WHERE status = 'Completed' " +
+                                    "WHERE order_date IS NOT NULL " +
                                     "AND DATE(order_date) BETWEEN :start AND :end"
                     )
                     .bind("start", prevStart)
@@ -337,7 +367,7 @@ public class ReportDAO {
                                         "COALESCE(SUM(o.total_amount), 0) as total_spent " +
                                         "FROM users u " +
                                         "JOIN orders o ON u.id = o.user_id " +
-                                        "WHERE o.status = 'Completed' " +
+                                        "WHERE o.order_date IS NOT NULL " +
                                         "AND DATE(o.order_date) BETWEEN :start AND :end " +
                                         "GROUP BY u.id, u.username, u.full_name, u.email " +
                                         "ORDER BY total_spent DESC " +

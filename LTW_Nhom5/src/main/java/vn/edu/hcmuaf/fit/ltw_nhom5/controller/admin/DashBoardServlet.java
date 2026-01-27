@@ -61,11 +61,16 @@ public class DashBoardServlet extends HttpServlet {
         List<Map<String, Object>> topProducts =
                 statisticsDAO.getTopSellingComics(startDate, endDate, 10);
 
+        // Lấy top 10 sản phẩm có đánh giá cao nhất
+        List<Map<String, Object>> topRatedComics =
+                statisticsDAO.getTopRatedComics(10);
+
         // Lấy dữ liệu biểu đồ phù hợp với khoảng thời gian
         List<Map<String, Object>> chartData = getChartData(period, startDate, endDate);
 
         request.setAttribute("stats", stats);
         request.setAttribute("topProducts", topProducts);
+        request.setAttribute("topRatedComics", topRatedComics);
         request.setAttribute("chartData", gson.toJson(chartData));
         request.setAttribute("chartType", getChartType(period));
         request.setAttribute("currentPeriod", period);
