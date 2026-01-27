@@ -628,6 +628,27 @@ public class ComicDAO extends ADao {
         LEFT JOIN categories cat ON c.category_id = cat.id 
         LEFT JOIN series s ON c.series_id = s.id 
         """ + buildFlashSaleJoin() + """
+        WHERE c.id = ? AND c.is_deleted = 0 
+    """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, comicId)
+                        .mapToBean(Comic.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+    public Comic getComicById3(int comicId) {
+        String sql = """
+        SELECT c.*, 
+               cat.name_categories AS categoryName, 
+               s.series_name AS seriesName
+        """ + buildFlashSaleColumns() + """
+        FROM comics c 
+        LEFT JOIN categories cat ON c.category_id = cat.id 
+        LEFT JOIN series s ON c.series_id = s.id 
+        """ + buildFlashSaleJoin() + """
         WHERE c.id = ? AND c.is_deleted = 0 AND c.is_hidden = 0
     """;
 
@@ -1761,9 +1782,9 @@ public class ComicDAO extends ADao {
         // Thêm điều kiện lọc ẩn/hiện
         if (hiddenFilter != null) {
             if (hiddenFilter == 0) {
-                sql.append(" AND c.is_hidden = 0"); // Chỉ hiển thị truyện không ẩn
+                sql.append(" AND c.is_hidden = 0 "); // Chỉ hiển thị truyện không ẩn
             } else if (hiddenFilter == 1) {
-                sql.append(" AND c.is_hidden = 1"); // Chỉ hiển thị truyện đã ẩn
+                sql.append(" AND c.is_hidden = 1 "); // Chỉ hiển thị truyện đã ẩn
             }
             // Nếu hiddenFilter = -1 hoặc null: hiển thị tất cả
         }
@@ -1845,9 +1866,9 @@ public class ComicDAO extends ADao {
         // Thêm điều kiện lọc ẩn/hiện
         if (hiddenFilter != null) {
             if (hiddenFilter == 0) {
-                sql.append(" AND c.is_hidden = 0");
+                sql.append(" AND c.is_hidden = 0 ");
             } else if (hiddenFilter == 1) {
-                sql.append(" AND c.is_hidden = 1");
+                sql.append(" AND c.is_hidden = 1 ");
             }
         }
 

@@ -65,7 +65,7 @@
                     <th>Tác giả</th>
                     <th>Giá</th>
                     <th>Còn trong kho</th>
-                    <th>Đánh giá</th>
+<%--                    <th>Đánh giá</th>--%>
                     <th></th>
                 </tr>
                 </thead>
@@ -269,40 +269,6 @@
         </div>
 
 
-        <!-- POPUP XÓA TRUYỆN -->
-        <%--        <div class="modal-overlay" id="deleteModal">--%>
-        <%--            <div class="delete-modal">--%>
-        <%--                <h3>Xóa truyện</h3>--%>
-
-        <%--                <div class="search-bar">--%>
-        <%--                    <input type="text" id="searchInput" placeholder="Tìm truyện để xóa...">--%>
-        <%--                    <button id="searchBtn" class="search-icon">--%>
-        <%--                        <i class="fa-solid fa-magnifying-glass"></i>--%>
-        <%--                    </button>--%>
-        <%--                </div>--%>
-
-        <%--                <div class="delete-list">--%>
-        <%--                    <label><input type="checkbox"> Thám tử lừng danh Conan – Tập 15 – Gosho Aoyama</label>--%>
-        <%--                    <label><input type="checkbox"> Doraemon – Tập 30 – Fujiko F. Fujio</label>--%>
-        <%--                    <label><input type="checkbox"> One Piece – Tập 100 – Eiichiro Oda</label>--%>
-        <%--                    <label><input type="checkbox"> Attack on Titan – Tập 17 – Hajime Isayama</label>--%>
-        <%--                    <label><input type="checkbox"> Naruto – Tập 300 – Masashi Kishimoto</label>--%>
-        <%--                    <label><input type="checkbox"> Bleach – Tập 70 – Tite Kubo</label>--%>
-        <%--                    <label><input type="checkbox"> Spy x Family – Tập 12 – Tatsuya Endo</label>--%>
-        <%--                    <label><input type="checkbox"> Bleach – Tập 40 – Tite Kubo</label>--%>
-        <%--                    <label><input type="checkbox"> Spy x Family– Tập 45 – Tatsuya Endo</label>--%>
-        <%--                    <label><input type="checkbox"> Bleach– Tập 80 – Tite Kubo</label>--%>
-        <%--                    <label><input type="checkbox"> Spy x Family– Tập 50 – Tatsuya Endo</label>--%>
-        <%--                </div>--%>
-
-        <%--                <div class="delete-buttons">--%>
-        <%--                    <button class="cancel-btn">Hủy</button>--%>
-        <%--                    <button class="delete-confirm-btn">Xóa</button>--%>
-        <%--                </div>--%>
-        <%--            </div>--%>
-        <%--        </div>--%>
-        <%--        deleteBtnMain--%>
-
         <!-- POPUP XÁC NHẬN XÓA -->
         <div class="modal-overlay" id="confirmDeleteModal">
             <div class="confirm-box">
@@ -400,7 +366,7 @@
 
         console.log('🔍 Search params:', {keyword, filterValue, page});
 
-        currentFilter = filterValue; // Lưu filter hiện tại
+        currentFilter = filterValue;
         const tbody = document.getElementById('productTableBody');
 
         // Hiển thị loading
@@ -408,16 +374,15 @@
             '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
             '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
 
-        // ✅ Xác định hiddenFilter dựa trên filterValue
+        // Xác định hiddenFilter
         let hiddenFilter = null;
         if (filterValue === 'visible') {
-            hiddenFilter = 0; // Chỉ hiện truyện ĐANG HIỂN THỊ (is_hidden = 0)
+            hiddenFilter = 0;
         } else if (filterValue === 'hidden') {
-            hiddenFilter = 1; // Chỉ hiện truyện ĐÃ ẨN (is_hidden = 1)
+            hiddenFilter = 1;
         }
-        // Nếu filterValue === 'all' → hiddenFilter = null (hiện tất cả)
 
-        // ✅ Build URL với hiddenFilter
+        // Build URL
         let url = contextPath + '/admin/products/search?keyword=' +
             encodeURIComponent(keyword) + '&page=' + page;
 
@@ -430,68 +395,7 @@
         // Gọi API
         fetch(url)
             .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('✅ Data received:', data);
-                currentPage = data.currentPage;
-                updateTable(data.comics);
-                updatePagination(data.currentPage, data.totalPages);
-                bindEventListeners();
-            })
-            .catch(error => {
-                console.error('❌ Error:', error);
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #f44336;">' +
-                    '<i class="fas fa-exclamation-triangle" style="font-size: 32px;"></i>' +
-                    '<p style="margin-top: 10px;">Có lỗi xảy ra: ' + error.message + '</p></td></tr>';
-            });
-    }
-
-    function searchProducts(page = 1) {
-        const keyword = document.getElementById('mainSearchInput').value.trim();
-        const filterSelect = document.getElementById('displayFilter');
-        const filterValue = filterSelect.value; // 'all', 'visible', 'hidden'
-
-        console.log('🔍 Search params:', {keyword, filterValue, page});
-
-        currentFilter = filterValue; // Lưu filter hiện tại
-        const tbody = document.getElementById('productTableBody');
-
-        // Hiển thị loading
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">' +
-            '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
-            '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
-
-        // ✅ Xác định hiddenFilter dựa trên filterValue
-        let hiddenFilter = null;
-        if (filterValue === 'visible') {
-            hiddenFilter = 0; // Chỉ hiện truyện ĐANG HIỂN THỊ (is_hidden = 0)
-        } else if (filterValue === 'hidden') {
-            hiddenFilter = 1; // Chỉ hiện truyện ĐÃ ẨN (is_hidden = 1)
-        }
-        // Nếu filterValue === 'all' → hiddenFilter = null (hiện tất cả)
-
-        // ✅ Build URL với hiddenFilter
-        let url = contextPath + '/admin/products/search?keyword=' +
-            encodeURIComponent(keyword) + '&page=' + page;
-
-        if (hiddenFilter !== null) {
-            url += '&hiddenFilter=' + hiddenFilter;
-        }
-
-        console.log('📡 Calling API:', url);
-
-        // Gọi API
-        fetch(url)
-            .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                if (!response.ok) throw new Error('Network response was not ok');
                 return response.json();
             })
             .then(data => {
@@ -564,9 +468,9 @@
                 '<td>' + formatPrice(comic.price) + ' đ</td>' +
                 '<td>' + comic.stockQuantity + ' quyển</td>' +
                 '<td class="review-cell">' +
-                '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
-                '<i class="fa-solid fa-eye"></i>' +
-                '</button>' +
+                // '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
+                // '<i class="fa-solid fa-eye"></i>' +
+                // '</button>' +
                 '</td>' +
                 '<td class="action-cell">' +
                 '<button class="edit-btn" data-comic-id="' + comic.id + '" title="Chỉnh sửa">' +
@@ -723,33 +627,32 @@
         });
     }
 
-
-    // === EVENT LISTENERS ===
+    // === EVENT LISTENERS - ĐIỂM KHỞI ĐẦU DUY NHẤT ===
     document.addEventListener('DOMContentLoaded', function () {
-        // Load danh sách ban đầu
+        console.log('🚀 Page loaded, initializing...');
+
+        // 1️⃣ Load danh sách ban đầu
         loadInitialComicsList();
 
-        // Tìm kiếm khi nhấn Enter
+        // 2️⃣ Sự kiện FILTER DROPDOWN
+        const filterSelect = document.getElementById('displayFilter');
+        filterSelect.addEventListener('change', function () {
+            console.log('🔽 Filter changed to:', this.value);
+            searchProducts(1); // Reset về trang 1
+        });
+
+        // 3️⃣ Tìm kiếm khi nhấn ENTER
         document.getElementById('mainSearchInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 searchProducts(1);
             }
         });
 
-        // Lắng nghe thay đổi filter
-        document.getElementById('displayFilter').addEventListener('change', function () {
-            searchProducts(1); // Reset về trang 1 khi đổi filter
-        });
-
-        // Đóng menu khi click ra ngoài
+        // 4️⃣ Đóng dropdown menu khi click ngoài
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
         });
-    });
-
-    // BIND EVENT CHO CÁC PHẦN TỬ BAN ĐẦU (TỪ HTML TĨnh)
-    document.addEventListener('DOMContentLoaded', function () {
-        bindEventListeners();
     });
 
 
@@ -783,17 +686,7 @@
 <!--action của hiện/ ẩn sản phẩm-->
 <script>
     document.querySelectorAll('.more-btn').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
 
-            const menu = this.nextElementSibling;
-            const rect = this.getBoundingClientRect();
-
-            menu.style.display = 'block';
-            menu.style.top = rect.bottom + 'px';
-            menu.style.left = (rect.right - menu.offsetWidth) + 'px';
-        });
     });
 
     document.addEventListener('click', () => {
@@ -830,14 +723,6 @@
         });
     });
 
-    // === MỞ POPUP XÓA ===
-    // const deleteBtnMain = document.querySelector('.delete-btn');
-    // if (deleteBtnMain) {
-    //     deleteBtnMain.addEventListener('click', () => {
-    //         document.getElementById('deleteModal').style.display = 'flex';
-    //     });
-    // }
-
     // === ĐÓNG POPUP KHI NHẤN HỦY ===
     document.querySelectorAll('.cancel-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -848,32 +733,6 @@
         });
     });
 
-    // === KHI NHẤN XÓA TRONG POPUP DANH SÁCH ===
-    // document.querySelectorAll('.delete-confirm-btn').forEach(btn => {
-    //     btn.addEventListener('click', () => {
-    //         document.getElementById('confirmDeleteModal').style.display = 'flex';
-    //     });
-    // });
-
-    // === TÌM KIẾM TRUYỆN TRONG POPUP XÓA ===
-    // const searchInput = document.getElementById('searchInput');
-    // const searchBtn = document.getElementById('searchBtn');
-    // const deleteList = document.querySelector('.delete-list');
-    //
-    // if (searchBtn && searchInput && deleteList) {
-    //     searchBtn.addEventListener('click', () => {
-    //         const keyword = searchInput.value.toLowerCase().trim();
-    //         const labels = deleteList.querySelectorAll('label');
-    //         labels.forEach(label => {
-    //             const text = label.textContent.toLowerCase();
-    //             label.style.display = text.includes(keyword) ? 'block' : 'none';
-    //         });
-    //     });
-    //
-    //     searchInput.addEventListener('keypress', e => {
-    //         if (e.key === 'Enter') searchBtn.click();
-    //     });
-    // }
 </script>
 
 <script>
@@ -968,11 +827,9 @@
 
 
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
 
         console.log('Loading initial comics list...');
-        loadInitialComicsList();
     });
 
     async function loadInitialComicsList() {
@@ -1024,41 +881,6 @@
         }
     }
 </script>
-<script>
-    function toggleHidden(id, hidden) {
-        fetch(contextPath + '/admin/products/toggle-hidden', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-            body: 'id=' + id + '&hidden=' + hidden
-        });
-    }
-
-</script>
-<%--xu ly dropdown filetr--%>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('Initializing filter dropdown...');
-        const filterSelect = document.getElementById('displayFilter');
-
-        // Lắng nghe thay đổi dropdown
-        filterSelect.addEventListener('change', function () {
-            const filterValue = this.value;
-            console.log('🔽 Filter changed to:', filterValue);
-
-            // Reset về trang 1 và search với filter mới
-            searchProducts(1);
-        });
-
-        console.log('✅ Filter dropdown initialized');
-    });
-
-
-
-</script>
-
-
-</body>
-</html>
 
 
 </body>

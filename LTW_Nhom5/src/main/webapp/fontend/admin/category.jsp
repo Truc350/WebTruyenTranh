@@ -74,27 +74,8 @@
     <jsp:include page="/fontend/admin/ASide.jsp"/>
 
     <div class="main-content">
-        <header class="admin-header">
-            <div class="header-right">
-                <a href="chatWithCus.jsp">
-                    <i class="fa-solid fa-comment"></i>
-                </a>
+        <%@ include file="HeaderAdmin.jsp" %>
 
-                <div class="admin-profile">
-                    <a href="profileAdmin.jsp">
-                        <img src="<%=request.getContextPath()%>/img/admin.png" class="admin-avatar" alt="Admin">
-                    </a>
-                    <span class="admin-name">Admin</span>
-                </div>
-
-                <!-- Nút đăng xuất -->
-                <button class="btn-logout" title="Đăng xuất">
-                    <a href="../public/login_bo.jsp">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </a>
-                </button>
-            </div>
-        </header>
         <h2 class="page-title">Quản lý thể loại</h2>
 
         <div class="table-container">
