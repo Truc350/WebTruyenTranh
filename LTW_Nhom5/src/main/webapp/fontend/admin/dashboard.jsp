@@ -257,13 +257,17 @@
 
     // Highlight menu sidebar
     document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
+        const current = window.location.pathname;
         const links = document.querySelectorAll(".sidebar li a");
 
         links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-            if (linkPage === current || current.includes('dashboard')) {
+            const linkHref = link.getAttribute("href");
+
+            // Kiểm tra chính xác URL hiện tại có chứa href của link không
+            if (current.endsWith(linkHref) || current.includes(linkHref)) {
                 link.classList.add("active");
+            } else {
+                link.classList.remove("active");
             }
         });
     });

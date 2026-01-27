@@ -198,9 +198,9 @@
                                              onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
                                         <div class="detail-book">
                                             <p>${comic.nameComics}
-                                                <c:if test="${comic.volume != null}">
-                                                    Tập ${comic.volume}
-                                                </c:if>
+<%--                                                <c:if test="${comic.volume != null}">--%>
+<%--                                                    Tập ${comic.volume}--%>
+<%--                                                </c:if>--%>
                                             </p>
 
                                             <!-- Giá -->
@@ -280,9 +280,9 @@
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
-                                                    <c:if test="${comic.hasFlashSale}">
+                                                    ./g<c:if test="${comic.hasFlashSale}">
                                                         <div class="flash-sale-badge-small">
-                                                            <i class="fas fa-bolt"></i>
+                                                            <i class="fas fa-bolt"></i>Flash sale
                                                         </div>
                                                     </c:if>
 
@@ -293,9 +293,9 @@
 
                                                 <p class="product-name">
                                                         ${comic.nameComics}
-                                                    <c:if test="${comic.volume != null}">
-                                                        Tập ${comic.volume}
-                                                    </c:if>
+<%--                                                    <c:if test="${comic.volume != null}">--%>
+<%--                                                        Tập ${comic.volume}--%>
+<%--                                                    </c:if>--%>
                                                 </p>
 
                                                 <!-- Giá -->
