@@ -11,7 +11,7 @@
 
         <ul>
             <li>
-                <a href="${pageContext.request.contextPath}/DashBoardServlet">
+                <a href="${pageContext.request.contextPath}/admin/dashboard">
                     <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
@@ -35,7 +35,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/OrderManagement">
+                <a href="${pageContext.request.contextPath}/admin/orders">
                     <img src="${pageContext.request.contextPath}/img/order.png" class="icon">
                     <span>Quản lý đơn hàng</span>
                 </a>
