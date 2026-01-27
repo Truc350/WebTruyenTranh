@@ -864,3 +864,4 @@ function fillEditFormGlobal(data) {
         editProductList.innerHTML = '<p style="color:#888; text-align:center;">Chưa áp dụng cho truyện nào</p>';
     }
 }
+
