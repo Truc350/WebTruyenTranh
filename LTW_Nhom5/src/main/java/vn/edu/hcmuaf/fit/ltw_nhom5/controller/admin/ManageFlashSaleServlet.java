@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @MultipartConfig
-@WebServlet("/FlashSaleManagement")
+@WebServlet("/admin/manage-flashsale")
 public class ManageFlashSaleServlet extends HttpServlet {
 
     private final FlashSaleDAO flashSaleDAO = new FlashSaleDAO();

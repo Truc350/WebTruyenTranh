@@ -350,15 +350,18 @@ function displayFlashSaleDetail(data) {
 }
 
 
-// ========== CHỈNH SỬA FLASH SALE ==========
+// THAY ĐỔI: CHỈNH SỬA FLASH SALE - THÊM TÌM KIẾM TRUYỆN
 document.addEventListener('DOMContentLoaded', () => {
     const editModal = document.getElementById('editFlashSaleModal');
-    const editProductList = document.querySelector('#editFlashSaleModal .product-select-list');
-    const updateBtn = document.querySelector('#editFlashSaleModal .save-btn');
+    const editProductList = document.getElementById('editSelectedProductList');
+    const updateBtn = document.getElementById('updateFlashSaleBtn');
     const closeEditBtn = document.getElementById('closeEditFlashSale');
 
+    // THÊM: Biến lưu trữ state
     let currentEditId = null;
+    let currentEditComics = []; // Lưu danh sách truyện hiện tại
 
+    // ========== MỞ POPUP EDIT ==========
     document.querySelectorAll('.openEditFlashSale').forEach(btn => {
         btn.addEventListener('click', () => {
             currentEditId = btn.dataset.id?.trim();
@@ -367,8 +370,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Reset state
+            currentEditComics = [];
             editProductList.innerHTML = '<p style="text-align:center; color:#888;">Đang tải...</p>';
 
+            // Fetch dữ liệu
             fetch(`${contextPath}/admin/manage-flashsale`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -376,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
                 .then(res => res.json())
                 .then(result => {
-                    console.log('Data nhận được:', result);
                     if (result.success && result.data) {
                         fillEditForm(result.data);
                         editModal.classList.add('show');
@@ -385,61 +390,164 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 })
                 .catch(err => {
-                    console.error('Lỗi:', err);
+                    console.error('❌ Lỗi:', err);
                     alert('Lỗi khi tải dữ liệu Flash Sale!');
                 });
         });
     });
 
-    closeEditBtn?.addEventListener('click', () => {
-        editModal.classList.remove('show');
-        currentEditId = null;
-    });
-
-    // Hàm điền dữ liệu vào form (LOCAL trong scope này)
+    // ========== ĐIỀN DỮ LIỆU VÀO FORM ==========
     function fillEditForm(data) {
-        const form = document.getElementById('editFlashSaleForm');
+        // Điền thông tin cơ bản
+        document.getElementById('editFlashSaleId').value = data.id;
+        document.getElementById('editFlashSaleName').value = data.name || '';
+        document.getElementById('editDiscountPercent').value = data.discountPercent || 30;
 
-        form.querySelector('input[type="text"]').value = data.name || '';
-        form.querySelector('input[type="number"]').value = data.discountPercent || 30;
-
+        // Điền thời gian
         try {
             const start = convertToISO(data.startTime);
             const end = convertToISO(data.endTime);
-            const timeInputs = form.querySelectorAll('input[type="datetime-local"]');
-            timeInputs[0].value = start;
-            timeInputs[1].value = end;
+            document.getElementById('editStartTime').value = start;
+            document.getElementById('editEndTime').value = end;
         } catch (e) {
-            console.warn('Không parse được thời gian', e);
+            console.warn('⚠️ Không parse được thời gian', e);
         }
 
+        // THAY ĐỔI: Điền danh sách truyện (không phải checkbox nữa)
         editProductList.innerHTML = '';
+        currentEditComics = [];
+
         if (data.comics && data.comics.length > 0) {
             data.comics.forEach(comic => {
-                const label = document.createElement('label');
-                label.innerHTML = `
-                    <input type="checkbox" data-comic-id="${comic.id}" checked>
-                    ${comic.name}
-                `;
-                editProductList.appendChild(label);
+                currentEditComics.push({ id: comic.id, name: comic.name });
+                addComicToEditList(comic.id, comic.name, false);
             });
         } else {
-            editProductList.innerHTML = '<p style="color:#888; text-align:center;">Chưa áp dụng cho truyện nào</p>';
+            editProductList.innerHTML = '<p class="empty-message">Chưa có truyện nào. Hãy tìm và thêm truyện.</p>';
         }
     }
 
+    // ========== THÊM MỚI: TÌM KIẾM TRUYỆN TRONG EDIT ==========
+    const editComicSearchInput = document.getElementById('editComicSearchInput');
+    const editSearchResults = document.getElementById('editSearchResults');
+    let editDebounceTimer;
+
+    editComicSearchInput?.addEventListener('input', function () {
+        clearTimeout(editDebounceTimer);
+        const keyword = this.value.trim();
+
+        if (keyword.length < 2) {
+            editSearchResults.style.display = 'none';
+            editSearchResults.innerHTML = '';
+            return;
+        }
+
+        editDebounceTimer = setTimeout(() => {
+            fetch(contextPath + '/admin/search-comics?keyword=' + encodeURIComponent(keyword))
+                .then(res => res.json())
+                .then(data => {
+                    editSearchResults.innerHTML = '';
+
+                    if (data.length === 0) {
+                        editSearchResults.innerHTML = '<div style="padding:15px; text-align:center; color:#888;">Không tìm thấy truyện nào</div>';
+                    } else {
+                        data.forEach(comic => {
+                            const div = document.createElement('div');
+                            div.textContent = comic.name;
+                            div.style.cssText = 'padding:12px 16px; cursor:pointer; border-bottom:1px solid #eee;';
+
+                            div.onmouseover = () => div.style.backgroundColor = '#f5f5f5';
+                            div.onmouseout = () => div.style.backgroundColor = '';
+
+                            // THÊM: Click để thêm truyện
+                            div.onclick = () => addComicToEditList(comic.id, comic.name, true);
+
+                            editSearchResults.appendChild(div);
+                        });
+                    }
+                    editSearchResults.style.display = 'block';
+                })
+                .catch(err => {
+                    console.error('Lỗi:', err);
+                    editSearchResults.innerHTML = '<div style="padding:15px; color:red;">Lỗi server</div>';
+                    editSearchResults.style.display = 'block';
+                });
+        }, 400);
+    });
+
+    // Ẩn kết quả khi click ra ngoài
+    document.addEventListener('click', (e) => {
+        if (editSearchResults &&
+            !editComicSearchInput?.contains(e.target) &&
+            !editSearchResults.contains(e.target)) {
+            editSearchResults.style.display = 'none';
+        }
+    });
+
+    // ========== THÊM MỚI: HÀM THÊM TRUYỆN VÀO DANH SÁCH ==========
+    function addComicToEditList(id, name, checkDuplicate = true) {
+        // Kiểm tra trùng
+        if (checkDuplicate) {
+            const exists = currentEditComics.find(c => c.id === id);
+            if (exists) {
+                alert('Truyện này đã có trong danh sách!');
+                return;
+            }
+        }
+
+        // Xóa placeholder
+        const placeholder = editProductList.querySelector('p.empty-message');
+        if (placeholder) placeholder.remove();
+
+        // Thêm vào mảng
+        if (checkDuplicate) {
+            currentEditComics.push({ id, name });
+        }
+
+        // Tạo item HTML
+        const item = document.createElement('div');
+        item.id = 'edit-comic-' + id;
+        item.style.cssText = `display: flex; align-items: center; background: #fafafa; padding: 12px 16px; 
+                              border-radius: 8px; border: 1px solid #eee; margin-bottom: 10px; gap: 12px;`;
+
+        item.innerHTML = `
+            <span style="flex:1; font-weight:500;">${name}</span>
+            <button type="button" class="remove-comic-btn" data-comic-id="${id}"
+                    style="background:#ff4c4c; color:white; border:none; width:30px; height:30px; 
+                           border-radius:50%; font-size:18px; cursor:pointer;">×</button>
+        `;
+
+        // THÊM: Xử lý xóa truyện
+        item.querySelector('.remove-comic-btn').onclick = () => {
+            item.remove();
+            currentEditComics = currentEditComics.filter(c => c.id !== id);
+
+            if (editProductList.children.length === 0) {
+                editProductList.innerHTML = '<p class="empty-message">Chưa có truyện nào. Hãy tìm và thêm truyện.</p>';
+            }
+        };
+
+        editProductList.appendChild(item);
+        editSearchResults.style.display = 'none';
+        editComicSearchInput.value = '';
+    }
+
+    // ========== THAY ĐỔI: CẬP NHẬT FLASH SALE ==========
     updateBtn?.addEventListener('click', (e) => {
         e.preventDefault();
 
-        if (!currentEditId) return alert('Không có ID để cập nhật!');
+        if (!currentEditId) {
+            alert('Không có ID để cập nhật!');
+            return;
+        }
 
-        const form = document.getElementById('editFlashSaleForm');
-        const name = form.querySelector('input[type="text"]').value.trim();
-        const discountPercent = form.querySelector('input[type="number"]').value.trim();
-        const timeInputs = form.querySelectorAll('input[type="datetime-local"]');
-        const startTime = timeInputs[0].value;
-        const endTime = timeInputs[1].value;
+        // Lấy dữ liệu
+        const name = document.getElementById('editFlashSaleName').value.trim();
+        const discountPercent = document.getElementById('editDiscountPercent').value.trim();
+        const startTime = document.getElementById('editStartTime').value;
+        const endTime = document.getElementById('editEndTime').value;
 
+        // Validate
         if (!name || !discountPercent || !startTime || !endTime) {
             alert('Vui lòng điền đầy đủ thông tin!');
             return;
@@ -451,12 +559,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const selectedComicIds = [];
-        editProductList.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-            const comicId = cb.getAttribute('data-comic-id');
-            if (comicId) selectedComicIds.push(comicId);
-        });
+        if (currentEditComics.length === 0) {
+            alert('Vui lòng chọn ít nhất một truyện!');
+            return;
+        }
 
+        // THAY ĐỔI: Lấy comic IDs từ mảng currentEditComics (không phải từ checkbox)
         const formData = new FormData();
         formData.append('action', 'update');
         formData.append('id', currentEditId);
@@ -464,13 +572,12 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('discountPercent', discountPercent);
         formData.append('startTime', startTime);
         formData.append('endTime', endTime);
-        selectedComicIds.forEach(id => formData.append('comicIds', id));
 
-        console.log('=== FormData gửi đi ===');
-        for (let [key, value] of formData.entries()) {
-            console.log(key + ': ' + value);
-        }
+        currentEditComics.forEach(comic => {
+            formData.append('comicIds', comic.id);
+        });
 
+        // Gửi request
         fetch(`${contextPath}/admin/manage-flashsale`, {
             method: 'POST',
             body: formData
@@ -486,11 +593,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(err => {
-                console.error('Lỗi update:', err);
+                console.error('Lỗi:', err);
                 alert('Lỗi kết nối server!');
             });
     });
+
+    // Đóng popup
+    closeEditBtn?.addEventListener('click', () => {
+        editModal.classList.remove('show');
+        currentEditId = null;
+        currentEditComics = [];
+    });
 });
+
 
 // Hàm chuyển đổi thời gian (GLOBAL - đặt ngoài để có thể gọi từ mọi nơi)
 function convertToISO(formattedTime) {

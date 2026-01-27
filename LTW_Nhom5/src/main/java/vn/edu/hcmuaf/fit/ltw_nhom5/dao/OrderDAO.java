@@ -386,7 +386,8 @@ public class OrderDAO extends ADao {
 
                 // Tính xu được cộng (1% tổng đơn hàng, làm tròn xuống)
                 // Ví dụ: đơn 150,000đ = 1 xu, 250,000đ = 2 xu
-                int earnedPoints = (int) (order.getTotalAmount() / 100000);
+                int earnedPoints = 200;
+//                int earnedPoints = (int) (order.getTotalAmount() / 100000);
 
                 if (earnedPoints > 0) {
                     // Cập nhật xu cho user

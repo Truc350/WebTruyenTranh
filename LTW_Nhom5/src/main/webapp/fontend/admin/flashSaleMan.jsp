@@ -160,56 +160,120 @@
 </div>
 
 <!-- POPUP SỬA -->
+
 <div class="modal-overlay" id="editFlashSaleModal">
     <div class="modal-flashsale">
         <h3>Chỉnh sửa Flash Sale</h3>
 
         <form id="editFlashSaleForm">
+            <!-- THÊM: Hidden field lưu ID -->
+            <input type="hidden" id="editFlashSaleId" name="id">
+
             <div class="form-row">
                 <div>
                     <label>Tên Flash Sale:</label>
-                    <input type="text" value="Flash Sale 10:00 - Mừng Noel">
+                    <!-- THÊM: ID để dễ dàng lấy giá trị -->
+                    <input type="text" id="editFlashSaleName" name="name" required>
                 </div>
                 <div>
                     <label>Phần trăm giảm:</label>
-                    <input type="number" name="discountPercent" min="1" max="90">
+                    <!-- THÊM: ID để dễ dàng lấy giá trị -->
+                    <input type="number" id="editDiscountPercent" name="discountPercent" min="1" max="90" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div>
                     <label>Giờ bắt đầu:</label>
-                    <input type="datetime-local" value="2024-12-24T10:00">
+                    <!-- THÊM: ID để dễ dàng lấy giá trị -->
+                    <input type="datetime-local" id="editStartTime" name="startTime" required>
                 </div>
-
                 <div>
                     <label>Giờ kết thúc:</label>
-                    <input type="datetime-local" value="2024-12-24T12:00">
+                    <!-- THÊM: ID để dễ dàng lấy giá trị -->
+                    <input type="datetime-local" id="editEndTime" name="endTime" required>
                 </div>
             </div>
 
+            <h4>Quản lý truyện áp dụng:</h4>
 
-            <h4>Sản phẩm đã áp dụng:</h4>
+            <!-- THÊM MỚI: TÌM KIẾM VÀ THÊM TRUYỆN (GIỐNG POPUP THÊM) -->
+            <div class="comic-search-container">
+                <input type="text" id="editComicSearchInput"
+                       placeholder="Tìm kiếm để thêm truyện mới vào Flash Sale"
+                       class="search-input" autocomplete="off">
 
-            <div class="product-select-list">
-                <label>
-                    <input type="checkbox" checked>
-                    Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama
-                </label>
+                <div id="editSearchResults" class="search-results">
+                    <!-- Kết quả tìm kiếm hiển thị ở đây -->
+                </div>
+            </div>
 
-                <label>
-                    <input type="checkbox" checked>
-                    One Piece – Tập 100 – Eiichiro Oda
-                </label>
+            <!-- THAY ĐỔI: Từ checkbox list → Danh sách có thể xóa -->
+            <div class="selected-comics-list" id="editSelectedProductList">
+                <p class="empty-message">Đang tải danh sách truyện...</p>
             </div>
 
             <div class="flashsale-buttons">
                 <button type="button" class="cancel-btn" id="closeEditFlashSale">Hủy</button>
-                <button type="submit" class="save-btn">Cập nhật</button>
+                <!-- THAY ĐỔI: Từ submit → button với ID mới -->
+                <button type="button" class="save-btn" id="updateFlashSaleBtn">Cập nhật</button>
             </div>
         </form>
     </div>
 </div>
+
+
+
+<%--<div class="modal-overlay" id="editFlashSaleModal">--%>
+<%--    <div class="modal-flashsale">--%>
+<%--        <h3>Chỉnh sửa Flash Sale</h3>--%>
+
+<%--        <form id="editFlashSaleForm">--%>
+<%--            <div class="form-row">--%>
+<%--                <div>--%>
+<%--                    <label>Tên Flash Sale:</label>--%>
+<%--                    <input type="text" value="Flash Sale 10:00 - Mừng Noel">--%>
+<%--                </div>--%>
+<%--                <div>--%>
+<%--                    <label>Phần trăm giảm:</label>--%>
+<%--                    <input type="number" name="discountPercent" min="1" max="90">--%>
+<%--                </div>--%>
+<%--            </div>--%>
+
+<%--            <div class="form-row">--%>
+<%--                <div>--%>
+<%--                    <label>Giờ bắt đầu:</label>--%>
+<%--                    <input type="datetime-local" value="2024-12-24T10:00">--%>
+<%--                </div>--%>
+
+<%--                <div>--%>
+<%--                    <label>Giờ kết thúc:</label>--%>
+<%--                    <input type="datetime-local" value="2024-12-24T12:00">--%>
+<%--                </div>--%>
+<%--            </div>--%>
+
+
+<%--            <h4>Sản phẩm đã áp dụng:</h4>--%>
+
+<%--            <div class="product-select-list">--%>
+<%--                <label>--%>
+<%--                    <input type="checkbox" checked>--%>
+<%--                    Thám tử lừng danh Conan – Tập 12 – Gosho Aoyama--%>
+<%--                </label>--%>
+
+<%--                <label>--%>
+<%--                    <input type="checkbox" checked>--%>
+<%--                    One Piece – Tập 100 – Eiichiro Oda--%>
+<%--                </label>--%>
+<%--            </div>--%>
+
+<%--            <div class="flashsale-buttons">--%>
+<%--                <button type="button" class="cancel-btn" id="closeEditFlashSale">Hủy</button>--%>
+<%--                <button type="submit" class="save-btn">Cập nhật</button>--%>
+<%--            </div>--%>
+<%--        </form>--%>
+<%--    </div>--%>
+<%--</div>--%>
 
 <!-- POPUP XEM CHI TIẾT FLASH SALE -->
 <div class="modal-overlay" id="viewFlashSaleModal">
