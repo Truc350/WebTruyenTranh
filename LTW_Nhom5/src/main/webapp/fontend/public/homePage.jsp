@@ -93,19 +93,19 @@
             </a>
 
 
-            <a href="getVourcher.jsp">
-                <div class="icon-item">
-                    <i class="fa-solid fa-money-bill"></i>
-                    <p>Săn voucher</p>
-                </div>
-            </a>
+<%--            <a href="getVourcher.jsp">--%>
+            <%--                <div class="icon-item">--%>
+            <%--                    <i class="fa-solid fa-money-bill"></i>--%>
+            <%--                    <p>Săn voucher</p>--%>
+            <%--                </div>--%>
+            <%--            </a>--%>
 
-            <a href="../nguoiB/profile.jsp">
-                <div class="icon-item">
-                    <i class="fa-solid fa-wallet"></i>
-                    <p>Ví Voucher</p>
-                </div>
-            </a>
+<%--            <a href="../nguoiB/profile.jsp">--%>
+<%--                <div class="icon-item">--%>
+<%--                    <i class="fa-solid fa-wallet"></i>--%>
+<%--                    <p>Ví Voucher</p>--%>
+<%--                </div>--%>
+<%--            </a>--%>
             <a href="../nguoiB/profile.jsp">
                 <div class="icon-item">
                     <i class="fa-solid fa-list"></i>
