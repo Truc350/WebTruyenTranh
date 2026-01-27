@@ -11,21 +11,21 @@
 
         <ul>
             <li>
-                <a href="${pageContext.request.contextPath}/admin/dashboard">
+                <a href="${pageContext.request.contextPath}/fontend/admin/dashboard.jsp">
                     <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
                     <span>Trang chủ</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/SeriesManagement">
+                <a href="${pageContext.request.contextPath}/fontend/admin/productManagement.jsp">
                     <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
-                    <span>Quản lý series</span>
+                    <span>Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/ProductManagement">
+                <a href="${pageContext.request.contextPath}/SeriesManagement?filter=all">
                     <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
-                    <span>Quản lý sản phẩm</span>
+                    <span>Quản lý series</span>
                 </a>
             </li>
             <li>
@@ -41,20 +41,20 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/UserManagement">
+                <a href="${pageContext.request.contextPath}/admin/user-management">
                     <img src="${pageContext.request.contextPath}/img/user.png" class="icon">
                     <span>Quản lý người dùng</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/FlashSaleManagement">
+                <a href="${pageContext.request.contextPath}/admin/manage-flashsale">
                     <img src="${pageContext.request.contextPath}/img/flashSale.png" class="icon">
                     <span>Quản lý Flash Sale</span>
                 </a>
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/ReportManagement">
+                <a href="${pageContext.request.contextPath}/fontend/admin/report.jsp">
                     <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
                     <span>Thống kê</span>
                 </a>

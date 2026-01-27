@@ -58,7 +58,7 @@ public class UpdateComicServlet extends HttpServlet {
             System.out.println("📖 Updating comic ID: " + comicId);
 
             // 2. Kiểm tra truyện có tồn tại không
-            Comic existingComic = comicDAO.getComicById2(comicId);
+            Comic existingComic = comicDAO.getComicById3(comicId);
             if (existingComic == null) {
                 result.put("success", false);
                 result.put("message", "Không tìm thấy truyện");
