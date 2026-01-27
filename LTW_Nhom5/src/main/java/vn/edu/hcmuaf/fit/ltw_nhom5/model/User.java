@@ -177,12 +177,16 @@ public class User implements Serializable {
         this.membershipLevel = membershipLevel;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {  // ✅ Thêm "get" prefix
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        this.isActive = active;  // Đã sửa đúng
+    public void setIsActive(boolean isActive) {  // ✅ Đổi tên parameter
+        this.isActive = isActive;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     public boolean isDeleted() {
