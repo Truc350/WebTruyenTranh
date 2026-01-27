@@ -279,4 +279,35 @@ public class StatisticsDAO {
                         .list()
         );
     }
+    /**
+     * lay top 10 san pham co danh gia cao nhat
+     */
+    /**
+     * Lấy top 10 sản phẩm có đánh giá cao nhất
+     * @param limit Số lượng sản phẩm cần lấy
+     * @return Danh sách sản phẩm có rating cao nhất
+     */
+    public List<Map<String, Object>> getTopRatedComics(int limit) {
+        String sql = """
+            SELECT 
+                c.id,
+                c.name_comics,
+                COALESCE(AVG(r.rating), 0) as average_rating,
+                COUNT(r.id) as total_reviews
+            FROM comics c
+            INNER JOIN reviews r ON c.id = r.comic_id
+            WHERE c.is_deleted = 0 AND c.is_hidden = 0
+            GROUP BY c.id, c.name_comics
+            HAVING COUNT(r.id) >= 1
+            ORDER BY average_rating DESC, total_reviews DESC
+            LIMIT :limit
+        """;
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", limit)
+                        .mapToMap()
+                        .list()
+        );
+    }
 }
