@@ -66,7 +66,7 @@
                     <th>Tác giả</th>
                     <th>Giá</th>
                     <th>Còn trong kho</th>
-                    <th>Đánh giá</th>
+<%--                    <th>Đánh giá</th>--%>
                     <th></th>
                 </tr>
                 </thead>
@@ -469,9 +469,9 @@
                 '<td>' + formatPrice(comic.price) + ' đ</td>' +
                 '<td>' + comic.stockQuantity + ' quyển</td>' +
                 '<td class="review-cell">' +
-                '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
-                '<i class="fa-solid fa-eye"></i>' +
-                '</button>' +
+                // '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
+                // '<i class="fa-solid fa-eye"></i>' +
+                // '</button>' +
                 '</td>' +
                 '<td class="action-cell">' +
                 '<button class="edit-btn" data-comic-id="' + comic.id + '" title="Chỉnh sửa">' +
