@@ -1,10 +1,13 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 import java.time.LocalDateTime;
 
 public class OrderReturnImage {
     private int id;
     private int orderReturnId;
+    @ColumnName("url_img")
     private String urlImg;
     private LocalDateTime createdAt;
 
