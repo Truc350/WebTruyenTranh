@@ -348,8 +348,15 @@
                                     <td>${returnOrder.customer_name}</td>
 
                                         <%-- Lý do hoàn trả --%>
-                                    <td class="reason-cell" title="${returnOrder.reason}">
-                                            ${returnOrder.reason}
+                                    <td class="reason-cell">
+                                        <c:choose>
+                                            <c:when test="${fn:contains(returnOrder.reason, 'Lý do từ chối:')}">
+                                                ${fn:substringBefore(returnOrder.reason, ' | ')}
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${returnOrder.reason}
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
 
                                         <%-- Số tiền hoàn --%>
@@ -370,7 +377,7 @@
                                                 data-customer="${returnOrder.customer_name}"
                                                 data-product="${returnOrder.product_name}"
                                                 data-quantity="${returnOrder.quantity}"
-                                                data-reason="${fn:escapeXml(returnOrder.reason)}"
+<%--                                                data-reason="${fn:escapeXml(returnOrder.reason)}"--%>
                                                 data-amount="${returnOrder.formatted_refund_amount}"
                                                 data-date="${returnOrder.formatted_return_date}">
                                             Xem
@@ -397,7 +404,9 @@
                                             </c:when>
                                             <%-- Nếu đã xử lý, không hiển thị nút --%>
                                             <c:otherwise>
-                                                <span style="color: #999;">-</span>
+                                                <div class="action-buttons">
+                                                    <span style="color: #999;">-</span>
+                                                </div>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -484,6 +493,15 @@
                     <span class="label">Lý do hoàn:</span>
                     <span class="value" id="detailReason">-</span>
                 </div>
+
+                <div class="popup-row" id="rejectReasonRow" style="display:none;">
+                    <span class="label">Lý do từ chối:</span>
+                    <span class="value" id="detailRejectReason"
+                          style="color:#dc2626; font-weight:500;">
+        -
+    </span>
+                </div>
+
 
                 <div class="popup-row">
                     <span class="label">Minh chứng:</span>
@@ -1050,6 +1068,29 @@
                         document.getElementById('detailAmount').textContent = returnDetail.formatted_refund_amount || '-';
                         document.getElementById('detailDate').textContent = returnDetail.formatted_return_date || '-';
 
+                        // Lý do từ chối: CHỈ HIỆN KHI BỊ REJECT
+                        const rejectRow = document.getElementById('rejectReasonRow');
+                        const rejectReasonEl = document.getElementById('detailRejectReason');
+
+                        rejectRow.style.display = 'none';
+                        rejectReasonEl.textContent = '';
+
+                        if (returnDetail.return_status === 'Rejected'
+                            && returnDetail.reason
+                            && returnDetail.reason.includes('Lý do từ chối:')) {
+
+                            const parts = returnDetail.reason.split('Lý do từ chối:');
+                            if (parts.length > 1) {
+                                rejectReasonEl.textContent = parts[1].trim();
+                                rejectRow.style.display = 'flex';
+                            }
+                        } else {
+                            // ẨN HOÀN TOÀN với Pending / Approved
+                            rejectRow.style.display = 'none';
+                            rejectReasonEl.textContent = '';
+                        }
+
+
                         // ✅ HIỂN THỊ ẢNH MINH CHỨNG VỚI LINK ĐÚNG
                         const proofContainer = document.getElementById('detailProofImages');
                         proofContainer.innerHTML = ''; // Xóa nội dung cũ
@@ -1058,42 +1099,40 @@
                             console.log('📸 Found ' + returnDetail.proof_images.length + ' proof images');
 
                             returnDetail.proof_images.forEach((image, index) => {
-                                // ✅ DEBUG: IN RA TẤT CẢ THÔNG TIN
-                                console.log('═══════════════════════════════════════');
-                                console.log('🖼️ IMAGE ' + (index + 1) + ' DEBUG INFO:');
-                                console.log('═══════════════════════════════════════');
-                                console.log('1️⃣ Original urlImg from DB:', image.urlImg);
-                                console.log('2️⃣ Image object:', JSON.stringify(image, null, 2));
-                                console.log('3️⃣ BASE_URL:', BASE_URL);
+                                console.log('Image ' + (index + 1) + ':', image);
 
                                 // ✅ XỬ LÝ LINK ẢNH
                                 let imageUrl = image.urlImg;
 
-                                // ✅ KIỂM TRA VÀ LOG TỪNG BƯỚC
-                                console.log('4️⃣ Starts with http?', imageUrl.startsWith('http'));
-                                console.log('5️⃣ Starts with BASE_URL?', imageUrl.startsWith(BASE_URL));
-
+                                // Nếu URL chưa có BASE_URL hoặc http
                                 if (!imageUrl.startsWith('http') && !imageUrl.startsWith(BASE_URL)) {
-                                    console.log('6️⃣ Need to add BASE_URL');
-
                                     if (!imageUrl.startsWith('/')) {
-                                        console.log('7️⃣ Adding leading slash');
                                         imageUrl = '/' + imageUrl;
                                     }
                                     imageUrl = BASE_URL + imageUrl;
                                 }
 
-                                console.log('8️⃣ FINAL URL:', imageUrl);
-                                console.log('═══════════════════════════════════════\n');
+                                console.log('Final URL:', imageUrl);
 
                                 const imgWrapper = document.createElement('div');
                                 imgWrapper.className = 'proof-image-item';
-                                imgWrapper.innerHTML = `
-        <img src="${imageUrl}"
-             alt="Minh chứng ${index + 1}"
-             onerror="handleImageError(this)"
-             onclick="openImageViewer('${imageUrl}')">
-    `;
+
+                                const img = document.createElement('img');
+                                img.src = imageUrl;
+                                img.alt = 'Minh chứng ' + (index + 1);
+                                img.onerror = function () {
+                                    console.error('Failed to load:', this.src);
+                                    this.parentElement.innerHTML =
+                                        '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; color: #9ca3af;">' +
+                                        '<i class="fas fa-image" style="font-size: 48px; margin-bottom: 8px;"></i>' +
+                                        '<span>Không thể tải ảnh</span>' +
+                                        '</div>';
+                                };
+                                img.onclick = function () {
+                                    openImageViewer(imageUrl);
+                                };
+
+                                imgWrapper.appendChild(img);
                                 proofContainer.appendChild(imgWrapper);
                             });
                         } else {
@@ -1126,35 +1165,114 @@
     };
 
     // ✅ HÀM MỞ ẢNH TO
+    // ✅ HÀM MỞ ẢNH TO - FIX LỖI LOAD ẢNH
     window.openImageViewer = function (imageUrl) {
         console.log('🔍 Opening image viewer for:', imageUrl);
 
+        // ✅ TẠO OVERLAY
         const viewer = document.createElement('div');
         viewer.className = 'image-viewer-overlay';
-        viewer.innerHTML = `
-        <div class="image-viewer-content">
-            <span class="close-viewer" onclick="this.parentElement.parentElement.remove()">&times;</span>
-            <img src="${imageUrl}"
-                 alt="Ảnh minh chứng"
-                 onerror="alert('Không thể tải ảnh này')">
-        </div>
+        viewer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     `;
+
+        // ✅ TẠO CONTENT WRAPPER
+        const content = document.createElement('div');
+        content.className = 'image-viewer-content';
+        content.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    `;
+
+        // ✅ TẠO NÚT ĐÓNG
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close-viewer';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.cssText = `
+        position: absolute;
+        top: -40px;
+        right: 0;
+        font-size: 40px;
+        color: white;
+        cursor: pointer;
+        font-weight: 300;
+        z-index: 10001;
+    `;
+        closeBtn.onclick = function () {
+            viewer.remove();
+        };
+        closeBtn.onmouseover = function () {
+            this.style.color = '#ff4444';
+        };
+        closeBtn.onmouseout = function () {
+            this.style.color = 'white';
+        };
+
+        // ✅ TẠO IMG ELEMENT
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Ảnh minh chứng';
+        img.style.cssText = `
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        display: block;
+    `;
+
+        // ✅ XỬ LÝ KHI LOAD ẢNH THÀNH CÔNG
+        img.onload = function () {
+            console.log('✅ Image viewer loaded successfully');
+        };
+
+        // ✅ XỬ LÝ KHI LOAD ẢNH BỊ LỖI
+        img.onerror = function () {
+            console.error('❌ Failed to load image in viewer:', imageUrl);
+
+            // Hiển thị thông báo lỗi thay vì alert
+            content.innerHTML = `
+            <div style="text-align: center; color: white; padding: 40px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 64px; margin-bottom: 20px; color: #ff4444;"></i>
+                <h3 style="margin-bottom: 10px;">Không thể tải ảnh này</h3>
+                <p style="color: #ccc; font-size: 14px; word-break: break-all; max-width: 600px;">${imageUrl}</p>
+                <button onclick="this.closest('.image-viewer-overlay').remove()"
+                        style="margin-top: 20px; padding: 10px 20px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Đóng
+                </button>
+            </div>
+        `;
+        };
+
+        // ✅ GHÉP CÁC PHẦN TỬ LẠI
+        content.appendChild(closeBtn);
+        content.appendChild(img);
+        viewer.appendChild(content);
         document.body.appendChild(viewer);
 
-        // Click outside để đóng
+        // ✅ CLICK OUTSIDE ĐỂ ĐÓNG
         viewer.addEventListener('click', function (e) {
             if (e.target === viewer) {
                 viewer.remove();
             }
         });
 
-        // ESC để đóng
-        document.addEventListener('keydown', function closeOnEsc(e) {
-            if (e.key === 'Escape' && viewer.parentElement) {
+        // ✅ ESC ĐỂ ĐÓNG
+        const closeOnEsc = function (e) {
+            if (e.key === 'Escape' && document.body.contains(viewer)) {
                 viewer.remove();
                 document.removeEventListener('keydown', closeOnEsc);
             }
-        });
+        };
+        document.addEventListener('keydown', closeOnEsc);
     };
 
     // ✅ ĐÓNG POPUP CHI TIẾT
@@ -1235,10 +1353,20 @@
 
             const isPending = returnOrder.return_status === 'Pending';
 
-            // ✅ MÃ ĐƠN HÀNG - CHỈ HIỂN THỊ SỐ
+            // MÃ ĐƠN HÀNG
             let html = '<td>' + returnOrder.order_code + '</td>';
             html += '<td>' + returnOrder.customer_name + '</td>';
-            html += '<td class="reason-cell" title="' + returnOrder.reason + '">' + returnOrder.reason + '</td>';
+            // html += '<td class="reason-cell" title="' + returnOrder.reason + '">' + returnOrder.reason + '</td>';
+            let displayReason = returnOrder.reason || '';
+
+            if (displayReason.includes('Lý do từ chối:')) {
+                displayReason = displayReason.split(' | ')[0];
+            }
+
+            html += '<td class="reason-cell" title="' + displayReason + '">'
+                + displayReason +
+                '</td>';
+
             html += '<td class="amount-cell">' + returnOrder.formatted_refund_amount + '</td>';
             html += '<td><span class="status ' + returnOrder.status_class + '">' + returnOrder.status_display + '</span></td>';
 

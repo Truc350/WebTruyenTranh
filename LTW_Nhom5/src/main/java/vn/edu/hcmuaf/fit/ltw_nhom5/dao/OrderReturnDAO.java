@@ -230,13 +230,17 @@ public class OrderReturnDAO {
      * Từ chối yêu cầu hoàn tiền với lý do
      */
     public boolean rejectRefund(int returnId, String rejectReason) {
-        String sql = "UPDATE order_returns SET status = ?, reason = CONCAT(reason, ' | Lý do từ chối: ', ?) WHERE id = ?";
+        String sql = """
+        UPDATE order_returns 
+        SET status = 'Rejected',
+            reject_reason = ?
+        WHERE id = ?
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createUpdate(sql)
-                        .bind(0, "Rejected")
-                        .bind(1, rejectReason)
-                        .bind(2, returnId)
+                        .bind(0, rejectReason)
+                        .bind(1, returnId)
                         .execute() > 0
         );
     }
