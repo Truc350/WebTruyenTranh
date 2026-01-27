@@ -114,16 +114,29 @@
 
     // ========== FORMAT SỐ ==========
     function formatCurrency(value) {
-        return new Intl.NumberFormat('vi-VN').format(Math.round(value)) + 'đ';
+        // Xử lý các trường hợp null, undefined, NaN
+        if (value === null || value === undefined || isNaN(value)) {
+            return '0đ';
+        }
+        const numValue = Number(value);
+        if (numValue === 0) return '0đ';
+
+        return new Intl.NumberFormat('vi-VN').format(Math.round(numValue)) + 'đ';
     }
 
     function formatNumber(value) {
-        return new Intl.NumberFormat('vi-VN').format(value);
-    }
+        // Xử lý các trường hợp null, undefined, NaN
+        if (value === null || value === undefined || isNaN(value)) {
+            return '0';
+        }
+        const numValue = Number(value);
+        if (numValue === 0) return '0';
 
+        return new Intl.NumberFormat('vi-VN').format(numValue);
+    }
     // ========== TẢI DỮ LIỆU AJAX ==========
     function loadReportData(filter, startDate, endDate) {
-        const params = new URLSearchParams({ filter: filter });
+        const params = new URLSearchParams({filter: filter});
 
         if (filter === 'custom' && startDate && endDate) {
             params.append('startDate', startDate);
@@ -147,10 +160,28 @@
 
     // ========== CẬP NHẬT KPI ==========
     function updateKPICards(kpi) {
-        document.getElementById('kpi-revenue').textContent = formatCurrency(kpi.revenue);
-        document.getElementById('kpi-orders').textContent = formatNumber(kpi.totalOrders) + ' đơn';
-        document.getElementById('kpi-avg').textContent = formatCurrency(kpi.avgOrderValue);
-        document.getElementById('kpi-best').textContent = kpi.bestProduct || 'Chưa có dữ liệu';
+        console.log('📈 Updating KPI cards:', kpi);
+
+        const revenueEl = document.getElementById('kpi-revenue');
+        const ordersEl = document.getElementById('kpi-orders');
+        const avgEl = document.getElementById('kpi-avg');
+        const bestEl = document.getElementById('kpi-best');
+
+        if (revenueEl) {
+            revenueEl.textContent = formatCurrency(kpi.revenue || 0);
+        }
+
+        if (ordersEl) {
+            ordersEl.textContent = formatNumber(kpi.totalOrders || 0) + ' đơn';
+        }
+
+        if (avgEl) {
+            avgEl.textContent = formatCurrency(kpi.avgOrderValue || 0);
+        }
+
+        if (bestEl) {
+            bestEl.textContent = kpi.bestProduct || 'Chưa có dữ liệu';
+        }
     }
 
     // ========== CẬP NHẬT TOP 3 SẢN PHẨM ==========
@@ -200,17 +231,17 @@
                     legend: {
                         display: true,
                         position: 'bottom',
-                        labels: { font: { size: 12 }, padding: 15, usePointStyle: true }
+                        labels: {font: {size: 12}, padding: 15, usePointStyle: true}
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 return context.label + ': ' + formatNumber(context.parsed) + ' cuốn';
                             }
                         }
                     }
                 },
-                animation: { duration: 1000, easing: 'easeOutQuart' }
+                animation: {duration: 1000, easing: 'easeOutQuart'}
             }
         });
     }
@@ -227,7 +258,7 @@
 
         let chartData, label, title;
 
-        switch(type) {
+        switch (type) {
             case 'revenue':
                 chartData = reportData.chartData.revenue;
                 label = 'Doanh thu';
@@ -266,11 +297,11 @@
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false },
+                    legend: {display: false},
                     tooltip: {
                         enabled: true,
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 let value = context.parsed.y;
                                 if (type === 'orders') {
                                     return label + ': ' + formatNumber(value) + ' đơn';
@@ -281,12 +312,12 @@
                         }
                     }
                 },
-                animation: { duration: 1000, easing: 'easeOutQuart' },
+                animation: {duration: 1000, easing: 'easeOutQuart'},
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 if (type === 'orders') {
                                     return formatNumber(value);
                                 } else {
@@ -302,7 +333,7 @@
 
     // ========== CLICK KPI CARD ĐỂ CHUYỂN BIỂU ĐỒ ==========
     document.querySelectorAll('.kpi-card[data-chart]').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const chartType = this.getAttribute('data-chart');
             updateChart(chartType);
 
@@ -320,7 +351,7 @@
     const endDateInput = document.getElementById('endDate');
 
     timeButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             timeButtons.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
 
@@ -337,20 +368,20 @@
         });
     });
 
-    startDateInput.addEventListener('change', function() {
+    startDateInput.addEventListener('change', function () {
         if (endDateInput.value) {
             loadReportData('custom', this.value, endDateInput.value);
         }
     });
 
-    endDateInput.addEventListener('change', function() {
+    endDateInput.addEventListener('change', function () {
         if (startDateInput.value) {
             loadReportData('custom', startDateInput.value, this.value);
         }
     });
 
     // ========== KHỞI TẠO ==========
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         loadReportData('today');
 
         const current = window.location.pathname.split("/").pop();

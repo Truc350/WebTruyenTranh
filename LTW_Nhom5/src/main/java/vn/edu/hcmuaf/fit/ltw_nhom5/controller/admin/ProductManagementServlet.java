@@ -20,7 +20,7 @@ import java.util.Map;
  * Đảm bảo JSP luôn được load qua Servlet thay vì truy cập trực tiếp
  */
 //@WebServlet(name = "ProductManagement", urlPatterns = {"/ProductManagement", "/admin/products/manage"})
-@WebServlet("/ProductManagement")
+@WebServlet("/admin/ProductManagement")
 public class ProductManagementServlet extends HttpServlet {
 
     private ComicDAO comicDAO;
