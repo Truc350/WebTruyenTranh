@@ -252,25 +252,43 @@
                     <tbody id="deliveredTableBody">
                     <c:forEach items="${ordersByStatus['Completed']}" var="order">
                         <tr>
-                            <td>${order.orderCode}</td>
+                            <td>${order.id}</td>
                             <td>${order.userName}</td>
                             <td><fmt:formatDate value="${order.orderDate}" pattern="dd/MM/yyyy"/></td>
                             <td>${order.formattedAmount}</td>
                             <td>${order.paymentMethodDisplay}</td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${not empty order.transactionId}">
+                                    <c:when test="${not empty order.transaction_id}">
                                         ${order.transactionId}
                                     </c:when>
                                     <c:otherwise>-</c:otherwise>
                                 </c:choose>
                             </td>
                             <td class="stars">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-regular fa-star-half-stroke"></i>
+                                <c:choose>
+                                    <c:when test="${order.hasReview}">
+                                        <!-- Hiển thị sao đầy -->
+                                        <c:forEach begin="1" end="${order.fullStars}">
+                                            <i class="fa-solid fa-star"></i>
+                                        </c:forEach>
+
+                                        <!-- Hiển thị sao nửa (nếu có) -->
+                                        <c:if test="${order.hasHalfStar}">
+                                            <i class="fa-solid fa-star-half-stroke"></i>
+                                        </c:if>
+
+                                        <!-- Hiển thị sao rỗng -->
+                                        <c:forEach begin="1" end="${order.emptyStars}">
+                                            <i class="fa-regular fa-star"></i>
+                                        </c:forEach>
+
+                                        <span class="rating-text">(${order.formattedRating})</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="no-rating">-</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                     </c:forEach>
@@ -310,6 +328,7 @@
                         <th>Mã đơn hàng</th>
                         <th>Khách hàng</th>
                         <th>Lý do hoàn trả</th>
+                        <th>Số tiền hoàn</th>
                         <th>Tình trạng xử lý</th>
                         <th>Chi tiết</th>
                         <th></th>
@@ -317,74 +336,99 @@
                     </thead>
 
                     <tbody id="returnTableBody">
+                    <c:choose>
+                        <c:when test="${not empty ordersByStatus['Returns']}">
+                            <c:forEach items="${ordersByStatus['Returns']}" var="returnOrder">
+                                <tr data-status="${returnOrder.return_status}"
+                                    data-return-id="${returnOrder.return_id}">
+                                        <%-- Mã đơn hàng - CHỈ HIỂN THỊ SỐ --%>
+                                    <td>${returnOrder.order_code}</td>
 
-                    <!-- Ví dụ đơn đang xem xét -->
-                    <tr data-status="pending">
-                        <td>DH00210</td>
-                        <td>Phạm Ngọc Mai</td>
-                        <td>Bìa truyện bị rách</td>
+                                        <%-- Khách hàng --%>
+                                    <td>${returnOrder.customer_name}</td>
 
-                        <!-- Trạng thái -->
-                        <td>
-                            <span class="status yellow">Đang xem xét</span>
-                        </td>
+                                        <%-- Lý do hoàn trả --%>
+                                    <td class="reason-cell">
+                                        <c:choose>
+                                            <c:when test="${fn:contains(returnOrder.reason, 'Lý do từ chối:')}">
+                                                ${fn:substringBefore(returnOrder.reason, ' | ')}
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${returnOrder.reason}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
 
-                        <!-- Nút Xem chi tiết -->
-                        <td>
-                            <button class="btn-detail">Xem</button>
-                        </td>
+                                        <%-- Số tiền hoàn --%>
+                                    <td class="amount-cell">${returnOrder.formatted_refund_amount}</td>
 
-                        <!-- Nút Xác nhận hoàn tiền -->
-                        <td class="action-buttons">
-                            <button class="btn-refund" onclick="confirmRefund(this)">Xác nhận hoàn tiền</button>
-                            <button class="btn-reject" onclick="openRejectPopup(this)">Từ chối</button>
-                        </td>
-                    </tr>
+                                        <%-- Tình trạng xử lý --%>
+                                    <td>
+                    <span class="status ${returnOrder.status_class}">
+                            ${returnOrder.status_display}
+                    </span>
+                                    </td>
 
-                    <!-- Ví dụ đơn đã hoàn -->
-                    <tr>
-                        <td>DH00211</td>
-                        <td>Nguyễn Quang Hải</td>
-                        <td>Giao nhầm sản phẩm</td>
+                                        <%-- Nút Xem chi tiết --%>
+                                    <td>
+                                        <button class="btn-detail"
+                                                data-return-id="${returnOrder.return_id}"
+                                                data-order-code="${returnOrder.order_code}"
+                                                data-customer="${returnOrder.customer_name}"
+                                                data-product="${returnOrder.product_name}"
+                                                data-quantity="${returnOrder.quantity}"
+<%--                                                data-reason="${fn:escapeXml(returnOrder.reason)}"--%>
+                                                data-amount="${returnOrder.formatted_refund_amount}"
+                                                data-date="${returnOrder.formatted_return_date}">
+                                            Xem
+                                        </button>
+                                    </td>
 
-                        <td>
-                            <span class="status green">Đã hoàn tiền</span>
-                        </td>
+                                        <%-- Nút hành động - HIỂN THỊ ĐÚNG THEO STATUS --%>
+                                    <td class="action-buttons">
+                                        <c:choose>
+                                            <%-- Nếu đang chờ xem xét (Pending), hiển thị nút xác nhận/từ chối --%>
+                                            <c:when test="${returnOrder.return_status eq 'Pending'}">
+                                                <button class="btn-refund"
+                                                        data-return-id="${returnOrder.return_id}"
+                                                        onclick="confirmRefund(this)">
+                                                    Xác nhận hoàn tiền
+                                                </button>
+                                                <button class="btn-reject"
+                                                        data-return-id="${returnOrder.return_id}"
+                                                        data-order-code="${returnOrder.order_code}"
+                                                        data-customer="${returnOrder.customer_name}"
+                                                        onclick="openRejectPopup(this)">
+                                                    Từ chối
+                                                </button>
+                                            </c:when>
+                                            <%-- Nếu đã xử lý, không hiển thị nút --%>
+                                            <c:otherwise>
+                                                <div class="action-buttons">
+                                                    <span style="color: #999;">-</span>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr class="no-result-message">
+                                <td colspan="7" style="text-align: center; padding: 30px; color: #999;">
+                                    <i class="fas fa-inbox"
+                                       style="font-size: 48px; margin-bottom: 10px; display: block;"></i>
+                                    Chưa có yêu cầu hoàn trả nào
+                                </td>
+                            </tr>
+                        </c:otherwise>
+                    </c:choose>
 
-                        <td>
-                            <button class="btn-detail">Xem</button>
-                        </td>
-
-                        <td>
-                            <!-- Nút không xuất hiện -->
-                        </td>
-                    </tr>
-
-                    <!-- Ví dụ đơn từ chối -->
-                    <tr>
-                        <td>DH00212</td>
-                        <td>Nguyễn Văn Lý</td>
-                        <td>Không thích nữa</td>
-
-                        <td>
-                            <span class="status red">Đã từ chối: Không đủ điều kiện</span>
-                        </td>
-
-                        <td>
-                            <button class="btn-detail">Xem</button>
-                        </td>
-
-                        <td>
-                            <!-- Nút không xuất hiện -->
-                        </td>
-                    </tr>
 
                     <!-- Phân trang -->
                     <tr class="pagination-row-return">
-                        <td colspan="10">
-                            <div class="pagination" id="returnPagination">
-
-                            </div>
+                        <td colspan="7">
+                            <div class="pagination" id="returnPagination"></div>
                         </td>
                     </tr>
 
@@ -402,60 +446,83 @@
                     <p><strong>Mã đơn:</strong> <span id="rejectOrderId"></span></p>
                     <p><strong>Khách hàng:</strong> <span id="rejectCustomer"></span></p>
 
-                    <label>Lý do từ chối <span>*</span></label>
+                    <label>Lý do từ chối <span style="color: red;">*</span></label>
                     <textarea id="rejectReason"
-                              placeholder="Nhập lý do chi tiết để gửi thông báo cho khách hàng..."></textarea>
+                              placeholder="Nhập lý do chi tiết để gửi thông báo cho khách hàng..."
+                              rows="4"></textarea>
                 </div>
 
                 <div class="popup-desk-actions">
                     <button type="button" class="btn-cancel"
-                            onclick="document.getElementById('rejectPopup').style.display='none'">Hủy
+                            onclick="closeRejectPopup()">Hủy
                     </button>
                     <button type="button" class="btn-save" onclick="confirmReject()">Xác nhận từ chối</button>
                 </div>
             </div>
         </div>
 
-        <div class="return-popup" id="returnPopup">
+        <!-- POPUP CHI TIẾT ĐƠN HOÀN -->
+        <div class="return-popup" id="returnPopup" style="display:none;">
             <div class="popup-header">
                 <h3>Chi tiết đơn hoàn</h3>
-                <span class="popup-close-btn" id="closePopup">×</span>
+                <span class="popup-close-btn" id="closePopup" onclick="closeReturnPopup()">&times;</span>
             </div>
 
             <div class="popup-content">
                 <div class="popup-row">
+                    <span class="label">Mã đơn hàng:</span>
+                    <span class="value" id="detailOrderCode">-</span>
+                </div>
+
+                <div class="popup-row">
+                    <span class="label">Khách hàng:</span>
+                    <span class="value" id="detailCustomer">-</span>
+                </div>
+
+                <div class="popup-row">
                     <span class="label">Sản phẩm:</span>
-                    <span class="value">Thám tử lừng danh Conan tập 156</span>
+                    <span class="value" id="detailProduct">-</span>
                 </div>
 
                 <div class="popup-row">
                     <span class="label">Số lượng:</span>
-                    <span class="value">1</span>
+                    <span class="value" id="detailQuantity">-</span>
                 </div>
 
                 <div class="popup-row">
                     <span class="label">Lý do hoàn:</span>
-                    <span class="value">Sách bị rách</span>
+                    <span class="value" id="detailReason">-</span>
                 </div>
+
+                <div class="popup-row" id="rejectReasonRow" style="display:none;">
+                    <span class="label">Lý do từ chối:</span>
+                    <span class="value" id="detailRejectReason"
+                          style="color:#dc2626; font-weight:500;">
+        -
+    </span>
+                </div>
+
 
                 <div class="popup-row">
                     <span class="label">Minh chứng:</span>
-                    <span class="value"><a href="#" class="proof-link">Xem ảnh / video</a></span>
+                    <div class="value proof-images-container" id="detailProofImages">
+                        <span style="color: #999;">Đang tải...</span>
+                    </div>
                 </div>
 
                 <div class="popup-row">
                     <span class="label">Số tiền hoàn:</span>
-                    <span class="value">24.500đ</span>
+                    <span class="value" id="detailAmount">-</span>
                 </div>
 
                 <div class="popup-row">
                     <span class="label">Ngày yêu cầu hoàn trả:</span>
-                    <span class="value">7/11/2025</span>
+                    <span class="value" id="detailDate">-</span>
                 </div>
             </div>
 
             <div class="popup-footer">
-                <button class="popup-close" id="closePopupBtn">Đóng</button>
+                <button class="popup-close" onclick="closeReturnPopup()">Đóng</button>
             </div>
         </div>
 
@@ -623,80 +690,6 @@
         // Hiển thị tab (không lưu lại để tránh loop)
         showTab(tabToShow, false);
     });
-</script>
-
-<!--TRA TIEN/ HOAN TIEN-->
-<script>
-
-    /* --- POPUP CHI TIẾT --- */
-    document.addEventListener("click", e => {
-        if (e.target.classList.contains("btn-detail")) {
-            document.getElementById("returnPopup").style.display = "block";
-        }
-    });
-    document.getElementById("closePopup").onclick = () => {
-        document.getElementById("returnPopup").style.display = "none";
-    };
-
-    document.getElementById("closePopupBtn").onclick = () => {
-        document.getElementById("returnPopup").style.display = "none";
-    };
-
-
-    /* --- XÁC NHẬN HOÀN TIỀN --- */
-    document.addEventListener("click", e => {
-        if (e.target.classList.contains("btn-refund")) {
-            const row = e.target.closest("tr");
-            if (confirm("Xác nhận hoàn tiền cho đơn này?")) {
-                row.querySelector(".status").textContent = "Đã hoàn tiền";
-                row.querySelector(".status").classList.remove("yellow");
-                row.querySelector(".status").classList.add("green");
-                e.target.remove();
-            }
-        }
-    });
-
-    let currentRejectRow = null;
-
-    window.openRejectPopup = function (btn) {
-        currentRejectRow = btn.closest('tr');
-        const orderId = currentRejectRow.cells[0].textContent;
-        const customer = currentRejectRow.cells[1].textContent;
-
-        document.getElementById('rejectOrderId').textContent = orderId;
-        document.getElementById('rejectCustomer').textContent = customer;
-        document.getElementById('rejectReason').value = '';
-
-        document.getElementById('rejectPopup').style.display = 'flex';
-    };
-
-    window.confirmReject = function () {
-        const reason = document.getElementById('rejectReason').value.trim();
-        if (!reason) {
-            alert('Vui lòng nhập lý do từ chối!');
-            return;
-        }
-
-        if (currentRejectRow) {
-            currentRejectRow.dataset.status = 'rejected';
-            currentRejectRow.cells[3].innerHTML = '<span class="status red">Đã từ chối</span>';
-            currentRejectRow.cells[5].innerHTML = `<span class="rejected-note">Đã từ chối: ${reason}</span>`;
-        }
-
-        document.getElementById('rejectPopup').style.display = 'none';
-        alert('Đã từ chối yêu cầu hoàn tiền!');
-    };
-
-    window.confirmRefund = function (btn) {
-        if (!confirm('Xác nhận hoàn tiền cho đơn hàng này?')) return;
-
-        const row = btn.closest('tr');
-        row.dataset.status = 'refunded';
-        row.cells[3].innerHTML = '<span class="status green">Đã hoàn tiền</span>';
-        row.cells[5].innerHTML = '-';
-        alert('Đã hoàn tiền thành công!');
-    };
-
 </script>
 
 <!--DON BI HUY-->
@@ -951,6 +944,477 @@
             const suggestedWidth = wrapper.clientWidth + 500;
         }
     }
+</script>
+
+<script>
+    // Biến lưu trữ thông tin để xử lý
+    let currentRejectReturnId = null;
+
+    /* --- XỬ LÝ XÁC NHẬN HOÀN TIỀN --- */
+    window.confirmRefund = function (btn) {
+        const returnId = btn.getAttribute('data-return-id');
+
+        if (!confirm('Xác nhận hoàn tiền cho đơn này?')) return;
+
+        console.log('🔄 Confirming refund for return ID:', returnId);
+
+        fetch(BASE_URL + '/admin/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=confirmRefund&returnId=' + returnId
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Response:', data);
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + (data.message || data.error));
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                alert('Lỗi kết nối: ' + error);
+            });
+    };
+
+    /* --- MỞ POPUP TỪ CHỐI --- */
+    window.openRejectPopup = function (btn) {
+        currentRejectReturnId = btn.getAttribute('data-return-id');
+        const orderCode = btn.getAttribute('data-order-code');
+        const customer = btn.getAttribute('data-customer');
+
+        document.getElementById('rejectOrderId').textContent = orderCode;
+        document.getElementById('rejectCustomer').textContent = customer;
+        document.getElementById('rejectReason').value = '';
+
+        document.getElementById('rejectPopup').style.display = 'flex';
+    };
+
+    /* --- ĐÓNG POPUP TỪ CHỐI --- */
+    window.closeRejectPopup = function () {
+        document.getElementById('rejectPopup').style.display = 'none';
+        currentRejectReturnId = null;
+    };
+
+    /* --- XÁC NHẬN TỪ CHỐI --- */
+    window.confirmReject = function () {
+        const reason = document.getElementById('rejectReason').value.trim();
+
+        if (!reason) {
+            alert('Vui lòng nhập lý do từ chối!');
+            return;
+        }
+
+        console.log('🔄 Rejecting refund for return ID:', currentRejectReturnId);
+
+        fetch(BASE_URL + '/admin/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=rejectRefund&returnId=' + currentRejectReturnId +
+                '&reason=' + encodeURIComponent(reason)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Response:', data);
+                if (data.success) {
+                    alert(data.message);
+                    closeRejectPopup();
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + (data.message || data.error));
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                alert('Lỗi kết nối: ' + error);
+            });
+    };
+
+    /* --- MỞ POPUP CHI TIẾT --- */
+    document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("btn-detail")) {
+            const btn = e.target;
+            const returnId = btn.getAttribute('data-return-id');
+
+            console.log('📋 Loading return detail for ID:', returnId);
+
+            // ✅ GỌI API LẤY CHI TIẾT ĐẦY ĐỦ
+            fetch(BASE_URL + '/admin/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=getReturnDetail&returnId=' + returnId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('✅ Return detail response:', data);
+
+                    if (data.success && data.return) {
+                        const returnDetail = data.return;
+
+                        // Điền thông tin vào popup
+                        document.getElementById('detailOrderCode').textContent = returnDetail.order_code || '-';
+                        document.getElementById('detailCustomer').textContent = returnDetail.customer_name || '-';
+                        document.getElementById('detailProduct').textContent = returnDetail.product_name || '-';
+                        document.getElementById('detailQuantity').textContent = returnDetail.quantity || '-';
+                        document.getElementById('detailReason').textContent = returnDetail.reason || '-';
+                        document.getElementById('detailAmount').textContent = returnDetail.formatted_refund_amount || '-';
+                        document.getElementById('detailDate').textContent = returnDetail.formatted_return_date || '-';
+
+                        // Lý do từ chối: CHỈ HIỆN KHI BỊ REJECT
+                        const rejectRow = document.getElementById('rejectReasonRow');
+                        const rejectReasonEl = document.getElementById('detailRejectReason');
+
+                        rejectRow.style.display = 'none';
+                        rejectReasonEl.textContent = '';
+
+                        if (returnDetail.return_status === 'Rejected'
+                            && returnDetail.reason
+                            && returnDetail.reason.includes('Lý do từ chối:')) {
+
+                            const parts = returnDetail.reason.split('Lý do từ chối:');
+                            if (parts.length > 1) {
+                                rejectReasonEl.textContent = parts[1].trim();
+                                rejectRow.style.display = 'flex';
+                            }
+                        } else {
+                            // ẨN HOÀN TOÀN với Pending / Approved
+                            rejectRow.style.display = 'none';
+                            rejectReasonEl.textContent = '';
+                        }
+
+
+                        // ✅ HIỂN THỊ ẢNH MINH CHỨNG VỚI LINK ĐÚNG
+                        const proofContainer = document.getElementById('detailProofImages');
+                        proofContainer.innerHTML = ''; // Xóa nội dung cũ
+
+                        if (returnDetail.proof_images && returnDetail.proof_images.length > 0) {
+                            console.log('📸 Found ' + returnDetail.proof_images.length + ' proof images');
+
+                            returnDetail.proof_images.forEach((image, index) => {
+                                console.log('Image ' + (index + 1) + ':', image);
+
+                                // ✅ XỬ LÝ LINK ẢNH
+                                let imageUrl = image.urlImg;
+
+                                // Nếu URL chưa có BASE_URL hoặc http
+                                if (!imageUrl.startsWith('http') && !imageUrl.startsWith(BASE_URL)) {
+                                    if (!imageUrl.startsWith('/')) {
+                                        imageUrl = '/' + imageUrl;
+                                    }
+                                    imageUrl = BASE_URL + imageUrl;
+                                }
+
+                                console.log('Final URL:', imageUrl);
+
+                                const imgWrapper = document.createElement('div');
+                                imgWrapper.className = 'proof-image-item';
+
+                                const img = document.createElement('img');
+                                img.src = imageUrl;
+                                img.alt = 'Minh chứng ' + (index + 1);
+                                img.onerror = function () {
+                                    console.error('Failed to load:', this.src);
+                                    this.parentElement.innerHTML =
+                                        '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; color: #9ca3af;">' +
+                                        '<i class="fas fa-image" style="font-size: 48px; margin-bottom: 8px;"></i>' +
+                                        '<span>Không thể tải ảnh</span>' +
+                                        '</div>';
+                                };
+                                img.onclick = function () {
+                                    openImageViewer(imageUrl);
+                                };
+
+                                imgWrapper.appendChild(img);
+                                proofContainer.appendChild(imgWrapper);
+                            });
+                        } else {
+                            console.log('⚠️ No proof images found');
+                            proofContainer.innerHTML = '<span style="color: #999;">Không có ảnh minh chứng</span>';
+                        }
+
+                        // Hiển thị popup
+                        document.getElementById("returnPopup").style.display = "block";
+                    } else {
+                        alert('Không thể tải chi tiết đơn hoàn: ' + (data.message || data.error));
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Error loading return detail:', error);
+                    alert('Lỗi kết nối: ' + error);
+                });
+        }
+    });
+
+    // ✅ XỬ LÝ KHI ẢNH BỊ LỖI
+    window.handleImageError = function (img) {
+        console.error('❌ Failed to load image:', img.src);
+        img.parentElement.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; color: #9ca3af;">
+            <i class="fas fa-image" style="font-size: 48px; margin-bottom: 8px;"></i>
+            <span>Không thể tải ảnh</span>
+        </div>
+    `;
+    };
+
+    // ✅ HÀM MỞ ẢNH TO
+    // ✅ HÀM MỞ ẢNH TO - FIX LỖI LOAD ẢNH
+    window.openImageViewer = function (imageUrl) {
+        console.log('🔍 Opening image viewer for:', imageUrl);
+
+        // ✅ TẠO OVERLAY
+        const viewer = document.createElement('div');
+        viewer.className = 'image-viewer-overlay';
+        viewer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    `;
+
+        // ✅ TẠO CONTENT WRAPPER
+        const content = document.createElement('div');
+        content.className = 'image-viewer-content';
+        content.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    `;
+
+        // ✅ TẠO NÚT ĐÓNG
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close-viewer';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.style.cssText = `
+        position: absolute;
+        top: -40px;
+        right: 0;
+        font-size: 40px;
+        color: white;
+        cursor: pointer;
+        font-weight: 300;
+        z-index: 10001;
+    `;
+        closeBtn.onclick = function () {
+            viewer.remove();
+        };
+        closeBtn.onmouseover = function () {
+            this.style.color = '#ff4444';
+        };
+        closeBtn.onmouseout = function () {
+            this.style.color = 'white';
+        };
+
+        // ✅ TẠO IMG ELEMENT
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Ảnh minh chứng';
+        img.style.cssText = `
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        display: block;
+    `;
+
+        // ✅ XỬ LÝ KHI LOAD ẢNH THÀNH CÔNG
+        img.onload = function () {
+            console.log('✅ Image viewer loaded successfully');
+        };
+
+        // ✅ XỬ LÝ KHI LOAD ẢNH BỊ LỖI
+        img.onerror = function () {
+            console.error('❌ Failed to load image in viewer:', imageUrl);
+
+            // Hiển thị thông báo lỗi thay vì alert
+            content.innerHTML = `
+            <div style="text-align: center; color: white; padding: 40px;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 64px; margin-bottom: 20px; color: #ff4444;"></i>
+                <h3 style="margin-bottom: 10px;">Không thể tải ảnh này</h3>
+                <p style="color: #ccc; font-size: 14px; word-break: break-all; max-width: 600px;">${imageUrl}</p>
+                <button onclick="this.closest('.image-viewer-overlay').remove()"
+                        style="margin-top: 20px; padding: 10px 20px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    Đóng
+                </button>
+            </div>
+        `;
+        };
+
+        // ✅ GHÉP CÁC PHẦN TỬ LẠI
+        content.appendChild(closeBtn);
+        content.appendChild(img);
+        viewer.appendChild(content);
+        document.body.appendChild(viewer);
+
+        // ✅ CLICK OUTSIDE ĐỂ ĐÓNG
+        viewer.addEventListener('click', function (e) {
+            if (e.target === viewer) {
+                viewer.remove();
+            }
+        });
+
+        // ✅ ESC ĐỂ ĐÓNG
+        const closeOnEsc = function (e) {
+            if (e.key === 'Escape' && document.body.contains(viewer)) {
+                viewer.remove();
+                document.removeEventListener('keydown', closeOnEsc);
+            }
+        };
+        document.addEventListener('keydown', closeOnEsc);
+    };
+
+    // ✅ ĐÓNG POPUP CHI TIẾT
+    window.closeReturnPopup = function () {
+        document.getElementById("returnPopup").style.display = "none";
+    };
+
+    // ✅ ĐÓNG POPUP KHI CLICK BÊN NGOÀI
+    window.addEventListener('click', function (event) {
+        const returnPopup = document.getElementById('returnPopup');
+        if (event.target === returnPopup) {
+            closeReturnPopup();
+        }
+    });
+
+    // ✅ DEBUG: KIỂM TRA BASE_URL
+    console.log('🔧 BASE_URL:', BASE_URL);
+
+    /* --- TÌM KIẾM ĐƠN HOÀN TRẢ --- */
+    let searchTimeout = null;
+
+    document.getElementById('returnSearch').addEventListener('input', function (e) {
+        const keyword = e.target.value.trim();
+
+        // Debounce: Chờ 500ms sau khi user ngừng gõ
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(function () {
+            console.log('🔍 Searching returns with keyword: "' + keyword + '"');
+
+            fetch(BASE_URL + '/admin/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=searchReturns&keyword=' + encodeURIComponent(keyword)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('✅ Search response:', data);
+                    if (data.success) {
+                        updateReturnTable(data.returns);
+                    } else {
+                        console.error('Search failed:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Search error:', error);
+                });
+        }, 500);
+    });
+
+    /**
+     * Cập nhật bảng hiển thị kết quả tìm kiếm
+     */
+    function updateReturnTable(returns) {
+        const tbody = document.getElementById('returnTableBody');
+
+        // Xóa các dòng cũ (trừ pagination row)
+        const rows = tbody.querySelectorAll('tr:not(.pagination-row-return)');
+        rows.forEach(row => row.remove());
+
+        if (returns.length === 0) {
+            const noResultRow = document.createElement('tr');
+            noResultRow.className = 'no-result-message';
+            noResultRow.innerHTML =
+                '<td colspan="7" style="text-align: center; padding: 30px; color: #999;">' +
+                '<i class="fas fa-search" style="font-size: 48px; margin-bottom: 10px; display: block;"></i>' +
+                'Không tìm thấy kết quả' +
+                '</td>';
+            tbody.insertBefore(noResultRow, tbody.querySelector('.pagination-row-return'));
+            return;
+        }
+
+        returns.forEach(returnOrder => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-status', returnOrder.return_status);
+            row.setAttribute('data-return-id', returnOrder.return_id);
+
+            const isPending = returnOrder.return_status === 'Pending';
+
+            // MÃ ĐƠN HÀNG
+            let html = '<td>' + returnOrder.order_code + '</td>';
+            html += '<td>' + returnOrder.customer_name + '</td>';
+            // html += '<td class="reason-cell" title="' + returnOrder.reason + '">' + returnOrder.reason + '</td>';
+            let displayReason = returnOrder.reason || '';
+
+            if (displayReason.includes('Lý do từ chối:')) {
+                displayReason = displayReason.split(' | ')[0];
+            }
+
+            html += '<td class="reason-cell" title="' + displayReason + '">'
+                + displayReason +
+                '</td>';
+
+            html += '<td class="amount-cell">' + returnOrder.formatted_refund_amount + '</td>';
+            html += '<td><span class="status ' + returnOrder.status_class + '">' + returnOrder.status_display + '</span></td>';
+
+            // Nút Xem chi tiết
+            html += '<td><button class="btn-detail" ' +
+                'data-return-id="' + returnOrder.return_id + '" ' +
+                'data-order-code="' + returnOrder.order_code + '" ' +
+                'data-customer="' + returnOrder.customer_name + '" ' +
+                'data-product="' + returnOrder.product_name + '" ' +
+                'data-quantity="' + returnOrder.quantity + '" ' +
+                'data-reason="' + returnOrder.reason + '" ' +
+                'data-amount="' + returnOrder.formatted_refund_amount + '" ' +
+                'data-date="' + (returnOrder.formatted_return_date || '') + '">' +
+                'Xem</button></td>';
+
+            // ✅ NÚT HÀNH ĐỘNG - HIỂN THỊ ĐÚNG THEO STATUS
+            html += '<td class="action-buttons">';
+            if (isPending) {
+                html += '<button class="btn-refund" data-return-id="' + returnOrder.return_id + '" ' +
+                    'onclick="confirmRefund(this)">Xác nhận hoàn tiền</button>';
+                html += '<button class="btn-reject" data-return-id="' + returnOrder.return_id + '" ' +
+                    'data-order-code="' + returnOrder.order_code + '" ' +
+                    'data-customer="' + returnOrder.customer_name + '" ' +
+                    'onclick="openRejectPopup(this)">Từ chối</button>';
+            } else {
+                html += '<span style="color: #999;">-</span>';
+            }
+            html += '</td>';
+
+            row.innerHTML = html;
+            tbody.insertBefore(row, tbody.querySelector('.pagination-row-return'));
+        });
+
+        console.log('✅ Table updated with ' + returns.length + ' results');
+    }
+
+    // Đóng popup khi click outside
+    window.addEventListener('click', function (event) {
+        const rejectPopup = document.getElementById('rejectPopup');
+        if (event.target === rejectPopup) {
+            closeRejectPopup();
+        }
+
+        const returnPopup = document.getElementById('returnPopup');
+        if (event.target === returnPopup) {
+            closeReturnPopup();
+        }
+    });
 </script>
 </body>
 </html>

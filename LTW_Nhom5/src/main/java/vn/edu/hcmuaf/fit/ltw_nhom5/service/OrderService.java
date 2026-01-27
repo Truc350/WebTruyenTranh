@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.CurrencyFormatter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class OrderService {
@@ -16,6 +17,10 @@ public class OrderService {
     private ComicDAO comicDAO;
     private UserDao userDAO;
     private OrderHistoryDAO orderHistoryDAO;
+    private OrderReturnDAO orderReturnDAO;
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public OrderService() {
         this.jdbi = JdbiConnector.get();
@@ -24,6 +29,7 @@ public class OrderService {
         this.comicDAO = new ComicDAO();
         this.userDAO = new UserDao(jdbi);
         this.orderHistoryDAO = new OrderHistoryDAO();
+        this.orderReturnDAO = new OrderReturnDAO();
     }
 
     /**
@@ -41,7 +47,7 @@ public class OrderService {
             ordersByStatus.put("Pending", getOrdersWithDetailsByStatus("Pending"));
             ordersByStatus.put("AwaitingPickup", getOrdersWithDetailsByStatus("AwaitingPickup"));
             ordersByStatus.put("Shipping", getOrdersWithDetailsByStatus("Shipping"));
-            ordersByStatus.put("Completed", getOrdersWithDetailsByStatus("Completed"));
+            ordersByStatus.put("Completed", searchCompletedOrders(""));
             ordersByStatus.put("Returned", getOrdersWithDetailsByStatus("Returned"));
             ordersByStatus.put("Cancelled", getOrdersWithDetailsByStatus("Cancelled"));
 
@@ -659,12 +665,12 @@ public class OrderService {
         return searchOrdersByTab(keyword, "Shipping");
     }
 
-    /**
-     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
-     */
-    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
-        return searchOrdersByTab(keyword, "Completed");
-    }
+//    /**
+//     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
+//     */
+//    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+//        return searchOrdersByTab(keyword, "Completed");
+//    }
 
     /**
      * Tìm kiếm đơn hàng cho tab TRẢ HÀNG/HOÀN TIỀN
@@ -705,5 +711,325 @@ public class OrderService {
             }
         }
         return true;
+    }
+
+    /**
+     * Tìm kiếm đơn hàng đã giao với thông tin đánh giá
+     */
+    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
+        try {
+            // Lấy danh sách đơn hàng đã giao kèm rating từ DAO
+            List<Map<String, Object>> orders = orderDAO.searchCompletedOrdersWithRating(keyword);
+
+            // Format dữ liệu cho từng đơn hàng
+            for (Map<String, Object> order : orders) {
+                // ✅ Format số tiền
+                Object totalAmountObj = order.get("total_amount");
+                if (totalAmountObj != null) {
+                    double totalAmount = 0.0;
+                    if (totalAmountObj instanceof Number) {
+                        totalAmount = ((Number) totalAmountObj).doubleValue();
+                    }
+                    order.put("formattedAmount", CurrencyFormatter.format(totalAmount));
+                }
+
+                // ✅ LẤY payment_method TỪ MAP TRƯỚC KHI DÙNG
+                String paymentMethod = (String) order.get("payment_method");
+
+                // ✅ Format payment method
+                String paymentMethodDisplay = "COD";
+                if ("COD".equalsIgnoreCase(paymentMethod)) {
+                    paymentMethodDisplay = "COD";
+                } else if ("VNPay".equalsIgnoreCase(paymentMethod)) {
+                    paymentMethodDisplay = "VNPay";
+                } else if (paymentMethod != null) {
+                    paymentMethodDisplay = paymentMethod;
+                }
+                order.put("paymentMethodDisplay", paymentMethodDisplay);
+
+                // ✅ Xử lý thông tin rating
+                Object avgRatingObj = order.get("average_rating");
+                Object reviewCountObj = order.get("review_count");
+
+                int reviewCount = reviewCountObj != null ?
+                        ((Number) reviewCountObj).intValue() : 0;
+
+                boolean hasReview = reviewCount > 0;
+                order.put("hasReview", hasReview);
+
+                if (hasReview && avgRatingObj != null) {
+                    double avgRating = ((Number) avgRatingObj).doubleValue();
+                    order.put("averageRating", avgRating);
+                    order.put("formattedRating", String.format("%.1f", avgRating));
+
+                    // Tính số sao đầy và sao nửa
+                    int fullStars = (int) avgRating;
+                    boolean hasHalfStar = (avgRating - fullStars) >= 0.5;
+
+                    order.put("fullStars", fullStars);
+                    order.put("hasHalfStar", hasHalfStar);
+                    order.put("emptyStars", 5 - fullStars - (hasHalfStar ? 1 : 0));
+                } else {
+                    order.put("averageRating", null);
+                    order.put("formattedRating", "-");
+                    order.put("fullStars", 0);
+                    order.put("hasHalfStar", false);
+                    order.put("emptyStars", 0);
+                }
+            }
+
+            return orders;
+
+        } catch (Exception e) {
+            System.err.println("Error in searchCompletedOrders: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Lấy tất cả yêu cầu hoàn trả với thông tin chi tiết
+     */
+    public List<Map<String, Object>> getAllReturnsWithDetails() {
+        try {
+            List<Map<String, Object>> returns = orderReturnDAO.getAllReturnsWithDetails();
+
+            // Format dữ liệu cho từng đơn hoàn trả
+            for (Map<String, Object> returnOrder : returns) {
+                formatReturnOrderData(returnOrder);
+            }
+
+            return returns;
+
+        } catch (Exception e) {
+            System.err.println("Error in getAllReturnsWithDetails: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Tìm kiếm đơn hoàn trả theo keyword
+     */
+    public List<Map<String, Object>> searchReturns(String keyword) {
+        try {
+            List<Map<String, Object>> returns = orderReturnDAO.searchReturns(keyword);
+
+            // Format dữ liệu
+            for (Map<String, Object> returnOrder : returns) {
+                formatReturnOrderData(returnOrder);
+            }
+
+            return returns;
+
+        } catch (Exception e) {
+            System.err.println("Error in searchReturns: " + e.getMessage());
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Xác nhận hoàn tiền
+     */
+    public Map<String, Object> confirmRefund(int returnId) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            boolean success = orderReturnDAO.confirmRefund(returnId);
+
+            if (success) {
+                result.put("success", true);
+                result.put("message", "Đã xác nhận hoàn tiền thành công");
+            } else {
+                result.put("success", false);
+                result.put("message", "Không thể xác nhận hoàn tiền");
+            }
+
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+     * Từ chối yêu cầu hoàn tiền
+     */
+    public Map<String, Object> rejectRefund(int returnId, String rejectReason) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            if (rejectReason == null || rejectReason.trim().isEmpty()) {
+                result.put("success", false);
+                result.put("message", "Vui lòng nhập lý do từ chối");
+                return result;
+            }
+
+            boolean success = orderReturnDAO.rejectRefund(returnId, rejectReason);
+
+            if (success) {
+                result.put("success", true);
+                result.put("message", "Đã từ chối yêu cầu hoàn tiền");
+            } else {
+                result.put("success", false);
+                result.put("message", "Không thể từ chối yêu cầu");
+            }
+
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+     * Lấy chi tiết đơn hoàn trả
+     */
+    public Map<String, Object> getReturnDetail(int returnId) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Map<String, Object> returnDetail = orderReturnDAO.getReturnDetailsById(returnId);
+
+            if (returnDetail != null) {
+                formatReturnOrderData(returnDetail);
+
+                // ✅ LẤY DANH SÁCH ẢNH VÀ CONVERT SANG MAP
+                List<OrderReturnImage> images = orderReturnDAO.getReturnImages(returnId);
+                List<Map<String, Object>> imageData = new ArrayList<>();
+
+                for (OrderReturnImage img : images) {
+                    Map<String, Object> imgMap = new HashMap<>();
+                    imgMap.put("id", img.getId());
+                    imgMap.put("urlImg", img.getUrlImg());
+
+                    // ✅ CONVERT LocalDateTime THÀNH STRING
+                    if (img.getCreatedAt() != null) {
+                        imgMap.put("createdAt", img.getCreatedAt().format(DATE_TIME_FORMATTER));
+                    }
+
+                    imageData.add(imgMap);
+                }
+
+                returnDetail.put("proof_images", imageData);
+
+                result.put("success", true);
+                result.put("return", returnDetail);
+            } else {
+                result.put("success", false);
+                result.put("message", "Không tìm thấy yêu cầu hoàn trả");
+            }
+        } catch (Exception e) {
+            System.err.println("Error in getReturnDetail: " + e.getMessage());
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("error", e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * Format dữ liệu đơn hoàn trả
+     */
+    private void formatReturnOrderData(Map<String, Object> returnOrder) {
+        try {
+            // Lấy danh sách ảnh minh chứng và convert sang Map
+            Object returnIdObj = returnOrder.get("return_id");
+            if (returnIdObj != null) {
+                int returnId = ((Number) returnIdObj).intValue();
+                List<OrderReturnImage> images = orderReturnDAO.getReturnImages(returnId);
+
+                // ✅ CONVERT ẢNH THÀNH LIST MAP THAY VÌ OBJECT
+                List<Map<String, Object>> imageData = new ArrayList<>();
+                for (OrderReturnImage img : images) {
+                    Map<String, Object> imgMap = new HashMap<>();
+                    imgMap.put("id", img.getId());
+                    imgMap.put("urlImg", img.getUrlImg());
+
+                    // ✅ CONVERT CREATED_AT THÀNH STRING
+                    if (img.getCreatedAt() != null) {
+                        imgMap.put("createdAt", img.getCreatedAt().format(DATE_TIME_FORMATTER));
+                    }
+                    imageData.add(imgMap);
+                }
+
+                returnOrder.put("proof_images", imageData);
+            }
+
+            // Xác định CSS class và text hiển thị cho status
+            String returnStatus = (String) returnOrder.get("return_status");
+            returnOrder.put("status_class", getReturnStatusClass(returnStatus));
+            returnOrder.put("status_display", getReturnStatusDisplay(returnStatus));
+
+            // ✅ FORMAT NGÀY TẠO - CHUYỂN LocalDateTime THÀNH STRING
+            Object returnDateObj = returnOrder.get("return_date");
+            if (returnDateObj != null) {
+                String formattedDate = null;
+
+                if (returnDateObj instanceof java.time.LocalDateTime) {
+                    java.time.LocalDateTime localDateTime = (java.time.LocalDateTime) returnDateObj;
+                    formattedDate = localDateTime.format(DATE_TIME_FORMATTER);
+                } else if (returnDateObj instanceof java.sql.Timestamp) {
+                    java.sql.Timestamp timestamp = (java.sql.Timestamp) returnDateObj;
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    formattedDate = sdf.format(timestamp);
+                }
+
+                // ✅ GHI ĐÈ return_date VỚI STRING ĐÃ FORMAT
+                if (formattedDate != null) {
+                    returnOrder.put("return_date", formattedDate);
+                    returnOrder.put("formatted_return_date", formattedDate);
+                }
+            }
+
+            // ✅ FORMAT SỐ TIỀN HOÀN TRẢ
+            Object refundAmountObj = returnOrder.get("refund_amount");
+            if (refundAmountObj != null) {
+                double refundAmount = ((Number) refundAmountObj).doubleValue();
+                returnOrder.put("formatted_refund_amount", CurrencyFormatter.format(refundAmount));
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error formatting return order data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Lấy CSS class cho status hoàn trả
+     */
+    private String getReturnStatusClass(String status) {
+        if (status == null) return "yellow";
+
+        switch (status) {
+            case "Pending":
+                return "yellow";
+            case "Refunded":
+                return "green";
+            case "Rejected":
+                return "red";
+            default:
+                return "yellow";
+        }
+    }
+
+    /**
+     * Lấy text hiển thị cho status hoàn trả
+     */
+    private String getReturnStatusDisplay(String status) {
+        if (status == null) return "Đang xem xét";
+
+        switch (status) {
+            case "Pending":
+                return "Đang xem xét";
+            case "Refunded":
+                return "Đã hoàn tiền";
+            case "Rejected":
+                return "Đã từ chối";
+            default:
+                return status;
+        }
     }
 }

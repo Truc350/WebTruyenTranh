@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/UserManagement")
+@WebServlet("/admin/user-management")
 public class UserManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
