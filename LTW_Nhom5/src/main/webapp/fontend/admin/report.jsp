@@ -13,191 +13,251 @@
 <div class="container">
     <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-<%--    <aside class="sidebar">--%>
-<%--        <div class="sidebar-header">--%>
-<%--            <img src="../../img/logo.png" alt="Logo" class="logo">--%>
-<%--            <h2>Comic Store</h2>--%>
-<%--        </div>--%>
-
-<%--        <ul>--%>
-<%--            <li>--%>
-<%--                <a href="dashboard.jsp">--%>
-<%--                <img src="../../img/home.png" class="icon">--%>
-<%--                <span>Trang chủ</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="seriesManagement.jsp">--%>
-<%--                    <img src="../../img/series.png" class="icon">--%>
-<%--                    <span>Quản lý series</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="productManagement.jsp">--%>
-<%--                    <img src="../../img/product.png" class="icon">--%>
-<%--                    <span>Quản lý sản phẩm</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="category.jsp">--%>
-<%--                    <img src="../../img/category.png" class="icon">--%>
-<%--                    <span>Quản lý thể loại</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="order.jsp">--%>
-<%--                    <img src="../../img/order.png" class="icon">--%>
-<%--                    <span>Quản lý đơn hàng</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="userManagement.jsp">--%>
-<%--                    <img src="../../img/user.png" class="icon">--%>
-<%--                    <span>Quản lý người dùng</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--            <li>--%>
-<%--                <a href="flashSaleMan.jsp">--%>
-<%--                    <img src="../../img/flashSale.png" class="icon">--%>
-<%--                    <span>Quản lý Flash Sale</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--&lt;%&ndash;            <li>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                <a href="promotion.jsp">&ndash;%&gt;--%>
-<%--&lt;%&ndash;                    <img src="../../img/promo.png" class="icon">&ndash;%&gt;--%>
-<%--&lt;%&ndash;                    <span>Quản lý khuyến mãi</span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                </a>&ndash;%&gt;--%>
-<%--&lt;%&ndash;            </li>&ndash;%&gt;--%>
-<%--            <li>--%>
-<%--                <a href="report.html">--%>
-<%--                    <img src="../../img/report.png" class="icon">--%>
-<%--                    <span>Thống kê</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
-<%--        </ul>--%>
-<%--    </aside>--%>
 
     <div class="main-content">
+        <!-- Header Admin -->
         <%@ include file="HeaderAdmin.jsp" %>
-<%--        <header class="admin-header">--%>
-<%--            <div class="header-right">--%>
-<%--                <a href="chatWithCus.jsp">--%>
-<%--                    <i class="fa-solid fa-comment"></i>--%>
-<%--                </a>--%>
 
-<%--                <div class="admin-profile">--%>
-<%--                    <a href="profileAdmin.jsp">--%>
-<%--                    <img src="../../img/admin.png" class="admin-avatar" alt="Admin">--%>
-<%--                    </a>--%>
-<%--                    <span class="admin-name">Admin</span>--%>
-<%--                </div>--%>
+        <!-- Wrapper cho nội dung thống kê -->
+        <div class="report-wrapper">
 
-<%--                <!-- Nút đăng xuất -->--%>
-<%--                <button class="btn-logout" title="Đăng xuất">--%>
-<%--                    <a href="../public/login_bo.jsp">--%>
-<%--                        <i class="fa-solid fa-right-from-bracket"></i>--%>
-<%--                    </a>--%>
-<%--                </button>--%>
-<%--            </div>--%>
-<%--        </header>--%>
+            <!-- Tiêu đề trang -->
+            <h1 class="page-title">
+                <i class="fas fa-chart-line"></i>
+                Thống kê
+            </h1>
 
-        <!-- Bộ lọc thời gian -->
-        <div class="filter-time">
-            <button class="time-btn active">Hôm nay</button>
-            <button class="time-btn">Tuần này</button>
-            <button class="time-btn">Tháng này</button>
-            <button class="time-btn">Tùy chỉnh</button>
-            <input type="date" id="startDate" style="display:none;">
-            <input type="date" id="endDate" style="display:none;">
-        </div>
+            <!-- Bộ lọc thời gian -->
+            <div class="filter-time">
+                <button class="time-btn active" data-filter="today">Hôm nay</button>
+                <button class="time-btn" data-filter="week">Tuần này</button>
+                <button class="time-btn" data-filter="month">Tháng này</button>
+                <button class="time-btn" data-filter="custom">Tùy chỉnh</button>
+                <input type="date" id="startDate" style="display:none;">
+                <input type="date" id="endDate" style="display:none;">
+            </div>
 
-        <!-- KPI Cards -->
-        <div class="kpi-cards">
-            <div class="kpi-card">
-                <i class="bi bi-currency-dollar kpi-icon"></i>
-                <div class="kpi-info">
-                    <span class="kpi-title">Doanh thu</span>
-                    <span class="kpi-value">12,450,000đ</span>
+            <!-- KPI Cards -->
+            <div class="kpi-cards">
+                <div class="kpi-card" data-chart="revenue">
+                    <i class="fas fa-dollar-sign kpi-icon"></i>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Doanh thu</span>
+                        <span class="kpi-value" id="kpi-revenue">0đ</span>
+                    </div>
+                </div>
+                <div class="kpi-card" data-chart="orders">
+                    <i class="fas fa-shopping-cart kpi-icon"></i>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Số đơn hàng</span>
+                        <span class="kpi-value" id="kpi-orders">0 đơn</span>
+                    </div>
+                </div>
+                <div class="kpi-card" data-chart="avgValue">
+                    <i class="fas fa-chart-line kpi-icon"></i>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Giá trị đơn trung bình</span>
+                        <span class="kpi-value" id="kpi-avg">0đ</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <i class="fas fa-star kpi-icon"></i>
+                    <div class="kpi-info">
+                        <span class="kpi-title">Sản phẩm bán chạy nhất</span>
+                        <span class="kpi-value" id="kpi-best">Chưa có dữ liệu</span>
+                    </div>
                 </div>
             </div>
-            <div class="kpi-card">
-                <i class="bi bi-bag kpi-icon"></i>
-                <div class="kpi-info">
-                    <span class="kpi-title">Số đơn hàng</span>
-                    <span class="kpi-value">128 đơn</span>
-                </div>
+
+            <!-- Chart chính: BAR CHART -->
+            <div class="chart-container">
+                <h3 id="chart-title">Biểu đồ Doanh thu</h3>
+                <canvas id="mainChart"></canvas>
             </div>
-            <div class="kpi-card">
-                <i class="bi bi-graph-up kpi-icon"></i>
-                <div class="kpi-info">
-                    <span class="kpi-title">Giá trị đơn trung bình</span>
-                    <span class="kpi-value">97,000đ</span>
+
+            <!-- Bảng top sản phẩm + Doughnut chart -->
+            <div class="top-products-wrapper">
+                <div class="top-products">
+                    <h3>Top 3 sản phẩm bán chạy</h3>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đã bán</th>
+                        </tr>
+                        </thead>
+                        <tbody id="top-products-body">
+                        <tr>
+                            <td colspan="2">Đang tải...</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="kpi-card">
-                <i class="bi bi-star kpi-icon"></i>
-                <div class="kpi-info">
-                    <span class="kpi-title">Sản phẩm bán chạy nhất</span>
-                    <span class="kpi-value">One Piece tập 105</span>
+
+                <div class="top-products-chart">
+                    <canvas id="topProductsChart"></canvas>
                 </div>
             </div>
         </div>
-
-        <!-- Chart chính: Doanh thu -->
-        <div class="chart-container">
-            <canvas id="revenueChart"></canvas>
-        </div>
-
-        <!-- Bảng top sản phẩm + Doughnut chart -->
-        <div class="top-products-wrapper">
-            <div class="top-products">
-                <h3>Top sản phẩm bán chạy</h3>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Sản phẩm</th>
-                        <th>Đã bán</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Conan tập 91</td>
-                        <td>128</td>
-                    </tr>
-                    <tr>
-                        <td>Doraemon 45</td>
-                        <td>103</td>
-                    </tr>
-                    <tr>
-                        <td>Blue Lock 14</td>
-                        <td>95</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="top-products-chart">
-                <canvas id="topProductsChart"></canvas>
-            </div>
-        </div>
-</div>
+        <!-- End report-wrapper -->
+    </div>
+    <!-- End main-content -->
 </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Chart chính: Doanh thu gradient + bo góc + animation + tooltip
-        const ctx = document.getElementById('revenueChart').getContext('2d');
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // ========== BIẾN TOÀN CỤC ==========
+    let mainChart = null;
+    let topProductsChart = null;
+    let currentChartType = 'revenue';
+    let reportData = null;
+
+    // ========== FORMAT SỐ ==========
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('vi-VN').format(Math.round(value)) + 'đ';
+    }
+
+    function formatNumber(value) {
+        return new Intl.NumberFormat('vi-VN').format(value);
+    }
+
+    // ========== TẢI DỮ LIỆU AJAX ==========
+    function loadReportData(filter, startDate, endDate) {
+        const params = new URLSearchParams({ filter: filter });
+
+        if (filter === 'custom' && startDate && endDate) {
+            params.append('startDate', startDate);
+            params.append('endDate', endDate);
+        }
+
+        fetch('${pageContext.request.contextPath}/admin/report-data?' + params.toString())
+            .then(response => response.json())
+            .then(data => {
+                console.log('📊 Data loaded:', data);
+                reportData = data;
+                updateKPICards(data.kpi);
+                updateTopProducts(data.topProducts);
+                updateChart(currentChartType);
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                alert('Lỗi tải dữ liệu!');
+            });
+    }
+
+    // ========== CẬP NHẬT KPI ==========
+    function updateKPICards(kpi) {
+        document.getElementById('kpi-revenue').textContent = formatCurrency(kpi.revenue);
+        document.getElementById('kpi-orders').textContent = formatNumber(kpi.totalOrders) + ' đơn';
+        document.getElementById('kpi-avg').textContent = formatCurrency(kpi.avgOrderValue);
+        document.getElementById('kpi-best').textContent = kpi.bestProduct || 'Chưa có dữ liệu';
+    }
+
+    // ========== CẬP NHẬT TOP 3 SẢN PHẨM ==========
+    function updateTopProducts(products) {
+        const tbody = document.getElementById('top-products-body');
+
+        if (!products || products.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="2">Chưa có dữ liệu</td></tr>';
+            updateDoughnutChart([]);
+            return;
+        }
+
+        tbody.innerHTML = products.map(p =>
+            `<tr><td>${p.name_comics}</td><td>${formatNumber(p.total_sold)}</td></tr>`
+        ).join('');
+
+        updateDoughnutChart(products);
+    }
+
+    // ========== BIỂU ĐỒ DOUGHNUT ==========
+    function updateDoughnutChart(products) {
+        const canvas = document.getElementById('topProductsChart');
+        const ctx = canvas.getContext('2d');
+
+        if (topProductsChart) {
+            topProductsChart.destroy();
+        }
+
+        if (!products || products.length === 0) return;
+
+        topProductsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: products.map(p => p.name_comics),
+                datasets: [{
+                    data: products.map(p => p.total_sold),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: { font: { size: 12 }, padding: 15, usePointStyle: true }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + formatNumber(context.parsed) + ' cuốn';
+                            }
+                        }
+                    }
+                },
+                animation: { duration: 1000, easing: 'easeOutQuart' }
+            }
+        });
+    }
+
+    // ========== BIỂU ĐỒ CHÍNH (BAR CHART) ==========
+    function updateChart(type) {
+        if (!reportData || !reportData.chartData) return;
+
+        currentChartType = type;
+        const canvas = document.getElementById('mainChart');
+        const ctx = canvas.getContext('2d');
+
+        if (mainChart) mainChart.destroy();
+
+        let chartData, label, title;
+
+        switch(type) {
+            case 'revenue':
+                chartData = reportData.chartData.revenue;
+                label = 'Doanh thu';
+                title = 'Biểu đồ Doanh thu';
+                break;
+            case 'orders':
+                chartData = reportData.chartData.orders;
+                label = 'Số đơn hàng';
+                title = 'Biểu đồ Số đơn hàng';
+                break;
+            case 'avgValue':
+                chartData = reportData.chartData.avgValue;
+                label = 'Giá trị trung bình';
+                title = 'Biểu đồ Giá trị đơn trung bình';
+                break;
+        }
+
+        document.getElementById('chart-title').textContent = title;
+
         const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(0,123,255,0.8)');
         gradient.addColorStop(1, 'rgba(0,123,255,0.2)');
 
-        const revenueChart = new Chart(ctx, {
+        mainChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['01/11','02/11','03/11','04/11','05/11','06/11','07/11'],
+                labels: chartData.labels,
                 datasets: [{
-                    label: 'Doanh thu',
-                    data: [1200000, 1500000, 1000000, 2000000, 1800000, 2200000, 1900000],
+                    label: label,
+                    data: chartData.data,
                     backgroundColor: gradient,
                     borderRadius: 5,
                     borderSkipped: false
@@ -207,85 +267,96 @@
                 responsive: true,
                 plugins: {
                     legend: { display: false },
-                    tooltip: { enabled: true }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-
-        // Chart phụ: Doughnut top sản phẩm
-        const topCtx = document.getElementById('topProductsChart').getContext('2d');
-        const topProductsChart = new Chart(topCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Conan tập 91', 'Doraemon 45', 'Blue Lock 14'],
-                datasets: [{
-                    data: [128, 103, 95],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                    borderWidth: 2,
-                    borderColor: '#fff',
-                    hoverBorderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '50%', // Tạo lỗ tròn đẹp
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            font: { size: 13 },
-                            padding: 20,
-                            usePointStyle: true
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.parsed.y;
+                                if (type === 'orders') {
+                                    return label + ': ' + formatNumber(value) + ' đơn';
+                                } else {
+                                    return label + ': ' + formatCurrency(value);
+                                }
+                            }
                         }
-                    },
-                    tooltip: { enabled: false }, // Tắt tooltip
-                    datalabels: { display: false }
+                    }
                 },
-                events: [], // Tắt mọi sự kiện click/hover
-                hover: { mode: null }, // Tắt hover
-                animation: {
-                    duration: 1200,
-                    easing: 'easeOutQuart'
+                animation: { duration: 1000, easing: 'easeOutQuart' },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (type === 'orders') {
+                                    return formatNumber(value);
+                                } else {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         });
+    }
 
-        // Bộ lọc thời gian (demo)
-        const buttons = document.querySelectorAll('.time-btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                buttons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const start = document.getElementById('startDate');
-                const end = document.getElementById('endDate');
-                if(btn.textContent === 'Tùy chỉnh') {
-                    start.style.display = 'inline-block';
-                    end.style.display = 'inline-block';
-                } else {
-                    start.style.display = 'none';
-                    end.style.display = 'none';
-                }
+    // ========== CLICK KPI CARD ĐỂ CHUYỂN BIỂU ĐỒ ==========
+    document.querySelectorAll('.kpi-card[data-chart]').forEach(card => {
+        card.addEventListener('click', function() {
+            const chartType = this.getAttribute('data-chart');
+            updateChart(chartType);
+
+            // Highlight card được chọn
+            document.querySelectorAll('.kpi-card[data-chart]').forEach(c => {
+                c.style.border = 'none';
             });
+            this.style.border = '2px solid #007bff';
         });
-    </script>
+    });
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+    // ========== BỘ LỌC THỜI GIAN ==========
+    const timeButtons = document.querySelectorAll('.time-btn');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    timeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            timeButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.getAttribute('data-filter');
+
+            if (filter === 'custom') {
+                startDateInput.style.display = 'inline-block';
+                endDateInput.style.display = 'inline-block';
+            } else {
+                startDateInput.style.display = 'none';
+                endDateInput.style.display = 'none';
+                loadReportData(filter);
+            }
+        });
+    });
+
+    startDateInput.addEventListener('change', function() {
+        if (endDateInput.value) {
+            loadReportData('custom', this.value, endDateInput.value);
+        }
+    });
+
+    endDateInput.addEventListener('change', function() {
+        if (startDateInput.value) {
+            loadReportData('custom', startDateInput.value, this.value);
+        }
+    });
+
+    // ========== KHỞI TẠO ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        loadReportData('today');
+
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
-
         links.forEach(link => {
             const linkPage = link.getAttribute("href");
-
             if (linkPage === current) {
                 link.classList.add("active");
             }
