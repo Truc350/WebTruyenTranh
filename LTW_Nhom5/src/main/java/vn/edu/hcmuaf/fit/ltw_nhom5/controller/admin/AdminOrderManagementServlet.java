@@ -187,12 +187,28 @@ public class AdminOrderManagementServlet extends HttpServlet {
             if ((Boolean) result.get("success")) {
                 Map<String, Object> returnInfo = orderService.getReturnBasicInfo(returnId);
 
-                if (returnInfo != null) {
-                    int userId = (Integer) returnInfo.get("userId");
-                    String orderCode = (String) returnInfo.get("orderCode");
+                System.out.println("📊 Return info: " + returnInfo); // DEBUG
 
-                    notificationService.notifyRefundRejected(userId, orderCode, rejectReason);
-                    System.out.println("✅ Refund rejection notification sent to user " + userId);
+                if (returnInfo != null && !returnInfo.isEmpty()) {
+                    Object userIdObj = returnInfo.get("userId");
+                    Object orderCodeObj = returnInfo.get("orderCode");
+
+                    if (userIdObj != null && orderCodeObj != null) {
+                        try {
+                            int userId = ((Number) userIdObj).intValue();
+                            String orderCode = String.valueOf(orderCodeObj);
+
+                            notificationService.notifyRefundRejected(userId, orderCode, rejectReason);
+                            System.out.println("✅ Refund rejection notification sent to user " + userId);
+                        } catch (Exception e) {
+                            System.err.println("⚠️ Error sending notification: " + e.getMessage());
+                        }
+                    } else {
+                        System.err.println("⚠️ Missing userId or orderCode in returnInfo");
+                        System.err.println("   Available keys: " + returnInfo.keySet());
+                    }
+                } else {
+                    System.err.println("⚠️ getReturnBasicInfo returned null or empty for return ID: " + returnId);
                 }
             }
 
@@ -222,13 +238,34 @@ public class AdminOrderManagementServlet extends HttpServlet {
             if ((Boolean) result.get("success")) {
                 Map<String, Object> returnInfo = orderService.getReturnBasicInfo(returnId);
 
-                if (returnInfo != null) {
-                    int userId = (Integer) returnInfo.get("userId");
-                    String orderCode = (String) returnInfo.get("orderCode");
-                    String refundAmount = (String) returnInfo.get("formattedRefundAmount");
+                System.out.println("📊 Return info: " + returnInfo); // DEBUG
 
-                    notificationService.notifyRefundApproved(userId, orderCode, refundAmount);
-                    System.out.println("✅ Refund approval notification sent to user " + userId);
+                if (returnInfo != null && !returnInfo.isEmpty()) {
+                    // ✅ KIỂM TRA VÀ LẤY GIÁ TRỊ AN TOÀN
+                    Object userIdObj = returnInfo.get("userId");
+                    Object orderCodeObj = returnInfo.get("orderCode");
+                    Object refundAmountObj = returnInfo.get("formattedRefundAmount");
+
+                    // ✅ XỬ LÝ KHI CÓ ĐẦY ĐỦ THÔNG TIN
+                    if (userIdObj != null && orderCodeObj != null) {
+                        try {
+                            int userId = ((Number) userIdObj).intValue();
+                            String orderCode = String.valueOf(orderCodeObj);
+                            String refundAmount = refundAmountObj != null ?
+                                    String.valueOf(refundAmountObj) : "N/A";
+
+                            notificationService.notifyRefundApproved(userId, orderCode, refundAmount);
+                            System.out.println("✅ Refund approval notification sent to user " + userId);
+                        } catch (Exception e) {
+                            System.err.println("⚠️ Error sending notification: " + e.getMessage());
+                            // Không throw exception, chỉ log lỗi
+                        }
+                    } else {
+                        System.err.println("⚠️ Missing userId or orderCode in returnInfo");
+                        System.err.println("   Available keys: " + returnInfo.keySet());
+                    }
+                } else {
+                    System.err.println("⚠️ getReturnBasicInfo returned null or empty for return ID: " + returnId);
                 }
             }
 
