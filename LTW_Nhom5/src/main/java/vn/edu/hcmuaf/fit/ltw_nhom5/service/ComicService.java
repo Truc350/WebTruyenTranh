@@ -149,6 +149,13 @@ public class ComicService {
         return comicDAO.getRelatedComics(comicId);
     }
 
+//    /**
+//     * Lấy danh sách đánh giá của truyện
+//     */
+//    public List<Review> getComicReviews(int comicId) {
+//        return comicDAO.getComicReviews(comicId);
+//    }
+
     /**
      * Tính điểm đánh giá trung bình
      */
@@ -240,5 +247,36 @@ public class ComicService {
         }
 
         return reviews;
+    }
+
+    /**
+     * Tìm kiếm với filter ẩn/hiện
+     */
+    public List<Comic> searchComicsAdminWithFilter(String keyword, String author,
+                                                   Integer categoryId, Integer hiddenFilter,
+                                                   int page, int limit) {
+        return comicDAO.searchComicsAdminWithFilter(keyword, author, categoryId, hiddenFilter, page, limit);
+    }
+
+    /**
+     * Đếm với filter ẩn/hiện
+     */
+    public int countComicsAdminWithFilter(String keyword, String author,
+                                          Integer categoryId, Integer hiddenFilter) {
+        return comicDAO.countComicsAdminWithFilter(keyword, author, categoryId, hiddenFilter);
+    }
+
+    /**
+     * Lấy tất cả với filter ẩn/hiện
+     */
+    public List<Comic> getAllComicsAdminWithFilter(int page, int limit, Integer hiddenFilter) {
+        return comicDAO.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
+    }
+
+    /**
+     * Đếm tất cả với filter ẩn/hiện
+     */
+    public int countAllComicsWithFilter(Integer hiddenFilter) {
+        return comicDAO.countAllComicsWithFilter(hiddenFilter);
     }
 }

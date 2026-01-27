@@ -947,3 +947,32 @@ th, td {
 .search-add .dropdown select:focus {
     border-color: #ff4c4c;
 }
+
+
+.filter-select {
+    width: 220px;              /* độ rộng */
+    padding: 8px 12px;         /* khoảng cách trong */
+    border: 2px solid #d9534f; /* viền đỏ */
+    border-radius: 6px;        /* bo góc */
+    background-color: #fff;    /* nền trắng */
+    font-size: 14px;           /* cỡ chữ */
+    color: #333;               /* màu chữ */
+    appearance: none;          /* bỏ style mặc định */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23d9534f' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* icon mũi tên */
+    background-size: 12px;
+}
+
+/* Khi hover */
+.filter-select:hover {
+    border-color: #c9302c;
+}
+
+/* Khi focus */
+.filter-select:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(217,83,79,0.5);
+}
