@@ -1032,4 +1032,63 @@ public class OrderService {
                 return status;
         }
     }
+
+    /**
+     * Lấy thông tin cơ bản của đơn hàng để gửi thông báo
+     */
+    public Map<String, Object> getOrderBasicInfo(int orderId) {
+        String sql = """
+        SELECT 
+            o.user_id,
+            o.id as ordercode, 
+            o.shipping_provider
+        FROM orders o
+        WHERE o.id = ?
+    """;
+
+        return JdbiConnector.get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, orderId)
+                        .mapToMap()
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
+    /**
+     * Lấy thông tin cơ bản của đơn hoàn để gửi thông báo
+     */
+    public Map<String, Object> getReturnBasicInfo(int returnId) {
+        String sql = """
+        SELECT 
+            o.user_id AS userId,
+            o.id AS orderCode,
+            r.refund_amount AS refundAmount
+        FROM order_returns r
+        JOIN orders o ON r.order_id = o.id
+        WHERE r.id = ?
+    """;
+
+        try {
+            Map<String, Object> result = JdbiConnector.get().withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind(0, returnId)
+                            .mapToMap()
+                            .findFirst()
+                            .orElse(null)
+            );
+
+            // ✅ Format refund amount sau khi lấy
+            if (result != null && result.get("refundAmount") != null) {
+                double amount = ((Number) result.get("refundAmount")).doubleValue();
+                result.put("formattedRefundAmount", CurrencyFormatter.format(amount));
+            }
+
+            return result;
+
+        } catch (Exception e) {
+            System.err.println("Error getting return basic info: " + e.getMessage());
+            return null;
+        }
+    }
 }

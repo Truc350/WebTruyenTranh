@@ -81,7 +81,7 @@
             <div class="notify-wrapper">
                 <a href="#" class="bell-icon" id="bell-icon">
                     <i class="fa-solid fa-bell"></i>
-                    <span class="notification-badge" id="notification-badge">0</span>
+                    <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
                 </a>
 
                 <!-- Dropdown thông báo -->
@@ -90,11 +90,10 @@
                         <div class="inform-num">
                             <i class="fa-solid fa-bell"></i>
                             <span>Thông báo</span>
-                            <span class="notification-badge" id="header-badge-count">(0)</span>
+                            <span class="notification-badge-count" id="header-badge-count">(0)</span>
                         </div>
                         <div class="inform-all">
-                            <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp#notifications">Xem
-                                tất cả</a>
+                            <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp#notifications">Xem tất cả</a>
                         </div>
                     </div>
 
@@ -260,7 +259,11 @@
         }
     };
 </script>
+<!-- ========== NOTIFICATION SCRIPT (CHỈ 1 ĐOẠN DUY NHẤT) ========== -->
 <script>
+    /**
+     * Load thông báo gần đây cho header dropdown
+     */
     async function loadHeaderNotifications() {
         try {
             const response = await fetch('${pageContext.request.contextPath}/NotificationServlet/recent?limit=8');
@@ -268,96 +271,195 @@
 
             const data = await response.json();
 
-            // Cập nhật badge
+            console.log('📨 Received notifications:', data); // DEBUG LOG
+
+            // Cập nhật badge số lượng
             const count = data.unread_count || 0;
-            document.getElementById('notification-badge').textContent = count;
-            document.getElementById('notification-badge').style.display = count > 0 ? 'flex' : 'none';
-            document.getElementById('header-badge-count').textContent = `(${count})`;
+            const badge = document.getElementById('notification-badge');
+            const badgeCount = document.getElementById('header-badge-count');
+
+            if (badge && badgeCount) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+                badgeCount.textContent = `(${count})`;
+            }
 
             const list = document.getElementById('header-notification-list');
+            if (!list) {
+                console.error('❌ Element header-notification-list not found');
+                return;
+            }
 
+            // Nếu không có thông báo
             if (!data.notifications || data.notifications.length === 0) {
                 list.innerHTML = '<div class="empty-noti">Chưa có thông báo mới</div>';
                 return;
             }
 
+            // Render danh sách thông báo
             let html = '';
             data.notifications.forEach(n => {
-                const unreadClass = n.is_read ? '' : 'unread';
+                // ✅ FIX: Kiểm tra is_read chính xác (false = chưa đọc = unread)
+                const unreadClass = (n.is_read === false) ? 'unread' : '';
+
+                // ✅ FIX: Format message rõ ràng hơn
+                let displayMessage = '(Không có nội dung)';
+                if (n.message && typeof n.message === 'string' && n.message.trim()) {
+                    const firstLine = n.message.trim().split('\n')[0];
+                    displayMessage = firstLine.length > 100
+                        ? firstLine.substring(0, 100) + '...'
+                        : firstLine;
+                }
+
+                // ICON THEO TYPE
+                let icon = '📬';
+                if (n.type === 'ORDER_CONFIRMED') icon = '✅';
+                else if (n.type === 'ORDER_SHIPPED') icon = '🚚';
+                else if (n.type === 'ORDER_CANCELLED') icon = '❌';
+                else if (n.type === 'REFUND_APPROVED') icon = '💰';
+                else if (n.type === 'REFUND_REJECTED') icon = '⛔';
+                else if (n.type === 'ORDER_UPDATE') icon = '📦';
+
+                // Format time
+                const formattedTime = n.formatted_date || n.formattedCreatedAt || '';
+
                 html += `
-                <a href="${n.link || '#'}" class="header-noti-item ${unreadClass}" data-id="${n.id}">
-                    <div class="title">${n.title}</div>
-                    <div class="msg">${n.message}</div>
-                    <div class="time">${n.formatted_date}</div>
-                </a>
+                <div class="header-noti-item ${unreadClass}" data-id="${n.id}">
+                    <div class="noti-icon">${icon}</div>
+                    <div class="noti-content">
+                        <div class="noti-message">${displayMessage}</div>
+                        <div class="noti-time">${formattedTime}</div>
+                    </div>
+                </div>
             `;
             });
+
             list.innerHTML = html;
+
+            console.log('✅ Rendered', data.notifications.length, 'notifications'); // DEBUG LOG
 
             // Click thông báo → đánh dấu đã đọc
             document.querySelectorAll('.header-noti-item').forEach(item => {
                 item.addEventListener('click', async function (e) {
                     if (this.classList.contains('unread')) {
                         const id = this.dataset.id;
-                        await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {method: 'POST'});
-                        loadHeaderNotifications(); // refresh lại
+                        try {
+                            await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
+                                method: 'POST'
+                            });
+                            this.classList.remove('unread');
+                            loadHeaderNotifications(); // Refresh badge
+                        } catch (err) {
+                            console.error('Lỗi đánh dấu đã đọc:', err);
+                        }
                     }
                 });
             });
 
         } catch (err) {
             console.error('Lỗi load thông báo header:', err);
-            document.getElementById('header-notification-list').innerHTML =
-                '<div class="empty-noti">Lỗi kết nối. Thử lại sau.</div>';
+            const list = document.getElementById('header-notification-list');
+            if (list) {
+                list.innerHTML = '<div class="empty-noti">Lỗi kết nối. Thử lại sau.</div>';
+            }
         }
     }
 
-    // Mở/đóng dropdown
+    /**
+     * Mở/đóng notification dropdown
+     */
     document.addEventListener('DOMContentLoaded', () => {
         const bell = document.getElementById('bell-icon');
         const panel = document.getElementById('notification-panel');
+
+        if (!bell || !panel) {
+            console.warn('⚠️ Bell icon hoặc notification panel không tìm thấy');
+            return;
+        }
 
         bell.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
+            console.log('🔔 Bell clicked!');
+            console.log('📊 Panel current display:', panel.style.display);
+
             if (panel.style.display === 'block') {
                 panel.style.display = 'none';
+                console.log('➡️ Closing panel');
             } else {
                 panel.style.display = 'block';
-                loadHeaderNotifications(); // load mới mỗi lần mở
+                console.log('➡️ Opening panel');
+                loadHeaderNotifications(); // Load mới mỗi lần mở
             }
         });
 
         // Đóng khi click ngoài
         document.addEventListener('click', function (e) {
             if (!bell.contains(e.target) && !panel.contains(e.target)) {
-                panel.style.display = 'none';
+                if (panel.style.display === 'block') {
+                    panel.style.display = 'none';
+                    console.log('➡️ Closing panel (click outside)');
+                }
             }
         });
-    });
 
-    // Load badge ngay khi trang mở
-    fetch('${pageContext.request.contextPath}/NotificationServlet/count')
-        .then(r => r.json())
-        .then(d => {
-            const count = d.unread_count || 0;
-            document.getElementById('notification-badge').textContent = count;
-            document.getElementById('notification-badge').style.display = count > 0 ? 'flex' : 'none';
-        })
-        .catch(() => {
-        });
+        // Load badge ngay khi trang mở
+        fetch('${pageContext.request.contextPath}/NotificationServlet/count')
+            .then(r => r.json())
+            .then(d => {
+                const count = d.unread_count || 0;
+                const badge = document.getElementById('notification-badge');
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                }
+                console.log('✅ Initial badge count loaded:', count);
+            })
+            .catch(err => {
+                console.error('❌ Lỗi load badge count:', err);
+            });
+    });
 </script>
-<c:if test="${not empty sessionScope.user}">
+
+<!-- ========== AUTO REFRESH NOTIFICATION (CHỈ CHO USER ĐÃ LOGIN) ========== -->
+<c:if test="${not empty sessionScope.currentUser}">
     <script>
-        document.body.dataset.userId = '${sessionScope.user.id}';
+        // AUTO REFRESH NOTIFICATION BADGE MỖI 60 GIÂY
+        setInterval(() => {
+            fetch('${pageContext.request.contextPath}/NotificationServlet/count')
+                .then(r => r.json())
+                .then(d => {
+                    const count = d.unread_count || 0;
+                    const badge = document.getElementById('notification-badge');
+                    const oldCount = parseInt(badge.textContent) || 0;
+
+                    // Nếu có thông báo mới → thêm animation
+                    if (count > oldCount && count > 0) {
+                        badge.classList.add('badge-pulse');
+                        setTimeout(() => badge.classList.remove('badge-pulse'), 1000);
+
+                        console.log('🔔 Có thông báo mới! Count:', count);
+                    }
+
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                })
+                .catch(err => console.error('Auto refresh badge error:', err));
+        }, 60000); // 60 giây
+    </script>
+
+    <script>
+        // SET dataset để firebase-notification.js sử dụng
+        document.body.dataset.userId = '${sessionScope.currentUser.id}';
         document.body.dataset.loggedIn = 'true';
         document.body.dataset.contextPath = '${pageContext.request.contextPath}';
     </script>
 
+    <!-- LOAD FIREBASE CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
-    <script src="${pageContext.request.contextPath}/fontend/js/firebase-notification.js"></script>
+    <script src="${pageContext.request.contextPath}/js/firebase-notification.js"></script>
 </c:if>
 

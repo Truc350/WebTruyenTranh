@@ -10,10 +10,8 @@ public class Notification {
     private String message;
     private String type;
     private boolean isRead;
-    private long relatedId;
-    private String relatedType;
     private LocalDateTime createdAt;
-    private LocalDateTime readAt;
+    private String formattedCreatedAt;
 
     public Notification() {
     }
@@ -66,22 +64,6 @@ public class Notification {
         isRead = read;
     }
 
-    public long getRelatedId() {
-        return relatedId;
-    }
-
-    public void setRelatedId(long relatedId) {
-        this.relatedId = relatedId;
-    }
-
-    public String getRelatedType() {
-        return relatedType;
-    }
-
-    public void setRelatedType(String relatedType) {
-        this.relatedType = relatedType;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -90,31 +72,23 @@ public class Notification {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getRaedAt() {
-        return readAt;
-    }
-
-    public void setRaedAt(LocalDateTime raedAt) {
-        this.readAt = raedAt;
-    }
-
-    public boolean getIsRead() {
-        return isRead;
-    }
-
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
-    }
-
-    // THÊM METHOD NÀY - Format createdAt cho JSP
     public String getFormattedCreatedAt() {
-        if (createdAt == null) return "";
-        return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        return formattedCreatedAt;
     }
 
-    // THÊM METHOD NÀY - Format readAt cho JSP (nếu cần)
-    public String getFormattedReadAt() {
-        if (readAt == null) return "";
-        return readAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
     }
+
+//    // THÊM METHOD NÀY - Format createdAt cho JSP
+//    public String getFormattedCreatedAt() {
+//        if (createdAt == null) return "";
+//        return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+//    }
+
+    // Alias cho frontend (để JS dễ đọc)
+    public String getFormatted_date() {
+        return formattedCreatedAt;
+    }
+
 }
