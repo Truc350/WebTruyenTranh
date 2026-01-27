@@ -6,7 +6,9 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.Review;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.ReviewImage;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReviewDAO {
     private final Jdbi jdbi;
@@ -19,8 +21,8 @@ public class ReviewDAO {
      * Thêm review mới
      */
     public int addReview(Review review) {
-        String sql = "INSERT INTO reviews (comic_id, user_id, rating, comment, created_at) " +
-                "VALUES (:comicId, :userId, :rating, :comment, NOW())";
+        String sql = "INSERT INTO reviews (comic_id, user_id, rating, comment, created_at, order_id) " +
+                "VALUES (:comicId, :userId, :rating, :comment, NOW(), :orderId)";
 
         return jdbi.withHandle(handle -> {
             int reviewId = handle.createUpdate(sql)
@@ -28,6 +30,7 @@ public class ReviewDAO {
                     .bind("userId", review.getUserId())
                     .bind("rating", review.getRating())
                     .bind("comment", review.getComment())
+                    .bind("orderId", review.getOrderId())
                     .executeAndReturnGeneratedKeys("id")
                     .mapTo(Integer.class)
                     .one();
@@ -55,9 +58,11 @@ public class ReviewDAO {
      * Kiểm tra user đã review order này chưa
      */
     public boolean hasUserReviewedOrder(int userId, int orderId) {
-        String sql = "SELECT COUNT(*) FROM reviews r " +
-                "INNER JOIN order_items oi ON r.comic_id = oi.comic_id " +
-                "WHERE oi.order_id = ? AND r.user_id = ?";
+//        String sql = "SELECT COUNT(*) FROM reviews r " +
+//                "INNER JOIN order_items oi ON r.comic_id = oi.comic_id " +
+//                "WHERE oi.order_id = ? AND r.user_id = ?";
+        String sql = "SELECT COUNT(*) FROM reviews " +
+                "WHERE order_id = ? AND user_id = ?";
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -76,12 +81,19 @@ public class ReviewDAO {
                 "INNER JOIN users u ON r.user_id = u.id " +
                 "WHERE r.comic_id = ? ORDER BY r.created_at DESC";
 
-        return jdbi.withHandle(handle ->
+        List<Review> reviews = jdbi.withHandle(handle ->
                 handle.createQuery(sql)
                         .bind(0, comicId)
                         .mapToBean(Review.class)
                         .list()
         );
+
+        for (Review review : reviews) {
+            List<ReviewImage> images = getReviewImages(review.getId());
+            review.setImages(images);
+        }
+
+        return reviews;
     }
 
     /**
@@ -90,12 +102,13 @@ public class ReviewDAO {
     public List<ReviewImage> getReviewImages(int reviewId) {
         String sql = "SELECT * FROM reviewimages WHERE review_id = ?";
 
-        return jdbi.withHandle(handle ->
+        List<ReviewImage> images = jdbi.withHandle(handle ->
                 handle.createQuery(sql)
                         .bind(0, reviewId)
                         .mapToBean(ReviewImage.class)
                         .list()
         );
+        return images;
     }
 
     /**
@@ -111,4 +124,47 @@ public class ReviewDAO {
                         .one()
         );
     }
+
+
+    public Map<Integer, Integer> getRatingDistribution(int comicId) {
+        String sql = "SELECT rating, COUNT(*) as count FROM reviews " +
+                "WHERE comic_id = ? GROUP BY rating";
+
+        Map<Integer, Integer> distribution = new HashMap<>();
+
+        // Khởi tạo giá trị mặc định cho tất cả các mức sao (1-5)
+        for (int i = 1; i <= 5; i++) {
+            distribution.put(i, 0);
+        }
+
+        // Lấy dữ liệu thực tế từ database và cập nhật vào map
+        jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, comicId)
+                        .map((rs, ctx) -> {
+                            int rating = rs.getInt("rating");
+                            int count = rs.getInt("count");
+                            distribution.put(rating, count);
+                            return null;
+                        })
+                        .list()
+        );
+
+        return distribution;
+    }
+
+    /**
+     * Đếm tổng số review của comic
+     */
+    public int getTotalReviews(int comicId) {
+        String sql = "SELECT COUNT(*) FROM reviews WHERE comic_id = ?";
+
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind(0, comicId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
 }

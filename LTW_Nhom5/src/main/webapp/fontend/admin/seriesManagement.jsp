@@ -11,11 +11,23 @@
 </head>
 <body>
 <div class="container">
+    <!-- Sidebar (giữ nguyên) -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
 
-
     <div class="main-content">
-        <%@ include file="HeaderAdmin.jsp" %>
+        <header class="admin-header">
+            <div class="header-right">
+                <a href="chatWithCus.jsp"><i class="fa-solid fa-comment"></i></a>
+                <div class="admin-profile">
+                    <a href="profileAdmin.jsp"><img src="${pageContext.request.contextPath}/img/admin.png"
+                                                    class="admin-avatar" alt="Admin"></a>
+                    <span class="admin-name">Admin</span>
+                </div>
+                <button class="btn-logout" title="Đăng xuất">
+                    <a href="../public/login_bo.jsp"><i class="fa-solid fa-right-from-bracket"></i></a>
+                </button>
+            </div>
+        </header>
 
         <h2 class="page-title">Quản lý series</h2>
 

@@ -37,7 +37,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/cart");
-
+        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
     }
 
     @Override

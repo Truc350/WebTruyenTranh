@@ -100,9 +100,10 @@ public class SubmitReviewServlet extends HttpServlet {
                 review.setUserId(user.getId());
                 review.setRating(rating);
                 review.setComment(comment);
+                review.setOrderId(orderId);
 
                 int reviewId = reviewDAO.addReview(review);
-                System.out.println("Created review ID: " + reviewId + " for comic: " + item.getComicId());
+                System.out.println("Created review ID: " + reviewId + " for comic: " + item.getComicId() + " in order: " + orderId);
 
                 // ✅ Thêm TẤT CẢ ảnh đã upload vào review này
                 for (String imageUrl : uploadedImageUrls) {

@@ -11,6 +11,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -313,8 +314,39 @@ public class CartSevlet extends HttpServlet {
                 boolean buyNow = "true".equals(request.getParameter("buyNow"));
 
                 if (buyNow) {
-                    response.sendRedirect(request.getContextPath() + "/cart");
-                } else {
+                    User currentUser = (User) session.getAttribute("currentUser");
+
+                    if (currentUser == null) {
+                        session.setAttribute("errorMsg", "Vui lòng đăng nhập để mua hàng");
+                        response.sendRedirect(request.getContextPath() + "/login");
+                        return;
+                    }
+
+                    // ✅ TẠO selectedItems CHỈ CHỨA SẢN PHẨM VỪA THÊM
+                    CartItem addedItem = cart.get(comicId);
+                    if (addedItem != null) {
+                        List<CartItem> selectedItems = new ArrayList<>();
+                        selectedItems.add(addedItem);
+
+                        // Tính toán cho checkout
+                        double subtotal = addedItem.getFinalPrice() * addedItem.getQuantity();
+                        double shippingFee = 25000;
+                        double totalAmount = subtotal + shippingFee;
+
+                        // Set vào session
+                        session.setAttribute("selectedItems", selectedItems);
+                        session.setAttribute("checkoutSubtotal", subtotal);
+                        session.setAttribute("shippingFee", shippingFee);
+                        session.setAttribute("checkoutTotal", totalAmount);
+
+                        // Redirect đến checkout
+                        response.sendRedirect(request.getContextPath() + "/checkout");
+                    }
+                }
+
+
+
+                else {
                     if ("wishlist".equals(returnUrl)) {
                         response.sendRedirect(request.getContextPath() + "/wishlist");
                     } else {

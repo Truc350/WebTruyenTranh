@@ -9,7 +9,6 @@
 <c:set var="categories" value="${categoryDAO.allCategories}"/>
 <c:set var="seriesList" value="${seriesDAO.allSeries}"/>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -827,7 +826,6 @@
 </script>
 
 
-<!-- ===== LOAD DANH SÁCH BAN ĐẦU ===== -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -842,7 +840,7 @@
             '<p style="margin-top: 10px;">Đang tải danh sách truyện...</p></td></tr>';
 
         try {
-            // ✅ LẤY FILTER HIỆN TẠI
+
             const filterSelect = document.getElementById('displayFilter');
             const filterValue = filterSelect.value;
 
@@ -853,7 +851,6 @@
                 hiddenFilter = 1;
             }
 
-            // ✅ BUILD URL VỚI FILTER
             let url = contextPath + '/admin/products/list?page=1';
             if (hiddenFilter !== null) {
                 url += '&hiddenFilter=' + hiddenFilter;

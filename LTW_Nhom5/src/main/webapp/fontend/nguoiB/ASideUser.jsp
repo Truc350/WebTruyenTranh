@@ -3,18 +3,50 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%-- Lấy user từ session với tên "currentUser" như trong LoginServlet --%>
+<c:set var="currentUser" value="${sessionScope.currentUser}" />
+
+<%-- Redirect nếu chưa login --%>
+<c:if test="${empty currentUser}">
+    <c:redirect url="${pageContext.request.contextPath}/login" />
+</c:if>
+
 <c:set var="currentURI" value="${pageContext.request.requestURI}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <div class="profile-container">
     <div class="profile-header">
         <div class="avatar">
-            <img src="https://mayweddingstudio.vn/wp-content/uploads/anh-dai-dien-facebook-nu-9.webp" alt="Avatar">
+            <c:choose>
+                <%-- Nếu có avatarUrl trong database thì dùng --%>
+                <c:when test="${not empty currentUser.avatarUrl}">
+                    <img src="${currentUser.avatarUrl}" alt="${currentUser.fullName}">
+                </c:when>
+                <%-- Nếu không có, dùng avatar mặc định theo giới tính --%>
+                <c:when test="${currentUser.gender == 'female'}">
+                    <img src="https://mayweddingstudio.vn/wp-content/uploads/anh-dai-dien-facebook-nu-9.webp" alt="Avatar">
+                </c:when>
+                <c:otherwise>
+                    <img src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg" alt="Avatar">
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="user-info">
-            <h2>Huỳnh Trúc</h2>
-            <p class="membership">Thành viên Bạc</p>
-            <p class="C-point">C-Point tích lũy: 0</p>
+            <%-- Hiển thị fullName, nếu null thì dùng username --%>
+            <h2>${not empty currentUser.fullName ? currentUser.fullName : currentUser.username}</h2>
+
+            <%-- Hiển thị membership level tiếng Việt --%>
+            <p class="membership">
+                <c:choose>
+                    <c:when test="${currentUser.membershipLevel == 'Silver'}">Thành viên Bạc</c:when>
+                    <c:when test="${currentUser.membershipLevel == 'Gold'}">Thành viên Vàng</c:when>
+                    <c:when test="${currentUser.membershipLevel == 'Platinum'}">Thành viên Kim Cương</c:when>
+                    <c:otherwise>Thành viên Thường</c:otherwise>
+                </c:choose>
+            </p>
+
+            <%-- Hiển thị điểm với format số --%>
+            <p class="C-point">C-Point tích lũy: <fmt:formatNumber value="${currentUser.points}" pattern="#,###"/></p>
         </div>
     </div>
     <div class="menu">

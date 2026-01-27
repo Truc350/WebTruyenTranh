@@ -1,5 +1,7 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,6 +23,7 @@ public class User implements Serializable {
     private int points;
     private BigDecimal totalSpent;
     private String membershipLevel;
+    @ColumnName("is_active")
     private boolean isActive;
     private boolean isDeleted;
     private LocalDateTime deletedAt;

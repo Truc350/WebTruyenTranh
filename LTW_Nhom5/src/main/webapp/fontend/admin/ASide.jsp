@@ -29,7 +29,7 @@
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/category.jsp">
+                <a href="${pageContext.request.contextPath}/CategoryManagement">
                     <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
                     <span>Quản lý thể loại</span>
                 </a>
