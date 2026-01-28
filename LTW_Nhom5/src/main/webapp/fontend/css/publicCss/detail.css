@@ -455,8 +455,8 @@
 
 .product-card img {
 
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 70%;
     object-fit: cover;
     display: block;
 }
@@ -477,8 +477,8 @@
 .product-card h3 {
     font-size: 14px;
     color: #333;
-    margin: 5px 0;
-    height: 40px;
+    margin: 3px 0;
+    height: 15px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -498,6 +498,7 @@
     margin: 5px 0 3px 0;
     padding: 0;
     flex-shrink: 0;
+    text-decoration: none;
 }
 
 .product-card .sold {
@@ -507,7 +508,7 @@
     font-size: 12px;
     color: #666;
     border-top: 1px solid #f0f0f0;
-    margin-bottom: 0;
+    margin-bottom: 5px;
 }
 
 .product-card .sold strong {
@@ -566,12 +567,15 @@
     50% { opacity: 0.6; }
 }
 
-/* Price Section - Product Card */
+/* ✅ Price Section - HIỂN THỊ CÙNG 1 HÀNG */
 .price-section {
     padding: 0;
     display: flex;
-    flex-direction: column;
-    gap: 3px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin: 5px 0;
+    flex-wrap: wrap;
 }
 
 .price-section .flash-price,
@@ -579,7 +583,8 @@
     color: #ff5722;
     font-weight: bold;
     font-size: 16px;
-    margin: 5px 0 3px 0;
+    margin: 0;
+    text-decoration: none;
 }
 
 .price-section .flash-price {
@@ -588,39 +593,18 @@
 
 .price-section .original-price {
     font-size: 13px;
-    margin: 3px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
+    margin: 0;
     color: #999;
     text-decoration: line-through;
 }
 
+/* ✅ ẨN PHẦN TRĂM GIẢM GIÁ */
 .price-section .discount-badge {
-    background-color: #ff5722;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: bold;
-    white-space: nowrap;
-    width: fit-content;
+    display: none;
 }
 
 .discount-badge.flash-badge {
-    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
-    color: white;
-    animation: glow 2s infinite;
-}
-
-@keyframes glow {
-    0%, 100% {
-        box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
-    }
+    display: none;
 }
 
 /* cái này container 4 */
@@ -867,10 +851,11 @@ a {
 }
 
 .price-wrapper {
-    padding: 5px 10px;
     display: flex;
-    flex-direction: column;
-    gap: 3px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
 }
 
 .original-price-small {
