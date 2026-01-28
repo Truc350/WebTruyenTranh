@@ -11,8 +11,10 @@ import java.util.Properties;
 
 public class EmailUtils {
     public static void sendEmail(String to, String subject, String content) {
-        final String username = "comicstore365@gmail.com";
-        final String password = "ddnaxksbhrfimxux";
+        final String username = "doghealthapp.app@gmail.com";
+        final String password = "fhuhzpuzjqqilzqm";
+//        final String username = "comicstore365@gmail.com";
+//        final String password = "ddnaxksbhrfimxux";
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");

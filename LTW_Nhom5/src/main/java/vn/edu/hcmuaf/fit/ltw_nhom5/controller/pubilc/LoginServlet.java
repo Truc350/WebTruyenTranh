@@ -37,7 +37,12 @@ public class LoginServlet extends HttpServlet {
         }
 
         Optional<User> userOpt = userDao.findByUsernameOrEmail(usernameOrEmail);
-
+        boolean isActive = userDao.isUserActive(userOpt);
+        if (!isActive) {
+            request.setAttribute("error", "Tài khoản của bạn đã bị khóa!");
+            request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
+            return;
+        }
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {

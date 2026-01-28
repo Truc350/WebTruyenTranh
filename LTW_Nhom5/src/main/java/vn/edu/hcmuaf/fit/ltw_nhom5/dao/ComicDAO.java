@@ -684,7 +684,7 @@ public class ComicDAO extends ADao {
      * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
      */
     public List<Comic> getRelatedComics(int comicId) {
-        final int LIMIT = 6;
+        final int LIMIT = 9;
 
         Comic current = jdbi.withHandle(h ->
                 h.createQuery("""
@@ -3575,6 +3575,31 @@ public class ComicDAO extends ADao {
                         .list()
         );
     }
+
+
+    public int getTotalSoldByComicId(int comicId) {
+        String sql = """
+        SELECT COALESCE(SUM(oi.quantity), 0)
+        FROM Order_Items oi
+        JOIN Orders o ON oi.order_id = o.id
+        WHERE oi.comic_id = :comicId
+          AND o.status = 'Completed'
+    """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("comicId", comicId)
+                            .mapTo(Integer.class)
+                            .one()
+            );
+        } catch (UnableToExecuteStatementException e) {
+            System.err.println("Lỗi khi lấy totalSold cho comicId=" + comicId);
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     /**
      * Đếm số lượng truyện trong một thể loại (chỉ truyện available, không bị xóa, không bị ẩn)
      */

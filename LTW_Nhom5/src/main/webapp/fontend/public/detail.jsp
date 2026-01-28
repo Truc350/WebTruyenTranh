@@ -16,6 +16,36 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/SuggesstItem.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="${pageContext.request.contextPath}/js/detail.js"></script>
+    <style>
+        .heart-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .heart-toggle i {
+            font-size: 22px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        /* Ẩn heart solid mặc định */
+        .heart-toggle .fa-solid {
+            display: none;
+            color: #e53935;
+        }
+
+        /* Khi checked */
+        .heart-toggle input:checked ~ .fa-regular {
+            display: none;
+        }
+
+        .heart-toggle input:checked ~ .fa-solid {
+            display: inline-block;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -114,7 +144,7 @@
 
                 <%--                Like--%>
                 <label class="heart-toggle" data-comic-id="${comic.id}">
-                    <input type="checkbox" hidden>
+                    <input id="hear_toggle" type="checkbox" hidden>
                     <i class="fa-regular fa-heart"></i>
                     <i class="fa-solid fa-heart"></i>
                     <p>Like</p>
@@ -129,19 +159,51 @@
             <h2>${comic.nameComics}
             </h2>
             <div class="information">
+
                 <div class="line1">
                     <c:if test="${not empty comic.publisher}">
-                        <p>Nhà xuất bản:<strong> ${comic.publisher}</strong></p>
+
+                        <p>Nhà xuất bản:
+                            <strong>
+                    <span class="publisher-link"
+                          data-publisher="${comic.publisher}"
+                          role="button"
+                          tabindex="0">
+                            ${comic.publisher}
+                    </span>
+                            </strong>
+                        </p>
                     </c:if>
                 </div>
                 <div class="line2">
                     <c:if test="${not empty comic.author}">
-                        <p>Tác giả:<strong> ${comic.author}</strong></p>
+                    <p>Tác giả:
+                        <strong>
+                    <span class="author-link"
+                          data-author="${comic.author}"
+                          role="button"
+                          tabindex="0">
+                            ${comic.author}
+                    </span>
+                        </strong>
+                    </p>
                     </c:if>
                 </div>
+
+                <%--                <div class="line1">--%>
+<%--                    <c:if test="${not empty comic.publisher}">--%>
+<%--                        <p>Nhà xuất bản:<strong> ${comic.publisher}</strong></p>--%>
+<%--                    </c:if>--%>
+<%--                </div>--%>
+<%--                <div class="line2">--%>
+<%--                    <c:if test="${not empty comic.author}">--%>
+<%--                        <p>Tác giả:<strong> ${comic.author}</strong></p>--%>
+<%--                    </c:if>--%>
+<%--                </div>--%>
             </div>
 
-            <p class="daban">Đã bán ${comic.totalSold}</p>
+            <p class="daban">Đã bán ${totalSell}</p>
+
 
             <div class="line3">
                 <div class="star">
@@ -310,6 +372,37 @@
             </section>
         </div>
 
+    </div>
+</div>
+
+
+
+
+<%--            Popup cho Author --%>
+<div id="authorPopup" class="info-popup" style="display: none;">
+    <div class="popup-overlay"></div>
+    <div class="popup-content">
+        <button class="popup-close">&times;</button>
+        <h2 id="authorPopupTitle">Thông tin tác giả</h2>
+        <div id="authorPopupBody" class="popup-body">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+        </div>
+    </div>
+</div>
+
+<%--           Popup cho Publisher--%>
+<div id="publisherPopup" class="info-popup" style="display: none;">
+    <div class="popup-overlay"></div>
+    <div class="popup-content">
+        <button class="popup-close">&times;</button>
+        <h2 id="publisherPopupTitle">Thông tin nhà xuất bản</h2>
+        <div id="publisherPopupBody" class="popup-body">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+        </div>
     </div>
 </div>
 
@@ -523,9 +616,9 @@
                     <i class="fas fa-book" style="font-size: 48px; margin-bottom: 10px;"></i>
                     <p>Chưa có gợi ý phù hợp</p>
                 </div>
+                </div>
             </c:otherwise>
         </c:choose>
-    </div>
 </div>
 
 
@@ -535,6 +628,174 @@
 <script>
     window.contextPath = '${pageContext.request.contextPath}';
 </script>
+
+
+<%--tác giả + nhà  xuất bản--%>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const contextPath = '${pageContext.request.contextPath}';
+
+        console.log('🟢 Script loaded, contextPath:', contextPath);
+
+        // ========== XỬ LÝ AUTHOR POPUP ==========
+        const authorLinks = document.querySelectorAll('.author-link');
+        console.log('📌 Found author links:', authorLinks.length);
+
+        authorLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const authorName = this.getAttribute('data-author');
+                console.log('🔵 Author clicked:', authorName);
+                showInfoPopup('author', authorName);
+            });
+        });
+
+        // ========== XỬ LÝ PUBLISHER POPUP ==========
+        const publisherLinks = document.querySelectorAll('.publisher-link');
+        console.log('📌 Found publisher links:', publisherLinks.length);
+
+        publisherLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const publisherName = this.getAttribute('data-publisher');
+                console.log('🔵 Publisher clicked:', publisherName);
+                showInfoPopup('publisher', publisherName);
+            });
+        });
+
+        // ========== ĐÓNG POPUP ==========
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('popup-close') ||
+                e.target.classList.contains('popup-overlay')) {
+                console.log('🔴 Closing popup');
+                document.querySelectorAll('.info-popup').forEach(popup => {
+                    popup.style.display = 'none';
+                });
+            }
+        });
+
+        // ========== HIỂN THỊ POPUP CHUNG ==========
+        function showInfoPopup(type, name) {
+
+            console.log('🟢 showInfoPopup called:', type, name);
+
+            const popupId = type === 'author' ? 'authorPopup' : 'publisherPopup';
+            const popup = document.getElementById(popupId);
+
+            if (!popup) {
+                console.error('❌ Popup not found:', popupId);
+                return;
+            }
+
+            const typeText = type === 'author' ? 'Tác giả' : 'Nhà xuất bản';
+            const title = document.getElementById(popupId + 'Title');
+            const body = document.getElementById(popupId + 'Body');
+
+            title.textContent = typeText + ': ' + name;
+            body.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div>';
+            popup.style.display = 'flex';
+
+            // ✅ DÙNG URL TUYỆT ĐỐI
+            const contextPath = window.contextPath || '';
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+
+            // Tạo URL đầy đủ
+            const url = protocol + '//' + host + contextPath + '/author-publisher-info?type=' +
+                encodeURIComponent(type) + '&name=' + encodeURIComponent(name);
+
+            console.log('📡 FULL URL:', url);
+            console.log('📡 Protocol:', protocol);
+            console.log('📡 Host:', host);
+            console.log('📡 Context Path:', contextPath);
+
+            fetch(url)
+                .then(res => {
+                    console.log('📡 Response status:', res.status);
+                    console.log('📡 Response URL:', res.url);
+                    console.log('📡 Content-Type:', res.headers.get('content-type'));
+
+                    if (!res.ok) {
+                        return res.text().then(text => {
+                            console.error('❌ Response body:', text);
+                            throw new Error('HTTP ' + res.status + ': ' + text.substring(0, 100));
+                        });
+                    }
+
+                    const contentType = res.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        return res.text().then(text => {
+                            console.error('❌ Not JSON, got:', text.substring(0, 200));
+                            throw new Error('Response is not JSON');
+                        });
+                    }
+
+                    return res.json();
+                })
+                .then(data => {
+                    console.log('📦 Data received:', data);
+
+                    if (data.success && Array.isArray(data.comics) && data.comics.length > 0) {
+                        renderComics(body, data, typeText);
+                    } else {
+                        body.innerHTML = '<p style="padding:20px">Không có truyện nào.</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error('❌ Fetch error:', err);
+                    body.innerHTML = '<div class="loading" style="color: #e74c3c;">Lỗi: ' + err.message + '</div>';
+                });
+        }
+
+        // ========== RENDER DANH SÁCH TRUYỆN ==========
+        function renderComics(container, data, typeText) {
+
+            const entityName = data.authorName || data.publisherName;
+            const icon = data.authorName ? 'fa-pen-nib' : 'fa-building';
+
+            let html =
+                '<div class="popup-stats">' +
+                '<i class="fas ' + icon + '"></i>' +
+                '<div class="popup-stats-text">' +
+                '<h3>' + entityName + '</h3>' +
+                '<p>Tổng số ' + data.totalComics + ' tác phẩm</p>' +
+                '</div>' +
+                '</div>' +
+                '<div class="comics-grid">';
+
+            data.comics.forEach(comic => {
+                html +=
+                    '<a href="' + window.contextPath + '/comic-detail?id=' + comic.id + '" class="comic-card">' +
+                    '<img src="' + comic.thumbnailUrl + '" ' +
+                    'alt="' + comic.nameComics + '" ' +
+                    'onerror="this.src=\'https://via.placeholder.com/140x180?text=No+Image\'">' +
+                    '<div class="comic-card-info">' +
+                    '<div class="comic-card-title" title="' + comic.nameComics + '">'
+                    + comic.nameComics +
+                    '</div>' +
+                    (comic.seriesName
+                        ? '<div class="comic-card-series">📚 ' + comic.seriesName + '</div>'
+                        : '') +
+                    '<div class="comic-card-price">' +
+                    formatPrice(comic.price) + ' đ' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>';
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // // ========== FORMAT GIÁ ==========
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price);
+        }
+    });
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -778,94 +1039,6 @@
     });
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('🚀 SLIDER INIT');
-
-        const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
-        console.log('Found sliders:', sliders.length);
-
-        sliders.forEach((slider, idx) => {
-            const track = slider.querySelector('.slider-track');
-            const items = slider.querySelectorAll('.product-item');
-            const prevBtn = slider.querySelector('.arrow.prev');
-            const nextBtn = slider.querySelector('.arrow.next');
-            const viewport = slider.querySelector('.slider-viewport');
-
-            console.log(`Slider ${idx}:`, {
-                track: !!track,
-                items: items.length,
-                prevBtn: !!prevBtn,
-                nextBtn: !!nextBtn,
-                viewport: !!viewport
-            });
-
-            if (!track || !prevBtn || !nextBtn || items.length === 0) {
-                console.error(`❌ Slider ${idx} missing elements`);
-                return;
-            }
-
-            let position = 0;
-
-            function update() {
-                const itemWidth = 220;
-                const gap = 20;
-                const moveDistance = itemWidth + gap;
-                const viewportWidth = viewport.offsetWidth;
-                const visibleCount = Math.floor(viewportWidth / moveDistance);
-                const maxPosition = Math.max(0, items.length - visibleCount);
-
-                position = Math.min(position, maxPosition);
-
-                const translateValue = position * moveDistance;
-
-                console.log(`📊 Slider ${idx} update:`, {
-                    position,
-                    maxPosition,
-                    visibleCount,
-                    translateValue,
-                    itemsLength: items.length
-                });
-
-                // Set transform
-                track.style.transform = 'translateX(-' + translateValue + 'px)';
-
-                // Update buttons
-                prevBtn.disabled = (position === 0);
-                nextBtn.disabled = (position >= maxPosition);
-
-                console.log('🎯 Transform applied:', track.style.transform);
-            }
-
-            nextBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                console.log('▶️ NEXT clicked on slider', idx);
-
-                if (!nextBtn.disabled) {
-                    position++;
-                    update();
-                }
-            });
-
-            prevBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                console.log('◀️ PREV clicked on slider', idx);
-
-                if (!prevBtn.disabled) {
-                    position--;
-                    update();
-                }
-            });
-
-            update();
-            console.log(`✅ Slider ${idx} initialized`);
-        });
-    });
-</script>
 
 
 <script>
@@ -945,54 +1118,6 @@
                 });
         });
     });
-
-    //tiem kiem
-
-    <%--function searchCategories(page = 1) {--%>
-    <%--    const keyword = document.getElementById('categorySearchInput').value.trim();--%>
-    <%--    const tbody = document.getElementById('categoryTableBody');--%>
-
-    <%--    tbody.innerHTML = `--%>
-    <%--    <tr>--%>
-    <%--        <td colspan="3" style="text-align: center; padding: 40px;">--%>
-    <%--            <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>--%>
-    <%--            <p style="margin-top: 10px;">Đang tìm kiếm...</p>--%>
-    <%--        </td>--%>
-    <%--    </tr>--%>
-    <%--`;--%>
-
-    <%--    const contextPath = window.contextPath || '';--%>
-    <%--    &lt;%&ndash;const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;&ndash;%&gt;--%>
-
-    <%--    console.log('🔍 Searching categories:', {keyword, page, url});--%>
-
-    <%--    fetch(url)--%>
-    <%--        .then(response => {--%>
-    <%--            if (!response.ok) {--%>
-    <%--                throw new Error(`HTTP ${response.status}: ${response.statusText}`);--%>
-    <%--            }--%>
-    <%--            return response.json();--%>
-    <%--        })--%>
-    <%--        .then(data => {--%>
-    <%--            console.log('✅ Search results:', data);--%>
-
-    <%--            if (data.success) {--%>
-    <%--                currentCategoryPage = data.currentPage;--%>
-    <%--                updateCategoryTable(data.categories);--%>
-    <%--                updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);--%>
-
-    <%--                if (keyword) {--%>
-    <%--                    showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');--%>
-    <%--                }--%>
-    <%--            } else {--%>
-    <%--                showError(data.message || 'Có lỗi xảy ra');--%>
-    <%--            }--%>
-    <%--        })--%>
-    <%--        .catch(error => {--%>
-    <%--            console.error('❌ Search error:', error);--%>
-    <%--            showError('Không thể kết nối đến server: ' + error.message);--%>
-    <%--        });--%>
-    <%--}--%>
 
 
     function showToast(message, type = 'success') {

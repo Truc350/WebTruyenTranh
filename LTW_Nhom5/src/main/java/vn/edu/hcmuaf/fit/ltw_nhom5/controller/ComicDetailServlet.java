@@ -3,6 +3,7 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ReviewDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO;
@@ -24,6 +25,7 @@ public class ComicDetailServlet extends HttpServlet {
     private RecommendationService recommendationService;
     private WishlistDAO wishlistDAO;
     private SeriesDAO seriesDAO;
+    private ComicDAO comicDAO;
 
     @Override
     public void init() throws ServletException {
@@ -31,6 +33,7 @@ public class ComicDetailServlet extends HttpServlet {
         recommendationService = new RecommendationService();
         wishlistDAO = new WishlistDAO();
         seriesDAO = new SeriesDAO();
+        comicDAO = new ComicDAO();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ComicDetailServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/home");
                 return;
             }
-
+            int totalSell = comicDAO.getTotalSoldByComicId(comic.getId());
             // Lấy danh sách ảnh của truyện
             var images = comicService.getComicImages(comicId);
 
@@ -128,6 +131,7 @@ public class ComicDetailServlet extends HttpServlet {
             request.setAttribute("totalReviews", totalReviews);
             request.setAttribute("suggestedComics", suggestedComics);
             request.setAttribute("suggestionType", suggestionType);
+            request.setAttribute("totalSell", totalSell);
 
             // Forward đến trang detail
             request.getRequestDispatcher("/fontend/public/detail.jsp")

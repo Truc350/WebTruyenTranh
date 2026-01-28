@@ -12,24 +12,21 @@
 }
 
     let currentPosition = 0;
-
     function getScrollAmount() {
-    const itemWidth = items[0].offsetWidth;
-    const gap = 15; // gap giữa các items
-    const itemsToScroll = 3; // Số items muốn cuộn mỗi lần
-    return (itemWidth + gap) * itemsToScroll;
-}
-
+        return viewport.clientWidth * 0.9;
+    }
     function getMaxScroll() {
-    const trackWidth = track.scrollWidth;
-    const viewportWidth = viewport.offsetWidth;
-    return Math.max(0, trackWidth - viewportWidth);
-}
-
+        return track.scrollWidth - viewport.clientWidth;
+    }
     function updatePosition() {
-    track.style.transform = `translateX(-${currentPosition}px)`;
-    updateButtons();
-}
+        const maxScroll = getMaxScroll();
+
+            if (currentPosition < 0) currentPosition = 0;
+            if (currentPosition > maxScroll) currentPosition = maxScroll;
+
+            track.style.transform = `translateX(-${currentPosition}px)`;
+            updateButtons();
+    }
 
     function updateButtons() {
     const maxScroll = getMaxScroll();
