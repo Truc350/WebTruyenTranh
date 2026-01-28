@@ -100,6 +100,7 @@
                 </div>
             </div>
 
+
             <!-- Biểu đồ doanh thu -->
             <div class="chart-section">
                 <h3 id="chartTitle">Biểu đồ doanh thu</h3>
@@ -129,6 +130,47 @@
                         <tr>
                             <td colspan="3" style="text-align: center; color: #999;">
                                 Chưa có dữ liệu
+                            </td>
+                        </tr>
+                    </c:if>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Top sản phẩm có đánh giá cao nhất -->
+            <div class="bestseller-section">
+                <h3>Top 10 sản phẩm có đánh giá cao nhất</h3>
+                <table class="bestseller-table">
+                    <thead>
+                    <tr>
+                        <th>Top</th>
+                        <th>Sản phẩm</th>
+                        <th>Điểm trung bình</th>
+                        <th>Số đánh giá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="comic" items="${topRatedComics}" varStatus="status">
+                        <tr>
+                            <td>${status.index + 1}</td>
+                            <td>${comic.name_comics}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <span style="color: #ffa500; font-weight: bold;">
+                                        <fmt:formatNumber value="${comic.average_rating}" pattern="#.##" maxFractionDigits="2"/>
+                                    </span>
+                                    <i class="fa-solid fa-star" style="color: #ffa500; font-size: 14px;"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <fmt:formatNumber value="${comic.total_reviews}" pattern="#,##0"/> đánh giá
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty topRatedComics}">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #999;">
+                                Chưa có dữ liệu đánh giá
                             </td>
                         </tr>
                     </c:if>
@@ -257,13 +299,17 @@
 
     // Highlight menu sidebar
     document.addEventListener("DOMContentLoaded", function () {
-        const current = window.location.pathname.split("/").pop();
+        const current = window.location.pathname;
         const links = document.querySelectorAll(".sidebar li a");
 
         links.forEach(link => {
-            const linkPage = link.getAttribute("href");
-            if (linkPage === current || current.includes('dashboard')) {
+            const linkHref = link.getAttribute("href");
+
+            // Kiểm tra chính xác URL hiện tại có chứa href của link không
+            if (current.endsWith(linkHref) || current.includes(linkHref)) {
                 link.classList.add("active");
+            } else {
+                link.classList.remove("active");
             }
         });
     });

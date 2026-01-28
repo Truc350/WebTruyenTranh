@@ -37,7 +37,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 100px);
+    height: auto;
     min-height: 600px;
 }
 

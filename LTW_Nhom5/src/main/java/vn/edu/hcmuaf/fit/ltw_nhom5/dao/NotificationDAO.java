@@ -1,9 +1,12 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.dao;
 
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.core.mapper.RowMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Notification;
 
+import java.sql.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +52,7 @@ public class NotificationDAO {
                 handle.createQuery(sql)
                         .bind(0, userId)
                         .bind(1, limit)
-                        .mapToBean(Notification.class)
+                        .map(new NotificationRowMapper())
                         .collect(Collectors.toList())
         );
     }
@@ -73,7 +76,7 @@ public class NotificationDAO {
             }
             query.bind(paramIndex++, pageSize);
             query.bind(paramIndex, (page - 1) * pageSize);
-            return query.mapToBean(Notification.class).list();
+            return query.map(new NotificationRowMapper()).list();
         });
     }
 
@@ -115,5 +118,61 @@ public class NotificationDAO {
     public void insertForAdmin(Notification noti) {
         noti.setUserId(ADMIN_ID);
         insert(noti);
+    }
+
+    public String getFCMToken(int userId) {
+        String sql = "SELECT token FROM fcm_tokens WHERE user_id = ? ORDER BY updated_at DESC LIMIT 1";
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind(0, userId)
+                            .mapTo(String.class)
+                            .findOne()
+                            .orElse(null)
+            );
+        } catch (Exception e) {
+            System.err.println("❌ Error getting FCM token: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void saveFCMToken(int userId, String token) {
+        String sql = "INSERT INTO fcm_tokens (user_id, token) VALUES (?, ?) " +
+                "ON DUPLICATE KEY UPDATE updated_at = CURRENT_TIMESTAMP";
+
+        try {
+            jdbi.useHandle(handle ->
+                    handle.createUpdate(sql)
+                            .bind(0, userId)
+                            .bind(1, token)
+                            .execute()
+            );
+
+            System.out.println("✅ Saved FCM token for user " + userId);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error saving FCM token: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * RowMapper tùy chỉnh để map ResultSet sang Notification với LocalDateTime
+     */
+    private static class NotificationRowMapper implements RowMapper<Notification> {
+        @Override
+        public Notification map(ResultSet rs, StatementContext ctx) throws SQLException {
+            Notification notification = new Notification();
+
+            notification.setId(rs.getInt("id"));
+            notification.setUserId(rs.getInt("user_id"));
+            notification.setMessage(rs.getString("message"));
+            notification.setType(rs.getString("type"));
+            notification.setRead(rs.getBoolean("is_read"));
+            notification.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
+            return notification;
+        }
     }
 }

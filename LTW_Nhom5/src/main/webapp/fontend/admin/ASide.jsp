@@ -13,23 +13,23 @@
             <li>
                 <a href="${pageContext.request.contextPath}/admin/dashboard">
                     <img src="${pageContext.request.contextPath}/img/home.png" class="icon">
-                    <span>Trang chủ</span>
+                    <span>Dashboard</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/productManagement.jsp">
+                <a href="${pageContext.request.contextPath}/admin/ProductManagement">
                     <img src="${pageContext.request.contextPath}/img/series.png" class="icon">
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/SeriesManagement?filter=all">
+                <a href="${pageContext.request.contextPath}/admin/SeriesManagement?filter=all">
                     <img src="${pageContext.request.contextPath}/img/product.png" class="icon">
                     <span>Quản lý series</span>
                 </a>
             </li>
             <li>
-                <a href="${pageContext.request.contextPath}/CategoryManagement">
+                <a href="${pageContext.request.contextPath}/admin/CategoryManagement">
                     <img src="${pageContext.request.contextPath}/img/category.png" class="icon">
                     <span>Quản lý thể loại</span>
                 </a>
@@ -54,7 +54,7 @@
             </li>
 
             <li>
-                <a href="${pageContext.request.contextPath}/fontend/admin/report.jsp">
+                <a href="${pageContext.request.contextPath}/admin/ReportManagement">
                     <img src="${pageContext.request.contextPath}/img/report.png" class="icon">
                     <span>Thống kê</span>
                 </a>

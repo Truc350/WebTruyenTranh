@@ -361,6 +361,13 @@ a {
   font-weight: bold;
 }
 
+.product-item p,
+.product-item .product-name,
+.product-item .product-price,
+.product-item .original-price-slider,
+.product-item .sold {
+    text-align: left;
+}
 .sold {
   margin-top: 3px;
   font-weight: 200;
@@ -576,7 +583,7 @@ section[aria-label] article img {
 .slider-viewport {
   overflow: hidden;
   width: 100%;
-  /*margin: 0 50px;*/
+  margin: 0 50px;
 }
 
 .slider-track {

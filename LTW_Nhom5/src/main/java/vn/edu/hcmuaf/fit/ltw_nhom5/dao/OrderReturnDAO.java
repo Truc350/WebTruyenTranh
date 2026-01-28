@@ -100,25 +100,30 @@ public class OrderReturnDAO {
     /**
      * Lấy tất cả yêu cầu trả hàng với thông tin đơn hàng và khách hàng
      */
+    /**
+     * Lấy tất cả yêu cầu trả hàng với thông tin đơn hàng và khách hàng
+     * ✅ GỘP THEO ĐƠN HÀNG (ORDER_ID) THAY VÌ THEO SẢN PHẨM
+     */
     public List<Map<String, Object>> getAllReturnsWithDetails() {
         String sql = """
-            SELECT 
-                or_ret.id as return_id,
-                or_ret.order_id,
-                or_ret.comic_id,
-                or_ret.quantity,
-                or_ret.reason,
-                or_ret.refund_amount,
-                or_ret.status as return_status,
-                or_ret.created_at as return_date,
-                o.id as order_code,
-                o.recipient_name as customer_name,
-                c.name_comics as product_name
-            FROM order_returns or_ret
-            JOIN orders o ON or_ret.order_id = o.id
-            LEFT JOIN comics c ON or_ret.comic_id = c.id
-            ORDER BY or_ret.created_at DESC
-        """;
+        SELECT 
+            MIN(or_ret.id) as return_id,
+            or_ret.order_id,
+            GROUP_CONCAT(DISTINCT or_ret.comic_id) as comic_ids,
+            SUM(or_ret.quantity) as total_quantity,
+            MAX(or_ret.reason) as reason,
+            SUM(or_ret.refund_amount) as refund_amount,
+            MAX(or_ret.status) as return_status,
+            MAX(or_ret.created_at) as return_date,
+            o.id as order_code,
+            o.recipient_name as customer_name,
+            GROUP_CONCAT(DISTINCT c.name_comics SEPARATOR ', ') as product_name
+        FROM order_returns or_ret
+        JOIN orders o ON or_ret.order_id = o.id
+        LEFT JOIN comics c ON or_ret.comic_id = c.id
+        GROUP BY or_ret.order_id
+        ORDER BY MAX(or_ret.created_at) DESC
+    """;
 
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -136,44 +141,46 @@ public class OrderReturnDAO {
         boolean isNumber = trimmedKeyword.matches("\\d+");
 
         String sqlById = """
-            SELECT 
-                or_ret.id as return_id,
-                or_ret.order_id,
-                or_ret.comic_id,
-                or_ret.quantity,
-                or_ret.reason,
-                or_ret.refund_amount,
-                or_ret.status as return_status,
-                or_ret.created_at as return_date,
-                o.id as order_code,
-                o.recipient_name as customer_name,
-                c.name_comics as product_name
-            FROM order_returns or_ret
-            JOIN orders o ON or_ret.order_id = o.id
-            LEFT JOIN comics c ON or_ret.comic_id = c.id
-            WHERE o.id = ?
-            ORDER BY or_ret.created_at DESC
-        """;
+        SELECT 
+            MIN(or_ret.id) as return_id,
+            or_ret.order_id,
+            GROUP_CONCAT(DISTINCT or_ret.comic_id) as comic_ids,
+            SUM(or_ret.quantity) as total_quantity,
+            MAX(or_ret.reason) as reason,
+            SUM(or_ret.refund_amount) as refund_amount,
+            MAX(or_ret.status) as return_status,
+            MAX(or_ret.created_at) as return_date,
+            o.id as order_code,
+            o.recipient_name as customer_name,
+            GROUP_CONCAT(DISTINCT c.name_comics SEPARATOR ', ') as product_name
+        FROM order_returns or_ret
+        JOIN orders o ON or_ret.order_id = o.id
+        LEFT JOIN comics c ON or_ret.comic_id = c.id
+        WHERE o.id = ?
+        GROUP BY or_ret.order_id
+        ORDER BY MAX(or_ret.created_at) DESC
+    """;
 
         String sqlByName = """
-            SELECT 
-                or_ret.id as return_id,
-                or_ret.order_id,
-                or_ret.comic_id,
-                or_ret.quantity,
-                or_ret.reason,
-                or_ret.refund_amount,
-                or_ret.status as return_status,
-                or_ret.created_at as return_date,
-                o.id as order_code,
-                o.recipient_name as customer_name,
-                c.name_comics as product_name
-            FROM order_returns or_ret
-            JOIN orders o ON or_ret.order_id = o.id
-            LEFT JOIN comics c ON or_ret.comic_id = c.id
-            WHERE LOWER(o.recipient_name) LIKE LOWER(?)
-            ORDER BY or_ret.created_at DESC
-        """;
+        SELECT 
+            MIN(or_ret.id) as return_id,
+            or_ret.order_id,
+            GROUP_CONCAT(DISTINCT or_ret.comic_id) as comic_ids,
+            SUM(or_ret.quantity) as total_quantity,
+            MAX(or_ret.reason) as reason,
+            SUM(or_ret.refund_amount) as refund_amount,
+            MAX(or_ret.status) as return_status,
+            MAX(or_ret.created_at) as return_date,
+            o.id as order_code,
+            o.recipient_name as customer_name,
+            GROUP_CONCAT(DISTINCT c.name_comics SEPARATOR ', ') as product_name
+        FROM order_returns or_ret
+        JOIN orders o ON or_ret.order_id = o.id
+        LEFT JOIN comics c ON or_ret.comic_id = c.id
+        WHERE LOWER(o.recipient_name) LIKE LOWER(?)
+        GROUP BY or_ret.order_id
+        ORDER BY MAX(or_ret.created_at) DESC
+    """;
 
         return jdbi.withHandle(handle -> {
             if (isNumber && !trimmedKeyword.isEmpty()) {
@@ -233,16 +240,26 @@ public class OrderReturnDAO {
         String sql = """
         UPDATE order_returns 
         SET status = 'Rejected',
-            reject_reason = ?
+            reason = CONCAT(reason, ' | Lý do từ chối: ', ?)
         WHERE id = ?
     """;
 
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind(0, rejectReason)
-                        .bind(1, returnId)
-                        .execute() > 0
-        );
+        try {
+            int rowsAffected = jdbi.withHandle(handle ->
+                    handle.createUpdate(sql)
+                            .bind(0, rejectReason)
+                            .bind(1, returnId)
+                            .execute()
+            );
+
+            System.out.println("✅ Rejected refund ID: " + returnId);
+            return rowsAffected > 0;
+
+        } catch (Exception e) {
+            System.err.println("❌ Error rejecting refund: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

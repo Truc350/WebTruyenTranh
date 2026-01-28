@@ -3600,4 +3600,130 @@ public class ComicDAO extends ADao {
         }
     }
 
+    /**
+     * Đếm số lượng truyện trong một thể loại (chỉ truyện available, không bị xóa, không bị ẩn)
+     */
+    public int countComicsByCategory(int categoryId) {
+        String sql = """
+                SELECT COUNT(*) 
+                FROM comics 
+                WHERE category_id = :categoryId 
+                  AND is_deleted = 0 
+                  AND is_hidden = 0 
+                  AND status = 'available'
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("categoryId", categoryId)
+                            .mapTo(Integer.class)
+                            .findOne()
+                            .orElse(0)
+            );
+        } catch (Exception e) {
+            System.err.println("Error counting comics by category " + categoryId + ":");
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Lấy danh sách truyện theo thể loại với phân trang
+     * @param categoryId - ID thể loại
+     * @param page - Trang hiện tại (bắt đầu từ 1)
+     * @param pageSize - Số truyện trên mỗi trang
+     * @return Danh sách truyện
+     */
+    public List<Comic> getComicsByCategoryPaginated(int categoryId, int page, int pageSize) {
+        String sql = """
+                SELECT 
+                    c.id,
+                    c.title,
+                    c.description,
+                    c.author,
+                    c.thumbnail_url as thumbnailUrl,
+                    c.category_id as categoryId,
+                    c.status,
+                    c.view_count as viewCount,
+                    c.is_deleted as isDeleted,
+                    c.is_hidden as isHidden,
+                    c.created_at as createdAt,
+                    c.updated_at as updatedAt,
+                    cat.name_categories as categoryName
+                FROM comics c
+                LEFT JOIN categories cat ON c.category_id = cat.id
+                WHERE c.category_id = :categoryId 
+                  AND c.is_deleted = 0 
+                  AND c.is_hidden = 0 
+                  AND c.status = 'available'
+                ORDER BY c.created_at DESC
+                LIMIT :limit OFFSET :offset
+                """;
+
+        int offset = (page - 1) * pageSize;
+
+        try {
+            System.out.println("Getting comics by category - CategoryId: " + categoryId +
+                    ", Page: " + page + ", PageSize: " + pageSize + ", Offset: " + offset);
+
+            List<Comic> result = jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("categoryId", categoryId)
+                            .bind("limit", pageSize)
+                            .bind("offset", offset)
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+
+            System.out.println("Retrieved " + result.size() + " comics");
+            return result;
+        } catch (Exception e) {
+            System.err.println("Error in getComicsByCategoryPaginated:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Lấy tất cả truyện theo thể loại (không phân trang) - để backward compatibility
+     */
+    public List<Comic> getComicsByCategory(int categoryId) {
+        String sql = """
+                SELECT 
+                    c.id,
+                    c.title,
+                    c.description,
+                    c.author,
+                    c.thumbnail_url as thumbnailUrl,
+                    c.category_id as categoryId,
+                    c.status,
+                    c.view_count as viewCount,
+                    c.is_deleted as isDeleted,
+                    c.is_hidden as isHidden,
+                    c.created_at as createdAt,
+                    c.updated_at as updatedAt,
+                    cat.name_categories as categoryName
+                FROM comics c
+                LEFT JOIN categories cat ON c.category_id = cat.id
+                WHERE c.category_id = :categoryId 
+                  AND c.is_deleted = 0 
+                  AND c.is_hidden = 0 
+                  AND c.status = 'available'
+                ORDER BY c.created_at DESC
+                """;
+
+        try {
+            return jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("categoryId", categoryId)
+                            .mapToBean(Comic.class)
+                            .list()
+            );
+        } catch (Exception e) {
+            System.err.println("Error getting comics by category " + categoryId + ":");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
 }

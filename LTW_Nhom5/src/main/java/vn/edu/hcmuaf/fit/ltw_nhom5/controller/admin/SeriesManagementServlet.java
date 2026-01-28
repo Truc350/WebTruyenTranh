@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/SeriesManagement")
+@WebServlet("/admin/SeriesManagement")
 public class SeriesManagementServlet extends HttpServlet {
 
     private SeriesDAO seriesDAO;
