@@ -26,6 +26,7 @@ public class UserNotificationServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         gson = GsonConfig.getGson();
+        System.out.println("✅ UserNotificationServlet initialized");
     }
 
     @Override
@@ -38,12 +39,14 @@ public class UserNotificationServlet extends HttpServlet {
         // Kiểm tra user đã đăng nhập
         User user = (User) request.getSession().getAttribute("currentUser");
         if (user == null) {
+            System.out.println("❌ User not authenticated");
             response.setStatus(401);
             response.getWriter().write("{\"error\": \"Not authenticated\"}");
             return;
         }
 
         String pathInfo = request.getPathInfo();
+        System.out.println("📡 Request pathInfo: " + pathInfo + " - User ID: " + user.getId());
 
         try {
             if ("/count".equals(pathInfo)) {
@@ -53,10 +56,12 @@ public class UserNotificationServlet extends HttpServlet {
             } else if ("/list".equals(pathInfo)) {
                 handleList(request, response, user);
             } else {
+                System.out.println("❌ Endpoint not found: " + pathInfo);
                 response.setStatus(404);
                 response.getWriter().write("{\"error\": \"Endpoint not found\"}");
             }
         } catch (Exception e) {
+            System.err.println("❌ Error handling request: " + e.getMessage());
             e.printStackTrace();
             response.setStatus(500);
             response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
@@ -78,6 +83,7 @@ public class UserNotificationServlet extends HttpServlet {
         }
 
         String pathInfo = request.getPathInfo();
+        System.out.println("📡 POST pathInfo: " + pathInfo + " - User ID: " + user.getId());
 
         try {
             if ("/mark-read".equals(pathInfo)) {
@@ -103,6 +109,7 @@ public class UserNotificationServlet extends HttpServlet {
             throws IOException {
 
         int unreadCount = notificationDAO.countUnread(user.getId());
+        System.out.println("📊 Unread count for user " + user.getId() + ": " + unreadCount);
 
         JsonObject json = new JsonObject();
         json.addProperty("unread_count", unreadCount);
@@ -120,11 +127,14 @@ public class UserNotificationServlet extends HttpServlet {
         String limitParam = request.getParameter("limit");
         int limit = (limitParam != null) ? Integer.parseInt(limitParam) : 10;
 
+        System.out.println("📋 Loading recent notifications - Limit: " + limit);
+
         List<Notification> notifications = notificationDAO.getRecent(user.getId(), limit);
         int unreadCount = notificationDAO.countUnread(user.getId());
 
+        System.out.println("✅ Found " + notifications.size() + " notifications");
+
         // Format date cho từng notification
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         for (Notification noti : notifications) {
             if (noti.getCreatedAt() != null) {
                 noti.setFormattedCreatedAt(formatRelativeTime(noti.getCreatedAt()));
@@ -139,8 +149,8 @@ public class UserNotificationServlet extends HttpServlet {
     }
 
     /**
-     * GET /NotificationServlet/list?page=1&pageSize=20&type=ORDER_CONFIRMED
-     * Trả về danh sách phân trang
+     * GET /NotificationServlet/list?page=1&pageSize=20&type=ORDER
+     * Trả về danh sách phân trang với filter theo type
      */
     private void handleList(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
@@ -152,21 +162,46 @@ public class UserNotificationServlet extends HttpServlet {
         int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
         int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 20;
 
+        // ✅ XỬ LÝ TYPE = "ALL" → KHÔNG FILTER
+        if ("ALL".equals(typeFilter)) {
+            typeFilter = null;
+        }
+
+        System.out.println("📋 Loading notification list:");
+        System.out.println("  - Page: " + page);
+        System.out.println("  - PageSize: " + pageSize);
+        System.out.println("  - Type filter: " + (typeFilter != null ? typeFilter : "ALL"));
+
         List<Notification> notifications = notificationDAO.getList(user.getId(), typeFilter, page, pageSize);
 
-        // Format date
+        System.out.println("✅ Found " + notifications.size() + " notifications");
+
+        // Format date và thêm title
         for (Notification noti : notifications) {
             if (noti.getCreatedAt() != null) {
-                noti.setFormattedCreatedAt(formatRelativeTime(noti.getCreatedAt()));
+                String formattedDate = formatRelativeTime(noti.getCreatedAt());
+                noti.setFormattedCreatedAt(formattedDate);
+
+                // ✅ THÊM FORMATTED_DATE CHO JSP
+                Map<String, Object> extraData = new HashMap<>();
+                extraData.put("formatted_date", formattedDate);
             }
+
+            // ✅ THÊM TITLE DỰA TRÊN TYPE
+            String title = generateTitle(noti.getType());
+            noti.setTitle(title);
         }
 
         Map<String, Object> result = new HashMap<>();
         result.put("notifications", notifications);
         result.put("page", page);
         result.put("pageSize", pageSize);
+        result.put("total", notifications.size());
 
-        response.getWriter().write(gson.toJson(result));
+        String jsonResponse = gson.toJson(result);
+        System.out.println("📤 Sending response: " + jsonResponse.substring(0, Math.min(200, jsonResponse.length())) + "...");
+
+        response.getWriter().write(jsonResponse);
     }
 
     /**
@@ -184,6 +219,8 @@ public class UserNotificationServlet extends HttpServlet {
         }
 
         int notiId = Integer.parseInt(idParam);
+        System.out.println("✅ Marking notification #" + notiId + " as read");
+
         notificationDAO.markAsread(notiId);
 
         response.getWriter().write("{\"success\": true}");
@@ -196,9 +233,41 @@ public class UserNotificationServlet extends HttpServlet {
     private void handleMarkAllRead(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
+        System.out.println("✅ Marking all notifications as read for user " + user.getId());
+
         notificationDAO.markAllAsRead(user.getId());
 
         response.getWriter().write("{\"success\": true}");
+    }
+
+    /**
+     * Tạo title cho notification dựa trên type
+     */
+    private String generateTitle(String type) {
+        if (type == null) return "Thông báo";
+
+        switch (type) {
+            case "ORDER_CONFIRMED":
+                return "✅ Đơn hàng đã được xác nhận";
+            case "ORDER_SHIPPED":
+                return "🚚 Đơn hàng đang được giao";
+            case "ORDER_DELIVERED":
+                return "📦 Đơn hàng đã giao thành công";
+            case "ORDER_CANCELLED":
+                return "❌ Đơn hàng đã bị hủy";
+            case "REFUND_APPROVED":
+                return "💰 Yêu cầu hoàn tiền đã được chấp nhận";
+            case "REFUND_REJECTED":
+                return "⛔ Yêu cầu hoàn tiền bị từ chối";
+            case "ORDER_UPDATE":
+                return "📋 Cập nhật đơn hàng";
+            case "PROMOTION":
+                return "🎉 Khuyến mãi mới";
+            case "SYSTEM":
+                return "🔔 Thông báo hệ thống";
+            default:
+                return "📬 Thông báo";
+        }
     }
 
     /**

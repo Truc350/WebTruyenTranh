@@ -222,10 +222,10 @@
                         <%--                            <i class="fas fa-bolt"></i> FLASH SALE--%>
                         <%--                        </div>--%>
                         <p id="giamdagiam">
-                            <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/>₫
+                            <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/> đ
                         </p>
                         <p id="giagoc">
-                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                         </p>
                         <p id="khuyenmai">
                             -<fmt:formatNumber value="${comic.finalDiscountPercent}" pattern="#" maxFractionDigits="0"/>%
@@ -235,10 +235,10 @@
                     <%-- Có discount thường (không phải Flash Sale) --%>
                     <c:when test="${comic.hasAnyDiscount() and not comic.hasFlashSale}">
                         <p id="giamdagiam">
-                            <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/>₫
+                            <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/> đ
                         </p>
                         <p id="giagoc">
-                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                         </p>
                         <p id="khuyenmai">
                             -<fmt:formatNumber value="${comic.finalDiscountPercent}" pattern="#" maxFractionDigits="0"/>%
@@ -248,7 +248,7 @@
                     <%-- Không có giảm giá --%>
                     <c:otherwise>
                         <p id="giamdagiam">
-                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                         </p>
                     </c:otherwise>
                 </c:choose>
@@ -327,29 +327,30 @@
                                 <h3>${relatedComic.nameComics}</h3>
 
                                 <!-- Hiển thị giá với Flash Sale -->
+                                <div class="priceFotmat" style="display: flex">
                                 <c:choose>
                                     <c:when test="${relatedComic.hasFlashSale}">
                                         <div class="price-section">
                                             <p class="flash-price">
                                                 <fmt:formatNumber value="${relatedComic.flashSalePrice}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/> đ
                                             </p>
                                             <p class="original-price">
-                                                <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/>₫
+                                                <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/> đ
                                             </p>
-                                            <span class="discount-badge">
-                                        -<fmt:formatNumber value="${relatedComic.flashSaleDiscount}" pattern="#"/>%
-                                    </span>
+<%--                                            <span class="discount-badge">--%>
+<%--                                        -<fmt:formatNumber value="${relatedComic.flashSaleDiscount}" pattern="#"/>%--%>
+<%--                                    </span>--%>
                                         </div>
                                     </c:when>
                                     <c:when test="${relatedComic.hasDiscount()}">
                                         <div class="price-section">
                                             <p class="discount-price">
                                                 <fmt:formatNumber value="${relatedComic.discountPrice}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/> đ
                                             </p>
                                             <p class="original-price">
-                                                <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/>₫
+                                                <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/> đ
                                             </p>
                                             <span class="discount-badge">
                                         -<fmt:formatNumber value="${relatedComic.discountPercent}" pattern="#"/>%
@@ -358,11 +359,11 @@
                                     </c:when>
                                     <c:otherwise>
                                         <p class="price">
-                                            <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/>₫
+                                            <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/> đ
                                         </p>
                                     </c:otherwise>
                                 </c:choose>
-
+                                </div>
                                 <p class="sold">Đã bán:
                                     <strong>${relatedComic.totalSold != null ? relatedComic.totalSold : 0}</strong></p>
                             </a>
@@ -566,11 +567,11 @@
                                                         <div class="price-wrapper">
                                                             <p class="product-price flash">
                                                                 <fmt:formatNumber value="${suggested.flashSalePrice}"
-                                                                                  pattern="#,###"/>₫
+                                                                                  pattern="#,###"/> đ
                                                             </p>
                                                             <p class="original-price-small">
                                                                 <fmt:formatNumber value="${suggested.price}"
-                                                                                  pattern="#,###"/>₫
+                                                                                  pattern="#,###"/> đ
                                                             </p>
                                                         </div>
                                                     </c:when>
@@ -578,18 +579,18 @@
                                                         <div class="price-wrapper">
                                                             <p class="product-price">
                                                                 <fmt:formatNumber value="${suggested.discountPrice}"
-                                                                                  pattern="#,###"/>₫
+                                                                                  pattern="#,###"/> đ
                                                             </p>
                                                             <p class="original-price-small">
                                                                 <fmt:formatNumber value="${suggested.price}"
-                                                                                  pattern="#,###"/>₫
+                                                                                  pattern="#,###"/> đ
                                                             </p>
                                                         </div>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <p class="product-price">
                                                             <fmt:formatNumber value="${suggested.price}"
-                                                                              pattern="#,###"/>₫
+                                                                              pattern="#,###"/> đ
                                                         </p>
                                                     </c:otherwise>
                                                 </c:choose>
