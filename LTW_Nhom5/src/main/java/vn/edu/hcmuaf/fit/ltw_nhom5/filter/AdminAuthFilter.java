@@ -36,7 +36,7 @@ public class AdminAuthFilter implements Filter {
 
         if (!isAdmin) {
             session.setAttribute("errorMessage", "Bạn không có quyền truy cập trang admin.");
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/home");
+            httpResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
