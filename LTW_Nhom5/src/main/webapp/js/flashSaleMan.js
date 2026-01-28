@@ -75,7 +75,7 @@ function initializeAddFlashSale() {
         searchResults.style.display = 'block';
 
         debounceTimer = setTimeout(() => {
-            fetch(contextPath + '/admin/search-comics1?keyword=' + encodeURIComponent(keyword))
+            fetch(contextPath + '/admin/search-comics?keyword=' + encodeURIComponent(keyword))
                 .then(res => res.json())
                 .then(data => {
                     searchResults.innerHTML = '';
@@ -256,7 +256,7 @@ function initializeEditFlashSale() {
         editSearchResults.style.display = 'block';
 
         debounceTimer = setTimeout(() => {
-            fetch(contextPath + '/admin/search-comics1?keyword=' + encodeURIComponent(keyword))
+            fetch(contextPath + '/admin/search-comics?keyword=' + encodeURIComponent(keyword))
                 .then(res => res.json())
                 .then(data => {
                     editSearchResults.innerHTML = '';

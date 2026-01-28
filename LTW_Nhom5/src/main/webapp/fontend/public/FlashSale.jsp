@@ -15,7 +15,7 @@
     <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/favicon.ico">
 </head>
 <body>
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <div class="container">
     <div class="banner-header">
@@ -93,7 +93,7 @@
 
                         <div class="price-section">
     <span class="price">
-        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/>₫
+        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/> đ
     </span>
                             <span class="discount">
         -<fmt:formatNumber value="${comic.discount_percent}" pattern="#" maxFractionDigits="0"/>%
@@ -102,7 +102,7 @@
 
                         <div class="price-section">
                             <span class="old-price">
-                                <fmt:formatNumber value="${comic.original_price}" pattern="#,###"/>₫
+                                <fmt:formatNumber value="${comic.original_price}" pattern="#,###"/> đ
                             </span>
                         </div>
 

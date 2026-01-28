@@ -209,10 +209,10 @@
                                                 <c:when test="${comic.hasFlashSale}">
                                                     <!-- Có Flash Sale -->
                                                     <p class="product-price flash">
-                                                        <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/>₫
+                                                        <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                                     </p>
                                                     <p class="original-price-small">
-                                                        <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫</s>
+                                                        <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ</s>
                                                         <span class="discount-badge-small flash">
                                                 -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
                                             </span>
@@ -221,7 +221,7 @@
                                                 <c:otherwise>
                                                     <!-- Giá thường -->
                                                     <p class="product-price">
-                                                        <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                                                        <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                                                     </p>
                                                 </c:otherwise>
                                             </c:choose>
@@ -303,10 +303,10 @@
                                                 <c:choose>
                                                     <c:when test="${comic.hasFlashSale}">
                                                         <p class="product-price flash">
-                                                            <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/>₫
+                                                            <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                                         </p>
                                                         <p class="original-price-slider">
-                                                            <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫</s>
+                                                            <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ</s>
                                                             <span class="discount-tag-slider">
                                                     -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
                                                 </span>
@@ -314,7 +314,7 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <p class="product-price">
-                                                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/>₫
+                                                            <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                                                         </p>
                                                     </c:otherwise>
                                                 </c:choose>
