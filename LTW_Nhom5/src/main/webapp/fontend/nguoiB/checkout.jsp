@@ -371,7 +371,8 @@
 
         let pointsDiscount = 0;
         if (usePointsCheckbox && usePointsCheckbox.checked) {
-            pointsDiscount = userPoints * 1000;
+            // pointsDiscount = userPoints * 1000;
+            pointsDiscount = userPoints;
         }
 
         const total = subtotal + shippingFee - pointsDiscount;

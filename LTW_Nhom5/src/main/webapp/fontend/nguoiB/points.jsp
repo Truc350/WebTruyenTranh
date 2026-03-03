@@ -1,3 +1,5 @@
+<%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.PointTransaction" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
@@ -23,7 +25,8 @@
         <div class="xu-header">
             <div class="xu-text">
                 <p class="label">Số C-Point hiện có</p>
-                <h1>2,500</h1>
+                <% int point =(Integer) request.getAttribute("point"); %>
+                <h1><%= point%></h1>
             </div>
             <img src="${pageContext.request.contextPath}/img/dollar.png" class="xu-icon" alt="Point Icon">
         </div>
@@ -31,37 +34,62 @@
         <div class="history">
             <h3>Lịch sử giao dịch</h3>
 
-            <div class="item">
-                <div class="left">
-                    <div class="light-icon">⚡</div>
-                    <p>Hoàn thành đơn hàng</p>
-                </div>
-                <span class="value plus">+200 C-Point</span>
-            </div>
 
-            <div class="item">
-                <div class="left">
-                    <div class="light-icon">⚡</div>
-                    <p>Hoàn thành đơn hàng</p>
-                </div>
-                <span class="value plus">+500 C-Point</span>
-            </div>
+            <%
+                List<PointTransaction> pointHistory = (List<PointTransaction>) request.getAttribute("pointHistory");
+                for (PointTransaction p : pointHistory){
+                    if(p.getTransactionType().equals("EARN")){
+            %>
 
-            <div class="item">
-                <div class="left">
-                    <div class="light-icon">⚡</div>
-                    <p>Đánh giá sản phẩm</p>
-                </div>
-                <span class="value plus">+50 C-Point</span>
-            </div>
 
+                         <div class="item">
+                             <div class="left">
+                             <div class="light-icon">⚡</div>
+                                 <p><%=p.getDescription()  %></p>
+                            </div>
+                             <span class="value plus">+<%=p.getPoints() %> C-Point</span>
+                         </div>
+            <%
+                    }else{
+            %>
             <div class="item">
                 <div class="left">
                     <div class="light-icon">🎁</div>
-                    <p>Đổi voucher 10K</p>
+                    <p><%=p.getDescription()%></p>
                 </div>
-                <span class="value minus">-1000 C-Point</span>
+                <span class="value minus">-<%=p.getPoints()%> C-Point</span>
             </div>
+            <%
+                    }
+                }
+            %>
+
+
+
+
+<%--            <div class="item">--%>
+<%--                <div class="left">--%>
+<%--                    <div class="light-icon">⚡</div>--%>
+<%--                    <p>Hoàn thành đơn hàng</p>--%>
+<%--                </div>--%>
+<%--                <span class="value plus">+200 C-Point</span>--%>
+<%--            </div>--%>
+
+<%--            <div class="item">--%>
+<%--                <div class="left">--%>
+<%--                    <div class="light-icon">⚡</div>--%>
+<%--                    <p>Hoàn thành đơn hàng</p>--%>
+<%--                </div>--%>
+<%--                <span class="value plus">+500 C-Point</span>--%>
+<%--            </div>--%>
+
+<%--            <div class="item">--%>
+<%--                <div class="left">--%>
+<%--                    <div class="light-icon">🎁</div>--%>
+<%--                    <p>Đổi voucher 10K</p>--%>
+<%--                </div>--%>
+<%--                <span class="value minus">-1000 C-Point</span>--%>
+<%--            </div>--%>
         </div>
     </div>
 </main>
