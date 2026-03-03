@@ -104,8 +104,7 @@
                 <tr>
                     <th>Mã thể loại</th>
                     <th>Tên thể loại</th>
-<%--                    <th>Mô tả</th>--%>
-                    <th>Thao tác</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody id="categoryTableBody">

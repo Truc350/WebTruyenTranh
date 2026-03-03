@@ -381,7 +381,7 @@ public class OrderService {
             }
 
             // Chuyển sang trạng thái AwaitingPickup
-            boolean success = orderDAO.updateOrderStatus(orderId, "AwaitingPickup");
+            boolean success = orderDAO.updateOrderStatusWithPoints(orderId, "AwaitingPickup");
 
             if (success) {
                 OrderHistory history = new OrderHistory(
@@ -401,7 +401,8 @@ public class OrderService {
 
         } catch (Exception e) {
             result.put("success", false);
-            result.put("error", e.getMessage());
+            result.put("message", "Lỗi: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return result;
@@ -457,7 +458,7 @@ public class OrderService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            boolean success = orderDAO.updateOrderStatus(orderId, "Shipping");
+            boolean success = orderDAO.updateOrderStatusWithPoints(orderId, "Shipping");
 
             if (success) {
                 result.put("success", true);
@@ -695,22 +696,22 @@ public class OrderService {
      */
     public boolean updateOrderStatusAndSync(int orderId, String newStatus) {
         // Cập nhật trạng thái đơn hàng
-        boolean orderUpdated = orderDAO.updateOrderStatus(orderId, newStatus);
+        boolean orderUpdated = orderDAO.updateOrderStatusWithPoints(orderId, newStatus);
 
-        if (!orderUpdated) {
-            return false;
+        if (orderUpdated) {
+            System.out.println("✅ Đã cập nhật đơn hàng " + orderId + " sang trạng thái: " + newStatus);
         }
 
-        // Nếu trạng thái mới là "completed", tự động cập nhật total_spent
-        if ("Completed".equalsIgnoreCase(newStatus)) {
-            Optional<Order> order = orderDAO.getOrderById(orderId);
-            if (order.isPresent() && order.get().getUserId() > 0) {
-                // Đồng bộ total_spent cho user
-                userDAO.syncTotalSpentFromOrders(order.get().getUserId());
-                System.out.println("Đã tự động cập nhật total_spent cho user ID: " + order.get().getUserId());
-            }
-        }
-        return true;
+//        // Nếu trạng thái mới là "completed", tự động cập nhật total_spent
+//        if ("Completed".equalsIgnoreCase(newStatus)) {
+//            Optional<Order> order = orderDAO.getOrderById(orderId);
+//            if (order.isPresent() && order.get().getUserId() > 0) {
+//                // Đồng bộ total_spent cho user
+//                userDAO.syncTotalSpentFromOrders(order.get().getUserId());
+//                System.out.println("Đã tự động cập nhật total_spent cho user ID: " + order.get().getUserId());
+//            }
+//        }
+        return orderUpdated;
     }
 
     /**

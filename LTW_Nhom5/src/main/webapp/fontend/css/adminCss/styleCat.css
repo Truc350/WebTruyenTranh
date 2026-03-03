@@ -148,7 +148,6 @@ body {
 .delete-btn {
     width: 36px;
     height: 36px;
-    border: 1px solid #ddd;
     background-color: #fff;
     cursor: pointer;
     font-size: 16px;
@@ -407,7 +406,6 @@ body {
 .action-cell button {
     width: 36px;
     height: 36px;
-    border: 1px solid #ddd;
     background-color: #fff;
     border-radius: 6px;
     cursor: pointer;
@@ -431,11 +429,11 @@ body {
 
 /* Hover riêng cho nút sửa */
 .action-cell .edit-btn:hover i {
-    color: #ff9800; /* cam */
+    color: #0056b3; /* cam */
 }
 
 /* Hover riêng cho nút xóa */
 .action-cell .delete-btn:hover i {
-    color: #f44336; /* đỏ */
+    color: #ff4c4c; /* đỏ */
 }
 
