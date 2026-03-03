@@ -106,7 +106,7 @@
 <%--                    <p>Ví Voucher</p>--%>
 <%--                </div>--%>
 <%--            </a>--%>
-            <a href="../nguoiB/profile.jsp">
+            <a href="${pageContext.request.contextPath}/wishlist">
                 <div class="icon-item">
                     <i class="fa-solid fa-list"></i>
                     <p>WishList</p>

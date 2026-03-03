@@ -6,6 +6,10 @@ html {
     overflow-x: hidden;
 }
 
+.navbar a{
+    width: fit-content !important;
+}
+
 .container{
     margin-left: 10%;
     max-width: 100%;

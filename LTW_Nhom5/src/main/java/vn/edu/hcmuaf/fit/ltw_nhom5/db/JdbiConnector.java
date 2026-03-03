@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class JdbiConnector {
+public class
+JdbiConnector {
 
     private static Jdbi jdbi;
 
