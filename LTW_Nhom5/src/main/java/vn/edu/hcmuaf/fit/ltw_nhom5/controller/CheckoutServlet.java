@@ -37,6 +37,7 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+        request.setAttribute("user", user);
 
         // Kiểm tra có sản phẩm được chọn không
         @SuppressWarnings("unchecked")

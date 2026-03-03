@@ -674,4 +674,14 @@ public class UserDao {
                 .orElse(false);
     }
 
+
+    public int userPoint(int id) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("select points from Users where id = :ue")
+                                    .bind("ue", id)
+                                    .mapTo(Integer.class)
+                                    .one()
+                );
+    }
+
 }

@@ -58,7 +58,7 @@
                 <a href="${contextPath}/change-password" data-page="change-password">Đổi mật khẩu</a>
             </li>
             <li class="${fn:contains(currentURI, 'points') ? 'active' : ''}">
-                <a href="${contextPath}/fontend/nguoiB/points.jsp" data-page="points">Ưu đãi C-Point</a>
+                <a href="${contextPath}/pointHistory" data-page="points">Ưu đãi C-Point</a>
             </li>
             <li class="${fn:contains(currentURI, 'order-history') ? 'active' : ''}">
                 <a href="${contextPath}/order-history?filter=pending" data-page="order-history">Đơn hàng của tôi</a>
