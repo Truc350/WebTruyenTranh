@@ -62,14 +62,6 @@
                 </div>
             </div>
 
-            <div class="action-panel">
-                <div class="notify-section">
-                    <button id="notifyBtn" class="notify-btn">
-                        <i class="fas fa-bell"></i> Nhận thông báo
-                    </button>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
@@ -144,26 +136,6 @@
         </c:otherwise>
     </c:choose>
 </div>
-
-
-
-
-<!-- DEBUG INFO (Remove in production) -->
-<c:if test="${pageContext.request.serverName == 'localhost'}">
-    <div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 8px; font-size: 12px; max-width: 300px; z-index: 9999;">
-        <strong>🔍 Debug Info:</strong><br>
-        Series ID: ${series.id}<br>
-        Total Comics: ${totalComics}<br>
-        Comics with Flash Sale:
-        <c:set var="flashSaleCount" value="0" />
-        <c:forEach var="comic" items="${comicsInSeries}">
-            <c:if test="${comic.hasFlashSale}">
-                <c:set var="flashSaleCount" value="${flashSaleCount + 1}" />
-            </c:if>
-        </c:forEach>
-            ${flashSaleCount}
-    </div>
-</c:if>
 
 
 <!-- INCLUDE FOOTER -->

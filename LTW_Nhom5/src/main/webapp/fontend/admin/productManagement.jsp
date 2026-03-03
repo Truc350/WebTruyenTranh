@@ -49,7 +49,6 @@
 
                 <div class="action-buttons">
                     <button class="add-btn">+ Thêm truyện</button>
-                    <%--                    <button class="delete-btn">Xóa truyện</button>--%>
                 </div>
             </div>
         </div>
@@ -65,12 +64,20 @@
                     <th>Tác giả</th>
                     <th>Giá</th>
                     <th>Còn trong kho</th>
-<%--                    <th>Đánh giá</th>--%>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody id="productTableBody">
                 </tbody>
+
+                <tbody id="paginationBody">
+                <tr class="pagination-row">
+                    <td colspan="10">
+                        <div class="pagination" id="paginationContainer"></div>
+                    </td>
+                </tr>
+                </tbody>
+
             </table>
         </div>
 
@@ -343,7 +350,7 @@
                 </div>
             </div>
         </div>
-        <div id="paginationContainer" class="pagination-container"></div>
+
     </main>
 
 
@@ -504,56 +511,23 @@
     }
 
 
-    function updatePagination(currentPage, totalPages, totalComics) {
+    function updatePagination(currentPage, totalPages) {
         const paginationContainer = document.getElementById('paginationContainer');
+        const paginationBody = document.getElementById('paginationBody');
 
         if (totalPages <= 1) {
-            paginationContainer.style.display = 'none';
+            paginationBody.style.display = 'none';
             return;
         }
 
-        paginationContainer.style.display = 'block';
-        let paginationHtml = '<div class="pagination">';
+        paginationBody.style.display = '';
+        let paginationHtml = '';
 
-        if (currentPage > 1) {
-            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(1)">⏮</button>';
-            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + (currentPage - 1) + ')">◀</button>';
-        } else {
-            paginationHtml += '<button class="page-btn nav-btn" disabled>⏮</button>';
-            paginationHtml += '<button class="page-btn nav-btn" disabled>◀</button>';
-        }
-
-        const maxVisible = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-        if (endPage - startPage < maxVisible - 1) {
-            startPage = Math.max(1, endPage - maxVisible + 1);
-        }
-
-        if (startPage > 1) {
-            paginationHtml += '<button class="page-btn" onclick="searchProducts(1)">1</button>';
-            if (startPage > 2) paginationHtml += '<span>...</span>';
-        }
-
-        for (let i = startPage; i <= endPage; i++) {
+        for (let i = 1; i <= totalPages; i++) {
             const activeClass = i === currentPage ? 'active' : '';
             paginationHtml += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
         }
 
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) paginationHtml += '<span>...</span>';
-            paginationHtml += '<button class="page-btn" onclick="searchProducts(' + totalPages + ')">' + totalPages + '</button>';
-        }
-
-        if (currentPage < totalPages) {
-            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + (currentPage + 1) + ')">▶</button>';
-            paginationHtml += '<button class="page-btn nav-btn" onclick="searchProducts(' + totalPages + ')">⏭</button>';
-        } else {
-            paginationHtml += '<button class="page-btn nav-btn" disabled>▶</button>';
-            paginationHtml += '<button class="page-btn nav-btn" disabled>⏭</button>';
-        }
-
-        paginationHtml += '</div>';
         paginationContainer.innerHTML = paginationHtml;
     }
 

@@ -8,7 +8,7 @@ let deletingCategoryId = null;
 let deletingCategoryName = '';
 let editingCategoryId = null;
 
-// ==================== UTILITY FUNCTIONS ====================
+
 function getContextPath() {
     return window.contextPath || '';
 }
@@ -133,7 +133,7 @@ function searchCategories(page = 1) {
             }
         })
         .catch(error => {
-            console.error('❌ Search error:', error);
+            console.error('Search error:', error);
             showError('Không thể kết nối đến server: ' + error.message);
         });
 }
