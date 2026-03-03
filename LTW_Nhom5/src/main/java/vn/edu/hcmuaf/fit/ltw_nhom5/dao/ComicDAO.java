@@ -684,7 +684,7 @@ public class ComicDAO extends ADao {
      * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
      */
     public List<Comic> getRelatedComics(int comicId) {
-        final int LIMIT = 9;
+        final int LIMIT = 6;
 
         Comic current = jdbi.withHandle(h ->
                 h.createQuery("""

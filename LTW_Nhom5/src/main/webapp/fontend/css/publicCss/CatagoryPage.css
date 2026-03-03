@@ -177,13 +177,16 @@ nav[aria-label="Phân trang"] ul li a.active {
 .detail-book {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: flex-start;
   gap: 3px;
 }
 
 .detail-book p {
   color: #333;
+  /*justify-content: flex-start;*/
+  align-content: flex-start ;
+  text-align: left !important;
 }
 
 .sold {
@@ -434,6 +437,7 @@ section[aria-label] {
   flex-wrap: wrap;
   gap: 20px;
   margin-top: 20px;
+  text-align: left;
 }
 
 section[aria-label] article {
