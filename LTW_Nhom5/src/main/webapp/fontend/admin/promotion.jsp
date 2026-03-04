@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +17,8 @@
     <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
 
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
-
 
         <div class="promotion-page">
 
@@ -150,7 +151,7 @@
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
                         <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></i></button>
                     </td>
                 </tr>
 
