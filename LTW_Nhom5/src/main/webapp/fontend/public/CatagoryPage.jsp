@@ -15,6 +15,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="${pageContext.request.contextPath}/js/category.js"></script>
+
+    <style>
+        .slider-viewport{
+            margin : 0;
+
+        }
+
+    </style>
 </head>
 
 <body>
@@ -281,7 +289,7 @@
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
-                                                    ./g<c:if test="${comic.hasFlashSale}">
+                                                    <c:if test="${comic.hasFlashSale}">
                                                         <div class="flash-sale-badge-small">
                                                             <i class="fas fa-bolt"></i>Flash sale
                                                         </div>
