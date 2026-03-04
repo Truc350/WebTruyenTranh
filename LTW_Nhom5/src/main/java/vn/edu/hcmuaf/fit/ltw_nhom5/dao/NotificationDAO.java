@@ -132,7 +132,6 @@ public class NotificationDAO {
                             .orElse(null)
             );
         } catch (Exception e) {
-            System.err.println("❌ Error getting FCM token: " + e.getMessage());
             return null;
         }
     }
@@ -152,7 +151,6 @@ public class NotificationDAO {
             System.out.println("✅ Saved FCM token for user " + userId);
 
         } catch (Exception e) {
-            System.err.println("❌ Error saving FCM token: " + e.getMessage());
             e.printStackTrace();
         }
     }

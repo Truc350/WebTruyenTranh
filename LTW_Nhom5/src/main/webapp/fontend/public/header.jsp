@@ -105,12 +105,6 @@
             </div>
         </div>
 
-<%--        <div class="actions">--%>
-<%--            <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">--%>
-<%--                <i class="fa-solid fa-comment"></i>--%>
-<%--            </a>--%>
-<%--        </div>--%>
-
         <div class="actions cart-icon-wrapper">
             <a href="${pageContext.request.contextPath}/cart" class="cart-icon">
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -311,7 +305,6 @@
                             : firstLine;
                     }
 
-                    // ICON THEO TYPE
                     let icon = '📬';
                     if (n.type === 'ORDER_CONFIRMED') icon = '✅';
                     else if (n.type === 'ORDER_SHIPPED') icon = '🚚';
@@ -320,20 +313,19 @@
                     else if (n.type === 'REFUND_REJECTED') icon = '⛔';
                     else if (n.type === 'ORDER_UPDATE') icon = '📦';
 
-                    const formattedTime = n.formatted_date || n.formattedCreatedAt || '';
+                    const formattedTime = n.formatted_date || '';
 
-                    html += `
-                <div class="header-noti-item ${unreadClass}" data-id="${n.id}">
-                    <div class="noti-icon">${icon}</div>
-                    <div class="noti-content">
-                        <div class="noti-message">${displayMessage}</div>
-                        <div class="noti-time">${formattedTime}</div>
-                    </div>
-                </div>
-            `;
+                    html += '<div class="header-noti-item ' + unreadClass + '" data-id="' + n.id + '">'
+                        +   '<div class="noti-icon">' + icon + '</div>'
+                        +   '<div class="noti-content">'
+                        +     '<div class="noti-message">' + displayMessage + '</div>'
+                        +     '<div class="noti-time">' + formattedTime + '</div>'
+                        +   '</div>'
+                        + '</div>';
                 });
 
                 list.innerHTML = html;
+                console.log("HTML được render:", html);
                 console.log("✅ Rendered", data.notifications.length, "notifications");
 
                 // Click thông báo → đánh dấu đã đọc
@@ -395,7 +387,7 @@
                 }
             });
 
-            // Đóng khi click ngoài
+
             document.addEventListener('click', function (e) {
                 if (!bell.contains(e.target) && !panel.contains(e.target)) {
                     if (panel.style.display === 'block') {
@@ -405,11 +397,11 @@
                 }
             });
 
-            // Load badge ngay khi trang mở
-            console.log("📊 Loading initial badge count...");
+
+            console.log("Loading initial badge count...");
             fetch('${pageContext.request.contextPath}/NotificationServlet/count')
                 .then(r => {
-                    console.log("📥 Badge count response:", r.status);
+                    console.log("Badge count response:", r.status);
                     return r.json();
                 })
                 .then(d => {
@@ -419,14 +411,12 @@
                         badge.textContent = count;
                         badge.style.display = count > 0 ? 'flex' : 'none';
                     }
-                    console.log('✅ Initial badge count loaded:', count);
                 })
                 .catch(err => {
-                    console.error('❌ Lỗi load badge count:', err);
+                    console.error('Lỗi load badge count:', err);
                 });
         });
 
-        // AUTO REFRESH NOTIFICATION BADGE MỖI 60 GIÂY
         setInterval(() => {
             fetch('${pageContext.request.contextPath}/NotificationServlet/count')
                 .then(r => r.json())

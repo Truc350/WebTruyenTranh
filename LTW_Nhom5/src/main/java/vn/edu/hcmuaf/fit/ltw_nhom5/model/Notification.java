@@ -1,16 +1,25 @@
 package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 
+import com.google.gson.annotations.SerializedName;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Notification {
+public class Notification implements Serializable{
+    @SerializedName("id")
     private int id;
+    @SerializedName("user_id")
     private int userId;
     private String title;
     private String message;
     private String type;
+    @SerializedName("is_read")
     private boolean isRead;
+    @SerializedName("created_at")
     private LocalDateTime createdAt;
+    @SerializedName("formatted_date")
     private String formattedCreatedAt;
 
     public Notification() {
@@ -78,17 +87,6 @@ public class Notification {
 
     public void setFormattedCreatedAt(String formattedCreatedAt) {
         this.formattedCreatedAt = formattedCreatedAt;
-    }
-
-//    // THÊM METHOD NÀY - Format createdAt cho JSP
-//    public String getFormattedCreatedAt() {
-//        if (createdAt == null) return "";
-//        return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-//    }
-
-    // Alias cho frontend (để JS dễ đọc)
-    public String getFormatted_date() {
-        return formattedCreatedAt;
     }
 
 }

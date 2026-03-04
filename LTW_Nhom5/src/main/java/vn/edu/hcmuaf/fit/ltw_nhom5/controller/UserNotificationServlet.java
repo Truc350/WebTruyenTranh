@@ -26,7 +26,6 @@ public class UserNotificationServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         gson = GsonConfig.getGson();
-        System.out.println("✅ UserNotificationServlet initialized");
     }
 
     @Override
@@ -39,7 +38,6 @@ public class UserNotificationServlet extends HttpServlet {
         // Kiểm tra user đã đăng nhập
         User user = (User) request.getSession().getAttribute("currentUser");
         if (user == null) {
-            System.out.println("❌ User not authenticated");
             response.setStatus(401);
             response.getWriter().write("{\"error\": \"Not authenticated\"}");
             return;
@@ -127,8 +125,6 @@ public class UserNotificationServlet extends HttpServlet {
         String limitParam = request.getParameter("limit");
         int limit = (limitParam != null) ? Integer.parseInt(limitParam) : 10;
 
-        System.out.println("📋 Loading recent notifications - Limit: " + limit);
-
         List<Notification> notifications = notificationDAO.getRecent(user.getId(), limit);
         int unreadCount = notificationDAO.countUnread(user.getId());
 
@@ -139,6 +135,7 @@ public class UserNotificationServlet extends HttpServlet {
             if (noti.getCreatedAt() != null) {
                 noti.setFormattedCreatedAt(formatRelativeTime(noti.getCreatedAt()));
             }
+            noti.setTitle(generateTitle(noti.getType()));
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -162,7 +159,6 @@ public class UserNotificationServlet extends HttpServlet {
         int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
         int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 20;
 
-        // ✅ XỬ LÝ TYPE = "ALL" → KHÔNG FILTER
         if ("ALL".equals(typeFilter)) {
             typeFilter = null;
         }
@@ -182,12 +178,10 @@ public class UserNotificationServlet extends HttpServlet {
                 String formattedDate = formatRelativeTime(noti.getCreatedAt());
                 noti.setFormattedCreatedAt(formattedDate);
 
-                // ✅ THÊM FORMATTED_DATE CHO JSP
                 Map<String, Object> extraData = new HashMap<>();
                 extraData.put("formatted_date", formattedDate);
             }
 
-            // ✅ THÊM TITLE DỰA TRÊN TYPE
             String title = generateTitle(noti.getType());
             noti.setTitle(title);
         }
