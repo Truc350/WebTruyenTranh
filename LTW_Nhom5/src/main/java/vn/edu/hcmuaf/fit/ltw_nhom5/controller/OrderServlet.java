@@ -10,7 +10,7 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
-import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
+//import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -107,11 +107,11 @@ public class OrderServlet extends HttpServlet {
                         + request.getContextPath()
                         + "/vnpay-return";
                 String orderInfo = "Thanh toan don hang - " + recipientName.trim();
-                String paymentUrl = VNPayUtils.createPaymentUrl(
-                        user.getId(), totalVnpay, orderInfo, returnURL, ipAddress
-                );
+//                String paymentUrl = VNPayUtils.createPaymentUrl(
+//                        user.getId(), totalVnpay, orderInfo, returnURL, ipAddress
+//                );
 
-                response.sendRedirect(paymentUrl);
+//                response.sendRedirect(paymentUrl);
                 return;// cho callback
             }
 

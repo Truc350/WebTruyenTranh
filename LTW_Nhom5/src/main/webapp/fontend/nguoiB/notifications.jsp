@@ -26,7 +26,7 @@
             <div class="tab" data-type="EVENT">Sự kiện</div>
         </div>
         <div class="line"></div>
-        <div id="notification-list-area" style="min-height:300px;">
+        <div id="notification-list-area" style="min-height:300px; max-height:480px; overflow-y:auto;">
             <div style="text-align:center;padding:60px;color:#999;">Đang tải thông báo...</div>
         </div>
         <div style="text-align:center;padding:20px;">
@@ -54,19 +54,14 @@
             });
         });
 
-        // Mark all read button
         document.getElementById('mark-all-read-btn').addEventListener('click', markAllRead);
     });
 
     async function loadNotifications() {
         const container = document.querySelector('.notification-container');
         const listArea = document.getElementById('notification-list-area');
-
         const activeTab = container.querySelector('.tab.active');
-        let type = 'ALL';
-        if (activeTab) {
-            type = activeTab.dataset.type || 'ALL';
-        }
+        let type = activeTab ? (activeTab.dataset.type || 'ALL') : 'ALL';
 
         listArea.innerHTML = '<div style="text-align:center;padding:60px;color:#999;">Đang tải thông báo...</div>';
 
@@ -88,38 +83,66 @@
             document.getElementById('mark-all-read-btn').style.display = 'block';
 
             let html = '';
-            data.notifications.forEach(n => {
-                const unreadStyle = n.is_read ? '' : 'background:#f0f8ff; font-weight:600; border-left:4px solid #007bff; padding-left:16px;';
-                html += `
-                <div style="padding:16px; margin-bottom:8px; border-bottom:1px solid #eee; border-radius:6px; cursor:pointer; ${unreadStyle}"
-                     onclick="markReadAndGo(${n.id}, '${n.link}')">
-                    <strong style="font-size:16px;display:block;margin-bottom:6px;">${n.title}</strong>
-                    <div style="color:#555;font-size:14px;margin-bottom:10px;">${n.message}</div>
-                    <small style="color:#999;font-size:13px;">${n.formatted_date}</small>
-                </div>
-            `;
+            data.notifications.forEach(function(n) {
+                const unreadStyle = n.is_read ? '' : 'background:#f0f8ff;font-weight:600;border-left:4px solid #007bff;padding-left:16px;';
+                const title = n.title || 'Thông báo';
+                const message = (n.message || '').replace(/\n/g, '<br>');
+                const formattedDate = n.formatted_date || '';
+                const notiId = n.id || 0;
+
+                let icon = '<i class="fa-solid fa-bell" style="color:#666;"></i>';
+                if (n.type === 'ORDER_CONFIRMED')  icon = '<i class="fa-solid fa-circle-check" style="color:#28a745;"></i>';
+                else if (n.type === 'ORDER_SHIPPED')   icon = '<i class="fa-solid fa-truck" style="color:#007bff;"></i>';
+                else if (n.type === 'ORDER_CANCELLED') icon = '<i class="fa-solid fa-circle-xmark" style="color:#dc3545;"></i>';
+                else if (n.type === 'ORDER_DELIVERED') icon = '<i class="fa-solid fa-box" style="color:#6f42c1;"></i>';
+                else if (n.type === 'REFUND_APPROVED') icon = '<i class="fa-solid fa-money-bill-wave" style="color:#fd7e14;"></i>';
+                else if (n.type === 'REFUND_REJECTED') icon = '<i class="fa-solid fa-ban" style="color:#dc3545;"></i>';
+                else if (n.type === 'ORDER_UPDATE')    icon = '<i class="fa-solid fa-box-open" style="color:#17a2b8;"></i>';
+                else if (n.type === 'PROMOTION')       icon = '<i class="fa-solid fa-tag" style="color:#e83e8c;"></i>';
+
+                html += '<div id="noti-' + notiId + '"style="display:flex;gap:12px;align-items:flex-start;padding:16px;margin-bottom:4px;border-bottom:1px solid #eee;border-radius:6px;cursor:pointer;' + unreadStyle + '" '
+                    + 'onclick="markReadAndGo(' + notiId + ')">'
+                    +   '<div style="font-size:22px;padding-top:2px;flex-shrink:0;">' + icon + '</div>'
+                    +   '<div style="flex:1;">'
+                    +     '<strong style="font-size:15px;display:block;margin-bottom:4px;' + (n.is_read ? '' : 'font-weight:700;') + '">' + title + '</strong>'
+                    +     '<div style="color:#555;font-size:13px;margin-bottom:6px;line-height:1.5;">' + message + '</div>'
+                    +     '<small style="color:#aaa;font-size:12px;"><i class="fa-regular fa-clock"></i> ' + formattedDate + '</small>'
+                    +   '</div>'
+                    + '</div>';
             });
 
             listArea.innerHTML = html;
 
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#noti-')) {
+                const targetEl = document.querySelector(hash);
+                if (targetEl) {
+                    setTimeout(function() {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetEl.style.transition = 'background 0.5s';
+                        targetEl.style.background = '#fff3cd';
+                        setTimeout(function() {
+                            targetEl.style.background = '';
+                        }, 2000);
+                    }, 300);
+                }
+            }
+
         } catch (err) {
             console.error('Lỗi load thông báo:', err);
-            listArea.innerHTML = '<div style="text-align:center;padding:60px;color:red;">Lỗi tải thông báo<br><small>Vui lòng làm mới trang</small></div>';
+            listArea.innerHTML = '<div style="text-align:center;padding:60px;color:red;">Lỗi tải thông báo</div>';
         }
     }
 
-    async function markReadAndGo(id, link) {
+    async function markReadAndGo(id) {
         try {
             await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
                 method: 'POST',
                 credentials: 'include'
             });
             loadNotifications();
-            if (link && link !== '#' && link !== '') {
-                window.location.href = link;
-            }
         } catch (err) {
-            alert('Lỗi đánh dấu đã đọc');
+            console.error('Lỗi đánh dấu đã đọc:', err);
         }
     }
 
