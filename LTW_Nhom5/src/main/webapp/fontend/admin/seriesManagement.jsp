@@ -11,7 +11,6 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar (giữ nguyên) -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
 
     <div class="main-content">
@@ -31,7 +30,6 @@
 
         <h2 class="page-title">Quản lý series</h2>
 
-        <!-- Toast Notification -->
         <c:if test="${not empty successMessage}">
             <div class="toast-notification success" id="toastNotification">
                 <i class="fas fa-check-circle"></i>
@@ -53,8 +51,7 @@
                        value="${keyword}">
                 <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
             </form>
-            <%--            Loc trang thai an hien--%>
-            <%-- Lọc trạng thái ẩn hiện --%>
+
             <div class="filter-container">
                 <label for="visibilityFilter" class="filter-label">
                     <i class="fas fa-filter"></i>
@@ -134,18 +131,6 @@
                     </tr>
                 </c:forEach>
 
-                <%--                <tr class="pagination-row">--%>
-                <%--                    <td colspan="10">--%>
-                <%--                        <div class="pagination">--%>
-                <%--                            <c:forEach var="i" begin="1" end="${totalPages}">--%>
-                <%--                                <button class="page-btn ${i == currentPage ? 'active' : ''}"--%>
-                <%--                                        onclick="window.location.href='${pageContext.request.contextPath}/SeriesManagement?page=${i}'">--%>
-                <%--                                        ${i}--%>
-                <%--                                </button>--%>
-                <%--                            </c:forEach>--%>
-                <%--                        </div>--%>
-                <%--                    </td>--%>
-                <%--                </tr>--%>
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination">

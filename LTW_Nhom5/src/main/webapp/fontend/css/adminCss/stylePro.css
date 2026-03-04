@@ -120,15 +120,11 @@ body {
 .add-btn:hover {
     background-color: #ff6a6a;
 }
+.delete-btn{
+    background-color: black;
+}
 
 
-/*.table-wrapper {*/
-/*    width: 100%;*/
-/*    background: white;*/
-/*    border-radius: 8px;*/
-/*    overflow: visible; !* Bỏ scroll *!*/
-/*}*/
-/* Container bao quanh bảng */
 .table-wrapper {
     width: 100%;           /* Chiều rộng tối đa của vùng chứa */
     overflow-x: auto;      /* Tự động hiện thanh cuộn ngang khi bảng quá rộng */
@@ -144,7 +140,6 @@ table {
     min-width: 800px;      /* Quan trọng: ép bảng phải rộng ít nhất 800px để kích hoạt scroll */
 }
 
-/* Tùy chỉnh thanh cuộn cho đẹp hơn (Dành cho Chrome, Safari, Edge) */
 .table-wrapper::-webkit-scrollbar {
     height: 8px;           /* Độ dày của thanh cuộn ngang */
 }
@@ -161,9 +156,6 @@ table {
 .table-wrapper::-webkit-scrollbar-thumb:hover {
     background: #555;      /* Màu thanh kéo khi di chuột qua */
 }
-
-
-
 
 /* Table */
 table {
@@ -240,14 +232,13 @@ th, td {
     font-size: 16px;
 }
 
-/* ===== PAGINATION STYLES - Căn giữa dưới bảng ===== */
 .pagination-container {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     margin-top: 30px;
     margin-bottom: 20px;
-    padding: 15px 0;
+    padding: 5px 0;
 }
 
 .pagination-wrapper {
@@ -274,83 +265,84 @@ th, td {
     padding: 0;
 }
 
-.page-btn {
-    min-width: 40px;
-    height: 40px;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    background: white;
-    color: #333;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
+/*.page-btn {*/
+/*    min-width: 32px;*/
+/*    height: 32px;*/
+/*    padding: 4px 8px;*/
+/*    border: 1px solid #FF7A7A;*/
+/*    background: white;*/
+/*    color: #333;*/
+/*    border-radius: 50%;*/
+/*    cursor: pointer;*/
+/*    font-size: 13px;*/
+/*    font-weight: 500;*/
+/*    transition: all 0.2s ease;*/
+/*    display: inline-flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*}*/
 
-.page-btn:hover:not(.active):not(:disabled) {
-    background: #f5f5f5;
-    border-color: #ccc;
-}
+/*.page-btn:hover:not(.active):not(:disabled) {*/
+/*    background: #f5f5f5;*/
+/*    border-color: #ccc;*/
+/*}*/
 
-.page-btn.active {
-    background: #ff4c4c;
-    color: white;
-    border-color: #ff4c4c;
-    font-weight: 600;
-    cursor: default;
-}
+/*.page-btn.active {*/
+/*    background: #ff4c4c;*/
+/*    color: white;*/
+/*    border-color: #ff4c4c;*/
+/*    font-weight: 600;*/
+/*    cursor: default;*/
+/*}*/
 
-.page-btn:disabled {
-    cursor: not-allowed;
-    opacity: 0.3;
-    background: #f5f5f5;
-    border-color: #e0e0e0;
-}
+/*.page-btn:disabled {*/
+/*    cursor: not-allowed;*/
+/*    opacity: 0.3;*/
+/*    background: #f5f5f5;*/
+/*    border-color: #e0e0e0;*/
+/*}*/
 
-.page-btn:disabled:hover {
-    transform: none;
-    box-shadow: none;
-    border-color: #e0e0e0;
-    background: #f5f5f5;
-}
+/*.page-btn:disabled:hover {*/
+/*    transform: none;*/
+/*    box-shadow: none;*/
+/*    border-color: #e0e0e0;*/
+/*    background: #f5f5f5;*/
+/*}*/
 
-.pagination span {
-    padding: 0 5px;
-    color: #999;
-    font-weight: bold;
-    font-size: 18px;
-}
+/*.pagination span {*/
+/*    padding: 0 5px;*/
+/*    color: #999;*/
+/*    font-weight: bold;*/
+/*    font-size: 18px;*/
+/*}*/
 
-.page-btn.nav-btn {
-    font-size: 18px;
-    min-width: 50px;
-}
+/*.page-btn.nav-btn {*/
+/*    font-size: 13px;*/
+/*    min-width: 32px;*/
+/*    border-radius: 50%;*/
+/*}*/
 
 /* Responsive */
-@media (max-width: 768px) {
-    .pagination {
-        gap: 5px;
-    }
+/*@media (max-width: 768px) {*/
+/*    .pagination {*/
+/*        gap: 4px;*/
+/*    }*/
 
-    .page-btn {
-        min-width: 38px;
-        height: 38px;
-        font-size: 14px;
-        padding: 8px 12px;
-    }
+/*    .page-btn {*/
+/*        min-width: 32px;*/
+/*        height: 32px;*/
+/*        font-size: 13px;*/
+/*        padding: 4px 8px;*/
+/*    }*/
 
-    .page-btn.nav-btn {
-        min-width: 40px;
-    }
+/*    .page-btn.nav-btn {*/
+/*        min-width: 32px;*/
+/*    }*/
 
-    .pagination-info {
-        font-size: 13px;
-    }
-}
+/*    .pagination-info {*/
+/*        font-size: 13px;*/
+/*    }*/
+/*}*/
 
 /* Ô chứa nút sửa và 3 chấm */
 .action-cell {
@@ -975,4 +967,48 @@ th, td {
 .filter-select:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(217,83,79,0.5);
+}
+
+.pagination-row td {
+    text-align: right;
+    padding: 10px 20px;
+    background-color: #fff;
+}
+
+.pagination {
+    display: inline-flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.page-btn {
+    all: unset !important;
+    box-sizing: border-box !important;
+    width: 30px !important;
+    height: 30px !important;
+    border: 1px solid #ffb1b1 !important;
+    border-radius: 6px !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.page-btn.active {
+    background: #ff4c4c !important;
+    color: white !important;
+    border-color: #ff4c4c !important;
+    font-weight: 600 !important;
+}
+
+.page-btn:hover:not(.active) {
+    background: #fff0f0 !important;
+    border-color: #ff4c4c !important;
+    cursor: pointer !important;
 }

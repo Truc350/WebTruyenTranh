@@ -356,6 +356,13 @@ public class OrderDAO extends ADao {
      * @param newStatus Trạng thái mới
      * @return true nếu cập nhật thành công
      */
+    /**
+     * ✅ FIXED: Cập nhật trạng thái đơn hàng VÀ cộng xu + total_spent khi hoàn thành
+     *
+     * @param orderId   ID đơn hàng
+     * @param newStatus Trạng thái mới
+     * @return true nếu cập nhật thành công
+     */
     public boolean updateOrderStatusWithPoints(int orderId, String newStatus) {
         return jdbi.inTransaction(handle -> {
             // 1. Lấy thông tin đơn hàng
@@ -366,10 +373,13 @@ public class OrderDAO extends ADao {
                     .orElse(null);
 
             if (order == null) {
+                System.err.println("❌ Không tìm thấy đơn hàng ID: " + orderId);
                 return false;
             }
 
             String oldStatus = order.getStatus();
+            int userId = order.getUserId();
+            double totalAmount = order.getTotalAmount();
 
             // 2. Cập nhật trạng thái đơn hàng
             int updated = handle.createUpdate("UPDATE orders SET status = ? WHERE id = ?")
@@ -378,50 +388,55 @@ public class OrderDAO extends ADao {
                     .execute();
 
             if (updated == 0) {
+                System.err.println("❌ Không thể cập nhật trạng thái đơn hàng ID: " + orderId);
                 return false;
             }
 
-            // 3. Nếu chuyển sang trạng thái "Completed", cộng xu cho user
             if ("Completed".equalsIgnoreCase(newStatus) &&
                     !"Completed".equalsIgnoreCase(oldStatus)) {
 
-                // Tính xu được cộng (1% tổng đơn hàng, làm tròn xuống)
-                // Ví dụ: đơn 150,000đ = 1 xu, 250,000đ = 2 xu
-                int earnedPoints = (int) (order.getTotalAmount() / 100000);
+                int earnedPoints = 200;
 
-                if (earnedPoints > 0) {
-                    // Cập nhật xu cho user
-                    handle.createUpdate("UPDATE users SET points = points + ? WHERE id = ?")
-                            .bind(0, earnedPoints)
-                            .bind(1, order.getUserId())
-                            .execute();
+                handle.createUpdate(
+                                "UPDATE users SET " +
+                                        "total_spent = total_spent + ?, " +
+                                        "points = points + ?, " +
+                                        "updated_at = NOW() " +
+                                        "WHERE id = ?"
+                        )
+                        .bind(0, totalAmount)      // ✅ Cộng total_spent
+                        .bind(1, earnedPoints)      // ✅ Cộng 200 điểm
+                        .bind(2, userId)
+                        .execute();
 
-                    // Ghi log giao dịch xu
-                    String insertTransactionSql = "INSERT INTO PointTransactions " +
-                            "(user_id, order_id, points, transaction_type, description, created_at) " +
-                            "VALUES (?, ?, ?, ?, ?, ?)";
+                System.out.println("✅ [COMPLETED] User " + userId + ": +" +
+                        String.format("%,.0f", totalAmount) + " VND, +" + earnedPoints + " điểm");
 
-                    handle.createUpdate(insertTransactionSql)
-                            .bind(0, order.getUserId())
-                            .bind(1, orderId)
-                            .bind(2, earnedPoints)
-                            .bind(3, "EARN")
-                            .bind(4, "Nhận " + earnedPoints + " xu từ đơn hàng #" + orderId +
-                                    " (Giá trị đơn: " + String.format("%,.0f", order.getTotalAmount()) + "đ)")
-                            .bind(5, LocalDateTime.now())
-                            .execute();
-                }
+                // Ghi log giao dịch xu
+                String insertTransactionSql = "INSERT INTO PointTransactions " +
+                        "(user_id, order_id, points, transaction_type, description, created_at) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)";
+
+                handle.createUpdate(insertTransactionSql)
+                        .bind(0, userId)
+                        .bind(1, orderId)
+                        .bind(2, earnedPoints)
+                        .bind(3, "EARN")
+                        .bind(4, "Nhận " + earnedPoints + " xu từ đơn hàng #" + orderId +
+                                " (Giá trị đơn: " + String.format("%,.0f", totalAmount) + "đ)")
+                        .bind(5, LocalDateTime.now())
+                        .execute();
             }
 
             // 4. Nếu hủy đơn hàng, hoàn xu (nếu đã sử dụng xu)
             if ("Cancelled".equalsIgnoreCase(newStatus) &&
                     !"Cancelled".equalsIgnoreCase(oldStatus)) {
 
-                if (order.getPointUsed() > 0) {
+                if (order.getPointUsed() != 0 && order.getPointUsed() > 0) {
                     // Hoàn xu cho user
-                    handle.createUpdate("UPDATE users SET points = points + ? WHERE id = ?")
+                    handle.createUpdate("UPDATE users SET points = points + ?, updated_at = NOW() WHERE id = ?")
                             .bind(0, order.getPointUsed())
-                            .bind(1, order.getUserId())
+                            .bind(1, userId)
                             .execute();
 
                     // Ghi log giao dịch hoàn xu
@@ -430,7 +445,7 @@ public class OrderDAO extends ADao {
                             "VALUES (?, ?, ?, ?, ?, ?)";
 
                     handle.createUpdate(insertTransactionSql)
-                            .bind(0, order.getUserId())
+                            .bind(0, userId)
                             .bind(1, orderId)
                             .bind(2, order.getPointUsed())
                             .bind(3, "REFUND")
@@ -441,6 +456,36 @@ public class OrderDAO extends ADao {
                 }
 
                 // Hoàn lại tồn kho
+                List<OrderItem> orderItems = handle.createQuery(
+                                "SELECT * FROM order_items WHERE order_id = ?")
+                        .bind(0, orderId)
+                        .mapToBean(OrderItem.class)
+                        .list();
+
+                for (OrderItem item : orderItems) {
+                    handle.createUpdate(
+                                    "UPDATE comics SET stock_quantity = stock_quantity + ? WHERE id = ?")
+                            .bind(0, item.getQuantity())
+                            .bind(1, item.getComicId())
+                            .execute();
+
+                }
+            }
+
+            // 5. THÊM: Xử lý trạng thái "Returned"
+            if ("Returned".equalsIgnoreCase(newStatus) &&
+                    !"Returned".equalsIgnoreCase(oldStatus)) {
+
+                // Hoàn xu nếu đã dùng
+                if (order.getPointUsed() != 0 && order.getPointUsed() > 0) {
+                    handle.createUpdate("UPDATE users SET points = points + ?, updated_at = NOW() WHERE id = ?")
+                            .bind(0, order.getPointUsed())
+                            .bind(1, userId)
+                            .execute();
+
+                }
+
+                // Hoàn tồn kho
                 List<OrderItem> orderItems = handle.createQuery(
                                 "SELECT * FROM order_items WHERE order_id = ?")
                         .bind(0, orderId)

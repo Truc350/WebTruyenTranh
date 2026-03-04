@@ -26,7 +26,7 @@
 </head>
 
 <body>
-<jsp:include page="/fontend/public/header.jsp" />
+<jsp:include page="/fontend/public/header.jsp"/>
 
 <div class="container-content">
 
@@ -289,7 +289,7 @@
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
-                                                    <c:if test="${comic.hasFlashSale}">
+                                                    ./g<c:if test="${comic.hasFlashSale}">
                                                         <div class="flash-sale-badge-small">
                                                             <i class="fas fa-bolt"></i>Flash sale
                                                         </div>

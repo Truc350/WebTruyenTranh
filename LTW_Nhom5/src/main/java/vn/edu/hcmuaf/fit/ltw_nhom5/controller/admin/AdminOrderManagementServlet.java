@@ -119,14 +119,18 @@ public class AdminOrderManagementServlet extends HttpServlet {
                     result = handleGetReturnDetail(req);
                     break;
                 default:
-                    result = Map.of("success", false, "error", "Invalid action");
+                    result = Map.of("success", false, "message", "Invalid action");
             }
 
-            resp.getWriter().write(gson.toJson(result));
+//            resp.getWriter().write(gson.toJson(result));
+            sendJson(resp, result);
 
         } catch (Exception e) {
             e.printStackTrace();
-            sendJsonError(resp, e.getMessage());
+            sendJson(resp, Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
         }
     }
 
@@ -140,11 +144,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             System.err.println("❌ Invalid return ID format");
-            return Map.of("success", false, "error", "Invalid return ID");
+            return Map.of("success", false, "message", "Invalid return ID");
         } catch (Exception e) {
             System.err.println("❌ Error getting return detail: " + e.getMessage());
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -169,7 +173,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
         } catch (Exception e) {
             System.err.println("❌ Error searching returns: " + e.getMessage());
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -218,11 +222,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             System.err.println("❌ Invalid return ID format");
-            return Map.of("success", false, "error", "Invalid return ID");
+            return Map.of("success", false, "message", "Invalid return ID");
         } catch (Exception e) {
             System.err.println("❌ Error rejecting refund: " + e.getMessage());
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -275,11 +279,11 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             System.err.println("❌ Invalid return ID format");
-            return Map.of("success", false, "error", "Invalid return ID");
+            return Map.of("success", false, "message", "Invalid return ID");
         } catch (Exception e) {
             System.err.println("❌ Error confirming refund: " + e.getMessage());
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -312,7 +316,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
                 req.setAttribute("stats", stats);
 
             } else {
-                req.setAttribute("error", data.get("error"));
+                req.setAttribute("message", data.get("message"));
             }
 
             // Forward tới JSP
@@ -321,7 +325,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("error", "Lỗi khi tải danh sách đơn hàng: " + e.getMessage());
+            req.setAttribute("message", "Lỗi khi tải danh sách đơn hàng: " + e.getMessage());
             req.getRequestDispatcher("/fontend/admin/order.jsp")
                     .forward(req, resp);
         }
@@ -459,7 +463,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
         } catch (Exception e) {
             return Map.of(
                     "success", false,
-                    "error", "Lỗi xử lý: " + e.getMessage()
+                    "message", "Lỗi xử lý: " + e.getMessage()
             );
         }
     }
@@ -473,11 +477,10 @@ public class AdminOrderManagementServlet extends HttpServlet {
             String shippingProvider = req.getParameter("shippingProvider");
 
 //            return orderService.confirmOrder(orderId, shippingProvider);
-            System.out.println("🔄 Confirming order ID: " + orderId);
 
             Map<String, Object> result = orderService.confirmOrder(orderId, shippingProvider);
 
-            // ✅ GỬI THÔNG BÁO CHO USER
+            // GỬI THÔNG BÁO CHO USER
             if ((Boolean) result.get("success")) {
                 System.out.println("📋 Getting order info for notification...");
 
@@ -494,19 +497,24 @@ public class AdminOrderManagementServlet extends HttpServlet {
                         String orderCode = String.valueOf(orderCodeObj);
 
                         notificationService.notifyOrderConfirmed(userId, orderCode);
-
-                        System.out.println("✅ Notification sent successfully");
                     }
                 }
             }
 
-            return result;
+//            return result;
+            Map<String, Object> mutableResult = new HashMap<>(result);
+            if (!mutableResult.containsKey("message")) {
+                mutableResult.put("message", Boolean.TRUE.equals(mutableResult.get("success"))
+                        ? "Xác nhận đơn hàng thành công!"
+                        : "Xác nhận đơn hàng thất bại");
+            }
+            return mutableResult;
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         } catch (Exception e) {
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -541,10 +549,10 @@ public class AdminOrderManagementServlet extends HttpServlet {
             return result;
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         } catch (Exception e) {
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -581,10 +589,10 @@ public class AdminOrderManagementServlet extends HttpServlet {
             return result;
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         } catch (Exception e) {
             e.printStackTrace();
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
     }
 
@@ -597,7 +605,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             return orderService.confirmDelivered(orderId);
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         }
     }
 
@@ -612,7 +620,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             return orderService.updateOrderStatus(orderId, newStatus);
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         }
     }
 
@@ -625,7 +633,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             return orderService.processRefund(orderId);
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         }
     }
 
@@ -638,7 +646,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(Map.of(
                 "success", false,
-                "error", message
+                "message", message
         )));
     }
 
@@ -666,7 +674,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             if (status == null || status.isEmpty()) {
                 resp.getWriter().write(gson.toJson(Map.of(
                         "success", false,
-                        "error", "Missing status parameter"
+                        "message", "Missing status parameter"
                 )));
                 return;
             }
@@ -730,7 +738,7 @@ public class AdminOrderManagementServlet extends HttpServlet {
             try {
                 Map<String, Object> errorResponse = new HashMap<>();
                 errorResponse.put("success", false);
-                errorResponse.put("error", e.getMessage() != null ? e.getMessage() : "Unknown error");
+                errorResponse.put("message", e.getMessage() != null ? e.getMessage() : "Unknown error");
                 errorResponse.put("errorType", e.getClass().getSimpleName());
 
                 resp.getWriter().write(gson.toJson(errorResponse));
@@ -763,9 +771,31 @@ public class AdminOrderManagementServlet extends HttpServlet {
             }
 
         } catch (NumberFormatException e) {
-            return Map.of("success", false, "error", "Invalid order ID");
+            return Map.of("success", false, "message", "Invalid order ID");
         } catch (Exception e) {
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of("success", false, "message", e.getMessage());
         }
+    }
+
+    private void sendJson(HttpServletResponse resp,
+                          Map<String, Object> result) throws IOException {
+
+        Map<String, Object> mutableResult = new HashMap<>(result != null ? result : new HashMap<>());
+
+        if (mutableResult.isEmpty()) {
+            mutableResult.put("success", false);
+            mutableResult.put("message", "Empty response from server");
+        }
+
+        if (!mutableResult.containsKey("message")) {
+            mutableResult.put("message", mutableResult.containsKey("success") &&
+                    Boolean.TRUE.equals(mutableResult.get("success"))
+                    ? "Thành công" : "Có lỗi xảy ra");
+        }
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(gson.toJson(mutableResult));
+        resp.getWriter().flush();
     }
 }

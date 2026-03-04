@@ -376,7 +376,7 @@
                                                 data-customer="${returnOrder.customer_name}"
                                                 data-product="${returnOrder.product_name}"
                                                 data-quantity="${returnOrder.quantity}"
-<%--                                                data-reason="${fn:escapeXml(returnOrder.reason)}"--%>
+                                            <%--                                                data-reason="${fn:escapeXml(returnOrder.reason)}"--%>
                                                 data-amount="${returnOrder.formatted_refund_amount}"
                                                 data-date="${returnOrder.formatted_return_date}">
                                             Xem
@@ -709,7 +709,6 @@
 </script>
 
 <%--TAB CHO XAC NHAN--%>
-<%--TAB CHO XAC NHAN--%>
 <script>
     // Xác nhận đơn hàng
     document.querySelectorAll('.confirm-btn').forEach(btn => {
@@ -724,7 +723,17 @@
                     },
                     body: 'action=confirm&orderId=' + orderId
                 })
-                    .then(response => response.json())
+                    // .then(response => response.json())
+                    .then(async response => {
+                        const text = await response.text();
+
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error("❌ Server không trả JSON:", text);
+                            throw new Error("Server response không hợp lệ");
+                        }
+                    })
                     .then(data => {
                         if (data.success) {
                             alert(data.message);

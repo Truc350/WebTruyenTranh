@@ -10,6 +10,7 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -79,6 +80,40 @@ public class OrderServlet extends HttpServlet {
             }
 
             boolean usePoints = "on".equals(usePointsStr);
+            if ("vnpay".equals(paymentMethod)) {
+                session.setAttribute("pending_receiverName", recipientName);
+                session.setAttribute("pending_receiverPhone", shippingPhone);
+                session.setAttribute("pending_province", province);
+                session.setAttribute("pending_district", district);
+                session.setAttribute("pending_ward", ward);
+                session.setAttribute("pending_address", streetAddress);
+                session.setAttribute("pending_shipping", shippingMethod);
+                session.setAttribute("pending_usePoints", usePoints);
+//                Tinh tong tien de gui sang vnpay
+                double subtotalVnpay = (Double) session.getAttribute("checkoutSubtotal");
+                double shippingFeeVnpay = "express".equals(shippingMethod) ? 50000 : 25000;
+                double pointsDiscountVnpay = 0;
+                if (usePoints && user.getPoints() > 0) {
+                    pointsDiscountVnpay = user.getPoints();
+                }
+                long totalVnpay = (long) Math.max(subtotalVnpay + shippingFeeVnpay - pointsDiscountVnpay, 0);
+                String ipAddress = request.getHeader("X-FORWARDED-FOR");
+                if (ipAddress == null || ipAddress.isEmpty()) {
+                    ipAddress = request.getRemoteAddr();
+                }
+                String returnURL = request.getScheme() + "://"
+                        + request.getServerName() + ":"
+                        + request.getServerPort()
+                        + request.getContextPath()
+                        + "/vnpay-return";
+                String orderInfo = "Thanh toan don hang - " + recipientName.trim();
+                String paymentUrl = VNPayUtils.createPaymentUrl(
+                        user.getId(), totalVnpay, orderInfo, returnURL, ipAddress
+                );
+
+                response.sendRedirect(paymentUrl);
+                return;// cho callback
+            }
 
             // Lấy thông tin giỏ hàng đã chọn từ session
             @SuppressWarnings("unchecked")
@@ -114,7 +149,7 @@ public class OrderServlet extends HttpServlet {
             double pointsDiscount = 0;
             if (usePoints && user.getPoints() > 0) {
                 pointsToUse = user.getPoints();
-                pointsDiscount = pointsToUse * 1000.0;
+                pointsDiscount = pointsToUse;
             }
 
             // Tổng tiền sau khi trừ điểm
