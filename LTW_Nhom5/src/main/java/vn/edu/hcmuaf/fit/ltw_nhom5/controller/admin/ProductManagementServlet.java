@@ -6,7 +6,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.CategoriesDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.ComicDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.SeriesDAO;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Category;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 
 import java.io.IOException;
@@ -17,21 +20,28 @@ import java.util.Map;
 
 /**
  * Servlet chuyên dụng để load trang Product Management
- * Đảm bảo JSP luôn được load qua Servlet thay vì truy cập trực tiếp
+ * PHIÊN BẢN CẢI TIẾN: Thêm load categories và series
  */
-//@WebServlet(name = "ProductManagement", urlPatterns = {"/ProductManagement", "/admin/products/manage"})
 @WebServlet("/admin/ProductManagement")
 public class ProductManagementServlet extends HttpServlet {
 
     private ComicDAO comicDAO;
+    private CategoriesDao categoriesDao;  // ✅ THÊM MỚI
+    private SeriesDAO seriesDAO;           // ✅ THÊM MỚI
     private Gson gson;
 
     @Override
     public void init() throws ServletException {
-        System.out.println("✅ ProductManagementServlet initialized successfully!");
+        System.out.println("✅ ProductManagementServlet initializing...");
         try {
             comicDAO = new ComicDAO();
+            categoriesDao = new CategoriesDao();  // ✅ KHỞI TẠO
+            seriesDAO = new SeriesDAO();          // ✅ KHỞI TẠO
             gson = new Gson();
+            System.out.println("✅ ProductManagementServlet initialized successfully!");
+            System.out.println("   - ComicDAO: OK");
+            System.out.println("   - CategoriesDao: OK");
+            System.out.println("   - SeriesDAO: OK");
         } catch (Exception e) {
             System.err.println("❌ Error initializing ProductManagementServlet: " + e.getMessage());
             e.printStackTrace();
@@ -80,7 +90,7 @@ public class ProductManagementServlet extends HttpServlet {
                 }
             }
 
-            // ✅ PARSE HIDDEN FILTER (QUAN TRỌNG!)
+            // ✅ PARSE HIDDEN FILTER
             Integer hiddenFilter = null;
             String hiddenParam = request.getParameter("hiddenFilter");
             if (hiddenParam != null && !hiddenParam.isEmpty()) {
@@ -111,7 +121,6 @@ public class ProductManagementServlet extends HttpServlet {
             }
 
             int totalPages = (int) Math.ceil((double) totalComics / limit);
-
             System.out.println("✅ Loaded " + comics.size() + " comics (Total: " + totalComics + ", Pages: " + totalPages + ")");
 
             // ✅ NẾU LÀ AJAX REQUEST → TRẢ VỀ JSON
@@ -120,7 +129,7 @@ public class ProductManagementServlet extends HttpServlet {
 
                 Map<String, Object> result = new HashMap<>();
 
-                // BUILD RESPONSE (THÊM isHidden)
+                // BUILD RESPONSE
                 List<Map<String, Object>> simplifiedComics = new ArrayList<>();
                 for (Comic comic : comics) {
                     Map<String, Object> dto = new HashMap<>();
@@ -149,8 +158,33 @@ public class ProductManagementServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ NẾU LÀ REQUEST THƯỜNG → FORWARD ĐẾN JSP
-            // Lấy messages từ session (nếu có từ add/edit/delete operations)
+            // ✅✅✅ PHẦN MỚI: LOAD CATEGORIES VÀ SERIES CHO JSP ✅✅✅
+            System.out.println("📦 Loading categories and series for JSP...");
+
+            List<Category> categories = categoriesDao.getAllCategories();
+            System.out.println("✅ Loaded " + categories.size() + " categories");
+
+            // Debug: In ra tên các thể loại
+            if (categories != null && !categories.isEmpty()) {
+                System.out.println("   Categories list:");
+                for (Category cat : categories) {
+                    System.out.println("   - ID: " + cat.getId() + ", Name: " + cat.getNameCategories());
+                }
+            } else {
+                System.out.println("   ⚠️ WARNING: No categories found!");
+            }
+
+            List<?> seriesList = seriesDAO.getAllSeries();
+            System.out.println("✅ Loaded " + seriesList.size() + " series");
+
+            // ✅ SET VÀO REQUEST ATTRIBUTE ĐỂ JSP SỬ DỤNG
+            request.setAttribute("categories", categories);
+            request.setAttribute("seriesList", seriesList);
+
+            System.out.println("📦 Categories and series have been set to request attributes");
+            // ✅✅✅ HẾT PHẦN MỚI ✅✅✅
+
+            // Lấy messages từ session
             String successMessage = (String) request.getSession().getAttribute("successMessage");
             String errorMessage = (String) request.getSession().getAttribute("errorMessage");
 
@@ -168,8 +202,6 @@ public class ProductManagementServlet extends HttpServlet {
 
             // Đánh dấu rằng trang đã được load qua Servlet
             request.setAttribute("loadedFromServlet", true);
-
-            // Set filter state để JSP có thể hiển thị
             request.setAttribute("currentHiddenFilter", hiddenFilter);
             request.setAttribute("currentPage", page);
 
@@ -202,7 +234,6 @@ public class ProductManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         // Nếu có POST request, chuyển sang GET
         doGet(request, response);
     }
