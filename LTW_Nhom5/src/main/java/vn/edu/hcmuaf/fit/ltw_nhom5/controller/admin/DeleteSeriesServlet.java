@@ -36,7 +36,7 @@ public class DeleteSeriesServlet extends HttpServlet {
             if (seriesIdParam == null || seriesIdParam.trim().isEmpty()) {
                 System.err.println("Missing series ID");
                 request.getSession().setAttribute("errorMessage", "Thiếu ID series!");
-                response.sendRedirect(request.getContextPath() + "/SeriesManagement");
+                response.sendRedirect(request.getContextPath() + "/admin/SeriesManagement");
                 return;
             }
 
@@ -72,7 +72,7 @@ public class DeleteSeriesServlet extends HttpServlet {
         }
 
         // Redirect về trang quản lý series
-        response.sendRedirect(request.getContextPath() + "/SeriesManagement");
+        response.sendRedirect(request.getContextPath() + "/admin/SeriesManagement");
     }
 
     @Override

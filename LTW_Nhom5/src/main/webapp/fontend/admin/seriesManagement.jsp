@@ -46,7 +46,7 @@
         </c:if>
 
         <div class="search-add-container">
-            <form action="${pageContext.request.contextPath}/SeriesManagement" method="get" class="search-box">
+            <form action="${pageContext.request.contextPath}/admin/SeriesManagement" method="get" class="search-box">
                 <input type="text" name="keyword" placeholder="Tìm kiếm series..." class="search-input"
                        value="${keyword}">
                 <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
@@ -136,7 +136,7 @@
                         <div class="pagination">
                             <c:forEach var="i" begin="1" end="${totalPages}">
                                 <c:set var="pageUrl"
-                                       value="${pageContext.request.contextPath}/SeriesManagement?page=${i}"/>
+                                       value="${pageContext.request.contextPath}/admin/SeriesManagement?page=${i}"/>
                                 <c:if test="${not empty param.filter}">
                                     <c:set var="pageUrl" value="${pageUrl}&filter=${param.filter}"/>
                                 </c:if>
@@ -393,7 +393,7 @@
             const seriesId = this.closest('.dropdown-menu').querySelector('.series-id').value;
             const action = this.value;
 
-            fetch('${pageContext.request.contextPath}/SeriesManagement', {
+            fetch('${pageContext.request.contextPath}/admin/SeriesManagement', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: new URLSearchParams({id: seriesId, action: action})
@@ -401,6 +401,7 @@
                 .then(res => {
                     if (res.ok) {
                         console.log("✅ Cập nhật thành công series " + seriesId + " → " + action);
+                        location.reload();
                     } else {
                         console.error("❌ Có lỗi khi cập nhật");
                     }
@@ -500,7 +501,7 @@
                 const keyword = urlParams.get('keyword');
 
                 // Tạo URL mới
-                let newUrl = '${pageContext.request.contextPath}/SeriesManagement?filter=' + filterValue;
+                let newUrl = '${pageContext.request.contextPath}/admin/SeriesManagement?filter=' + filterValue;
 
                 if (keyword) {
                     newUrl += '&keyword=' + encodeURIComponent(keyword);
