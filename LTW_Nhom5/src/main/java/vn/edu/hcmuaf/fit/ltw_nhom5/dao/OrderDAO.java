@@ -350,15 +350,6 @@ public class OrderDAO extends ADao {
     }
 
     /**
-     * Cập nhật trạng thái đơn hàng VÀ cộng xu khi hoàn thành
-     *
-     * @param orderId   ID đơn hàng
-     * @param newStatus Trạng thái mới
-     * @return true nếu cập nhật thành công
-     */
-    /**
-     * ✅ FIXED: Cập nhật trạng thái đơn hàng VÀ cộng xu + total_spent khi hoàn thành
-     *
      * @param orderId   ID đơn hàng
      * @param newStatus Trạng thái mới
      * @return true nếu cập nhật thành công
@@ -404,8 +395,8 @@ public class OrderDAO extends ADao {
                                         "updated_at = NOW() " +
                                         "WHERE id = ?"
                         )
-                        .bind(0, totalAmount)      // ✅ Cộng total_spent
-                        .bind(1, earnedPoints)      // ✅ Cộng 200 điểm
+                        .bind(0, totalAmount)
+                        .bind(1, earnedPoints)
                         .bind(2, userId)
                         .execute();
 
@@ -609,7 +600,6 @@ public class OrderDAO extends ADao {
         String trimmedKeyword = keyword.trim();
         boolean isNumber = trimmedKeyword.matches("\\d+");
 
-        // ✅ DÙNG POSITIONAL PARAMETERS (?)
         String sqlById = """
                 SELECT 
                     o.id, o.user_id, o.order_date, o.total_amount,

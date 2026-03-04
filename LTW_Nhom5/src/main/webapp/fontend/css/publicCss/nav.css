@@ -222,9 +222,9 @@ body {
     left: 10px;
 }
 
-.notify-wrapper:hover .notification-panel {
-    display: block;
-}
+/*.notify-wrapper:hover .notification-panel {*/
+/*    display: block;*/
+/*}*/
 
 .notification-header {
     display: flex;
