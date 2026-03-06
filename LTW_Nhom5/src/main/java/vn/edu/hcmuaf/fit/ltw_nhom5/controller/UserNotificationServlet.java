@@ -26,7 +26,6 @@ public class UserNotificationServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         gson = GsonConfig.getGson();
-        System.out.println("✅ UserNotificationServlet initialized");
     }
 
     @Override
@@ -39,7 +38,6 @@ public class UserNotificationServlet extends HttpServlet {
         // Kiểm tra user đã đăng nhập
         User user = (User) request.getSession().getAttribute("currentUser");
         if (user == null) {
-            System.out.println("❌ User not authenticated");
             response.setStatus(401);
             response.getWriter().write("{\"error\": \"Not authenticated\"}");
             return;
@@ -56,12 +54,10 @@ public class UserNotificationServlet extends HttpServlet {
             } else if ("/list".equals(pathInfo)) {
                 handleList(request, response, user);
             } else {
-                System.out.println("❌ Endpoint not found: " + pathInfo);
                 response.setStatus(404);
                 response.getWriter().write("{\"error\": \"Endpoint not found\"}");
             }
         } catch (Exception e) {
-            System.err.println("❌ Error handling request: " + e.getMessage());
             e.printStackTrace();
             response.setStatus(500);
             response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
@@ -109,7 +105,6 @@ public class UserNotificationServlet extends HttpServlet {
             throws IOException {
 
         int unreadCount = notificationDAO.countUnread(user.getId());
-        System.out.println("📊 Unread count for user " + user.getId() + ": " + unreadCount);
 
         JsonObject json = new JsonObject();
         json.addProperty("unread_count", unreadCount);
@@ -127,18 +122,16 @@ public class UserNotificationServlet extends HttpServlet {
         String limitParam = request.getParameter("limit");
         int limit = (limitParam != null) ? Integer.parseInt(limitParam) : 10;
 
-        System.out.println("📋 Loading recent notifications - Limit: " + limit);
-
         List<Notification> notifications = notificationDAO.getRecent(user.getId(), limit);
         int unreadCount = notificationDAO.countUnread(user.getId());
 
-        System.out.println("✅ Found " + notifications.size() + " notifications");
 
         // Format date cho từng notification
         for (Notification noti : notifications) {
             if (noti.getCreatedAt() != null) {
                 noti.setFormattedCreatedAt(formatRelativeTime(noti.getCreatedAt()));
             }
+            noti.setTitle(generateTitle(noti.getType()));
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -162,19 +155,11 @@ public class UserNotificationServlet extends HttpServlet {
         int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
         int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 20;
 
-        // ✅ XỬ LÝ TYPE = "ALL" → KHÔNG FILTER
-        if ("ALL".equals(typeFilter)) {
+        if ("ALL".equals(typeFilter) || typeFilter == null) {
             typeFilter = null;
         }
 
-        System.out.println("📋 Loading notification list:");
-        System.out.println("  - Page: " + page);
-        System.out.println("  - PageSize: " + pageSize);
-        System.out.println("  - Type filter: " + (typeFilter != null ? typeFilter : "ALL"));
-
         List<Notification> notifications = notificationDAO.getList(user.getId(), typeFilter, page, pageSize);
-
-        System.out.println("✅ Found " + notifications.size() + " notifications");
 
         // Format date và thêm title
         for (Notification noti : notifications) {
@@ -182,12 +167,10 @@ public class UserNotificationServlet extends HttpServlet {
                 String formattedDate = formatRelativeTime(noti.getCreatedAt());
                 noti.setFormattedCreatedAt(formattedDate);
 
-                // ✅ THÊM FORMATTED_DATE CHO JSP
                 Map<String, Object> extraData = new HashMap<>();
                 extraData.put("formatted_date", formattedDate);
             }
 
-            // ✅ THÊM TITLE DỰA TRÊN TYPE
             String title = generateTitle(noti.getType());
             noti.setTitle(title);
         }
@@ -199,7 +182,6 @@ public class UserNotificationServlet extends HttpServlet {
         result.put("total", notifications.size());
 
         String jsonResponse = gson.toJson(result);
-        System.out.println("📤 Sending response: " + jsonResponse.substring(0, Math.min(200, jsonResponse.length())) + "...");
 
         response.getWriter().write(jsonResponse);
     }
@@ -219,7 +201,6 @@ public class UserNotificationServlet extends HttpServlet {
         }
 
         int notiId = Integer.parseInt(idParam);
-        System.out.println("✅ Marking notification #" + notiId + " as read");
 
         notificationDAO.markAsread(notiId);
 
@@ -232,8 +213,6 @@ public class UserNotificationServlet extends HttpServlet {
      */
     private void handleMarkAllRead(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
-
-        System.out.println("✅ Marking all notifications as read for user " + user.getId());
 
         notificationDAO.markAllAsRead(user.getId());
 

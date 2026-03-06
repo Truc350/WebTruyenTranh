@@ -19,19 +19,21 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-console.log('✅ Firebase initialized');
+console.log('Firebase initialized');
 
-// 3. Đăng ký Service Worker (QUAN TRỌNG!)
+// 3. Đăng ký Service Worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+    const contextPath = getContextPath();
+    navigator.serviceWorker.register(
+        contextPath + '/js/firebase-messaging-sw.js',
+        {scope: '/'}
+    )
         .then(registration => {
-            console.log('✅ Service Worker registered:', registration.scope);
-
-            // Cho Firebase biết dùng Service Worker này
-            messaging.useServiceWorker(registration);
+            console.log('=SW registered');
+            messaging.swRegistration = registration;
         })
         .catch(err => {
-            console.error('❌ Service Worker registration failed:', err);
+            console.warn('SW failed (non-critical):', err.message);
         });
 }
 
@@ -186,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLoggedIn = document.body.dataset.loggedIn === "true";
     const userId = document.body.dataset.userId;
 
-    console.log('📊 User status:', { isLoggedIn, userId });
+    console.log('📊 User status:', {isLoggedIn, userId});
 
     if (isLoggedIn && userId) {
         console.log('✅ User logged in → initializing Firebase');

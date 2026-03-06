@@ -94,7 +94,7 @@
                             <span class="notification-badge-count" id="header-badge-count">(0)</span>
                         </div>
                         <div class="inform-all">
-                            <a href="${pageContext.request.contextPath}/fontend/nguoiB/profile.jsp#notifications">Xem tất cả</a>
+                            <a href="${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp">Xem tất cả</a>
                         </div>
                     </div>
 
@@ -104,12 +104,6 @@
                 </div>
             </div>
         </div>
-
-<%--        <div class="actions">--%>
-<%--            <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">--%>
-<%--                <i class="fa-solid fa-comment"></i>--%>
-<%--            </a>--%>
-<%--        </div>--%>
 
         <div class="actions cart-icon-wrapper">
             <a href="${pageContext.request.contextPath}/cart" class="cart-icon">
@@ -245,33 +239,23 @@
     };
 </script>
 
-<!-- ========== NOTIFICATION SCRIPT (CHỈ CHO USER ĐÃ LOGIN) ========== -->
 <c:if test="${not empty sessionScope.currentUser}">
     <script>
-        console.log("🔔 Notification script initializing...");
-        console.log("👤 Current user:", "${sessionScope.currentUser.fullName}");
-        console.log("📍 Context path:", "${pageContext.request.contextPath}");
-
         /**
          * Load thông báo gần đây cho header dropdown
          */
         async function loadHeaderNotifications() {
             const url = '${pageContext.request.contextPath}/NotificationServlet/recent?limit=8';
-            console.log("📡 Loading notifications from:", url);
 
             try {
                 const response = await fetch(url);
-                console.log("📥 Response status:", response.status);
-                console.log("📥 Response URL:", response.url);
 
                 if (!response.ok) {
                     const text = await response.text();
-                    console.error("❌ Response error:", text);
                     throw new Error('Network error: ' + response.status);
                 }
 
                 const data = await response.json();
-                console.log("✅ Received data:", data);
 
                 // Cập nhật badge số lượng
                 const count = data.unread_count || 0;
@@ -282,19 +266,16 @@
                     badge.textContent = count;
                     badge.style.display = count > 0 ? 'flex' : 'none';
                     badgeCount.textContent = `(${count})`;
-                    console.log("✅ Updated badge count:", count);
                 }
 
                 const list = document.getElementById('header-notification-list');
                 if (!list) {
-                    console.error('❌ Element header-notification-list not found');
                     return;
                 }
 
                 // Nếu không có thông báo
                 if (!data.notifications || data.notifications.length === 0) {
                     list.innerHTML = '<div class="empty-noti">Chưa có thông báo mới</div>';
-                    console.log("ℹ️ No notifications to display");
                     return;
                 }
 
@@ -311,51 +292,35 @@
                             : firstLine;
                     }
 
-                    // ICON THEO TYPE
-                    let icon = '📬';
-                    if (n.type === 'ORDER_CONFIRMED') icon = '✅';
-                    else if (n.type === 'ORDER_SHIPPED') icon = '🚚';
-                    else if (n.type === 'ORDER_CANCELLED') icon = '❌';
-                    else if (n.type === 'REFUND_APPROVED') icon = '💰';
-                    else if (n.type === 'REFUND_REJECTED') icon = '⛔';
-                    else if (n.type === 'ORDER_UPDATE') icon = '📦';
+                    const formattedTime = n.formatted_date || '';
 
-                    const formattedTime = n.formatted_date || n.formattedCreatedAt || '';
-
-                    html += `
-                <div class="header-noti-item ${unreadClass}" data-id="${n.id}">
-                    <div class="noti-icon">${icon}</div>
-                    <div class="noti-content">
-                        <div class="noti-message">${displayMessage}</div>
-                        <div class="noti-time">${formattedTime}</div>
-                    </div>
-                </div>
-            `;
+                    html += '<div class="header-noti-item ' + unreadClass + '" data-id="' + n.id + '">'
+                        +   '<div class="noti-icon">' + '</div>'
+                        +   '<div class="noti-content">'
+                        +     '<div class="noti-message">' + displayMessage + '</div>'
+                        +     '<div class="noti-time">' + formattedTime + '</div>'
+                        +   '</div>'
+                        + '</div>';
                 });
 
                 list.innerHTML = html;
-                console.log("✅ Rendered", data.notifications.length, "notifications");
 
                 // Click thông báo → đánh dấu đã đọc
                 document.querySelectorAll('.header-noti-item').forEach(item => {
                     item.addEventListener('click', async function () {
-                        if (this.classList.contains('unread')) {
                             const id = this.dataset.id;
                             try {
                                 await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
                                     method: 'POST'
                                 });
-                                this.classList.remove('unread');
-                                loadHeaderNotifications();
                             } catch (err) {
                                 console.error('Lỗi đánh dấu đã đọc:', err);
                             }
-                        }
+                            window.location.href = '${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp#noti-' + id;
                     });
                 });
 
             } catch (err) {
-                console.error('❌ Error loading notifications:', err);
                 const list = document.getElementById('header-notification-list');
                 if (list) {
                     list.innerHTML = '<div class="empty-noti">Lỗi kết nối. Thử lại sau.</div>';
@@ -363,53 +328,43 @@
             }
         }
 
-        /**
-         * Mở/đóng notification dropdown
-         */
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("📋 DOM loaded, setting up notification panel...");
 
             const bell = document.getElementById('bell-icon');
             const panel = document.getElementById('notification-panel');
 
             if (!bell || !panel) {
-                console.warn('⚠️ Bell icon hoặc notification panel không tìm thấy');
                 return;
             }
 
-            console.log("✅ Bell and panel found");
 
             bell.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                console.log('🔔 Bell clicked!');
 
                 if (panel.style.display === 'block') {
                     panel.style.display = 'none';
-                    console.log('➡️ Closing panel');
                 } else {
                     panel.style.display = 'block';
-                    console.log('➡️ Opening panel');
                     loadHeaderNotifications();
                 }
             });
 
-            // Đóng khi click ngoài
+
             document.addEventListener('click', function (e) {
                 if (!bell.contains(e.target) && !panel.contains(e.target)) {
                     if (panel.style.display === 'block') {
                         panel.style.display = 'none';
-                        console.log('➡️ Closing panel (click outside)');
                     }
                 }
             });
 
-            // Load badge ngay khi trang mở
-            console.log("📊 Loading initial badge count...");
+
+            console.log("Loading initial badge count...");
             fetch('${pageContext.request.contextPath}/NotificationServlet/count')
                 .then(r => {
-                    console.log("📥 Badge count response:", r.status);
+                    console.log("Badge count response:", r.status);
                     return r.json();
                 })
                 .then(d => {
@@ -419,14 +374,12 @@
                         badge.textContent = count;
                         badge.style.display = count > 0 ? 'flex' : 'none';
                     }
-                    console.log('✅ Initial badge count loaded:', count);
                 })
                 .catch(err => {
-                    console.error('❌ Lỗi load badge count:', err);
+                    console.error('Lỗi load badge count:', err);
                 });
         });
 
-        // AUTO REFRESH NOTIFICATION BADGE MỖI 60 GIÂY
         setInterval(() => {
             fetch('${pageContext.request.contextPath}/NotificationServlet/count')
                 .then(r => r.json())
@@ -438,7 +391,6 @@
                     if (count > oldCount && count > 0) {
                         badge.classList.add('badge-pulse');
                         setTimeout(() => badge.classList.remove('badge-pulse'), 1000);
-                        console.log('🔔 Có thông báo mới! Count:', count);
                     }
 
                     badge.textContent = count;
@@ -449,13 +401,11 @@
     </script>
 
     <script>
-        // SET dataset để firebase-notification.js sử dụng
         document.body.dataset.userId = '${sessionScope.currentUser.id}';
         document.body.dataset.loggedIn = 'true';
         document.body.dataset.contextPath = '${pageContext.request.contextPath}';
     </script>
 
-    <!-- LOAD FIREBASE CDN -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 

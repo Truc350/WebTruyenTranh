@@ -64,14 +64,18 @@ public class NotificationDAO {
                 WHERE user_id = ?
                 """);
         if (typeFilter != null) {
-            sql.append(" AND type = ?");
+            if ("ORDER".equals(typeFilter)) {
+                sql.append(" AND type LIKE 'ORDER_%'");
+            } else {
+                sql.append(" AND type = ?");
+            }
         }
         sql.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
 
         return JdbiConnector.get().withHandle(handle -> {
             var query = handle.createQuery(sql.toString()).bind(0, userId);
             int paramIndex = 1;
-            if (typeFilter != null) {
+            if (typeFilter != null && !"ORDER".equals(typeFilter)) {
                 query.bind(paramIndex++, typeFilter);
             }
             query.bind(paramIndex++, pageSize);
@@ -132,7 +136,6 @@ public class NotificationDAO {
                             .orElse(null)
             );
         } catch (Exception e) {
-            System.err.println("❌ Error getting FCM token: " + e.getMessage());
             return null;
         }
     }
@@ -149,17 +152,11 @@ public class NotificationDAO {
                             .execute()
             );
 
-            System.out.println("✅ Saved FCM token for user " + userId);
-
         } catch (Exception e) {
-            System.err.println("❌ Error saving FCM token: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    /**
-     * RowMapper tùy chỉnh để map ResultSet sang Notification với LocalDateTime
-     */
     private static class NotificationRowMapper implements RowMapper<Notification> {
         @Override
         public Notification map(ResultSet rs, StatementContext ctx) throws SQLException {
