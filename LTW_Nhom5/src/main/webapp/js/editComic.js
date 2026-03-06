@@ -315,7 +315,7 @@ async function loadThumbnailImage(thumbnailUrl) {
     preview.style.objectFit = 'cover';
     preview.style.zIndex = '10';
 }
-
+z
 // ✅ HÀM LOAD 3 ẢNH CHI TIẾT (BOX 2, 3, 4)
 async function loadDetailImages(comicId) {
     console.log('🖼️ Loading detail images for comic:', comicId);
