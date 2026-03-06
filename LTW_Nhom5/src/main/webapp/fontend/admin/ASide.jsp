@@ -54,7 +54,7 @@
             </li>
             <li>
                 <a href="${pageContext.request.contextPath}/fontend/admin/promotion.jsp">
-                    <img src="../../img/promo.png" class="icon">
+                    <img src="${pageContext.request.contextPath}/img/promo.png" class="icon">
                     <span>Quản lý khuyến mãi</span>
                 </a>
             </li>

@@ -151,7 +151,7 @@
                     <td><span class="status-active">Đang chạy</span></td>
                     <td>
                         <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></i></button>
+                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
 
@@ -182,6 +182,15 @@
             <div>
                 <label>Tên mã</label>
                 <input type="text" id="addCode" placeholder="NEWUSER10" maxlength="20">
+            </div>
+            <div>
+                <label>Áp dụng</label>
+                <select id="addType" required>
+                    <option value="">Chọn </option>
+                    <option value="percent">Vận chuyển</option>
+                    <option value="fixed">Giảm giá</option>
+                    <option value="fixed">khác</option>
+                </select>
             </div>
             <div>
                 <label>Loại</label>
