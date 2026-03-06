@@ -108,7 +108,6 @@
                 </tr>
                 </thead>
                 <tbody id="categoryTableBody">
-                <!-- Data sẽ được load bằng JavaScript -->
                 <tr><td colspan="4" style="text-align: center;">Đang tải dữ liệu...</td></tr>
                 </tbody>
             </table>
@@ -159,7 +158,6 @@
             <div class="popup-box">
                 <h3>Bạn có chắc muốn xóa?</h3>
                 <p id="deleteCategoryName" style="text-align: center; color: #666; margin: 10px 0;"></p>
-                <!-- Thêm dòng này để hiển thị message -->
                 <p id="deleteCategoryMessage" style="text-align: center; color: #333; margin: 10px 0; font-weight: 500;"></p>
                 <div class="popup-actions">
                     <button class="save-btn" id="confirmDeleteBtn">Xóa</button>
@@ -171,14 +169,11 @@
     </div>
 </div>
 
-<!-- JavaScript -->
 <script>
-    // Lấy context path từ JSP và gán vào window để JS file external có thể dùng
     window.contextPath = '<%=request.getContextPath()%>';
     console.log('Context path set to:', window.contextPath);
 </script>
 <script src="<%=request.getContextPath()%>/js/categoryManagement.js"></script>
-<%--<script src="<%=request.getContextPath()%>/js/categorySearch.js"></script>--%>
 
 </body>
 </html>

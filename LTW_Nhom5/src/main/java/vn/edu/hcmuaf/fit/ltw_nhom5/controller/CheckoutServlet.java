@@ -4,17 +4,17 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import org.jdbi.v3.core.Jdbi;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FlashSaleComicsDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserShippingAddressDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.CartItem;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.UserShippingAddress;
+import vn.edu.hcmuaf.fit.ltw_nhom5.service.ComicService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
@@ -32,14 +32,60 @@ public class CheckoutServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("currentUser");
 
-        // Kiểm tra đăng nhập
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
+
+        String comicIdParam = request.getParameter("comicId");
+        if (comicIdParam != null) {
+            try {
+                int comicId = Integer.parseInt(comicIdParam);
+                int quantity = request.getParameter("quantity") != null
+                        ? Integer.parseInt(request.getParameter("quantity")) : 1;
+
+                ComicService comicService = new ComicService();
+                Comic comic = comicService.getComicById(comicId);
+
+                if (comic == null || comic.getStockQuantity() < quantity) {
+                    session.setAttribute("errorMsg", "Sản phẩm không đủ hàng");
+                    response.sendRedirect(request.getContextPath() + "/comic-detail?id=" + comicId);
+                    return;
+                }
+
+                FlashSaleComicsDAO flashSaleDAO = new FlashSaleComicsDAO();
+                Map<String, Object> flashInfo = flashSaleDAO.getFlashSaleInfoByComicId(comicId);
+                Integer flashSaleId = null;
+                Double flashSalePrice = null;
+                if (flashInfo != null) {
+                    flashSaleId = (Integer) flashInfo.get("flashsale_id");
+                    Object discountObj = flashInfo.get("discount_percent");
+                    if (discountObj instanceof Number) {
+                        double pct = ((Number) discountObj).doubleValue();
+                        flashSalePrice = comic.getPrice() * (1 - pct / 100.0);
+                    }
+                }
+
+                CartItem tempItem = new CartItem(comic, quantity, flashSaleId, flashSalePrice);
+                double subtotal = tempItem.getFinalPrice() * quantity;
+                double shippingFee = 25000;
+
+                List<CartItem> selectedItems = new ArrayList<>();
+                selectedItems.add(tempItem);
+
+                session.setAttribute("selectedItems", selectedItems);
+                session.setAttribute("checkoutSubtotal", subtotal);
+                session.setAttribute("shippingFee", shippingFee);
+                session.setAttribute("checkoutTotal", subtotal + shippingFee);
+
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/home");
+                return;
+            }
+        }
+
         request.setAttribute("user", user);
 
-        // Kiểm tra có sản phẩm được chọn không
         @SuppressWarnings("unchecked")
         List<CartItem> selectedItems = (List<CartItem>) session.getAttribute("selectedItems");
 
@@ -49,15 +95,12 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // Lấy địa chỉ mặc định của user (nếu có)
         Optional<UserShippingAddress> defaultAddress =
                 shippingAddressDAO.getDefaultAddress(user.getId());
 
         if (defaultAddress.isPresent()) {
             UserShippingAddress address = defaultAddress.get();
             request.setAttribute("defaultAddress", address);
-
-            // Set các giá trị mặc định vào request để hiển thị trong form
             request.setAttribute("defaultRecipientName", address.getRecipientName());
             request.setAttribute("defaultPhone", address.getPhone());
             request.setAttribute("defaultProvince", address.getProvince());
@@ -66,7 +109,6 @@ public class CheckoutServlet extends HttpServlet {
             request.setAttribute("defaultStreetAddress", address.getStreetAddress());
         }
 
-        // Chuyển đến trang checkout
         request.getRequestDispatcher("/fontend/nguoiB/checkout.jsp").forward(request, response);
     }
 
@@ -76,13 +118,11 @@ public class CheckoutServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("currentUser");
 
-        // Kiểm tra đăng nhập
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // Lấy danh sách comic ID đã được chọn từ form
         String[] selectedComicIds = request.getParameterValues("selectedComics");
 
         if (selectedComicIds == null || selectedComicIds.length == 0) {
@@ -91,7 +131,6 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // Lấy giỏ hàng từ session
         @SuppressWarnings("unchecked")
         List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
 
@@ -101,7 +140,6 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // Lọc ra các sản phẩm đã được chọn
         List<CartItem> selectedItems = new ArrayList<>();
         double subtotal = 0;
 
@@ -110,39 +148,21 @@ public class CheckoutServlet extends HttpServlet {
             for (CartItem item : cartItems) {
                 if (item.getComic().getId() == id) {
                     selectedItems.add(item);
-
-
-                    // debug
-                    System.out.println("=== CHECKOUT ITEM ===");
-                    System.out.println("Comic: " + item.getComic().getNameComics());
-                    System.out.println("Original Price: " + item.getComic().getPrice());
-                    System.out.println("Discount Price: " + item.getComic().getDiscountPrice());
-                    System.out.println("Flash Sale Price: " + item.getFlashSalePrice());
-                    System.out.println("Final Price: " + item.getFinalPrice());
-                    System.out.println("Quantity: " + item.getQuantity());
-                    System.out.println("Subtotal: " + (item.getFinalPrice() * item.getQuantity()));
-                    System.out.println("====================");
                     subtotal += item.getFinalPrice() * item.getQuantity();
                     break;
                 }
             }
         }
 
-        System.out.println("Total Subtotal: " + subtotal);
-        // Tính phí vận chuyển mặc định (Tiêu chuẩn)
         double shippingFee = 25000;
 
-        // Tổng tiền (chưa trừ điểm)
         double totalAmount = subtotal + shippingFee;
 
-        // Lưu thông tin vào session để hiển thị trên trang checkout
         session.setAttribute("selectedItems", selectedItems);
         session.setAttribute("checkoutSubtotal", subtotal);
         session.setAttribute("shippingFee", shippingFee);
         session.setAttribute("checkoutTotal", totalAmount);
 
-
-        // Dùng forward thay vì sendRedirect để giữ lại dữ liệu
         response.sendRedirect(request.getContextPath() + "/checkout");
     }
 }

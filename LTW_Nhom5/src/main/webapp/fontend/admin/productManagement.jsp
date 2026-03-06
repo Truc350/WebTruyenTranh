@@ -355,11 +355,8 @@
 
 
 </div>
-<!-- Script thêm truyện mới -->
 <script src="${pageContext.request.contextPath}/js/addComic.js"></script>
-<!-- Script chỉnh sửa truyện -->
 <script src="${pageContext.request.contextPath}/js/editComic.js"></script>
-<!-- Script xóa truyện -->
 <script src="${pageContext.request.contextPath}/js/deleteComic.js"></script>
 <script>
     let currentPage = 1;
@@ -371,17 +368,13 @@
         const filterSelect = document.getElementById('displayFilter');
         const filterValue = filterSelect.value; // 'all', 'visible', 'hidden'
 
-        console.log('🔍 Search params:', {keyword, filterValue, page});
-
         currentFilter = filterValue;
         const tbody = document.getElementById('productTableBody');
 
-        // Hiển thị loading
         tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">' +
             '<i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #ff4c4c;"></i>' +
             '<p style="margin-top: 10px;">Đang tìm kiếm...</p></td></tr>';
 
-        // Xác định hiddenFilter
         let hiddenFilter = null;
         if (filterValue === 'visible') {
             hiddenFilter = 0;
@@ -389,7 +382,6 @@
             hiddenFilter = 1;
         }
 
-        // Build URL
         let url = contextPath + '/admin/products/search?keyword=' +
             encodeURIComponent(keyword) + '&page=' + page;
 
@@ -397,9 +389,6 @@
             url += '&hiddenFilter=' + hiddenFilter;
         }
 
-        console.log('📡 Calling API:', url);
-
-        // Gọi API
         fetch(url)
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -475,9 +464,6 @@
                 '<td>' + formatPrice(comic.price) + ' đ</td>' +
                 '<td>' + comic.stockQuantity + ' quyển</td>' +
                 '<td class="review-cell">' +
-                // '<button class="view-review-btn" data-comic="' + comic.id + '" title="Xem review">' +
-                // '<i class="fa-solid fa-eye"></i>' +
-                // '</button>' +
                 '</td>' +
                 '<td class="action-cell">' +
                 '<button class="edit-btn" data-comic-id="' + comic.id + '" title="Chỉnh sửa">' +
@@ -510,7 +496,11 @@
         tbody.innerHTML = html;
     }
 
+    const PAGE_GROUP_SIZE = 3;
 
+    function getPageGroup(page) {
+        return Math.floor((page - 1) / PAGE_GROUP_SIZE);
+    }
     function updatePagination(currentPage, totalPages) {
         const paginationContainer = document.getElementById('paginationContainer');
         const paginationBody = document.getElementById('paginationBody');
@@ -521,23 +511,42 @@
         }
 
         paginationBody.style.display = '';
-        let paginationHtml = '';
 
-        for (let i = 1; i <= totalPages; i++) {
-            const activeClass = i === currentPage ? 'active' : '';
-            paginationHtml += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
+        const currentGroup = getPageGroup(currentPage);
+        const startPage = currentGroup * PAGE_GROUP_SIZE + 1;
+        const endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, totalPages);
+        const hasPrev = startPage > 1;
+        const hasNext = endPage < totalPages;
+
+        let html = '';
+
+        if (hasPrev) {
+            const prevGroupLastPage = startPage - 1;
+            html += '<button class="page-btn nav-btn" onclick="searchProducts(' + prevGroupLastPage + ')" title="Nhóm trang trước">&laquo;</button>';
+        } else {
+            html += '<button class="page-btn nav-btn" disabled title="Nhóm trang trước">&laquo;</button>';
         }
 
-        paginationContainer.innerHTML = paginationHtml;
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === currentPage ? 'active' : '';
+            html += '<button class="page-btn ' + activeClass + '" onclick="searchProducts(' + i + ')">' + i + '</button>';
+        }
+
+        if (hasNext) {
+            const nextGroupFirstPage = endPage + 1;
+            html += '<button class="page-btn nav-btn" onclick="searchProducts(' + nextGroupFirstPage + ')" title="Nhóm trang tiếp">&raquo;</button>';
+        } else {
+            html += '<button class="page-btn nav-btn" disabled title="Nhóm trang tiếp">&raquo;</button>';
+        }
+
+        paginationContainer.innerHTML = html;
     }
 
     function formatPrice(price) {
         return new Intl.NumberFormat('vi-VN').format(price);
     }
 
-    // HÀM BIND LẠI EVENT LISTENERS SAU KHI RENDER
     function bindEventListeners() {
-        // 1. Bind event cho nút "Xem review"
         document.querySelectorAll('.view-review-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const comicId = this.dataset.comic;
@@ -550,7 +559,6 @@
             });
         });
 
-        // 2. Bind event cho nút "Sửa"
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const comicId = this.dataset.comicId;
@@ -559,7 +567,6 @@
             });
         });
 
-        // 3. Bind event cho nút "Xóa" - ĐOẠN MỚI
         document.querySelectorAll('.trash-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -569,14 +576,10 @@
                 const comicRow = this.closest('tr');
                 const comicName = comicRow.querySelector('td:nth-child(2)').textContent;
 
-                console.log('🗑️ Delete button clicked for comic ID:', comicId, 'Name:', comicName);
-
-                // Gọi hàm từ deleteComic.js
                 if (typeof window.showDeleteConfirmation === 'function') {
                     window.showDeleteConfirmation(comicId, comicName);
                 } else {
                     console.error('showDeleteConfirmation not found!');
-                    // Fallback nếu script chưa load
                     const confirmDelete = confirm('Bạn có chắc muốn xóa truyện "' + comicName + '" không?');
                     if (confirmDelete) {
                         window.deleteComicDirect(comicId);
@@ -585,7 +588,6 @@
             });
         });
 
-        // 4.Bind event cho menu "Hiện/Ẩn"
         document.querySelectorAll('.more-btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -601,21 +603,15 @@
         });
     }
 
-    // === EVENT LISTENERS - ĐIỂM KHỞI ĐẦU DUY NHẤT ===
     document.addEventListener('DOMContentLoaded', function () {
-        console.log('🚀 Page loaded, initializing...');
 
-        // 1️⃣ Load danh sách ban đầu
         loadInitialComicsList();
 
-        // 2️⃣ Sự kiện FILTER DROPDOWN
         const filterSelect = document.getElementById('displayFilter');
         filterSelect.addEventListener('change', function () {
-            console.log('🔽 Filter changed to:', this.value);
-            searchProducts(1); // Reset về trang 1
+            searchProducts(1);
         });
 
-        // 3️⃣ Tìm kiếm khi nhấn ENTER
         document.getElementById('mainSearchInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -623,7 +619,6 @@
             }
         });
 
-        // 4️⃣ Đóng dropdown menu khi click ngoài
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
         });
@@ -644,7 +639,6 @@
 
             if (result.success) {
                 alert('Xóa truyện thành công!');
-                // Reload lại danh sách
                 searchProducts(currentPage);
             } else {
                 alert('Lỗi: ' + (result.message || 'Không thể xóa truyện'));

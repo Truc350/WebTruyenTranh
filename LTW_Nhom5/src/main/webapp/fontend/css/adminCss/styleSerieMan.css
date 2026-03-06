@@ -15,7 +15,6 @@ body {
     height: 100vh;
 }
 
-/* ==== MAIN CONTENT ==== */
 .main-content {
     flex: 1;
     padding: 30px;
@@ -26,13 +25,11 @@ body {
     margin-bottom: 25px;
 }
 
-/* Thanh tìm kiếm và nút thêm */
 .search-add-container {
     display: flex;
     margin-bottom: 40px;
     gap: 30px;
     align-items: center;
-    /*white-space: nowrap;       !* Không cho xuống hàng *!*/
 }
 
 .search-box {
@@ -58,7 +55,7 @@ body {
 
 .search-box .fa-magnifying-glass {
     position: absolute;
-    right: 15px; /* icon sát hơn về phía phải */
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 20px;
@@ -147,7 +144,6 @@ body {
     margin-bottom: 25px;
 }
 
-/* Áp dụng chung cho cả input và textarea */
 .modal-box input,
 .modal-box textarea, .modal-box select {
     width: 100%;
@@ -168,17 +164,15 @@ body {
     border-color: #ff5c5c;
 }
 
-/* Riêng textarea nếu muốn bo góc mềm hơn một chút */
 .modal-box textarea {
     border: 2px solid #ffb1b1;
-    resize: vertical;              /* Chỉ cho phép kéo dọc */
+    resize: vertical;
 }
 
 .modal-box textarea:focus {
     border-color: #ff5c5c;
 }
 
-/* Đảm bảo label luôn nằm trên và căn chỉnh đẹp */
 .modal-box label {
     display: block;
     font-weight: bold;
@@ -218,13 +212,11 @@ body {
     background-color: #ff6a6a;
 }
 
-/* Container giữ icon 3 chấm */
 .menu-container {
     position: relative;
     display: inline-block;
 }
 
-/* Nút 3 chấm */
 .more-btn {
     background: none;
     border: none;
@@ -232,7 +224,6 @@ body {
     cursor: pointer;
 }
 
-/* Dropdown mặc định ẩn */
 .dropdown-menu {
     position: absolute;
     right: 0;
@@ -247,7 +238,6 @@ body {
     white-space: nowrap;
 }
 
-/* Nội dung label trong dropdown */
 .dropdown-menu label {
     display: block;
     margin-bottom: 6px;
@@ -259,21 +249,16 @@ body {
     margin-bottom: 0;
 }
 
-/* Khi mở menu */
 .menu-container.active .dropdown-menu {
     display: block;
 }
 
-/*pagination*/
-/* Hàng chứa phân trang */
 .pagination-row td {
     text-align: right;
     padding: 10px 20px;
     background-color: #fff;
 }
 
-/* Phân trang bên trong bảng */
-/* ==== PAGINATION ==== */
 .pagination-row td {
     text-align: right;
     background-color: #fff;
@@ -314,7 +299,7 @@ body {
 .action-wrapper {
     display: flex;
     align-items: center;
-    gap: 12px; /* khoảng cách giữa nút edit và 3 chấm */
+    gap: 12px;
 }
 
 .edit-series-btn:hover { color: #0056b3; }
@@ -360,8 +345,8 @@ body {
 }
 
 .modal-box.two-column {
-    width: 60%;       /* muốn lớn nữa thì 70% hoặc 80% */
-    max-width: 900px; /* hạn chế quá to */
+    width: 60%;
+    max-width: 900px;
     background: #fff;
     padding: 20px 25px;
     border-radius: 12px;
@@ -388,7 +373,7 @@ body {
 
 .page-btn.active {
     font-weight: bold;
-    background-color: #007bff; /* xanh */
+    background-color: #007bff;
     color: #fff;
     border: 1px solid #007bff;
 }
@@ -446,7 +431,6 @@ body {
     }
 }
 
-/* Styles cho image upload box */
 .image-upload-box {
     width: 100%;
     height: 200px;
@@ -480,7 +464,6 @@ body {
     left: 0;
 }
 
-/* Styles cho modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -555,34 +538,6 @@ body {
     justify-content: flex-end;
 }
 
-/*.save-btn,*/
-/*.cancel-btn {*/
-/*    padding: 10px 30px;*/
-/*    border: none;*/
-/*    border-radius: 6px;*/
-/*    font-size: 14px;*/
-/*    cursor: pointer;*/
-/*    transition: all 0.3s ease;*/
-/*}*/
-
-/*.save-btn {*/
-/*    background-color: #007bff;*/
-/*    color: white;*/
-/*}*/
-
-/*.save-btn:hover {*/
-/*    background-color: #0056b3;*/
-/*}*/
-
-/*.cancel-btn {*/
-/*    background-color: #6c757d;*/
-/*    color: white;*/
-/*}*/
-
-/*.cancel-btn:hover {*/
-/*    background-color: #545b62;*/
-/*}*/
-/* Toast Notification */
 .toast-notification {
     position: fixed;
     top: 20px;
@@ -653,7 +608,6 @@ body {
     opacity: 1;
 }
 
-/* Nút xóa series */
 .delete-series-btn {
     background-color: transparent;
     border: none;
@@ -667,11 +621,6 @@ body {
     color: #ff4c4c;
 }
 
-/*.delete-series-btn i {*/
-/*    font-size: 14px;*/
-/*}*/
-
-/* Popup xác nhận xóa */
 .confirm-dialog {
     max-width: 450px;
     text-align: center;
@@ -729,7 +678,6 @@ body {
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
-/* Action buttons wrapper */
 .action-wrapper {
     display: flex;
     gap: 8px;
@@ -752,7 +700,6 @@ body {
     color: #0056b3;
 }
 
-/* Styles cho image upload box */
 .image-upload-box {
     width: 100%;
     height: 200px;
@@ -786,7 +733,6 @@ body {
     left: 0;
 }
 
-/* Styles cho modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -861,34 +807,6 @@ body {
     justify-content: flex-end;
 }
 
-/*.save-btn,*/
-/*.cancel-btn {*/
-/*    padding: 10px 30px;*/
-/*    border: none;*/
-/*    border-radius: 6px;*/
-/*    font-size: 14px;*/
-/*    cursor: pointer;*/
-/*    transition: all 0.3s ease;*/
-/*}*/
-
-/*.save-btn {*/
-/*    background-color: #007bff;*/
-/*    color: white;*/
-/*}*/
-
-/*.save-btn:hover {*/
-/*    background-color: #0056b3;*/
-/*}*/
-
-/*.cancel-btn {*/
-/*    background-color: #6c757d;*/
-/*    color: white;*/
-/*}*/
-
-/*.cancel-btn:hover {*/
-/*    background-color: #545b62;*/
-/*}*/
-
 .filter-container {
     display: flex;
     align-items: center;
@@ -930,8 +848,8 @@ body {
 }
 
 .filter-select:hover {
-    border-color: #ff4c4c; /* Viền đỏ đậm hơn khi hover */
-    background-color: #fff5f5; /* Background hồng nhạt khi hover */
+    border-color: #ff4c4c;
+    background-color: #fff5f5;
 }
 
 .filter-select:focus {
@@ -939,7 +857,6 @@ body {
     box-shadow: 0 0 0 2px rgba(255, 76, 76, 0.1);
 }
 
-/* Style cho options trong dropdown */
 .filter-select option {
     background-color: #ff4c4c;
     color: #fff;
@@ -948,11 +865,10 @@ body {
 }
 
 .filter-select option:hover {
-    background-color: #fff !important; /* Background trắng khi được chọn */
-    color: #ff4c4c !important; /* Chữ đỏ khi được chọn */
+    background-color: #fff !important;
+    color: #ff4c4c !important;
 }
 
-/* ========== RESPONSIVE ========== */
 @media (max-width: 992px) {
     .filter-container {
         padding: 10px 16px;
@@ -979,4 +895,58 @@ body {
         flex: 1;
         min-width: auto;
     }
+}
+
+.pagination-row td {
+    text-align: right;
+    padding: 10px 20px;
+    background-color: #fff;
+}
+
+.pagination {
+    display: inline-flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.page-btn {
+    all: unset;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ffb1b1 !important;
+    border-radius: 6px !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+}
+
+.page-btn.active {
+    background: #ff4c4c !important;
+    color: white !important;
+    border-color: #ff4c4c !important;
+    font-weight: 600 !important;
+}
+
+.page-btn:hover:not(.active) {
+    background: #fff0f0 !important;
+    border-color: #ff4c4c !important;
+}
+
+.page-btn.nav-btn {
+    font-size: 14px !important;
+    font-weight: bold !important;
+}
+
+.page-btn[disabled] {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
 }
