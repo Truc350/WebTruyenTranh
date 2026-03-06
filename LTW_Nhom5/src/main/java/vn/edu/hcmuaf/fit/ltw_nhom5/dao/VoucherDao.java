@@ -4,6 +4,8 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.Voucher;
 
+import java.util.List;
+
 public class VoucherDao {
     private final Jdbi jdbi;
 
@@ -36,5 +38,14 @@ public class VoucherDao {
         );
 
 
+    }
+
+    public List<Voucher> getAllVouchers() {
+        String sql = "select * from vouchers order by id desc";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapToBean(Voucher.class)
+                        .list()
+                );
     }
 }

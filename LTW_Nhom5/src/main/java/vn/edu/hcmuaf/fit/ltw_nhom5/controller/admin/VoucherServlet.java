@@ -46,6 +46,6 @@ public class VoucherServlet extends HttpServlet {
             System.out.println("Successfully added voucher");
         }
 
-        response.sendRedirect(request.getContextPath() + "/admin/vouchers");
+        response.sendRedirect(request.getContextPath() + "/admin/vouchersManagement");
     }
 }

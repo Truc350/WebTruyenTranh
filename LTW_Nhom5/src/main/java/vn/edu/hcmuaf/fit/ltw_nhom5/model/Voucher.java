@@ -172,4 +172,9 @@ public class Voucher implements Serializable {
     public void setUsedCount(int usedCount) {
         this.usedCount = usedCount;
     }
+
+    public boolean isExpired() {
+        if (endDate == null) return false;
+        return endDate.isBefore(LocalDateTime.now());
+    }
 }

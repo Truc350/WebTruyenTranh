@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Khuyến mãi</title>
-    <link rel="stylesheet" href="../css/adminCss/stylePromotion.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/stylePromotion.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -57,33 +57,64 @@
                 </thead>
 
                 <tbody id="promoTableBody">
-                <tr>
-                    <td>NEWUSER10</td>
-                    <td>10%</td>
-                    <td>Vận chuyển</td>
-                    <td>54/100</td>
-                    <td>0đ</td>
-                    <td>01/02/2026</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
 
-                <tr>
-                    <td>SIEUSALE15</td>
-                    <td>15%</td>
-                    <td>Giảm giá</td>
-                    <td>0/50</td>
-                    <td>50.000đ</td>
-                    <td>08/10/2025</td>
-                    <td><span class="status-out">Hết lượt</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
+                <c:forEach var="voucher" items="${allVouchers}">
+                    <tr>
+                        <td>${voucher.code}</td>
+                        <td>${voucher.discountValue}</td>
+                        <td>${voucher.discountTarget}</td>
+                        <td>${voucher.usedCount}/${voucher.quantity}</td>
+                        <td>${voucher.minOrderAmount}</td>
+                        <td>${voucher.endDate}</td>
+
+                        <c:choose>
+                            <c:when test="${voucher.expired}">
+                                <td><span class="status-out">Hết Hạn</span></td>
+                            </c:when>
+                            <c:when test="${voucher.usedCount == voucher.quantity}">
+                                <td><span class="status-out">Hết lượt</span></td>
+                            </c:when>
+
+                            <c:otherwise>
+                                <td><span class="status-active">Đang chạy</span></td>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <td>
+                            <button class="edit-btn" onclick="openEdit('${voucher.code}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </c:forEach>
+
+
+<%--                <tr>--%>
+<%--                    <td>NEWUSER10</td>--%>
+<%--                    <td>10%</td>--%>
+<%--                    <td>Vận chuyển</td>--%>
+<%--                    <td>54/100</td>--%>
+<%--                    <td>0đ</td>--%>
+<%--                    <td>01/02/2026</td>--%>
+<%--                    <td><span class="status-active">Đang chạy</span></td>--%>
+<%--                    <td>--%>
+<%--                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></button>--%>
+<%--                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                    </td>--%>
+<%--                </tr>--%>
+
+<%--                <tr>--%>
+<%--                    <td>SIEUSALE15</td>--%>
+<%--                    <td>15%</td>--%>
+<%--                    <td>Giảm giá</td>--%>
+<%--                    <td>0/50</td>--%>
+<%--                    <td>50.000đ</td>--%>
+<%--                    <td>08/10/2025</td>--%>
+<%--                    <td><span class="status-out">Hết lượt</span></td>--%>
+<%--                    <td>--%>
+<%--                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>--%>
+<%--                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                    </td>--%>
+<%--                </tr>--%>
 
                 <!-- Phân trang -->
                 <tr class="pagination-row">
@@ -117,8 +148,8 @@
                 <div>
                     <label>Áp dụng</label>
                     <select id="addType" name="discount_target"  required>
-                        <option value="percent">Vận chuyển</option>
-                        <option value="fixed">Giảm giá</option>
+                        <option value="Vận chuyển">Vận chuyển</option>
+                        <option value="Giảm giá">Giảm giá</option>
                     </select>
                 </div>
                 <div>
