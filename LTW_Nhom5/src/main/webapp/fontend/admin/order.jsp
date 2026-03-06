@@ -637,18 +637,7 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/orderManagement.js"></script>
-<!--xu li chuyen tab-->
 
-<%--<script>--%>
-<%--    document.querySelectorAll(".cancel-btn").forEach(btn => {--%>
-<%--        btn.addEventListener("click", () => {--%>
-<%--            document.querySelector(".cancel-popup").style.display = "flex";--%>
-<%--        });--%>
-<%--    });--%>
-<%--    document.querySelector(".close-popup").addEventListener("click", () => {--%>
-<%--        document.querySelector(".cancel-popup").style.display = "none";--%>
-<%--    });--%>
-<%--</script>--%>
 
 <script>
     const tabs = document.querySelectorAll(".tab-item");

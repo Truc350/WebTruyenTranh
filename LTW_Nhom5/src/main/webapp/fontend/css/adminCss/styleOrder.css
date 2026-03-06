@@ -2076,14 +2076,14 @@ tr:not([data-status="Pending"]) .btn-reject {
 }
 
 .page-btn {
-    min-width: 36px;
-    height: 36px;
+    min-width: 30px;
+    height: 30px;
     border: 1px solid #ffb1b1;
     background: white;
     color: #333;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     transition: all 0.2s ease;
     padding: 0;
