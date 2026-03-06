@@ -15,6 +15,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="${pageContext.request.contextPath}/js/category.js"></script>
+
+    <style>
+        .slider-viewport{
+            margin : 0;
+
+        }
+
+    </style>
 </head>
 
 <body>
@@ -170,7 +178,7 @@
             <h1>${selectedCategory.nameCategories}</h1>
 
             <div id="sum-items">
-                <p><strong>Tổng sản phẩm:</strong> ${totalComics}
+                <p><strong>Tổng sản phẩm hiển thị:</strong> ${comicList.size()}</p>
             </div>
 
             <!-- Lưới sản phẩm -->
@@ -199,9 +207,9 @@
                                              onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
                                         <div class="detail-book">
                                             <p>${comic.nameComics}
-                                                    <%--                                                <c:if test="${comic.volume != null}">--%>
-                                                    <%--                                                    Tập ${comic.volume}--%>
-                                                    <%--                                                </c:if>--%>
+<%--                                                <c:if test="${comic.volume != null}">--%>
+<%--                                                    Tập ${comic.volume}--%>
+<%--                                                </c:if>--%>
                                             </p>
 
                                             <!-- Giá -->
@@ -209,12 +217,10 @@
                                                 <c:when test="${comic.hasFlashSale}">
                                                     <!-- Có Flash Sale -->
                                                     <p class="product-price flash">
-                                                        <fmt:formatNumber value="${comic.flashSalePrice}"
-                                                                          pattern="#,###"/> đ
+                                                        <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                                     </p>
                                                     <p class="original-price-small">
-                                                        <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/>
-                                                            đ</s>
+                                                        <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ</s>
                                                         <span class="discount-badge-small flash">
                                                 -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
                                             </span>
@@ -230,8 +236,7 @@
 
                                             <c:choose>
                                                 <c:when test="${comic.stockQuantity > 0}">
-                                                    <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong>
-                                                    </p>
+                                                    <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <p class="sold out-of-stock">Hết hàng</p>
@@ -246,30 +251,8 @@
                 </c:choose>
 
             </section>
-            <div class="panigation">
-                <c:if test="${totalPages > 1}">
-                    <div class="pagination">
-
-                        <c:forEach begin="1" end="${totalPages}" var="i">
-                            <c:choose>
-                                <c:when test="${i == currentPage}">
-                                    <span class="page-btn active">${i}</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="page-btn"
-                                       href="${pageContext.request.contextPath}/category?id=${selectedCategory.id}&page=${i}<c:forEach var="p" items="${selectedPrices}">&amp;price=${p}</c:forEach><c:forEach var="a" items="${selectedAuthors}">&amp;author=${a}</c:forEach><c:forEach var="pub" items="${selectedPublishers}">&amp;publisher=${pub}</c:forEach><c:forEach var="y" items="${selectedYears}">&amp;year=${y}</c:forEach>">
-                                            ${i}
-                                    </a>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </div>
-                </c:if>
-            </div>
-
 
         </div>
-
 
     </div>
 
@@ -307,10 +290,10 @@
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
                                                     ./g<c:if test="${comic.hasFlashSale}">
-                                                    <div class="flash-sale-badge-small">
-                                                        <i class="fas fa-bolt"></i>Flash sale
-                                                    </div>
-                                                </c:if>
+                                                        <div class="flash-sale-badge-small">
+                                                            <i class="fas fa-bolt"></i>Flash sale
+                                                        </div>
+                                                    </c:if>
 
                                                     <img src="${comic.thumbnailUrl}"
                                                          alt="${comic.nameComics}"
@@ -319,21 +302,19 @@
 
                                                 <p class="product-name">
                                                         ${comic.nameComics}
-                                                        <%--                                                    <c:if test="${comic.volume != null}">--%>
-                                                        <%--                                                        Tập ${comic.volume}--%>
-                                                        <%--                                                    </c:if>--%>
+<%--                                                    <c:if test="${comic.volume != null}">--%>
+<%--                                                        Tập ${comic.volume}--%>
+<%--                                                    </c:if>--%>
                                                 </p>
 
                                                 <!-- Giá -->
                                                 <c:choose>
                                                     <c:when test="${comic.hasFlashSale}">
                                                         <p class="product-price flash">
-                                                            <fmt:formatNumber value="${comic.flashSalePrice}"
-                                                                              pattern="#,###"/> đ
+                                                            <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                                         </p>
                                                         <p class="original-price-slider">
-                                                            <s><fmt:formatNumber value="${comic.price}"
-                                                                                 pattern="#,###"/> đ</s>
+                                                            <s><fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ</s>
                                                             <span class="discount-tag-slider">
                                                     -<fmt:formatNumber value="${comic.flashSaleDiscount}" pattern="#"/>%
                                                 </span>
@@ -348,8 +329,7 @@
 
                                                 <c:choose>
                                                     <c:when test="${comic.stockQuantity > 0}">
-                                                        <p class="sold">Còn hàng:
-                                                            <strong>${comic.stockQuantity}</strong></p>
+                                                        <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <p class="sold out-of-stock">Hết hàng</p>
@@ -370,10 +350,13 @@
     </c:if>
 
 
+
+
+
 </div>
 
 <!-- INCLUDE FOOTER -->
-<jsp:include page="/fontend/public/Footer.jsp"/>
+<jsp:include page="/fontend/public/Footer.jsp" />
 
 <style>
     /* Style bổ sung cho trạng thái hết hàng */

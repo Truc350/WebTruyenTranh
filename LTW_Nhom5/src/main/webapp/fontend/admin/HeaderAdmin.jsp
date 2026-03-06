@@ -47,31 +47,31 @@
 
                 <!-- Danh sách thông báo -->
                 <!-- Danh sách thông báo -->
-                <c:forEach var="n" items="${notifications}">
-                    <div class="notification-item ${n.isRead ? '' : 'unread'}"
-                         onclick="openNotificationDetail(${n.id}, '${fn:escapeXml(n.message)}')">
-                        <div class="notification-content">
-                            <!-- SỬA: Hiển thị type thay vì title -->
-                            <strong>
-                                <c:choose>
-                                    <c:when test="${n.type == 'USER_VIOLATION'}">⚠️ Vi phạm quy định</c:when>
-                                    <c:when test="${n.type == 'ORDER'}">📦 Đơn hàng</c:when>
-                                    <c:when test="${n.type == 'SYSTEM'}">ℹ️ Hệ thống</c:when>
-                                    <c:otherwise>${n.type}</c:otherwise>
-                                </c:choose>
-                            </strong>
-                            <!-- Hiển thị message (có thể nhiều dòng) -->
-                            <p style="white-space: pre-line;">${n.message}</p>
-                            <small>
-                                <i class="fa-regular fa-clock"></i>
-                                    ${n.formattedCreatedAt}
-                            </small>
-                        </div>
-                        <c:if test="${!n.isRead}">
-                            <span class="unread-dot"></span>
-                        </c:if>
-                    </div>
-                </c:forEach>
+<%--                <c:forEach var="n" items="${notifications}">--%>
+<%--                    <div class="notification-item ${n.isRead ? '' : 'unread'}"--%>
+<%--                         onclick="openNotificationDetail(${n.id}, '${fn:escapeXml(n.message)}')">--%>
+<%--                        <div class="notification-content">--%>
+<%--                            <!-- SỬA: Hiển thị type thay vì title -->--%>
+<%--                            <strong>--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${n.type == 'USER_VIOLATION'}">⚠️ Vi phạm quy định</c:when>--%>
+<%--                                    <c:when test="${n.type == 'ORDER'}">📦 Đơn hàng</c:when>--%>
+<%--                                    <c:when test="${n.type == 'SYSTEM'}">ℹ️ Hệ thống</c:when>--%>
+<%--                                    <c:otherwise>${n.type}</c:otherwise>--%>
+<%--                                </c:choose>--%>
+<%--                            </strong>--%>
+<%--                            <!-- Hiển thị message (có thể nhiều dòng) -->--%>
+<%--                            <p style="white-space: pre-line;">${n.message}</p>--%>
+<%--                            <small>--%>
+<%--                                <i class="fa-regular fa-clock"></i>--%>
+<%--                                    ${n.formattedCreatedAt}--%>
+<%--                            </small>--%>
+<%--                        </div>--%>
+<%--                        <c:if test="${!n.isRead}">--%>
+<%--                            <span class="unread-dot"></span>--%>
+<%--                        </c:if>--%>
+<%--                    </div>--%>
+<%--                </c:forEach>--%>
 
                 <c:if test="${empty notifications}">
                     <div class="notification-empty">

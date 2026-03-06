@@ -141,7 +141,7 @@ main {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
     margin-bottom: 15px; /* Giảm từ 20px */
     width: 100%;
-    max-width: 700px; /* Giảm từ 800px */
+    max-width: 1000px; /* Giảm từ 800px */
     min-height: 400px; /* Giảm từ 500px */
     box-sizing: border-box;
     font-size: 16px; /* Giảm từ 16px */
@@ -445,7 +445,7 @@ main {
     border-radius: 10px; /* Giảm từ 12px */
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
     width: 100%;
-    max-width: 700px; /* Giảm từ 800px */
+    max-width: 1000px; /* Giảm từ 800px */
     min-height: 600px; /* Giảm từ 800px */
     box-sizing: border-box;
     font-size: 16px; /* Giảm từ 16px */
@@ -991,7 +991,7 @@ main {
     border-radius: 8px; /* Giảm từ 10px */
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
     width: 100%;
-    max-width: 700px; /* Giảm từ 800px */
+    max-width: 1000px; /* Giảm từ 800px */
     min-height: 400px; /* Giảm từ 450px */
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -1021,9 +1021,9 @@ main {
 
 .wishlist-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px; /* Giảm từ 15px */
-    max-height: 500px; /* Giảm từ 550px */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px; /* Giảm từ 15px */
+    max-height: 600px; /* Giảm từ 550px */
     overflow-y: auto;
     padding-bottom: 8px; /* Giảm từ 10px */
 }
@@ -1045,7 +1045,7 @@ main {
 
 .wishlist-img {
     width: 100%;
-    height: 180px; /* Giảm từ 220px */
+    height: 240px; /* Giảm từ 220px */
     object-fit: cover;
     border-radius: 5px; /* Giảm từ 6px */
     border: 1.5px solid #f0f0f0; /* Giảm từ 2px */
@@ -1074,22 +1074,26 @@ main {
 .wishlist-price {
     display: flex;
     justify-content: flex-start;
-    gap: 3px; /* Giảm từ 4px */
-    font-size: 12px; /* Giảm từ 12px */
-    margin-bottom: 8px; /* Giảm từ 8px */
+    gap: 3px;
+    font-size: 12px;
+    margin-bottom: 8px;
     align-items: baseline;
 }
 
 .wishlist-price .original-price {
     text-decoration: line-through;
     color: #999;
-    font-size: 14px; /* Giảm từ 10px */
+    font-size: 14px;
 }
 
 .wishlist-price .discount-price {
     color: #e74c3c;
     font-weight: 700;
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 14px;
+}
+
+.wishlist-price .current-price {
+    font-size: 14px;
 }
 
 .wishlist-actions {
@@ -1119,6 +1123,7 @@ main {
 .remove-wishlist-btn {
     background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
     box-shadow: 0 1px 2px rgba(220, 53, 69, 0.15);
+    max-width: 70px;
 }
 
 .add-to-cart-btn:hover {
@@ -1202,7 +1207,7 @@ main {
     border-radius: 10px; /* Giảm từ 12px */
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
     width: 100%;
-    max-width: 700px; /* Giảm từ 800px */
+    max-width: 1000px; /* Giảm từ 800px */
     min-height: 400px; /* Giảm từ 500px */
     box-sizing: border-box;
     font-size: 14px; /* Giảm từ 16px */
@@ -1379,7 +1384,7 @@ main {
     border-radius: 10px !important;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
     width: 100% !important;
-    max-width: 700px !important;
+    max-width: 1000px !important;
     /*min-height: 520px !important;   !* giống y hệt mấy cái kia *!*/
     box-sizing: border-box !important;
     min-height: 550px;
@@ -1714,6 +1719,7 @@ main {
     border-radius: 6px;
     border: 1px solid #ddd;
 }
+
 /* Flash Sale Badge */
 .flash-sale-badge {
     display: inline-block;
@@ -1749,8 +1755,12 @@ main {
 }
 
 @keyframes flashPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
 }
 
 .price-details {
@@ -1759,12 +1769,13 @@ main {
     flex-wrap: wrap;
     gap: 8px;
 }
+
 .filter-section {
     background: white;
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .filter-controls {
@@ -1833,7 +1844,7 @@ main {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     z-index: 9999;
     justify-content: center;
     align-items: center;
@@ -1853,8 +1864,12 @@ main {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .period-label {

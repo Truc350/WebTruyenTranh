@@ -1,4 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +17,8 @@
     <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
 
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
-
 
         <div class="promotion-page">
 
@@ -181,6 +182,15 @@
             <div>
                 <label>Tên mã</label>
                 <input type="text" id="addCode" placeholder="NEWUSER10" maxlength="20">
+            </div>
+            <div>
+                <label>Áp dụng</label>
+                <select id="addType" required>
+                    <option value="">Chọn </option>
+                    <option value="percent">Vận chuyển</option>
+                    <option value="fixed">Giảm giá</option>
+                    <option value="fixed">khác</option>
+                </select>
             </div>
             <div>
                 <label>Loại</label>
