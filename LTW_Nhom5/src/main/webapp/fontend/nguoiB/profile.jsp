@@ -289,7 +289,7 @@
                     <span>Tổng tiền: <strong>55.000đ</strong></span>
                 </div>
                 <div class="order-actions">
-                    <a href="chat.jsp">
+                    <a href="https://zalo.me/0394158994" target="_blank">
                         <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                     <button class="action-btn cancel-order">Hủy đơn hàng</button>
@@ -319,7 +319,7 @@
                     <span>Tổng tiền: <strong>80.000đ</strong></span>
                 </div>
                 <div class="order-actions">
-                    <a href="chat.jsp">
+                    <a href="https://zalo.me/0394158994" target="_blank">
                         <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                 </div>
@@ -385,7 +385,7 @@
                     <a href="cart.jsp">
                         <button class="action-btn buy-again">Mua lại</button>
                     </a>
-                    <a href="chat.jsp">
+                    <a href="https://zalo.me/0394158994" target="_blank">
                         <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                 </div>
@@ -421,7 +421,7 @@
                     <a href="cart.jsp">
                         <button class="action-btn buy-again">Mua lại</button>
                     </a>
-                    <a href="chat.jsp">
+                    <a href="https://zalo.me/0394158994" target="_blank">
                         <button class="action-btn contact-seller">Liên hệ</button>
                     </a>
                 </div>
