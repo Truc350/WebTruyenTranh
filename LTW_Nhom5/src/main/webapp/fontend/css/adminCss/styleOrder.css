@@ -220,43 +220,6 @@ body {
     transition: 0.25s;
 }
 
-.pagination-row td {
-    text-align: right;
-    background-color: #fff;
-    padding-right: 20px;
-}
-
-.pagination {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.pagination button {
-    background-color: #fff;
-    border: 1px solid #FF7A7A;
-    border-radius: 6px;
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.pagination button.active {
-    background-color: #FF7A7A;
-    color: #fff;
-}
-
-.pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.pagination .active {
-    background-color: #FF7A7A;
-    color: #fff;
-    border-color: #FF7A7A;
-}
-
 .cancel-popup {
     position: fixed;
     inset: 0;
@@ -1285,42 +1248,6 @@ tr:not([data-status="Pending"]) .btn-reject {
     font-size: 14px;
 }
 
-.pagination {
-    display: flex;
-    justify-content: right;
-    align-items: flex-end;
-    gap: 8px;
-    padding: 5px 0;
-}
-
-.page-btn {
-    min-width: 36px;
-    height: 36px;
-    border: 1px solid #ddd;
-    background: white;
-    color: #333;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    padding: 0 12px;
-}
-
-.page-btn:hover {
-    background: #f5f5f5;
-    border-color: #999;
-}
-
-.page-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.pagination:empty {
-    display: none;
-}
-
 .order-table tbody tr {
     transition: background-color 0.2s ease;
 }
@@ -1353,13 +1280,6 @@ tr:not([data-status="Pending"]) .btn-reject {
         min-width: auto;
     }
 
-    .page-btn {
-        min-width: 32px;
-        height: 32px;
-        font-size: 12px;
-        padding: 0 8px;
-    }
-
     .ship-confirm-btn,
     .confirm-btn,
     .cancel-btn {
@@ -1382,17 +1302,12 @@ tr:not([data-status="Pending"]) .btn-reject {
     }
 }
 
-/* ============================================
-   SCROLL PANE - FIX CHO BẢNG CÓ ÍT CỘT
-   ============================================ */
-
-/* WRAPPER - CONTAINER SCROLL (KHÔNG CÓ BORDER) */
 #tab-pending .table-scroll-wrapper {
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
     overflow-x: auto !important;
     overflow-y: visible !important;
     margin-bottom: 20px;
-    position: relative;
 }
 
 /* SCROLLBAR STYLE - ĐẬM MÀU DỄ NHÌN */
@@ -1414,28 +1329,23 @@ tr:not([data-status="Pending"]) .btn-reject {
     background: #64748b !important;
 }
 
-/* TABLE-WRAPPER - CÓ BORDER */
 #tab-pending .table-wrapper {
-    min-width: 100%;
+    width: fit-content !important;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     background: white;
-    /*overflow: hidden;*/
+    min-width: unset !important;
 }
 
-/* TABLE - FORCE WIDTH LỚN HƠN ĐỂ SCROLL */
 #tab-pending .table-scroll-wrapper .order-table {
-    /*width: 3000px !important;      */
-    /*min-width: 3000px !important;  */
     margin: 0 !important;
     border-collapse: collapse !important;
     table-layout: fixed !important;
 }
 
-/* SET WIDTH CHO TỪNG CỘT - ĐIỀU CHỈNH THEO SỐ CỘT THỰC TẾ */
 #tab-pending .table-scroll-wrapper .order-table th,
 #tab-pending .table-scroll-wrapper .order-table td {
-    padding: 12px 16px !important;
+    padding: 12px 8px !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -1444,38 +1354,37 @@ tr:not([data-status="Pending"]) .btn-reject {
 /* CỘT 1: MÃ ĐƠN HÀNG */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(1),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(1) {
-    width: 200px !important;
+    width: 140px !important;
 }
 
 /* CỘT 2: KHÁCH HÀNG */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(2),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(2) {
-    width: 300px !important;
+    width: 150px !important;
 }
 
 /* CỘT 3: NGÀY ĐẶT */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(3),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(3) {
-    width: 200px !important;
+    width: 110px !important;
 }
 
 /* CỘT 4: TỔNG TIỀN */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(4),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(4) {
-    width: 200px !important;
+    width: 120px !important;
 }
 
 /* CỘT 5: THANH TOÁN */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(5),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(5) {
-    width: 250px !important;
+    width: 150px !important;
 }
 
 /* CỘT 6: SẢN PHẨM - CHO PHÉP XUỐNG DÒNG */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(6),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(6) {
-    width: 500px !important;
-    /*white-space: normal !important;*/
+    width: 250px !important;
     word-wrap: break-word !important;
     line-height: 1.5 !important;
 }
@@ -1484,7 +1393,6 @@ tr:not([data-status="Pending"]) .btn-reject {
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(7),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(7) {
     width: 500px !important;
-    /*white-space: normal !important;*/
     word-wrap: break-word !important;
     line-height: 1.5 !important;
 }
@@ -1492,13 +1400,13 @@ tr:not([data-status="Pending"]) .btn-reject {
 /* CỘT 8: ĐƠN VỊ VẬN CHUYỂN */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(8),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(8) {
-    width: 300px !important;
+    width: 200px !important;
 }
 
 /* CỘT 9: ACTIONS */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(9),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(9) {
-    width: 350px !important;
+    width: 180px !important;
     text-align: center !important;
 }
 
@@ -1508,7 +1416,6 @@ tr:not([data-status="Pending"]) .btn-reject {
     background: white !important;
 }
 
-/* ========== RATING STYLES - TAB ĐÃ GIAO ========== */
 
 #tab-delivered .stars {
     display: flex;
@@ -2045,9 +1952,8 @@ tr:not([data-status="Pending"]) .btn-reject {
     }
 }
 
-/* ===== LÝ DO TỪ CHỐI - HIỂN THỊ RIÊNG 1 HÀNG ===== */
 .popup-row.reject-reason-row {
-    display: block; /* ✅ ĐỔI THÀNH BLOCK ĐỂ CHIẾM FULL WIDTH */
+    display: block;
     background: #fee2e2;
     padding: 12px;
     border-radius: 8px;
@@ -2056,7 +1962,7 @@ tr:not([data-status="Pending"]) .btn-reject {
 }
 
 .popup-row.reject-reason-row .label {
-    width: 100%; /* ✅ LABEL CHIẾM FULL WIDTH */
+    width: 100%;
     margin-bottom: 8px;
     color: #991b1b;
     font-weight: 700;
@@ -2091,7 +1997,7 @@ tr:not([data-status="Pending"]) .btn-reject {
 
 .container {
     width: 100vw;
-    overflow: hidden;y
+    overflow: hidden;
 
 }
 
@@ -2110,9 +2016,122 @@ tr:not([data-status="Pending"]) .btn-reject {
     border-radius: 8px;
 }
 #tab-pending .table-scroll-wrapper .order-table {
-    min-width: 2800px !important;
-    width: 2800px !important;
+    width: max-content !important;
+    min-width: unset !important;
     margin: 0 !important;
     border-collapse: collapse !important;
-    table-layout: fixed !important;
+    table-layout: auto !important;
+}
+
+.toast-notification {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 99999;
+    min-width: 280px;
+    border-left: 4px solid #28a745;
+    transition: opacity 0.3s ease;
+}
+
+.toast-notification.error {
+    border-left-color: #dc2626;
+}
+
+.toast-notification.show {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.toast-notification i {
+    font-size: 20px;
+    color: #28a745;
+}
+
+.toast-notification.error i {
+    color: #dc2626;
+}
+
+.toast-notification span {
+    font-size: 14px;
+    color: #333;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 0;
+}
+
+.pagination:empty {
+    display: none;
+}
+
+.page-btn {
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid #ffb1b1;
+    background: white;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled):not(.active) {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+.page-btn.active {
+    background: #ff4c4c;
+    color: white;
+    border-color: #ff4c4c;
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.page-btn.prev-btn,
+.page-btn.next-btn {
+    font-size: 13px;
+    color: #555;
+    border-color: #ddd;
+    background: white;
+}
+
+.page-btn.prev-btn:hover:not(:disabled),
+.page-btn.next-btn:hover:not(:disabled) {
+    background: #f5f5f5;
+    border-color: #bbb;
+    color: #333;
+}
+
+.pagination-row td,
+.pagination-row-pickup td,
+.pagination-row-delivering td,
+.pagination-row-delivered td,
+.pagination-row-return td,
+.pagination-row-cancelled td {
+    text-align: right;
+    background-color: #fff;
+    padding-right: 20px;
+    border-bottom: none !important;
 }

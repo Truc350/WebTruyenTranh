@@ -103,12 +103,14 @@
 
                     <label>
                         <input type="radio" name="shipping" value="standard" data-fee="25000" checked>
-                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">Đang tải...</span>
+                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">25.000đ</span>
                     </label><br>
                     <label>
                         <input type="radio" name="shipping" value="express" data-fee="50000">
-                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">Đang tải...</span>
+                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">50.000đ</span>
                     </label>
+
+                    <input type="hidden" name="shippingFee" id="hiddenShippingFee" value="25000">
                 </section>
 
                 <section class="payment">
@@ -264,109 +266,109 @@
         return json.data || [];
     }
 
-    async function calcFee(serviceId, toDistrict, toWard) {
-        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Token": GHN_TOKEN,
-                "ShopId": String(GHN_SHOP_ID)
-            },
-            body: JSON.stringify({
-                service_id:       serviceId,
-                from_district_id: FROM_DISTRICT,
-                to_district_id:   toDistrict,
-                to_ward_code:     toWard,
-                weight:           300,
-                insurance_value:  ${checkoutSubtotal}
-            })
-        });
-        const json = await res.json();
-        if (json.code !== 200) throw new Error(json.message);
-        return json.data.total;
-    }
+    <%--async function calcFee(serviceId, toDistrict, toWard) {--%>
+    <%--    const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {--%>
+    <%--        method: "POST",--%>
+    <%--        headers: {--%>
+    <%--            "Content-Type": "application/json",--%>
+    <%--            "Token": GHN_TOKEN,--%>
+    <%--            "ShopId": String(GHN_SHOP_ID)--%>
+    <%--        },--%>
+    <%--        body: JSON.stringify({--%>
+    <%--            service_id:       serviceId,--%>
+    <%--            from_district_id: FROM_DISTRICT,--%>
+    <%--            to_district_id:   toDistrict,--%>
+    <%--            to_ward_code:     toWard,--%>
+    <%--            weight:           300,--%>
+    <%--            insurance_value:  ${checkoutSubtotal}--%>
+    <%--        })--%>
+    <%--    });--%>
+    <%--    const json = await res.json();--%>
+    <%--    if (json.code !== 200) throw new Error(json.message);--%>
+    <%--    return json.data.total;--%>
+    <%--}--%>
 
-    async function updateShippingFee() {
-        const provinceName = provinceSelect.value;
-        const wardName     = wardSelect.value;
-        if (!provinceName || !wardName) return;
+    <%--async function updateShippingFee() {--%>
+    <%--    const provinceName = provinceSelect.value;--%>
+    <%--    const wardName     = wardSelect.value;--%>
+    <%--    if (!provinceName || !wardName) return;--%>
 
-        const loadingEl  = document.getElementById('shippingLoading');
-        const errorEl    = document.getElementById('shippingError');
-        const stdDisplay = document.getElementById('standardFeeDisplay');
-        const expDisplay = document.getElementById('expressFeeDisplay');
+    <%--    const loadingEl  = document.getElementById('shippingLoading');--%>
+    <%--    const errorEl    = document.getElementById('shippingError');--%>
+    <%--    const stdDisplay = document.getElementById('standardFeeDisplay');--%>
+    <%--    const expDisplay = document.getElementById('expressFeeDisplay');--%>
 
-        function normalize(name) {
-            return name.toLowerCase()
-                .replace(/^(phường|xã|thị trấn|quận|huyện|tỉnh|thành phố|tp\.?)\s+/i, '')
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .trim();
-        }
+    <%--    function normalize(name) {--%>
+    <%--        return name.toLowerCase()--%>
+    <%--            .replace(/^(phường|xã|thị trấn|quận|huyện|tỉnh|thành phố|tp\.?)\s+/i, '')--%>
+    <%--            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")--%>
+    <%--            .trim();--%>
+    <%--    }--%>
 
-        function fuzzyMatch(a, b) {
-            const na = normalize(a), nb = normalize(b);
-            return na === nb || na.includes(nb) || nb.includes(na);
-        }
+    <%--    function fuzzyMatch(a, b) {--%>
+    <%--        const na = normalize(a), nb = normalize(b);--%>
+    <%--        return na === nb || na.includes(nb) || nb.includes(na);--%>
+    <%--    }--%>
 
-        try {
-            if (loadingEl) loadingEl.style.display = 'block';
-            if (errorEl)   errorEl.style.display   = 'none';
+    <%--    try {--%>
+    <%--        if (loadingEl) loadingEl.style.display = 'block';--%>
+    <%--        if (errorEl)   errorEl.style.display   = 'none';--%>
 
-            // 1. Map tên tỉnh → GHN Province ID
-            const ghnProvinces = await getGHNProvinces();
-            const province = ghnProvinces.find(p => fuzzyMatch(p.ProvinceName, provinceName));
-            if (!province) throw new Error("Không tìm thấy tỉnh: " + provinceName);
+    <%--        // 1. Map tên tỉnh → GHN Province ID--%>
+    <%--        const ghnProvinces = await getGHNProvinces();--%>
+    <%--        const province = ghnProvinces.find(p => fuzzyMatch(p.ProvinceName, provinceName));--%>
+    <%--        if (!province) throw new Error("Không tìm thấy tỉnh: " + provinceName);--%>
 
-            // 2. Lấy tất cả quận của tỉnh, duyệt từng quận tìm phường đúng
-            const ghnDistricts = await getGHNDistricts(province.ProvinceID);
+    <%--        // 2. Lấy tất cả quận của tỉnh, duyệt từng quận tìm phường đúng--%>
+    <%--        const ghnDistricts = await getGHNDistricts(province.ProvinceID);--%>
 
-            let foundDistrict = null;
-            let foundWard = null;
+    <%--        let foundDistrict = null;--%>
+    <%--        let foundWard = null;--%>
 
-            for (const d of ghnDistricts) {
-                const wards = await getGHNWards(d.DistrictID);
-                console.log(`Quận ${d.DistrictName}:`, wards.map(w => w.WardName));
-                const matched = wards.find(w => fuzzyMatch(w.WardName, wardName));
-                if (matched) {
-                    foundDistrict = d;
-                    foundWard = matched;
-                    break;
-                }
-            }
+    <%--        for (const d of ghnDistricts) {--%>
+    <%--            const wards = await getGHNWards(d.DistrictID);--%>
+    <%--            console.log(`Quận ${d.DistrictName}:`, wards.map(w => w.WardName));--%>
+    <%--            const matched = wards.find(w => fuzzyMatch(w.WardName, wardName));--%>
+    <%--            if (matched) {--%>
+    <%--                foundDistrict = d;--%>
+    <%--                foundWard = matched;--%>
+    <%--                break;--%>
+    <%--            }--%>
+    <%--        }--%>
 
-            if (!foundDistrict || !foundWard) {
-                throw new Error("Không tìm thấy phường/xã: " + wardName);
-            }
+    <%--        if (!foundDistrict || !foundWard) {--%>
+    <%--            throw new Error("Không tìm thấy phường/xã: " + wardName);--%>
+    <%--        }--%>
 
-            ghnDistrictId = foundDistrict.DistrictID;
-            ghnWardCode   = foundWard.WardCode;
+    <%--        ghnDistrictId = foundDistrict.DistrictID;--%>
+    <%--        ghnWardCode   = foundWard.WardCode;--%>
 
-            // 3. Tính phí 2 dịch vụ song song
-            const [stdFee, expFee] = await Promise.all([
-                calcFee(GHN_STANDARD, ghnDistrictId, ghnWardCode),
-                calcFee(GHN_EXPRESS,  ghnDistrictId, ghnWardCode)
-            ]);
+    <%--        // 3. Tính phí 2 dịch vụ song song--%>
+    <%--        const [stdFee, expFee] = await Promise.all([--%>
+    <%--            calcFee(GHN_STANDARD, ghnDistrictId, ghnWardCode),--%>
+    <%--            calcFee(GHN_EXPRESS,  ghnDistrictId, ghnWardCode)--%>
+    <%--        ]);--%>
 
-            // 4. Cập nhật data-fee và hiển thị
-            document.querySelector('input[name="shipping"][value="standard"]').dataset.fee = stdFee;
-            document.querySelector('input[name="shipping"][value="express"]').dataset.fee  = expFee;
-            if (stdDisplay) stdDisplay.textContent = formatNumber(stdFee) + 'đ';
-            if (expDisplay) expDisplay.textContent = formatNumber(expFee) + 'đ';
+    <%--        // 4. Cập nhật data-fee và hiển thị--%>
+    <%--        document.querySelector('input[name="shipping"][value="standard"]').dataset.fee = stdFee;--%>
+    <%--        document.querySelector('input[name="shipping"][value="express"]').dataset.fee  = expFee;--%>
+    <%--        if (stdDisplay) stdDisplay.textContent = formatNumber(stdFee) + 'đ';--%>
+    <%--        if (expDisplay) expDisplay.textContent = formatNumber(expFee) + 'đ';--%>
 
-            updateTotal();
+    <%--        updateTotal();--%>
 
-        } catch (err) {
-            console.error("GHN Error:", err);
-            if (errorEl) {
-                errorEl.textContent = "⚠️ Không tính được phí ship tự động: " + err.message;
-                errorEl.style.display = 'block';
-            }
-            if (stdDisplay) stdDisplay.textContent = '25.000đ';
-            if (expDisplay) expDisplay.textContent = '50.000đ';
-        } finally {
-            if (loadingEl) loadingEl.style.display = 'none';
-        }
-    }
+    <%--    } catch (err) {--%>
+    <%--        console.error("GHN Error:", err);--%>
+    <%--        if (errorEl) {--%>
+    <%--            errorEl.textContent = "⚠️ Không tính được phí ship tự động: " + err.message;--%>
+    <%--            errorEl.style.display = 'block';--%>
+    <%--        }--%>
+    <%--        if (stdDisplay) stdDisplay.textContent = '25.000đ';--%>
+    <%--        if (expDisplay) expDisplay.textContent = '50.000đ';--%>
+    <%--    } finally {--%>
+    <%--        if (loadingEl) loadingEl.style.display = 'none';--%>
+    <%--    }--%>
+    <%--}--%>
 
     // ==================== LOAD TỈNH/THÀNH PHỐ ====================
     function loadProvinces() {
@@ -453,9 +455,9 @@
                 if (wardLoading) wardLoading.style.display = "none";
 
                 // Nếu có ward được auto-select → tính phí GHN luôn
-                if (autoSelectWard && wardSelect.value) {
-                    updateShippingFee();
-                }
+                // if (autoSelectWard && wardSelect.value) {
+                //     updateShippingFee();
+                // }
             })
             .catch(err => {
                 console.error("Error loading wards:", err);
@@ -482,9 +484,9 @@
     });
 
     // *** THÊM MỚI: trigger tính phí GHN khi chọn phường/xã ***
-    wardSelect.addEventListener("change", function() {
-        updateShippingFee();
-    });
+    // wardSelect.addEventListener("change", function() {
+    //     updateShippingFee();
+    // });
 
     // ==================== SHIPPING & POINTS ====================
     const shippingRadios = document.querySelectorAll('input[name="shipping"]');
@@ -503,6 +505,9 @@
     function updateTotal() {
         const selectedShipping = document.querySelector('input[name="shipping"]:checked');
         const shippingFee = selectedShipping ? parseInt(selectedShipping.dataset.fee) || 0 : 0;
+
+        const hiddenFee = document.getElementById('hiddenShippingFee');
+        if (hiddenFee) hiddenFee.value = shippingFee;
 
         let pointsDiscount = 0;
         if (usePointsCheckbox && usePointsCheckbox.checked) {
