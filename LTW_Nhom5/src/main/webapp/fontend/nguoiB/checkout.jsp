@@ -96,10 +96,19 @@
 
                 <section class="shipping">
                     <h2>Phương thức Vận chuyển: *</h2>
-                    <label><input type="radio" name="shipping" value="standard" data-fee="25000" checked> Giao hàng Tiêu
-                        Chuẩn - 25.000đ</label><br>
-                    <label><input type="radio" name="shipping" value="express" data-fee="50000"> Giao hàng Hỏa Tốc -
-                        50.000đ</label>
+                    <div id="shippingLoading" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> Đang tính phí vận chuyển...
+                    </div>
+                    <div id="shippingError" style="display:none; color:red;"></div>
+
+                    <label>
+                        <input type="radio" name="shipping" value="standard" data-fee="25000" checked>
+                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">Đang tải...</span>
+                    </label><br>
+                    <label>
+                        <input type="radio" name="shipping" value="express" data-fee="50000">
+                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">Đang tải...</span>
+                    </label>
                 </section>
 
                 <section class="payment">
@@ -207,37 +216,168 @@
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
-    // ==================== CẤU HÌNH ====================
+
     const API_BASE = "${pageContext.request.contextPath}/api/provinces";
     const provinceSelect = document.getElementById("province");
     const wardSelect = document.getElementById("ward");
     const provinceLoading = document.getElementById("provinceLoading");
     const wardLoading = document.getElementById("wardLoading");
 
-    // Lấy địa chỉ mặc định
     const defaultProvince = document.getElementById('defaultProvince')?.value || '';
     const defaultWard = document.getElementById('defaultWard')?.value || '';
 
-    console.log("🚀 Checkout initialized");
-    console.log("📍 API Base:", API_BASE);
-    console.log("📍 Default address:", {defaultProvince, defaultWard});
+    // ==================== GHN CONFIG ====================
+    const GHN_TOKEN = "bb67bb35-1796-11f1-b2c0-1ab1fd37f3b7";
+    const GHN_SHOP_ID = 6302109;
+    const FROM_DISTRICT = 3695;
+    const GHN_STANDARD = 2; // Tiêu chuẩn
+    const GHN_EXPRESS  = 1; // Hỏa tốc
+
+    let ghnDistrictId = null;
+    let ghnWardCode   = null;
+
+    async function getGHNProvinces() {
+        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/master-data/province", {
+            headers: { "Token": GHN_TOKEN }
+        });
+        const json = await res.json();
+        return json.data || [];
+    }
+
+    async function getGHNDistricts(provinceId) {
+        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/master-data/district", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Token": GHN_TOKEN },
+            body: JSON.stringify({ province_id: provinceId })
+        });
+        const json = await res.json();
+        return json.data || [];
+    }
+
+    async function getGHNWards(districtId) {
+        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/master-data/ward", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Token": GHN_TOKEN },
+            body: JSON.stringify({ district_id: districtId })
+        });
+        const json = await res.json();
+        return json.data || [];
+    }
+
+    async function calcFee(serviceId, toDistrict, toWard) {
+        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Token": GHN_TOKEN,
+                "ShopId": String(GHN_SHOP_ID)
+            },
+            body: JSON.stringify({
+                service_id:       serviceId,
+                from_district_id: FROM_DISTRICT,
+                to_district_id:   toDistrict,
+                to_ward_code:     toWard,
+                weight:           300,
+                insurance_value:  ${checkoutSubtotal}
+            })
+        });
+        const json = await res.json();
+        if (json.code !== 200) throw new Error(json.message);
+        return json.data.total;
+    }
+
+    async function updateShippingFee() {
+        const provinceName = provinceSelect.value;
+        const wardName     = wardSelect.value;
+        if (!provinceName || !wardName) return;
+
+        const loadingEl  = document.getElementById('shippingLoading');
+        const errorEl    = document.getElementById('shippingError');
+        const stdDisplay = document.getElementById('standardFeeDisplay');
+        const expDisplay = document.getElementById('expressFeeDisplay');
+
+        function normalize(name) {
+            return name.toLowerCase()
+                .replace(/^(phường|xã|thị trấn|quận|huyện|tỉnh|thành phố|tp\.?)\s+/i, '')
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        function fuzzyMatch(a, b) {
+            const na = normalize(a), nb = normalize(b);
+            return na === nb || na.includes(nb) || nb.includes(na);
+        }
+
+        try {
+            if (loadingEl) loadingEl.style.display = 'block';
+            if (errorEl)   errorEl.style.display   = 'none';
+
+            // 1. Map tên tỉnh → GHN Province ID
+            const ghnProvinces = await getGHNProvinces();
+            const province = ghnProvinces.find(p => fuzzyMatch(p.ProvinceName, provinceName));
+            if (!province) throw new Error("Không tìm thấy tỉnh: " + provinceName);
+
+            // 2. Lấy tất cả quận của tỉnh, duyệt từng quận tìm phường đúng
+            const ghnDistricts = await getGHNDistricts(province.ProvinceID);
+
+            let foundDistrict = null;
+            let foundWard = null;
+
+            for (const d of ghnDistricts) {
+                const wards = await getGHNWards(d.DistrictID);
+                console.log(`Quận ${d.DistrictName}:`, wards.map(w => w.WardName));
+                const matched = wards.find(w => fuzzyMatch(w.WardName, wardName));
+                if (matched) {
+                    foundDistrict = d;
+                    foundWard = matched;
+                    break;
+                }
+            }
+
+            if (!foundDistrict || !foundWard) {
+                throw new Error("Không tìm thấy phường/xã: " + wardName);
+            }
+
+            ghnDistrictId = foundDistrict.DistrictID;
+            ghnWardCode   = foundWard.WardCode;
+
+            // 3. Tính phí 2 dịch vụ song song
+            const [stdFee, expFee] = await Promise.all([
+                calcFee(GHN_STANDARD, ghnDistrictId, ghnWardCode),
+                calcFee(GHN_EXPRESS,  ghnDistrictId, ghnWardCode)
+            ]);
+
+            // 4. Cập nhật data-fee và hiển thị
+            document.querySelector('input[name="shipping"][value="standard"]').dataset.fee = stdFee;
+            document.querySelector('input[name="shipping"][value="express"]').dataset.fee  = expFee;
+            if (stdDisplay) stdDisplay.textContent = formatNumber(stdFee) + 'đ';
+            if (expDisplay) expDisplay.textContent = formatNumber(expFee) + 'đ';
+
+            updateTotal();
+
+        } catch (err) {
+            console.error("GHN Error:", err);
+            if (errorEl) {
+                errorEl.textContent = "⚠️ Không tính được phí ship tự động: " + err.message;
+                errorEl.style.display = 'block';
+            }
+            if (stdDisplay) stdDisplay.textContent = '25.000đ';
+            if (expDisplay) expDisplay.textContent = '50.000đ';
+        } finally {
+            if (loadingEl) loadingEl.style.display = 'none';
+        }
+    }
 
     // ==================== LOAD TỈNH/THÀNH PHỐ ====================
     function loadProvinces() {
         if (provinceLoading) provinceLoading.style.display = "block";
 
-        const provincesUrl = API_BASE + "/p/";
-        console.log("🔄 Loading provinces from:", provincesUrl);
-
-        fetch(provincesUrl)
+        fetch(API_BASE + "/p/")
             .then(res => {
-                console.log("📥 Response status:", res.status);
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
             })
             .then(provinces => {
-                console.log("✅ Loaded", provinces.length, "provinces");
-
                 provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành phố --</option>';
 
                 let selectedProvinceCode = null;
@@ -248,11 +388,9 @@
                     opt.textContent = p.name;
                     opt.dataset.code = p.code;
 
-                    // Tự động chọn tỉnh mặc định
                     if (defaultProvince && p.name === defaultProvince) {
                         opt.selected = true;
                         selectedProvinceCode = p.code;
-                        console.log("✅ Auto-selected province:", p.name);
                     }
 
                     provinceSelect.appendChild(opt);
@@ -261,13 +399,12 @@
                 provinceSelect.disabled = false;
                 if (provinceLoading) provinceLoading.style.display = "none";
 
-                // Nếu có tỉnh mặc định, load phường/xã
                 if (selectedProvinceCode) {
                     loadWards(selectedProvinceCode, defaultWard);
                 }
             })
             .catch(err => {
-                console.error("❌ Error loading provinces:", err);
+                console.error("Error loading provinces:", err);
                 alert("Không thể tải danh sách tỉnh/thành phố: " + err.message);
                 if (provinceLoading) {
                     provinceLoading.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Lỗi tải dữ liệu';
@@ -282,18 +419,12 @@
         wardSelect.disabled = true;
         if (wardLoading) wardLoading.style.display = "block";
 
-        const wardsUrl = API_BASE + "/p/" + provinceCode + "?depth=2";
-        console.log("🔄 Loading wards from:", wardsUrl);
-
-        fetch(wardsUrl)
+        fetch(API_BASE + "/p/" + provinceCode + "?depth=2")
             .then(res => {
-                console.log("📥 Response status:", res.status);
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
             })
             .then(data => {
-                console.log("✅ Wards data received");
-
                 let wards = [];
                 if (data.districts && Array.isArray(data.districts)) {
                     wards = data.districts;
@@ -303,8 +434,6 @@
                     wards = data;
                 }
 
-                console.log("📊 Found", wards.length, "wards");
-
                 wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
 
                 wards.forEach(w => {
@@ -313,10 +442,8 @@
                     opt.textContent = w.name;
                     opt.dataset.code = w.code;
 
-                    // Tự động chọn phường/xã mặc định
                     if (autoSelectWard && w.name === autoSelectWard) {
                         opt.selected = true;
-                        console.log("✅ Auto-selected ward:", w.name);
                     }
 
                     wardSelect.appendChild(opt);
@@ -324,9 +451,14 @@
 
                 wardSelect.disabled = false;
                 if (wardLoading) wardLoading.style.display = "none";
+
+                // Nếu có ward được auto-select → tính phí GHN luôn
+                if (autoSelectWard && wardSelect.value) {
+                    updateShippingFee();
+                }
             })
             .catch(err => {
-                console.error("❌ Error loading wards:", err);
+                console.error("Error loading wards:", err);
                 alert("Không thể tải danh sách phường/xã: " + err.message);
                 wardSelect.innerHTML = '<option value="">-- Lỗi tải dữ liệu --</option>';
                 if (wardLoading) {
@@ -341,14 +473,17 @@
         const selectedOption = this.options[this.selectedIndex];
         const code = selectedOption.dataset.code;
 
-        console.log("🔍 Province changed:", selectedOption.value);
-
         if (code) {
             loadWards(code);
         } else {
             wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
             wardSelect.disabled = true;
         }
+    });
+
+    // *** THÊM MỚI: trigger tính phí GHN khi chọn phường/xã ***
+    wardSelect.addEventListener("change", function() {
+        updateShippingFee();
     });
 
     // ==================== SHIPPING & POINTS ====================
@@ -371,7 +506,6 @@
 
         let pointsDiscount = 0;
         if (usePointsCheckbox && usePointsCheckbox.checked) {
-            // pointsDiscount = userPoints * 1000;
             pointsDiscount = userPoints;
         }
 
@@ -537,3 +671,4 @@
 
 </body>
 </html>
+
