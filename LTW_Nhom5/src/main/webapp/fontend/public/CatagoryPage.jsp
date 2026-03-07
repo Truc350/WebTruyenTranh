@@ -289,7 +289,7 @@
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
-                                                    ./g<c:if test="${comic.hasFlashSale}">
+                                                    <c:if test="${comic.hasFlashSale}">
                                                         <div class="flash-sale-badge-small">
                                                             <i class="fas fa-bolt"></i>Flash sale
                                                         </div>
