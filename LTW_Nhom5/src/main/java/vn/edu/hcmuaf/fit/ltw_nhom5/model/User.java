@@ -177,7 +177,7 @@ public class User implements Serializable {
         this.membershipLevel = membershipLevel;
     }
 
-    public boolean getIsActive() {  // ✅ Thêm "get" prefix
+    public boolean getIsActive() {
         return isActive;
     }
 

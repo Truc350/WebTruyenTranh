@@ -135,6 +135,144 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .social-float-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-toggle-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .social-toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .social-toggle-btn.open {
+            background: #fff;
+            transform: rotate(20deg);
+        }
+
+        .social-items {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        .social-items.open {
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .social-float-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: block;
+        }
+
+        .social-float-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .social-float-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Tooltip */
+        .social-float-btn {
+            position: relative;
+        }
+
+        .social-float-btn::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 54px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .social-float-btn:hover::before {
+            opacity: 1;
+        }
+    </style>
+
+    <div class="social-float-container">
+        <button class="social-toggle-btn" id="socialToggle" title="Liên hệ">
+            <img src="https://cdn-icons-png.flaticon.com/128/134/134718.png" alt="Contact"
+                 style="width:28px;height:28px;object-fit:contain;">
+        </button>
+        <div class="social-items" id="socialItems">
+            <a class="social-float-btn" href="https://zalo.me/0394158994" target="_blank" data-tooltip="Zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+            </a>
+            <a class="social-float-btn" href="https://www.facebook.com/share/1MVc1miHnd/" target="_blank" data-tooltip="Facebook">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook">
+            </a>
+            <a class="social-float-btn" href="https://www.instagram.com/comic.store/" target="_blank"
+               data-tooltip="Instagram">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const socialToggle = document.getElementById('socialToggle');
+        const socialItems = document.getElementById('socialItems');
+
+        socialToggle.addEventListener('click', () => {
+            socialToggle.classList.toggle('open');
+            socialItems.classList.toggle('open');
+        });
+
+        // Click ngoài thì đóng
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.social-float-container')) {
+                socialToggle.classList.remove('open');
+                socialItems.classList.remove('open');
+            }
+        });
+    </script>
 </header>
 
 <!-- SEARCH HISTORY SCRIPT -->
@@ -295,11 +433,11 @@
                     const formattedTime = n.formatted_date || '';
 
                     html += '<div class="header-noti-item ' + unreadClass + '" data-id="' + n.id + '">'
-                        +   '<div class="noti-icon">' + '</div>'
-                        +   '<div class="noti-content">'
-                        +     '<div class="noti-message">' + displayMessage + '</div>'
-                        +     '<div class="noti-time">' + formattedTime + '</div>'
-                        +   '</div>'
+                        + '<div class="noti-icon">' + '</div>'
+                        + '<div class="noti-content">'
+                        + '<div class="noti-message">' + displayMessage + '</div>'
+                        + '<div class="noti-time">' + formattedTime + '</div>'
+                        + '</div>'
                         + '</div>';
                 });
 
@@ -308,15 +446,15 @@
                 // Click thông báo → đánh dấu đã đọc
                 document.querySelectorAll('.header-noti-item').forEach(item => {
                     item.addEventListener('click', async function () {
-                            const id = this.dataset.id;
-                            try {
-                                await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
-                                    method: 'POST'
-                                });
-                            } catch (err) {
-                                console.error('Lỗi đánh dấu đã đọc:', err);
-                            }
-                            window.location.href = '${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp#noti-' + id;
+                        const id = this.dataset.id;
+                        try {
+                            await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
+                                method: 'POST'
+                            });
+                        } catch (err) {
+                            console.error('Lỗi đánh dấu đã đọc:', err);
+                        }
+                        window.location.href = '${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp#noti-' + id;
                     });
                 });
 
