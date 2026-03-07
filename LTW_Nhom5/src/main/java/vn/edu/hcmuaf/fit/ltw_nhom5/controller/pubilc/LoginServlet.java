@@ -46,16 +46,13 @@ public class LoginServlet extends HttpServlet {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
-
-                // 1️⃣ RESET SỐ LẦN ĐĂNG NHẬP THẤT BẠI VỀ 0
                 OrderViolationService.getInstance().resetLoginFailureCount(user.getId());
-                System.out.println("✅ [Login] Đăng nhập thành công - User: " + user.getUsername());
+                System.out.println("Đăng nhập thành công - User: " + user.getUsername());
 
                 // ===== BƯỚC 1: LẤY SESSION CŨ VÀ IN DEBUG =====
                 HttpSession oldSession = request.getSession(false);
                 if (oldSession != null) {
                     Cart oldCart = (Cart) oldSession.getAttribute("cart");
-                    System.out.println("===== SESSION CŨ =====");
                     System.out.println("Session ID cũ: " + oldSession.getId());
                     if (oldCart != null) {
                         System.out.println("Giỏ hàng cũ có: " + oldCart.getItems().size() + " sản phẩm");
@@ -63,20 +60,13 @@ public class LoginServlet extends HttpServlet {
                             System.out.println("  - " + item.getComic().getNameComics());
                         });
                     }
-                    // XÓA HẲN SESSION CŨ
-                    System.out.println("=> ĐANG XÓA SESSION CŨ...");
                     oldSession.invalidate();
-                    System.out.println("=> ĐÃ XÓA SESSION CŨ!");
                 }
 
-                // ===== BƯỚC 2: TẠO SESSION MỚI HOÀN TOÀN =====
                 HttpSession newSession = request.getSession(true); // true = tạo mới nếu chưa có
-                System.out.println("===== SESSION MỚI =====");
                 System.out.println("Session ID mới: " + newSession.getId());
 
-
 //                check admin
-                // ===== KIỂM TRA ADMIN (CÁCH TỐT HƠN) =====
                 boolean isAdmin = "ADMIN".equalsIgnoreCase(user.getRole());
 
                 if (isAdmin) {
@@ -91,9 +81,6 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                     return;
                 }
-
-                // ===== USER THƯỜNG =====
-                // Tạo giỏ hàng MỚI (TRỐNG)
                 Cart newCart = new Cart();
                 System.out.println("Giỏ hàng mới có: " + newCart.getItems().size() + " sản phẩm");
 
@@ -101,7 +88,6 @@ public class LoginServlet extends HttpServlet {
                 newSession.setAttribute("cart", newCart);
                 newSession.setAttribute("currentUser", user);
                 newSession.setAttribute("clearCartLocalStorage", true);
-                System.out.println("======================");
 
 
 //                request.getSession().setAttribute("currentUser", user);
@@ -122,25 +108,16 @@ public class LoginServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + "/home");
                 }
             } else {
-                // ========================================
-                // ❌ SAI MẬT KHẨU
-                // ========================================
-
-                // 1️⃣ TĂNG SỐ LẦN ĐĂNG NHẬP THẤT BẠI
                 OrderViolationService.getInstance().incrementLoginFailureCount(usernameOrEmail);
-                System.out.println("❌ [Login] Sai mật khẩu - User: " + usernameOrEmail);
+                System.out.println("Sai mật khẩu - User: " + usernameOrEmail);
 
-                // 2️⃣ KIỂM TRA VI PHẠM (nếu >= 5 lần sẽ thông báo admin)
                 OrderViolationService.getInstance().checkLoginFailureViolation(usernameOrEmail);
 
                 request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
                 request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
             }
         } else {
-            // ========================================
-            // ❌ KHÔNG TÌM THẤY USER
-            // ========================================
-            System.out.println("❌ [Login] Không tìm thấy user: " + usernameOrEmail);
+            System.out.println("Không tìm thấy user: " + usernameOrEmail);
             request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
         }

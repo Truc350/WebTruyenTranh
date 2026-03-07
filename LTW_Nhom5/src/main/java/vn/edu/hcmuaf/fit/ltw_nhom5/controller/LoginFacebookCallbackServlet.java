@@ -4,12 +4,19 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import org.json.JSONObject;
+import vn.edu.hcmuaf.fit.ltw_nhom5.config.FacebookConfig;
+import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
+import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Optional;
 
 /*
 fontend → Facebook → Servlet → Graph API → Session
@@ -18,72 +25,101 @@ fontend → Facebook → Servlet → Graph API → Session
 @WebServlet("/login-facebook-callback")
 public class LoginFacebookCallbackServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String code = request.getParameter("code");
+        if (code == null){
+            response.sendRedirect(request.getContextPath()+ "/login?error=Bạn đã hủy đăng nhập Facebook");
+            return;
+        }
         try {
-            String code = request.getParameter("code"); // Facebook gửi code về
-            if (code == null) {
-                response.getWriter().println("Code từ Facebook bị null hoặc user hủy login");
+            String accessToken = getAccessToken(code);
+
+            JSONObject fbUser = getFacebookUserInfo(accessToken);
+            String fbId = fbUser.getString("id");
+            String fbName = fbUser.getString("name");
+            String fbEmail = fbUser.optString("email", "");
+            UserDao userDao = UserDao.getInstance();
+            User user = findOrCreateUser(userDao, fbId,fbName, fbEmail);
+            if (user.getIsActive() == false || !user.getIsActive()){
+                response.sendRedirect(request.getContextPath()
+                        + "/login?error=Tài khoản của bạn đã bị khóa");
                 return;
             }
-
-            // Bước 1: Đổi code lấy access token
-            String clientId = System.getenv("FACEBOOK_APP_ID");
-            String clientSecret = System.getenv("FACEBOOK_APP_SECRET");
-            String redirectUri = "http://localhost:8080/LTW_Nhom5/login-facebook-callback";
-
-
-            String tokenUrl = "https://graph.facebook.com/v19.0/oauth/access_token"
-                    + "?client_id=" + clientId
-                    + "&redirect_uri=" + redirectUri
-                    + "&client_secret=" + clientSecret
-                    + "&code=" + code;
-
-            URL url = new URL(tokenUrl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            br.close();
-
-            JSONObject tokenJson = new JSONObject(sb.toString());
-            String accessToken = tokenJson.getString("access_token");
-
-            // Bước 2: Dùng access token lấy thông tin user
-            String userUrl = "https://graph.facebook.com/me?fields=id,name,email&access_token=" + accessToken;
-            URL userURL = new URL(userUrl);
-            HttpURLConnection userConn = (HttpURLConnection) userURL.openConnection();
-            userConn.setRequestMethod("GET");
-
-            BufferedReader brUser = new BufferedReader(new InputStreamReader(userConn.getInputStream()));
-            StringBuilder userSb = new StringBuilder();
-            while ((line = brUser.readLine()) != null) userSb.append(line);
-            brUser.close();
-
-            JSONObject userJson = new JSONObject(userSb.toString());
-
-            // Lưu thông tin user vào session
-            request.getSession().setAttribute("fbId", userJson.getString("id"));
-            request.getSession().setAttribute("name", userJson.getString("name"));
-            request.getSession().setAttribute("email", userJson.optString("email", ""));
-
-            // Redirect về trang chính
-            response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
-
+            HttpSession session = request.getSession();
+            session.setAttribute("user",   user);
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("role",   user.getRole());
+            if ("admin".equalsIgnoreCase(user.getRole())){
+                response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            }else {
+                response.sendRedirect(request.getContextPath() + "/fontend/public/homePage.jsp");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                response.getWriter().println("Lỗi: " + e.getMessage());
-            } catch (Exception ex) {
-            }
+            response.sendRedirect(request.getContextPath()
+                    + "/login?error=Đăng nhập Facebook thất bại, vui lòng thử lại");
         }
 
     }
 
+    private JSONObject getFacebookUserInfo(String accessToken) throws Exception {
+        String url = "https://graph.facebook.com/me"
+                + "?fields=id,name,email"
+                + "&access_token=" + accessToken;
+        return new JSONObject(httpGet(url));
+    }
+
+    private User findOrCreateUser(UserDao userDao, String fbId, String fbName, String fbEmail) {
+        if (!fbEmail.isEmpty()) {
+            Optional<User> existing = userDao.findByEmail(fbEmail);
+            if (existing.isPresent()) {
+                return existing.get(); // Tài khoản đã tồn tại thif đăng nhập luôn
+            }
+        }
+
+        Optional<User> byUserName = userDao.findByUsername("fb_" + fbId);
+        if (byUserName.isPresent()) {
+            return byUserName.get();
+        }
+//        chua co tai khoan thi tao
+        User newUser = new User();
+        newUser.setUsername("fb_" + fbId);
+        newUser.setEmail(fbEmail.isEmpty() ? fbId + "@facebook.com" : fbEmail);
+        newUser.setFullName(fbName);
+        newUser.setPasswordHash("");
+        userDao.insert(newUser);
+        return userDao.findByUsername("fb_" + fbId)
+                .orElseThrow(() -> new RuntimeException("Lỗi tạo tài khoản Facebook"));
+    }
+
+    private String  getAccessToken(String accessToken) throws Exception  {
+        String url = "https://graph.facebook.com/v19.0/oauth/access_token"
+                + "?client_id="     + FacebookConfig.getAppId()
+                + "&redirect_uri="  + URLEncoder.encode(FacebookConfig.getRedirectUri(), "UTF-8")
+                + "&client_secret=" + FacebookConfig.getAppSecret()
+                + "&code="          + accessToken;
+
+        JSONObject json = new JSONObject(httpGet(url));
+        return json.getString("access_token");
+    }
+
+    private String httpGet(String urlStr) throws Exception  {
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(5000);
+
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), "UTF-8"))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) sb.append(line);
+            return sb.toString();
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        doGet(request, response);
     }
 }

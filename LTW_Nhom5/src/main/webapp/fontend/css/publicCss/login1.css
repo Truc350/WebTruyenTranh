@@ -148,6 +148,7 @@ button:hover {
 
 .facebook {
     background: #0276DA;
+    border: 1px solid #ddd;
 }
 
 /* Error message */
