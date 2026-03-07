@@ -122,7 +122,6 @@
 
 
             <div class="actions-btn">
-                <%--                Thêm vào giỏ và Mua ngay--%>
                 <c:choose>
                     <c:when test="${comic.stockQuantity == 0}">
                         <button class="btn add-to-cart" disabled style="background-color: #ccc; cursor: not-allowed;">
@@ -136,7 +135,7 @@
                         <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1">
                             <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                         </a>
-                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1&buyNow=true" id="buy-now-link">
+                        <a href="${pageContext.request.contextPath}/checkout?comicId=${comic.id}&quantity=1" id="buy-now-link">
                             <button class="btn buy-now">Mua ngay</button>
                         </a>
                     </c:otherwise>
@@ -189,17 +188,6 @@
                     </p>
                     </c:if>
                 </div>
-
-                <%--                <div class="line1">--%>
-<%--                    <c:if test="${not empty comic.publisher}">--%>
-<%--                        <p>Nhà xuất bản:<strong> ${comic.publisher}</strong></p>--%>
-<%--                    </c:if>--%>
-<%--                </div>--%>
-<%--                <div class="line2">--%>
-<%--                    <c:if test="${not empty comic.author}">--%>
-<%--                        <p>Tác giả:<strong> ${comic.author}</strong></p>--%>
-<%--                    </c:if>--%>
-<%--                </div>--%>
             </div>
 
             <p class="daban">Đã bán ${totalSell}</p>
@@ -216,11 +204,7 @@
             </div>
             <div class="line4">
                 <c:choose>
-                    <%-- Có Flash Sale --%>
                     <c:when test="${comic.hasFlashSale}">
-                        <%--                        <div class="flash-sale-badge-detail-page">--%>
-                        <%--                            <i class="fas fa-bolt"></i> FLASH SALE--%>
-                        <%--                        </div>--%>
                         <p id="giamdagiam">
                             <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/> đ
                         </p>
@@ -232,7 +216,6 @@
                         </p>
                     </c:when>
 
-                    <%-- Có discount thường (không phải Flash Sale) --%>
                     <c:when test="${comic.hasAnyDiscount() and not comic.hasFlashSale}">
                         <p id="giamdagiam">
                             <fmt:formatNumber value="${comic.finalPrice}" pattern="#,###"/> đ
@@ -245,7 +228,6 @@
                         </p>
                     </c:when>
 
-                    <%-- Không có giảm giá --%>
                     <c:otherwise>
                         <p id="giamdagiam">
                             <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
@@ -277,11 +259,11 @@
                 <p>Số lượng: </p>
                 <div class="quantity-control">
                     <button type="button" class="quantity-btn minus-btn">
-                        <i class="fas fa-minus" id="btn-vol"></i>
+                        <i class="fas fa-minus" id="btn-vol1"></i>
                     </button>
                     <span id="quantity-display">1</span>
                     <button type="button" class="quantity-btn plus-btn">
-                        <i class="fas fa-plus" id="btn-vol"></i>
+                        <i class="fas fa-plus" id="btn-vol2"></i>
                     </button>
                 </div>
             </div>
@@ -338,9 +320,6 @@
                                             <p class="original-price">
                                                 <fmt:formatNumber value="${relatedComic.price}" pattern="#,###"/> đ
                                             </p>
-<%--                                            <span class="discount-badge">--%>
-<%--                                        -<fmt:formatNumber value="${relatedComic.flashSaleDiscount}" pattern="#"/>%--%>
-<%--                                    </span>--%>
                                         </div>
                                     </c:when>
                                     <c:when test="${relatedComic.hasDiscount()}">
@@ -379,7 +358,6 @@
 
 
 
-<%--            Popup cho Author --%>
 <div id="authorPopup" class="info-popup" style="display: none;">
     <div class="popup-overlay"></div>
     <div class="popup-content">
@@ -393,7 +371,6 @@
     </div>
 </div>
 
-<%--           Popup cho Publisher--%>
 <div id="publisherPopup" class="info-popup" style="display: none;">
     <div class="popup-overlay"></div>
     <div class="popup-content">
@@ -408,9 +385,7 @@
 </div>
 
 
-<!-- phàn này đánh giá -->
 <div class="rating-container">
-    <!-- Cột trái -->
     <div class="rating-left">
         <h3>Đánh giá sản phẩm</h3>
 
@@ -456,7 +431,6 @@
 
 </div>
 
-<!-- lời comment -->
 <div class="comment">
 
     <div class="review-tabs">
@@ -513,15 +487,13 @@
     </div>
 </div>
 
-<%--<--Modal xem ảnh phóng to -->--%>
 <div id="imageModal" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <img class="image-modal-content" id="modalImage">
 </div>
 </div>
 
-<!-- phần này gợi ý cho bạn -->
-<!-- phần này gợi ý cho bạn -->
+
 <div class="container-slider">
     <div id="slider-suggestions">
         <div class="suggest">
@@ -530,14 +502,12 @@
 
         <c:choose>
             <c:when test="${not empty suggestedComics}">
-                <%-- Chia thành 3 hàng, mỗi hàng 8 sản phẩm --%>
                 <c:forEach var="row" begin="0" end="2" step="1">
                     <c:set var="startIndex" value="${row * 8}"/>
                     <c:set var="endIndex" value="${row * 8 + 7}"/>
 
                     <c:if test="${startIndex < suggestedComics.size()}">
                         <div class="product-slider" data-row="${row}">
-                            <!-- Mũi tên trái -->
                             <button class="arrow prev" type="button" aria-label="Previous">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
@@ -549,7 +519,6 @@
                                                end="${endIndex > suggestedComics.size() - 1 ? suggestedComics.size() - 1 : endIndex}">
                                         <div class="product-item">
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${suggested.id}">
-                                                <!-- Flash Sale Badge -->
                                                 <c:if test="${suggested.hasFlashSale}">
                                                     <div class="flash-sale-badge-small">
                                                         <i class="fas fa-bolt"></i>
@@ -561,7 +530,6 @@
                                                 <img src="${suggested.thumbnailUrl}" alt="${suggested.nameComics}">
                                                 <p class="product-name">${suggested.nameComics}</p>
 
-                                                <!-- Hiển thị giá với Flash Sale -->
                                                 <c:choose>
                                                     <c:when test="${suggested.hasFlashSale}">
                                                         <div class="price-wrapper">
@@ -604,7 +572,6 @@
                                 </div>
                             </div>
 
-                            <!-- Mũi tên phải -->
                             <button class="arrow next" type="button" aria-label="Next">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
@@ -631,62 +598,48 @@
 </script>
 
 
-<%--tác giả + nhà  xuất bản--%>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const contextPath = '${pageContext.request.contextPath}';
 
-        console.log('🟢 Script loaded, contextPath:', contextPath);
-
-        // ========== XỬ LÝ AUTHOR POPUP ==========
         const authorLinks = document.querySelectorAll('.author-link');
-        console.log('📌 Found author links:', authorLinks.length);
 
         authorLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 const authorName = this.getAttribute('data-author');
-                console.log('🔵 Author clicked:', authorName);
                 showInfoPopup('author', authorName);
             });
         });
 
-        // ========== XỬ LÝ PUBLISHER POPUP ==========
         const publisherLinks = document.querySelectorAll('.publisher-link');
-        console.log('📌 Found publisher links:', publisherLinks.length);
 
         publisherLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 const publisherName = this.getAttribute('data-publisher');
-                console.log('🔵 Publisher clicked:', publisherName);
                 showInfoPopup('publisher', publisherName);
             });
         });
 
-        // ========== ĐÓNG POPUP ==========
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('popup-close') ||
                 e.target.classList.contains('popup-overlay')) {
-                console.log('🔴 Closing popup');
                 document.querySelectorAll('.info-popup').forEach(popup => {
                     popup.style.display = 'none';
                 });
             }
         });
 
-        // ========== HIỂN THỊ POPUP CHUNG ==========
         function showInfoPopup(type, name) {
 
-            console.log('🟢 showInfoPopup called:', type, name);
 
             const popupId = type === 'author' ? 'authorPopup' : 'publisherPopup';
             const popup = document.getElementById(popupId);
 
             if (!popup) {
-                console.error('❌ Popup not found:', popupId);
                 return;
             }
 
@@ -698,29 +651,19 @@
             body.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div>';
             popup.style.display = 'flex';
 
-            // ✅ DÙNG URL TUYỆT ĐỐI
             const contextPath = window.contextPath || '';
             const protocol = window.location.protocol;
             const host = window.location.host;
 
-            // Tạo URL đầy đủ
             const url = protocol + '//' + host + contextPath + '/author-publisher-info?type=' +
                 encodeURIComponent(type) + '&name=' + encodeURIComponent(name);
 
-            console.log('📡 FULL URL:', url);
-            console.log('📡 Protocol:', protocol);
-            console.log('📡 Host:', host);
-            console.log('📡 Context Path:', contextPath);
-
             fetch(url)
                 .then(res => {
-                    console.log('📡 Response status:', res.status);
-                    console.log('📡 Response URL:', res.url);
-                    console.log('📡 Content-Type:', res.headers.get('content-type'));
+
 
                     if (!res.ok) {
                         return res.text().then(text => {
-                            console.error('❌ Response body:', text);
                             throw new Error('HTTP ' + res.status + ': ' + text.substring(0, 100));
                         });
                     }
@@ -728,7 +671,6 @@
                     const contentType = res.headers.get('content-type');
                     if (!contentType || !contentType.includes('application/json')) {
                         return res.text().then(text => {
-                            console.error('❌ Not JSON, got:', text.substring(0, 200));
                             throw new Error('Response is not JSON');
                         });
                     }
@@ -736,7 +678,6 @@
                     return res.json();
                 })
                 .then(data => {
-                    console.log('📦 Data received:', data);
 
                     if (data.success && Array.isArray(data.comics) && data.comics.length > 0) {
                         renderComics(body, data, typeText);
@@ -745,12 +686,10 @@
                     }
                 })
                 .catch(err => {
-                    console.error('❌ Fetch error:', err);
                     body.innerHTML = '<div class="loading" style="color: #e74c3c;">Lỗi: ' + err.message + '</div>';
                 });
         }
 
-        // ========== RENDER DANH SÁCH TRUYỆN ==========
         function renderComics(container, data, typeText) {
 
             const entityName = data.authorName || data.publisherName;
@@ -777,7 +716,7 @@
                     + comic.nameComics +
                     '</div>' +
                     (comic.seriesName
-                        ? '<div class="comic-card-series">📚 ' + comic.seriesName + '</div>'
+                        ? '<div class="comic-card-series"> ' + comic.seriesName + '</div>'
                         : '') +
                     '<div class="comic-card-price">' +
                     formatPrice(comic.price) + ' đ' +
@@ -824,18 +763,16 @@
         function updateCartLinks() {
             const contextPath = window.contextPath || '';
 
-            // Update "Thêm vào giỏ"
             const addToCartLink = document.getElementById('add-to-cart-link');
             if (addToCartLink) {
                 addToCartLink.setAttribute('href',
                     contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity);
             }
 
-            // ✅ Update "Mua ngay"
             const buyNowLink = document.getElementById('buy-now-link');
             if (buyNowLink) {
                 buyNowLink.setAttribute('href',
-                    contextPath + '/cart?action=add&comicId=' + comicId + '&quantity=' + currentQuantity + '&buyNow=true');
+                    contextPath + '/checkout?comicId=' + comicId + '&quantity=' + currentQuantity);
             }
         }
 
@@ -983,68 +920,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const heartLabel = document.querySelector('.heart-toggle');
-        const checkbox = heartLabel.querySelector('input[type="checkbox"]');
-        const comicId = ${comic.id}; // Lấy ID từ JSP
-
-        if (!heartLabel) return;
-
-        // 1. Load trạng thái yêu thích khi trang được mở
-        fetch('${pageContext.request.contextPath}/WishlistServlet?comic_id=' + comicId, {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                checkbox.checked = data.inWishlist;
-            })
-            .catch(() => {
-                checkbox.checked = false;
-            });
-
-        // 2. Khi click vào trái tim
-        heartLabel.addEventListener('click', function (e) {
-            // Ngăn click liên tục
-            if (heartLabel.classList.contains('loading')) return;
-            heartLabel.classList.add('loading');
-
-            const willBeChecked = !checkbox.checked;
-            const action = willBeChecked ? 'add' : 'remove';
-
-            fetch('${pageContext.request.contextPath}/WishlistServlet', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                credentials: 'include',
-                body: 'action=' + action + '&comic_id=' + comicId
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        checkbox.checked = willBeChecked;
-                        alert(data.message);
-
-                        // Cập nhật số lượng yêu thích trên header (nếu có phần hiển thị)
-                        const wishCountEl = document.querySelector('.wishlist-count'); // ví dụ class trên header
-                        if (wishCountEl) wishCountEl.textContent = data.count;
-                    } else {
-                        alert(data.message);
-                        // Không thay đổi trạng thái nếu lỗi
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Lỗi kết nối, vui lòng thử lại');
-                })
-                .finally(() => {
-                    heartLabel.classList.remove('loading');
-                });
-        });
-    });
-</script>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const heartLabel = document.querySelector('.heart-toggle');
         const checkbox = heartLabel ? heartLabel.querySelector('input[type="checkbox"]') : null;
 
         if (!heartLabel || !checkbox) {
@@ -1102,9 +977,7 @@
                         updateWishlistCount(data.count);
                     } else {
                         if (data.message.includes('đăng nhập')) {
-                            if (confirm(data.message + '. Chuyển đến trang đăng nhập?')) {
-                                window.location.href = '${pageContext.request.contextPath}/login';
-                            }
+                            showLoginPopup();
                         } else {
                             showToast(data.message, 'error');
                         }
@@ -1123,18 +996,71 @@
 
     function showToast(message, type = 'success') {
         const oldToast = document.querySelector('.wishlist-toast');
-        if (oldToast) oldToast.remove();
+        if (oldToast) {
+            oldToast.classList.remove('show');
+            setTimeout(() => oldToast.remove(), 300);
+        }
 
         const toast = document.createElement('div');
         toast.className = 'wishlist-toast ' + type;
         toast.textContent = message;
         document.body.appendChild(toast);
 
-        setTimeout(() => toast.classList.add('show'), 10);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => toast.classList.add('show'));
+        });
+
         setTimeout(() => {
             toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
+            setTimeout(() => toast.remove(), 400);
         }, 3000);
+    }
+
+    function showLoginPopup() {
+        const old = document.querySelector('.login-popup-overlay');
+        if (old) old.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'login-popup-overlay';
+        overlay.innerHTML = `
+        <div class="login-popup-box">
+            <h3>Bạn chưa đăng nhập</h3>
+            <p>Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.</p>
+            <div class="login-popup-actions">
+                <button class="btn-cancel">Hủy</button>
+                <a href="${pageContext.request.contextPath}/login" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                </a>
+            </div>
+        </div>
+    `;
+
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => overlay.classList.add('show'));
+        });
+
+        overlay.querySelector('.btn-cancel').addEventListener('click', () => {
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.remove(), 300);
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('show');
+                setTimeout(() => overlay.remove(), 300);
+            }
+        });
+
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.classList.remove('show');
+                setTimeout(() => overlay.remove(), 300);
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     }
 
     function updateWishlistCount(count) {

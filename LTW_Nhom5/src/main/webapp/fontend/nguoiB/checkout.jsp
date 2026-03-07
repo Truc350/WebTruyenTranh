@@ -118,12 +118,14 @@
 
                     <label>
                         <input type="radio" name="shipping" value="standard" data-fee="25000" checked>
-                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">Đang tải...</span>
+                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">25.000đ</span>
                     </label><br>
                     <label>
                         <input type="radio" name="shipping" value="express" data-fee="50000">
-                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">Đang tải...</span>
+                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">50.000đ</span>
                     </label>
+
+                    <input type="hidden" name="shippingFee" id="hiddenShippingFee" value="25000">
                 </section>
 
                 <section class="payment">
@@ -590,6 +592,9 @@
         const selectedShipping = document.querySelector('input[name="shipping"]:checked');
         const shippingFee = selectedShipping ? parseInt(selectedShipping.dataset.fee) || 0 : 0;
 
+        const hiddenFee = document.getElementById('hiddenShippingFee');
+        if (hiddenFee) hiddenFee.value = shippingFee;
+
         let pointsDiscount = 0;
         if (usePointsCheckbox?.checked) pointsDiscount = userPoints;
 
@@ -706,16 +711,12 @@
     }
 
     window.addEventListener('DOMContentLoaded', function () {
-        const errorMsg = '${orderError}';
-        if (errorMsg && errorMsg.trim() !== '' && errorMsg !== 'null') {
-            alert(errorMsg);
-            <% session.removeAttribute("orderError"); %>
-        }
-        const successMsg = '${orderSuccess}';
-        if (successMsg && successMsg.trim() !== '' && successMsg !== 'null') {
-            showSuccessPopup(successMsg);
-            <% session.removeAttribute("orderSuccess"); %>
-        }
+        <c:if test="${not empty orderError}">
+        alert('<c:out value="${orderError}"/>');
+        </c:if>
+        <c:if test="${not empty orderSuccess}">
+        showSuccessPopup('<c:out value="${orderSuccess}"/>');
+        </c:if>
     });
 
     function showSuccessPopup(message) {

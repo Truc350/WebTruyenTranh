@@ -11,7 +11,6 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
 //import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +37,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/cart");
-        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
+//        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
     }
 
     @Override
@@ -141,7 +140,8 @@ public class OrderServlet extends HttpServlet {
             }
 
             // Tính toán giá
-            double subtotal = (Double) session.getAttribute("checkoutSubtotal");
+            Object subtotalObj = session.getAttribute("checkoutSubtotal");
+            double subtotal = subtotalObj != null ? ((Double) subtotalObj) : 0.0;
             double shippingFee = "express".equals(shippingMethod) ? 50000 : 25000;
 
             // Tính điểm giảm giá (1 điểm = 1.000đ)
@@ -205,7 +205,6 @@ public class OrderServlet extends HttpServlet {
             order.setRecipientName(recipientName.trim());
             order.setShippingPhone(shippingPhone.trim());
 
-            // Địa chỉ đầy đủ để hiển thị
             // Địa chỉ đầy đủ
             String fullAddress = streetAddress.trim() + ", " + ward.trim();
             if (district != null && !district.trim().isEmpty()) {
@@ -233,7 +232,6 @@ public class OrderServlet extends HttpServlet {
             int orderId = orderDAO.createOrderWithPayment(order, orderItems, paymentMethod);
 
             if (orderId > 0) {
-                // ✅ NẾU LÀ E-WALLET, CẬP NHẬT TRANSACTION ID VÀ PAYMENT STATUS
                 if ("ewallet".equals(paymentMethod)) {
                     PaymentDAO paymentDAO = new PaymentDAO(JdbiConnector.get());
 
@@ -251,8 +249,6 @@ public class OrderServlet extends HttpServlet {
                                 "Completed",  // Trạng thái: Đã thanh toán
                                 transactionId
                         );
-
-                        System.out.println("✅ E-wallet payment completed. Transaction ID: " + transactionId);
                     }
                 }
                 // Xóa các sản phẩm đã đặt khỏi giỏ hàng
@@ -267,7 +263,7 @@ public class OrderServlet extends HttpServlet {
                         purchasedComicIds.add(item.getComic().getId());
                     }
 
-                    // XÓA TỪ CART OBJECT (quan trọng!)
+                    // XÓA TỪ CART OBJECT
                     for (Integer comicId : purchasedComicIds) {
                         cart.removeItem(comicId);
                     }
@@ -303,27 +299,24 @@ public class OrderServlet extends HttpServlet {
                     pointTransactionDAO.createTransaction(transaction);
                 }
 
-                // Xóa thông tin checkout khỏi session
                 session.removeAttribute("selectedItems");
                 session.removeAttribute("checkoutSubtotal");
                 session.removeAttribute("shippingFee");
                 session.removeAttribute("checkoutTotal");
 
-                // Lưu thông tin đơn hàng để hiển thị trang success
                 session.setAttribute("orderId", orderId);
                 session.setAttribute("orderTotal", totalAmount);
                 session.setAttribute("orderPaymentMethod", paymentMethod);
                 session.setAttribute("orderSuccess", "Đặt hàng thành công!");
 
                 // Chuyển đến trang thành công
-                response.sendRedirect(request.getContextPath() + "/home");
+                response.sendRedirect(request.getContextPath() + "/order-success");
             } else {
                 session.setAttribute("orderError", "Đặt hàng thất bại. Vui lòng thử lại!");
                 response.sendRedirect(request.getContextPath() + "/checkout");
             }
 
         } catch (RuntimeException e) {
-            // Lỗi từ transaction (ví dụ: không đủ hàng)
             e.printStackTrace();
             session.setAttribute("orderError", e.getMessage());
             response.sendRedirect(request.getContextPath() + "/checkout");
@@ -335,16 +328,11 @@ public class OrderServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Tạo transaction ID ngẫu nhiên cho thanh toán online
-     * Format: TXN + timestamp + random
-     * Ví dụ: TXN1737446789ABC123
-     */
+
     private String generateTransactionId() {
         String prefix = "TXN";
-        long timestamp = System.currentTimeMillis() / 1000; // Unix timestamp
+        long timestamp = System.currentTimeMillis() / 1000;
 
-        // Tạo 6 ký tự ngẫu nhiên (A-Z, 0-9)
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         StringBuilder randomPart = new StringBuilder();
         java.util.Random random = new java.util.Random();

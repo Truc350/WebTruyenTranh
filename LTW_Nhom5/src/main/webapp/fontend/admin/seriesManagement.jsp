@@ -133,23 +133,7 @@
 
                 <tr class="pagination-row">
                     <td colspan="10">
-                        <div class="pagination">
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <c:set var="pageUrl"
-                                       value="${pageContext.request.contextPath}/admin/SeriesManagement?page=${i}"/>
-                                <c:if test="${not empty param.filter}">
-                                    <c:set var="pageUrl" value="${pageUrl}&filter=${param.filter}"/>
-                                </c:if>
-                                <c:if test="${not empty keyword}">
-                                    <c:set var="pageUrl" value="${pageUrl}&keyword=${keyword}"/>
-                                </c:if>
-
-                                <button class="page-btn ${i == currentPage ? 'active' : ''}"
-                                        onclick="window.location.href='${pageUrl}'">
-                                        ${i}
-                                </button>
-                            </c:forEach>
-                        </div>
+                        <div class="pagination" id="paginationContainer"></div>
                     </td>
                 </tr>
                 </tbody>
@@ -157,7 +141,6 @@
         </div>
     </div>
 
-    <!-- POPUP THÊM SERIES -->
     <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data"
           id="addSeriesForm">
         <div class="modal-overlay" id="addSeriesModal">
@@ -400,7 +383,6 @@
             })
                 .then(res => {
                     if (res.ok) {
-                        console.log("✅ Cập nhật thành công series " + seriesId + " → " + action);
                         location.reload();
                     } else {
                         console.error("❌ Có lỗi khi cập nhật");
@@ -410,7 +392,6 @@
         });
     });
 
-    // Active sidebar
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
@@ -420,7 +401,6 @@
         });
     });
 </script>
-<%--xoa seri--%>
 <script>
     let deleteSeriesId = null;
 
@@ -429,47 +409,31 @@
             deleteSeriesId = this.getAttribute("data-id");
             const seriesName = this.getAttribute("data-name");
 
-            console.log("✅ Delete button clicked");
-            console.log("📝 Series ID:", deleteSeriesId);
-            console.log("📝 Series Name:", seriesName);
-
-            // Hiển thị tên series trong popup
             document.getElementById("deleteSeriesName").textContent = seriesName;
 
-            // Mở popup xác nhận
             document.getElementById("deleteConfirmModal").style.display = "flex";
         });
     });
 
-    // Xử lý khi click nút XÁC NHẬN XÓA trong popup
     document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
         if (!deleteSeriesId) {
             alert("❌ Không tìm thấy ID series cần xóa!");
             return;
         }
 
-        console.log("🗑️ Confirming delete for ID:", deleteSeriesId);
-
-        // Hiển thị loading
         this.disabled = true;
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
 
-        // Tạo URL xóa
         const deleteUrl = '${pageContext.request.contextPath}/DeleteSeriesServlet?id=' + deleteSeriesId;
-        console.log("🔗 Redirecting to:", deleteUrl);
 
-        // Chuyển hướng
         window.location.href = deleteUrl;
     });
 
-    // Xử lý khi click nút HÙY XÓA
     document.getElementById("cancelDeleteBtn").addEventListener("click", function () {
-        console.log("❌ Delete cancelled");
         document.getElementById("deleteConfirmModal").style.display = "none";
         deleteSeriesId = null;
     });
 
-    // Đóng popup khi click ra ngoài
     document.getElementById("deleteConfirmModal").addEventListener("click", function (e) {
         if (e.target === this) {
             this.style.display = "none";
@@ -477,7 +441,6 @@
         }
     });
 
-    // Đóng popup khi click nền
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) {
@@ -486,34 +449,81 @@
         });
     });
 </script>
-<%--xu ly loc--%>
+
 <script>
-    // ========== XỬ LÝ BỘ LỌC ==========
     document.addEventListener('DOMContentLoaded', function () {
         const filterSelect = document.getElementById('visibilityFilter');
-
         if (filterSelect) {
             filterSelect.addEventListener('change', function () {
                 const filterValue = this.value;
                 const urlParams = new URLSearchParams(window.location.search);
-
-                // Giữ keyword nếu có
                 const keyword = urlParams.get('keyword');
-
-                // Tạo URL mới
                 let newUrl = '${pageContext.request.contextPath}/admin/SeriesManagement?filter=' + filterValue;
-
                 if (keyword) {
                     newUrl += '&keyword=' + encodeURIComponent(keyword);
                 }
-
-                console.log('🔍 Applying filter:', filterValue);
-                console.log('🔗 Redirecting to:', newUrl);
-
                 window.location.href = newUrl;
             });
         }
     });
 </script>
+
+<script>
+    (function () {
+        var PAGE_GROUP_SIZE = 3;
+        var TOTAL_PAGES = parseInt('${totalPages}') || 1;
+        var CURRENT_PAGE = parseInt('${currentPage}') || 1;
+        var BASE_URL = '${pageContext.request.contextPath}/admin/SeriesManagement';
+        var FILTER = '${param.filter}';
+        var KEYWORD = '${keyword}';
+
+        function buildUrl(page) {
+            var url = BASE_URL + '?page=' + page;
+            if (FILTER) url += '&filter=' + encodeURIComponent(FILTER);
+            if (KEYWORD) url += '&keyword=' + encodeURIComponent(KEYWORD);
+            return url;
+        }
+
+        function renderPagination() {
+            var container = document.getElementById('paginationContainer');
+            var row = document.getElementById('paginationRow');
+            if (!container) return;
+
+            if (TOTAL_PAGES <= 1) {
+                if (row) row.style.display = 'none';
+                return;
+            }
+
+            var currentGroup = Math.floor((CURRENT_PAGE - 1) / PAGE_GROUP_SIZE);
+            var startPage = currentGroup * PAGE_GROUP_SIZE + 1;
+            var endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, TOTAL_PAGES);
+            var hasPrev = startPage > 1;
+            var hasNext = endPage < TOTAL_PAGES;
+            var html = '';
+
+            if (hasPrev) {
+                html += '<button class="page-btn nav-btn" onclick="window.location.href=\'' + buildUrl(startPage - 1) + '\'">&laquo;</button>';
+            } else {
+                html += '<button class="page-btn nav-btn" disabled>&laquo;</button>';
+            }
+
+            for (var i = startPage; i <= endPage; i++) {
+                var activeClass = (i === CURRENT_PAGE) ? ' active' : '';
+                html += '<button class="page-btn' + activeClass + '" onclick="window.location.href=\'' + buildUrl(i) + '\'">' + i + '</button>';
+            }
+
+            if (hasNext) {
+                html += '<button class="page-btn nav-btn" onclick="window.location.href=\'' + buildUrl(endPage + 1) + '\'">&raquo;</button>';
+            } else {
+                html += '<button class="page-btn nav-btn" disabled>&raquo;</button>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderPagination);
+    })();
+</script>
+
 </body>
 </html>
