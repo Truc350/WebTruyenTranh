@@ -698,16 +698,12 @@
     }
 
     window.addEventListener('DOMContentLoaded', function () {
-        const errorMsg = '${orderError}';
-        if (errorMsg && errorMsg.trim() !== '' && errorMsg !== 'null') {
-            alert(errorMsg);
-            <% session.removeAttribute("orderError"); %>
-        }
-        const successMsg = '${orderSuccess}';
-        if (successMsg && successMsg.trim() !== '' && successMsg !== 'null') {
-            showSuccessPopup(successMsg);
-            <% session.removeAttribute("orderSuccess"); %>
-        }
+        <c:if test="${not empty orderError}">
+        alert('<c:out value="${orderError}"/>');
+        </c:if>
+        <c:if test="${not empty orderSuccess}">
+        showSuccessPopup('<c:out value="${orderSuccess}"/>');
+        </c:if>
     });
 
     function showSuccessPopup(message) {

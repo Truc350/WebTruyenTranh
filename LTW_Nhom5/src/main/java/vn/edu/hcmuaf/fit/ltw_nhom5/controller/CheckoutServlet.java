@@ -109,6 +109,17 @@ public class CheckoutServlet extends HttpServlet {
             request.setAttribute("defaultStreetAddress", address.getStreetAddress());
         }
 
+        String orderSuccess = (String) session.getAttribute("orderSuccess");
+        if (orderSuccess != null) {
+            request.setAttribute("orderSuccess", orderSuccess);
+            session.removeAttribute("orderSuccess");
+        }
+        String orderError = (String) session.getAttribute("orderError");
+        if (orderError != null) {
+            request.setAttribute("orderError", orderError);
+            session.removeAttribute("orderError");
+        }
+
         request.getRequestDispatcher("/fontend/nguoiB/checkout.jsp").forward(request, response);
     }
 
