@@ -150,11 +150,11 @@
                                     <h3>${comic.name}</h3>
                                     <p class="flash-price">
                                         Giá khuyến mãi:
-                                        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/>₫
+                                        <fmt:formatNumber value="${comic.flash_price}" pattern="#,###"/>đ
                                     </p>
                                     <p class="original-price">
                                         Giá gốc:
-                                        <s><fmt:formatNumber value="${comic.original_price}" pattern="#,###"/>₫</s>
+                                        <s><fmt:formatNumber value="${comic.original_price}" pattern="#,###"/>đ</s>
                                     </p>
                                     <p class="discount-tag">
                                         Giảm giá:
@@ -228,12 +228,12 @@
                                             <%-- Giá sau giảm (Flash Sale hoặc discount thường) --%>
                                             <p class="product-price">
                                                 <fmt:formatNumber value="${comic.finalPrice}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/>đ
                                             </p>
                                             <%-- Giá gốc + % giảm --%>
                                             <p class="original-price">
                                                 <s><fmt:formatNumber value="${comic.price}"
-                                                                     pattern="#,###"/>₫</s>
+                                                                     pattern="#,###"/>đ</s>
                                                 <span class="discount-badge ${comic.hasFlashSale ? 'flash-badge' : ''}">
                 -<fmt:formatNumber value="${comic.finalDiscountPercent}"
                                    pattern="#" maxFractionDigits="0"/>%
@@ -244,7 +244,7 @@
                                             <%-- Không có giảm giá --%>
                                             <p class="product-price">
                                                 <fmt:formatNumber value="${comic.price}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/>đ
                                             </p>
                                         </c:otherwise>
                                     </c:choose>
@@ -295,11 +295,11 @@
                                                 <p class="price-top">
                                     <span class="current-price">
                                         <fmt:formatNumber value="${comic.finalPrice}"
-                                                          pattern="#,###"/>₫
+                                                          pattern="#,###"/>đ
                                     </span>
                                                     <span class="original-price-top">
                                         <s><fmt:formatNumber value="${comic.price}"
-                                                             pattern="#,###"/>₫</s>
+                                                             pattern="#,###"/>đ</s>
                                     </span>
                                                 </p>
                                                 <p class="discount-top ${comic.hasFlashSale ? 'flash-discount' : ''}">
@@ -310,7 +310,7 @@
                                             <c:otherwise>
                                                 <p class="price-top">
                                                     <fmt:formatNumber value="${comic.price}"
-                                                                      pattern="#,###"/>₫
+                                                                      pattern="#,###"/>đ
                                                 </p>
                                             </c:otherwise>
                                         </c:choose>
@@ -360,11 +360,11 @@
                                         <c:when test="${comic.hasAnyDiscount()}">
                                             <p class="sale-price">
                                                 <fmt:formatNumber value="${comic.finalPrice}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/>đ
                                             </p>
                                             <div class="sale-item">
                                                 <p><s><fmt:formatNumber value="${comic.price}"
-                                                                        pattern="#,###"/>₫</s></p>
+                                                                        pattern="#,###"/>đ</s></p>
                                                 <div class="sale-percent ${comic.hasFlashSale ? 'flash-percent' : ''}">
                                                     -<fmt:formatNumber value="${comic.finalDiscountPercent}"
                                                                        pattern="#" maxFractionDigits="0"/>%
@@ -374,7 +374,7 @@
                                         <c:otherwise>
                                             <p class="sale-price">
                                                 <fmt:formatNumber value="${comic.price}"
-                                                                  pattern="#,###"/>₫
+                                                                  pattern="#,###"/>đ
                                             </p>
                                         </c:otherwise>
                                     </c:choose>

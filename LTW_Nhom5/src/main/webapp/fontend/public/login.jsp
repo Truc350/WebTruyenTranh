@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -13,45 +14,39 @@
     <!-- Left 2/3 -->
     <div class="login-section">
         <div class="login-box">
-           <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return validateLogin()">
-               <h2>Đăng nhập</h2>
+            <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return validateLogin()">
+                <h2>Đăng nhập</h2>
+                <%-- chỗ này của clinet js--%>
+                <p id="clientError"
+                   style="color:red; font-size:14px; font-weight: bold; text-align:center; display:none;">
+                </p>
 
-<%--               chỗ này của clinet js--%>
-               <p id="clientError"
-                  style="color:red; font-size:14px; font-weight: bold; text-align:center; display:none;">
-               </p>
+                <c:if test="${not empty error}">
+                    <h3 id="serverError"
+                        style="color:red; font-size:14px; text-align:center;">
+                            ${error}
+                    </h3>
+                </c:if>
 
-               <c:if test="${not empty error}">
-                   <h3 id="serverError"
-                       style="color:red; font-size:14px; text-align:center;">
-                           ${error}
-                   </h3>
-               </c:if>
+                <label>Nhập Email hoặc Tên đăng nhập:</label>
+                <input id="username" placeholder="Email hoặc tên đăng nhập" name="username">
 
-
-           <%--               <c:if test="${not empty error}">--%>
-<%--               <h3 style="color : red; font-size: 14px; display: flex; justify-content: center; ">${error}</h3>--%>
-<%--               </c:if>--%>
-
-               <label>Nhập Email hoặc Tên đăng nhập:</label>
-               <input id="username"  placeholder="Email hoặc tên đăng nhập" name="username">
-
-               <label>Nhập mật khẩu:</label>
-               <div class="password-box">
-                   <input id="password" type="password" placeholder="Mật khẩu" name="password">
-                   <span class="eye">
+                <label>Nhập mật khẩu:</label>
+                <div class="password-box">
+                    <input id="password" type="password" placeholder="Mật khẩu" name="password">
+                    <span class="eye">
                     <img src="${pageContext.request.contextPath}/img/eyePassword.png" id="toggleEye" alt="eye">
                 </span>
-               </div>
+                </div>
 
-               <div class="links">
-                   <a href="${pageContext.request.contextPath}/RegisterServlet">Đăng ký tài khoản</a>
-                   <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu</a>
-               </div>
+                <div class="links">
+                    <a href="${pageContext.request.contextPath}/RegisterServlet">Đăng ký tài khoản</a>
+                    <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu</a>
+                </div>
 
                 <button type="submit" value="Đăng nhập">Đăng nhập</button>
 
-           </form>
+            </form>
             <p class="or">Hoặc đăng nhập bằng</p>
 
             <div class="social">
@@ -60,11 +55,14 @@
                      alt="Google"
                      style="cursor: pointer;">
 
+                <img class="facebook" id="facebookLogin"
+                     src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg"
+                     alt="Facebook"
+                     style="cursor: pointer; width: 40px; height: 40px;">
             </div>
 
         </div>
     </div>
-
     <!-- Right 1/3 -->
     <div class="image-section">
         <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
@@ -100,13 +98,15 @@
     const facebookBtn = document.getElementById("facebookLogin");
     if (facebookBtn) {
         facebookBtn.addEventListener("click", () => {
-            const clientId = "YOUR_FACEBOOK_APP_ID"; // Lấy từ env hoặc config
+            const clientId   = "4112997315630876";
             const redirectUri = encodeURIComponent("http://localhost:8080/LTW_Nhom5/login-facebook-callback");
-            const scope = encodeURIComponent("email,public_profile");
+            const scope       = encodeURIComponent("email,public_profile");
 
-            const facebookAuthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code`;
-
-            window.location.href = facebookAuthUrl;
+            window.location.href = `https://www.facebook.com/v19.0/dialog/oauth`
+                + `?client_id=${clientId}`
+                + `&redirect_uri=${redirectUri}`
+                + `&scope=${scope}`
+                + `&response_type=code`;
         });
     }
 </script>

@@ -57,6 +57,7 @@
                         <select name="province" id="province" required>
                             <option value="">-- Chọn Tỉnh/Thành phố --</option>
                         </select>
+                        <input type="hidden" id="provinceHidden" name="provinceHidden">
                         <div id="provinceLoading" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách tỉnh/thành phố...
                         </div>
@@ -68,6 +69,7 @@
                         <select name="district" id="district" required disabled>
                             <option value="">-- Chọn Quận/Huyện --</option>
                         </select>
+                        <input type="hidden" id="districtHidden" name="districtHidden">
                         <div id="districtLoading" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách quận/huyện...
                         </div>
@@ -79,6 +81,8 @@
                         <select name="ward" id="ward" required disabled>
                             <option value="">-- Chọn Phường/Xã --</option>
                         </select>
+                        <input type="hidden" id="wardHidden" name="wardHidden">
+
                         <div id="wardLoading" class="loading-indicator" style="display: none;">
                             <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách phường/xã...
                         </div>
@@ -241,21 +245,20 @@
     const GHN_TOKEN = "bb67bb35-1796-11f1-b2c0-1ab1fd37f3b7";
     const GHN_SHOP_ID = 6302109;
     const FROM_DISTRICT = 3695;
-    const GHN_STANDARD = 2;
-    const GHN_EXPRESS = 1;
 
     let ghnDistrictId = null;
     let ghnWardCode = null;
-
-
     function normalize(name) {
+        if (!name) return '';
         return name.toLowerCase()
-            .replace(/^(phường|xã|thị trấn|quận|huyện|tỉnh|thành phố|tp\.?)\s+/i, '')
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/^(phường|ph\.|xã|thị trấn|tt\.|quận|q\.|huyện|h\.|tỉnh|thành phố|tp\.|city|province)\s*/i, '')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, ' ')
             .trim();
     }
-
     function fuzzyMatch(a, b) {
+        if (!a || !b) return false;
         const na = normalize(a), nb = normalize(b);
         return na === nb || na.includes(nb) || nb.includes(na);
     }
@@ -285,6 +288,17 @@
         return (await res.json()).data || [];
     }
 
+    async function getAvailableServices(fromDistrict, toDistrict) {
+        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services", {
+            method: "POST",
+            headers: {"Content-Type": "application/json", "Token": GHN_TOKEN},
+            body: JSON.stringify({shop_id: GHN_SHOP_ID, from_district: fromDistrict, to_district: toDistrict})
+        });
+        const json = await res.json();
+        if (json.code !== 200) throw new Error(json.message);
+        return json.data || [];
+    }
+
     async function calcFee(serviceId, toDistrict, toWard) {
         const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", {
             method: "POST",
@@ -299,49 +313,33 @@
                 to_district_id: toDistrict,
                 to_ward_code: toWard,
                 weight: 300,
-                insurance_value:  ${checkoutSubtotal}
+                insurance_value: ${checkoutSubtotal}
             })
         });
         const json = await res.json();
         if (json.code !== 200) throw new Error(json.message);
         return json.data.total;
     }
-    async function getAvailableServices(fromDistrict, toDistrict) {
-        const res = await fetch("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Token": GHN_TOKEN
-            },
-            body: JSON.stringify({
-                shop_id: GHN_SHOP_ID,
-                from_district: fromDistrict,
-                to_district: toDistrict
-            })
-        });
-        const json = await res.json();
-        if (json.code !== 200) throw new Error(json.message);
-        return json.data || [];
-    }
+
     async function updateShippingFee() {
         const provinceName = provinceSelect.options[provinceSelect.selectedIndex]?.text || '';
         const districtName = districtSelect.options[districtSelect.selectedIndex]?.text || '';
-        const wardName     = wardSelect.options[wardSelect.selectedIndex]?.text || '';
+        const wardName = wardSelect.options[wardSelect.selectedIndex]?.text || '';
 
         if (!provinceName || provinceName.startsWith('--') ||
             !districtName || districtName.startsWith('--') ||
-            !wardName     || wardName.startsWith('--')) return;
+            !wardName || wardName.startsWith('--')) return;
 
-        const loadingEl  = document.getElementById('shippingLoading');
-        const errorEl    = document.getElementById('shippingError');
+        const loadingEl = document.getElementById('shippingLoading');
+        const errorEl = document.getElementById('shippingError');
         const stdDisplay = document.getElementById('standardFeeDisplay');
         const expDisplay = document.getElementById('expressFeeDisplay');
-        const stdRadio   = document.querySelector('input[name="shipping"][value="standard"]');
-        const expRadio   = document.querySelector('input[name="shipping"][value="express"]');
+        const stdRadio = document.querySelector('input[name="shipping"][value="standard"]');
+        const expRadio = document.querySelector('input[name="shipping"][value="express"]');
 
         try {
             if (loadingEl) loadingEl.style.display = 'block';
-            if (errorEl)   errorEl.style.display   = 'none';
+            if (errorEl) errorEl.style.display = 'none';
 
             const ghnProvinces = await getGHNProvinces();
             const province = ghnProvinces.find(p => fuzzyMatch(p.ProvinceName, provinceName));
@@ -358,19 +356,12 @@
             ghnWardCode = ward.WardCode;
 
             const availableServices = await getAvailableServices(FROM_DISTRICT, ghnDistrictId);
-            console.log("Available services:", availableServices);
 
-            // GHN service_type_id: 2 = Hàng nhẹ (Tiêu chuẩn), 1 = Hỏa tốc, 5 = Chuyển phát nhanh
-            // Map theo short_name hoặc service_type_id
-            const stdService = availableServices.find(s =>
-                s.service_type_id === 2 || s.short_name?.toLowerCase().includes('chuẩn') || s.service_type_id === 5
-            );
-            const expService = availableServices.find(s =>
-                s.service_type_id === 1 || s.short_name?.toLowerCase().includes('tốc')
-            );
+            const stdService = availableServices.find(s => s.service_type_id === 2 || s.service_type_id === 5);
+            const expService = availableServices.find(s => s.service_type_id === 1);
 
-            //Tính phí cho từng service có sẵn
             let stdFee = null, expFee = null;
+
             if (stdService) {
                 try {
                     stdFee = await calcFee(stdService.service_id, ghnDistrictId, ghnWardCode);
@@ -394,10 +385,7 @@
             } else {
                 stdRadio.disabled = true;
                 if (stdDisplay) stdDisplay.textContent = 'Không khả dụng';
-                // Nếu standard đang được chọn mà không khả dụng → chuyển sang express
-                if (stdRadio.checked && expService && expFee !== null) {
-                    expRadio.checked = true;
-                }
+                if (stdRadio.checked && expFee !== null) expRadio.checked = true;
             }
 
             if (expFee !== null) {
@@ -414,7 +402,7 @@
         } catch (err) {
             console.error("GHN Error:", err);
             if (errorEl) {
-                errorEl.textContent = " Không tính được phí ship tự động: " + err.message;
+                errorEl.textContent = "Không tính được phí ship: " + err.message;
                 errorEl.style.display = 'block';
             }
             if (stdDisplay) stdDisplay.textContent = '25.000đ';
@@ -432,15 +420,18 @@
             const res = await fetch(API_BASE + "/p/");
             if (!res.ok) throw new Error("HTTP " + res.status);
             const provinces = await res.json();
+
             provinceSelect.innerHTML = '<option value="">-- Chọn Tỉnh/Thành phố --</option>';
             let autoSelectCode = null;
 
             provinces.forEach(p => {
                 const opt = document.createElement("option");
-                opt.value = p.code;        // lưu code để gọi API tiếp
+                opt.value = p.name;
+                opt.dataset.code = p.code;
                 opt.textContent = p.name;
-                opt.dataset.name = p.name;
-                if (defaultProvince && p.name === defaultProvince) {
+
+                // Dùng fuzzyMatch thay vì ===
+                if (defaultProvince && fuzzyMatch(p.name, defaultProvince)) {
                     opt.selected = true;
                     autoSelectCode = p.code;
                 }
@@ -448,6 +439,7 @@
             });
 
             provinceSelect.disabled = false;
+            console.log("Province auto-select code:", autoSelectCode, "| defaultProvince:", defaultProvince);
             if (autoSelectCode) loadDistricts(autoSelectCode, defaultDistrict);
 
         } catch (err) {
@@ -457,7 +449,6 @@
             if (provinceLoading) provinceLoading.style.display = "none";
         }
     }
-
 
     async function loadDistricts(provinceCode, autoSelectDistrict = '') {
         districtSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
@@ -475,19 +466,28 @@
             districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
             let autoSelectCode = null;
 
+            // Debug
+            console.log("defaultDistrict cần match:", autoSelectDistrict);
+            console.log("Danh sách huyện từ API:", districts.map(d => d.name));
+
             districts.forEach(d => {
                 const opt = document.createElement("option");
-                opt.value = d.code;
+                opt.value = d.name;
+                opt.dataset.code = d.code;
                 opt.textContent = d.name;
-                opt.dataset.name = d.name;
-                if (autoSelectDistrict && d.name === autoSelectDistrict) {
+
+                // Dùng fuzzyMatch thay vì === để chịu được sai khác tên
+                if (autoSelectDistrict && fuzzyMatch(d.name, autoSelectDistrict)) {
                     opt.selected = true;
                     autoSelectCode = d.code;
+                    // Đồng bộ lại value lưu DB thành tên đúng từ API
+                    opt.value = d.name;
                 }
                 districtSelect.appendChild(opt);
             });
 
             districtSelect.disabled = false;
+            console.log("Auto select district code:", autoSelectCode);
             if (autoSelectCode) loadWards(autoSelectCode, defaultWard);
 
         } catch (err) {
@@ -498,7 +498,6 @@
             if (districtLoading) districtLoading.style.display = "none";
         }
     }
-
 
     async function loadWards(districtCode, autoSelectWard = '') {
         wardSelect.innerHTML = '<option value="">-- Đang tải... --</option>';
@@ -513,12 +512,17 @@
 
             wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
 
+            // Debug
+            console.log("defaultWard cần match:", autoSelectWard);
+            console.log("Danh sách xã từ API:", wards.map(w => w.name));
+
             wards.forEach(w => {
                 const opt = document.createElement("option");
-                opt.value = w.code;
+                opt.value = w.name;
+                opt.dataset.code = w.code;
                 opt.textContent = w.name;
-                opt.dataset.name = w.name;
-                if (autoSelectWard && w.name === autoSelectWard) {
+
+                if (autoSelectWard && fuzzyMatch(w.name, autoSelectWard)) {
                     opt.selected = true;
                 }
                 wardSelect.appendChild(opt);
@@ -526,9 +530,11 @@
 
             wardSelect.disabled = false;
 
-            // Nếu ward được auto-select → tính GHN luôn
             if (autoSelectWard && wardSelect.value) {
+                console.log("Ward auto-selected:", wardSelect.value);
                 updateShippingFee();
+            } else {
+                console.warn("Không tìm thấy ward match với:", autoSelectWard);
             }
 
         } catch (err) {
@@ -540,9 +546,9 @@
         }
     }
 
-
     provinceSelect.addEventListener("change", function () {
-        const code = this.value;
+        document.getElementById('provinceHidden').value = this.value;
+        const code = this.options[this.selectedIndex]?.dataset.code;
         if (code) {
             loadDistricts(code);
         } else {
@@ -554,7 +560,8 @@
     });
 
     districtSelect.addEventListener("change", function () {
-        const code = this.value;
+        document.getElementById('districtHidden').value = this.value;
+        const code = this.options[this.selectedIndex]?.dataset.code;
         if (code) {
             loadWards(code);
         } else {
@@ -564,9 +571,9 @@
     });
 
     wardSelect.addEventListener("change", function () {
+        document.getElementById('wardHidden').value = this.value;
         if (this.value) updateShippingFee();
     });
-
 
     const shippingRadios = document.querySelectorAll('input[name="shipping"]');
     const usePointsCheckbox = document.getElementById('usePoints');
@@ -668,6 +675,8 @@
             } else {
                 checkoutBtn.disabled = true;
                 checkoutBtn.textContent = 'Đang xử lý...';
+                districtSelect.disabled = false;
+                wardSelect.disabled = false;
                 orderForm.submit();
             }
         });
@@ -682,6 +691,7 @@
             if (containerQrPopup) containerQrPopup.style.display = 'none';
         });
     }
+
     if (containerQrPopup) {
         containerQrPopup.addEventListener('click', function (e) {
             if (e.target === this || e.target.classList.contains('qr-backdrop')) {
@@ -689,10 +699,13 @@
             }
         });
     }
+
     if (confirmPaymentBtn) {
         confirmPaymentBtn.addEventListener('click', function () {
             this.disabled = true;
             this.textContent = 'Đang xử lý...';
+            districtSelect.disabled = false;
+            wardSelect.disabled = false;
             orderForm.submit();
         });
     }
@@ -709,23 +722,20 @@
     function showSuccessPopup(message) {
         const backdrop = document.createElement('div');
         backdrop.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
-        `;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); z-index: 10000;
+        display: flex; align-items: center; justify-content: center;
+    `;
         backdrop.innerHTML = `
-            <div style="background: white; border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
-                <div style="color: #28a745; font-size: 48px; margin-bottom: 15px;">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <h2 style="color: #333; font-size: 22px; margin-bottom: 10px;">Đặt hàng thành công!</h2>
-                <p style="color: #666; font-size: 15px; margin-bottom: 20px;">${message}</p>
-                <button onclick="this.closest('div').parentElement.remove()"
-                    style="background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600;">
-                    OK
-                </button>
-            </div>
-        `;
+        <div style="background: white; border-radius: 12px; padding: 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+            <h2 style="color: #333; font-size: 22px; margin-bottom: 10px;">Dat hang thanh cong!</h2>
+            <p style="color: #666; font-size: 15px; margin-bottom: 20px;">${message}</p>
+            <button onclick="this.closest('div').parentElement.remove()"
+                style="background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: 600;">
+                OK
+            </button>
+        </div>
+    `;
         document.body.appendChild(backdrop);
         setTimeout(() => backdrop.remove(), 5000);
     }
