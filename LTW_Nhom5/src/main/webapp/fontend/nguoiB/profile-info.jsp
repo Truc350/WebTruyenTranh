@@ -24,9 +24,32 @@
         if (message != null) {
     %>
     <script>
-        window.onload = function() {
-            alert("<%= message %>");
-        };
+        window.addEventListener('DOMContentLoaded', function () {
+            const overlay = document.createElement('div');
+            overlay.className = 'msg-overlay';
+            overlay.innerHTML =
+                '<div class="msg-popup">' +
+                '<div class="msg-popup-icon">✅</div>' +
+                '<h3>Thành công</h3>' +
+                '<p><%= message %></p>' +
+                '<button class="msg-btn-ok">OK</button>' +
+                '</div>';
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => overlay.classList.add('show'));
+
+            function closeMsg() {
+                overlay.classList.remove('show');
+                setTimeout(() => overlay.remove(), 250);
+            }
+
+            overlay.querySelector('.msg-btn-ok').addEventListener('click', closeMsg);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeMsg();
+            });
+            document.addEventListener('keydown', function esc(e) {
+                if (e.key === 'Escape') { document.removeEventListener('keydown', esc); closeMsg(); }
+            });
+        });
     </script>
     <%
         }

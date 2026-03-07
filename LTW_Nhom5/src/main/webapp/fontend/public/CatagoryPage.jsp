@@ -306,11 +306,11 @@
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
                                                     <!-- Badge Flash Sale -->
-                                                    ./g<c:if test="${comic.hasFlashSale}">
-                                                    <div class="flash-sale-badge-small">
-                                                        <i class="fas fa-bolt"></i>Flash sale
-                                                    </div>
-                                                </c:if>
+                                                    <c:if test="${comic.hasFlashSale}">
+                                                        <div class="flash-sale-badge-small">
+                                                            <i class="fas fa-bolt"></i>Flash sale
+                                                        </div>
+                                                    </c:if>
 
                                                     <img src="${comic.thumbnailUrl}"
                                                          alt="${comic.nameComics}"
