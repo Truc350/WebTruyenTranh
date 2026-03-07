@@ -172,9 +172,12 @@ public class OrderServlet extends HttpServlet {
             shippingAddress.setCreatedAt(LocalDate.now());
             shippingAddress.setUpdatedAt(LocalDate.now());
 
-            // Nếu đây là địa chỉ đầu tiên của user, đặt làm mặc định
+            boolean setAsDefault = "true".equals(request.getParameter("setDefaultAddress"));
+
+            // Nếu là địa chỉ đầu tiên, luôn set default dù user có tick hay không
             int addressCount = userShippingAddressDAO.countAddressesByUserId(user.getId());
-            shippingAddress.setDefault(addressCount == 0);
+            boolean shouldSetDefault = setAsDefault || addressCount == 0;
+            shippingAddress.setDefault(shouldSetDefault);
 
             // Kiểm tra địa chỉ đã tồn tại chưa
             Optional<UserShippingAddress> existingAddress =
@@ -184,8 +187,14 @@ public class OrderServlet extends HttpServlet {
             if (existingAddress.isPresent()) {
                 // Sử dụng địa chỉ đã có
                 shippingAddressId = existingAddress.get().getId();
+                // Nếu user tick "đặt làm mặc định" -> cập nhật lại
+                if (shouldSetDefault) {
+                    userShippingAddressDAO.setDefaultAddress(shippingAddressId, user.getId());
+                }
             } else {
-                // Tạo địa chỉ mới
+                if (shouldSetDefault) {
+                    userShippingAddressDAO.unsetAllDefaultAddresses(user.getId());
+                }
                 shippingAddressId = userShippingAddressDAO.createShippingAddress(shippingAddress);
 
                 if (shippingAddressId <= 0) {

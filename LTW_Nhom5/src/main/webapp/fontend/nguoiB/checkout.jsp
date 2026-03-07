@@ -466,10 +466,6 @@
             districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
             let autoSelectCode = null;
 
-            // Debug
-            console.log("defaultDistrict cần match:", autoSelectDistrict);
-            console.log("Danh sách huyện từ API:", districts.map(d => d.name));
-
             districts.forEach(d => {
                 const opt = document.createElement("option");
                 opt.value = d.name;
