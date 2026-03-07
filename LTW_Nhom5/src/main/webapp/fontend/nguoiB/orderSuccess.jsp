@@ -26,7 +26,7 @@
     <div class="icon"><i class="fas fa-check-circle"></i></div>
     <h2>Đặt hàng thành công!</h2>
     <p><%= orderSuccess %></p>
-    <a href="${pageContext.request.contextPath}/cart" class="btn">Về giỏ hàng</a>
+    <a href="${pageContext.request.contextPath}/order-history?filter=pending" class="btn">Xem giỏ hàng</a>
     <p class="countdown">Tự động chuyển sau <span id="sec">3</span> giây...</p>
 </div>
 
@@ -38,7 +38,7 @@
         secEl.textContent = s;
         if (s <= 0) {
             clearInterval(timer);
-            window.location.href = '${pageContext.request.contextPath}/cart';
+            window.location.href = '${pageContext.request.contextPath}/order-history?filter=pending';
         }
     }, 1000);
 </script>

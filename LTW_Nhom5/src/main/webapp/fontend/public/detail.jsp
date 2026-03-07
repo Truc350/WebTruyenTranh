@@ -920,68 +920,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const heartLabel = document.querySelector('.heart-toggle');
-        const checkbox = heartLabel.querySelector('input[type="checkbox"]');
-        const comicId = ${comic.id}; // Lấy ID từ JSP
-
-        if (!heartLabel) return;
-
-        // 1. Load trạng thái yêu thích khi trang được mở
-        fetch('${pageContext.request.contextPath}/WishlistServlet?comic_id=' + comicId, {
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                checkbox.checked = data.inWishlist;
-            })
-            .catch(() => {
-                checkbox.checked = false;
-            });
-
-        // 2. Khi click vào trái tim
-        heartLabel.addEventListener('click', function (e) {
-            // Ngăn click liên tục
-            if (heartLabel.classList.contains('loading')) return;
-            heartLabel.classList.add('loading');
-
-            const willBeChecked = !checkbox.checked;
-            const action = willBeChecked ? 'add' : 'remove';
-
-            fetch('${pageContext.request.contextPath}/WishlistServlet', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                credentials: 'include',
-                body: 'action=' + action + '&comic_id=' + comicId
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        checkbox.checked = willBeChecked;
-                        alert(data.message);
-
-                        // Cập nhật số lượng yêu thích trên header (nếu có phần hiển thị)
-                        const wishCountEl = document.querySelector('.wishlist-count'); // ví dụ class trên header
-                        if (wishCountEl) wishCountEl.textContent = data.count;
-                    } else {
-                        alert(data.message);
-                        // Không thay đổi trạng thái nếu lỗi
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Lỗi kết nối, vui lòng thử lại');
-                })
-                .finally(() => {
-                    heartLabel.classList.remove('loading');
-                });
-        });
-    });
-</script>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const heartLabel = document.querySelector('.heart-toggle');
         const checkbox = heartLabel ? heartLabel.querySelector('input[type="checkbox"]') : null;
 
         if (!heartLabel || !checkbox) {
@@ -1039,9 +977,7 @@
                         updateWishlistCount(data.count);
                     } else {
                         if (data.message.includes('đăng nhập')) {
-                            if (confirm(data.message + '. Chuyển đến trang đăng nhập?')) {
-                                window.location.href = '${pageContext.request.contextPath}/login';
-                            }
+                            showLoginPopup();
                         } else {
                             showToast(data.message, 'error');
                         }
@@ -1060,18 +996,71 @@
 
     function showToast(message, type = 'success') {
         const oldToast = document.querySelector('.wishlist-toast');
-        if (oldToast) oldToast.remove();
+        if (oldToast) {
+            oldToast.classList.remove('show');
+            setTimeout(() => oldToast.remove(), 300);
+        }
 
         const toast = document.createElement('div');
         toast.className = 'wishlist-toast ' + type;
         toast.textContent = message;
         document.body.appendChild(toast);
 
-        setTimeout(() => toast.classList.add('show'), 10);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => toast.classList.add('show'));
+        });
+
         setTimeout(() => {
             toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
+            setTimeout(() => toast.remove(), 400);
         }, 3000);
+    }
+
+    function showLoginPopup() {
+        const old = document.querySelector('.login-popup-overlay');
+        if (old) old.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'login-popup-overlay';
+        overlay.innerHTML = `
+        <div class="login-popup-box">
+            <h3>Bạn chưa đăng nhập</h3>
+            <p>Vui lòng đăng nhập để thêm sản phẩm vào danh sách yêu thích.</p>
+            <div class="login-popup-actions">
+                <button class="btn-cancel">Hủy</button>
+                <a href="${pageContext.request.contextPath}/login" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                </a>
+            </div>
+        </div>
+    `;
+
+        document.body.appendChild(overlay);
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => overlay.classList.add('show'));
+        });
+
+        overlay.querySelector('.btn-cancel').addEventListener('click', () => {
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.remove(), 300);
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('show');
+                setTimeout(() => overlay.remove(), 300);
+            }
+        });
+
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.classList.remove('show');
+                setTimeout(() => overlay.remove(), 300);
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     }
 
     function updateWishlistCount(count) {
