@@ -100,6 +100,15 @@ public class CheckoutServlet extends HttpServlet {
 
         if (defaultAddress.isPresent()) {
             UserShippingAddress address = defaultAddress.get();
+
+            if (address.getDistrict() == null || address.getDistrict().trim().isEmpty()) {
+                List<UserShippingAddress> allAddresses = shippingAddressDAO.getAddressesByUserId(user.getId());
+                UserShippingAddress addressWithDistrict = allAddresses.stream()
+                        .filter(a -> a.getDistrict() != null && !a.getDistrict().trim().isEmpty())
+                        .findFirst()
+                        .orElse(address);
+                address = addressWithDistrict;
+            }
             request.setAttribute("defaultAddress", address);
             request.setAttribute("defaultRecipientName", address.getRecipientName());
             request.setAttribute("defaultPhone", address.getPhone());
