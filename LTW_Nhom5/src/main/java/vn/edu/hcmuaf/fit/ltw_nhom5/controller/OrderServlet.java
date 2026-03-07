@@ -11,7 +11,6 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
 //import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +37,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/cart");
-        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
+//        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
     }
 
     @Override
@@ -141,7 +140,8 @@ public class OrderServlet extends HttpServlet {
             }
 
             // Tính toán giá
-            double subtotal = (Double) session.getAttribute("checkoutSubtotal");
+            Object subtotalObj = session.getAttribute("checkoutSubtotal");
+            double subtotal = subtotalObj != null ? ((Double) subtotalObj) : 0.0;
             double shippingFee = "express".equals(shippingMethod) ? 50000 : 25000;
 
             // Tính điểm giảm giá (1 điểm = 1.000đ)

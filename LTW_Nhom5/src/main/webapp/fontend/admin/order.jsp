@@ -12,12 +12,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 </head>
 <body>
 
 <script>
-    // Định nghĩa BASE_URL để dùng cho tất cả fetch
     const BASE_URL = '${pageContext.request.contextPath}';
 </script>
 
@@ -498,8 +496,8 @@
                     <span class="label">Lý do từ chối:</span>
                     <span class="value" id="detailRejectReason"
                           style="color:#dc2626; font-weight:500;">
-        -
-    </span>
+
+                    </span>
                 </div>
 
 
@@ -628,27 +626,19 @@
             </div>
         </div>
 
+        <div class="toast-notification" id="toastMsg">
+            <i class="fas fa-check-circle" id="toastIcon"></i>
+            <span id="toastText"></span>
+        </div>
+
     </div>
 
 
 </div>
 
 <script src="${pageContext.request.contextPath}/js/orderManagement.js"></script>
-<!--xu li chuyen tab-->
 
-<!--khi nhan huy don => hiện form dien-->
-<script>
-    document.querySelectorAll(".cancel-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelector(".cancel-popup").style.display = "flex";
-        });
-    });
-    document.querySelector(".close-popup").addEventListener("click", () => {
-        document.querySelector(".cancel-popup").style.display = "none";
-    });
-</script>
 
-<!--CHUỂN TRANG GIŨA CÁC TAB-->
 <script>
     const tabs = document.querySelectorAll(".tab-item");
     const tabContents = document.querySelectorAll(".tab-content");
@@ -661,33 +651,28 @@
             c.style.display = (i === index) ? "" : "none";
         });
 
-        // LƯU TAB HIỆN TẠI VÀO LOCALSTORAGE
         if (saveState && typeof saveCurrentTab === 'function') {
             saveCurrentTab(index);
         }
     }
 
-    // Gắn sự kiện click cho tab
     tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
-            showTab(index, true); // Lưu state khi user click
+            showTab(index, true);
         });
     });
 
-    // KHÔI PHỤC TAB ĐÃ LƯU HOẶC MẶC ĐỊNH TAB 0
     document.addEventListener('DOMContentLoaded', function () {
-        let tabToShow = 0; // Mặc định tab đầu tiên
+        let tabToShow = 0;
 
         // Kiểm tra có tab đã lưu không
         if (typeof getSavedTab === 'function') {
             const savedTab = getSavedTab();
             if (savedTab !== null && savedTab >= 0 && savedTab < tabs.length) {
                 tabToShow = savedTab;
-                console.log('📌 Khôi phục tab đã lưu:', tabToShow);
             }
         }
 
-        // Hiển thị tab (không lưu lại để tránh loop)
         showTab(tabToShow, false);
     });
 </script>
@@ -716,7 +701,6 @@
         btn.addEventListener('click', function () {
             const orderId = this.dataset.orderId;
 
-            if (confirm('Xác nhận đơn hàng này?')) {
                 fetch(BASE_URL + '/admin/orders', {
                     method: 'POST',
                     headers: {
@@ -724,30 +708,24 @@
                     },
                     body: 'action=confirm&orderId=' + orderId
                 })
-                    // .then(response => response.json())
                     .then(async response => {
                         const text = await response.text();
 
                         try {
                             return JSON.parse(text);
                         } catch (e) {
-                            console.error("❌ Server không trả JSON:", text);
                             throw new Error("Server response không hợp lệ");
                         }
                     })
                     .then(data => {
                         if (data.success) {
-                            alert(data.message);
-                            location.reload();
+                            showToast(data.message || 'Xác nhận đơn hàng thành công!');
+                            setTimeout(() => location.reload(), 1500);
                         } else {
-                            alert('Lỗi: ' + data.message);
+                            showToast('Lỗi: ' + data.message, 'error');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Lỗi kết nối: ' + error);
-                    });
-            }
+                    .catch(error => showToast('Lỗi kết nối: ' + error, 'error'));
         });
     });
 
@@ -810,39 +788,31 @@
 <script>
     // XÁC NHẬN TẤT CẢ ĐơN HÀNG TRONG TAB CHỜ XÁC NHẬN
     document.querySelector('.confirm-all-btn').addEventListener('click', function () {
-
-        if (!confirm('Bạn có chắc muốn xác nhận TẤT CẢ đơn hàng đang chờ xác nhận?')) {
-            return;
-        }
-
-        // Hiển thị loading
         this.disabled = true;
         this.textContent = 'Đang xử lý...';
-
-        const btn = this; // Lưu reference để dùng trong callback
+        const btn = this;
 
         // Gửi request xác nhận tất cả
         fetch(BASE_URL + '/admin/orders', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: 'action=confirmAll'
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(data.message || 'Đã xác nhận thành công tất cả đơn hàng!');
-                    location.reload();
+                    showToast(data.message || 'Đã xác nhận thành công tất cả đơn hàng!');
+                    setTimeout(() => location.reload(), 1500);
                 } else {
-                    alert('Lỗi: ' + (data.message || data.error));
+                    showToast('Lỗi: ' + (data.message || data.error), 'error');
                     btn.disabled = false;
                     btn.textContent = 'Xác nhận tất cả';
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Lỗi kết nối: ' + error);
+                showToast('Lỗi kết nối: ' + error, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Xác nhận tất cả';
             });
@@ -857,7 +827,7 @@
             const orderId = this.dataset.orderId;
 
             if (confirm('Xác nhận đã giao cho đơn vị vận chuyển?')) {
-                fetch(`${BASE_URL}/admin/orders`, {  // ✅ DÙNG BASE_URL
+                fetch(`${BASE_URL}/admin/orders`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -1227,7 +1197,6 @@
             this.style.color = 'white';
         };
 
-        // ✅ TẠO IMG ELEMENT
         const img = document.createElement('img');
         img.src = imageUrl;
         img.alt = 'Ảnh minh chứng';
@@ -1238,14 +1207,11 @@
         display: block;
     `;
 
-        // ✅ XỬ LÝ KHI LOAD ẢNH THÀNH CÔNG
         img.onload = function () {
             console.log('✅ Image viewer loaded successfully');
         };
 
-        // ✅ XỬ LÝ KHI LOAD ẢNH BỊ LỖI
         img.onerror = function () {
-            console.error('❌ Failed to load image in viewer:', imageUrl);
 
             // Hiển thị thông báo lỗi thay vì alert
             content.innerHTML = `
@@ -1261,20 +1227,17 @@
         `;
         };
 
-        // ✅ GHÉP CÁC PHẦN TỬ LẠI
         content.appendChild(closeBtn);
         content.appendChild(img);
         viewer.appendChild(content);
         document.body.appendChild(viewer);
 
-        // ✅ CLICK OUTSIDE ĐỂ ĐÓNG
         viewer.addEventListener('click', function (e) {
             if (e.target === viewer) {
                 viewer.remove();
             }
         });
 
-        // ✅ ESC ĐỂ ĐÓNG
         const closeOnEsc = function (e) {
             if (e.key === 'Escape' && document.body.contains(viewer)) {
                 viewer.remove();
@@ -1284,12 +1247,10 @@
         document.addEventListener('keydown', closeOnEsc);
     };
 
-    // ✅ ĐÓNG POPUP CHI TIẾT
     window.closeReturnPopup = function () {
         document.getElementById("returnPopup").style.display = "none";
     };
 
-    // ✅ ĐÓNG POPUP KHI CLICK BÊN NGOÀI
     window.addEventListener('click', function (event) {
         const returnPopup = document.getElementById('returnPopup');
         if (event.target === returnPopup) {
@@ -1297,8 +1258,6 @@
         }
     });
 
-    // ✅ DEBUG: KIỂM TRA BASE_URL
-    console.log('🔧 BASE_URL:', BASE_URL);
 
     /* --- TÌM KIẾM ĐƠN HOÀN TRẢ --- */
     let searchTimeout = null;
@@ -1309,7 +1268,6 @@
         // Debounce: Chờ 500ms sau khi user ngừng gõ
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function () {
-            console.log('🔍 Searching returns with keyword: "' + keyword + '"');
 
             fetch(BASE_URL + '/admin/orders', {
                 method: 'POST',
@@ -1320,7 +1278,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('✅ Search response:', data);
                     if (data.success) {
                         updateReturnTable(data.returns);
                     } else {
@@ -1391,7 +1348,6 @@
                 'data-date="' + (returnOrder.formatted_return_date || '') + '">' +
                 'Xem</button></td>';
 
-            // ✅ NÚT HÀNH ĐỘNG - HIỂN THỊ ĐÚNG THEO STATUS
             html += '<td class="action-buttons">';
             if (isPending) {
                 html += '<button class="btn-refund" data-return-id="' + returnOrder.return_id + '" ' +
@@ -1409,10 +1365,8 @@
             tbody.insertBefore(row, tbody.querySelector('.pagination-row-return'));
         });
 
-        console.log('✅ Table updated with ' + returns.length + ' results');
     }
 
-    // Đóng popup khi click outside
     window.addEventListener('click', function (event) {
         const rejectPopup = document.getElementById('rejectPopup');
         if (event.target === rejectPopup) {
@@ -1424,6 +1378,22 @@
             closeReturnPopup();
         }
     });
+</script>
+
+<script>
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastMsg');
+        const icon = document.getElementById('toastIcon');
+        const text = document.getElementById('toastText');
+
+        text.textContent = message;
+        toast.className = 'toast-notification show' + (type === 'error' ? ' error' : '');
+        icon.className = type === 'error' ? 'fas fa-times-circle' : 'fas fa-check-circle';
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
 </script>
 </body>
 </html>

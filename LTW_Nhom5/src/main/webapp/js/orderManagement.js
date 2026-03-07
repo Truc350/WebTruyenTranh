@@ -1,10 +1,3 @@
-// =====================================================================
-// PAGINATION ĐỘNG - TỰ ĐỘNG TÍNH SỐ TRANG DỰA TRÊN SỐ LƯỢNG ĐƠN HÀNG
-// =====================================================================
-
-/**
- * Helper function: Kiểm tra xem row có phải là pagination row không
- */
 function isPaginationRow(row) {
     const classList = row.classList;
     return classList.contains('pagination-row') ||
@@ -14,13 +7,53 @@ function isPaginationRow(row) {
         classList.contains('pagination-row-return') ||
         classList.contains('pagination-row-cancelled');
 }
-/**
- * Hàm khởi tạo phân trang động cho một tab
- * @param {string} tbodyId - ID của tbody
- * @param {string} paginationId - ID của container phân trang
- * @param {string} pageButtonClass - Class của nút trang
- * @param {number} rowsPerPage - Số dòng mỗi trang (mặc định 5)
- */
+
+function renderPaginationButtons(paginationContainer, totalPages, currentPage, onPageClick) {
+    paginationContainer.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    const windowSize = 3;
+
+    const groupIndex = Math.floor((currentPage - 1) / windowSize);
+    const groupStart = groupIndex * windowSize + 1;          // trang đầu nhóm
+    const groupEnd   = Math.min(groupStart + windowSize - 1, totalPages);
+
+    // Nút «
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn prev-btn';
+    prevBtn.innerHTML = '&#171;';
+    prevBtn.disabled = groupStart === 1;
+    prevBtn.addEventListener('click', function () {
+        if (currentPage > 1) onPageClick(groupStart - 1);
+    });
+    paginationContainer.appendChild(prevBtn);
+
+    // Các nút số trang
+    for (let i = groupStart; i <= groupEnd; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+        pageBtn.dataset.page = i;
+        pageBtn.textContent = i;
+        const pageIndex = i;
+        pageBtn.addEventListener('click', function () {
+            onPageClick(pageIndex);
+        });
+        paginationContainer.appendChild(pageBtn);
+    }
+
+    // Nút »
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn next-btn';
+    nextBtn.innerHTML = '&#187;';
+    nextBtn.disabled = groupEnd === totalPages;
+    nextBtn.addEventListener('click', function () {
+        if (currentPage < totalPages) onPageClick(currentPage + 1);
+    });
+    paginationContainer.appendChild(nextBtn);
+}
+
+
 function initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPage = 5) {
     const tbody = document.getElementById(tbodyId);
     const paginationContainer = document.getElementById(paginationId);
@@ -30,69 +63,35 @@ function initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPa
         return;
     }
 
-    // ✅ SỬ DỤNG isPaginationRow() thay vì hardcode
     const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !isPaginationRow(r));
-
-    // Tính số trang cần thiết
     const totalPages = Math.ceil(allRows.length / rowsPerPage);
 
-    console.log(`📊 ${tbodyId}: ${allRows.length} rows, ${totalPages} pages`);
+    let currentPage = 1;
 
-    // Xóa các nút trang cũ
-    paginationContainer.innerHTML = '';
-
-    // Tạo các nút trang mới
-    for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.className = `page-btn ${pageButtonClass}`;
-        pageBtn.dataset.page = i;
-        pageBtn.textContent = i;
-
-        // Thêm sự kiện click
-        pageBtn.addEventListener('click', function () {
-            showPage(i, allRows, paginationContainer, pageButtonClass, rowsPerPage);
-        });
-
-        paginationContainer.appendChild(pageBtn);
+    function goToPage(page) {
+        currentPage = page;
+        showPage(page, allRows, rowsPerPage);
+        renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
     }
 
-    // Hiển thị trang đầu tiên
+    renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
+
     if (totalPages > 0) {
-        showPage(1, allRows, paginationContainer, pageButtonClass, rowsPerPage);
+        showPage(1, allRows, rowsPerPage);
     }
 }
-/**
- * Hiển thị một trang cụ thể
- */
-function showPage(pageNumber, rows, paginationContainer, pageButtonClass, rowsPerPage) {
+
+
+function showPage(pageNumber, rows, rowsPerPage) {
     const start = (pageNumber - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
-    // Ẩn/hiện các dòng
     rows.forEach((row, idx) => {
         row.style.display = (idx >= start && idx < end) ? '' : 'none';
-    });
-
-    // Cập nhật trạng thái active của các nút
-    const pageButtons = paginationContainer.querySelectorAll(`.${pageButtonClass}`);
-    pageButtons.forEach(btn => btn.classList.remove('active'));
-
-    const currentBtn = paginationContainer.querySelector(`[data-page="${pageNumber}"]`);
-    if (currentBtn) {
-        currentBtn.classList.add('active');
-    }
+    })
 }
 
-// =====================================================================
-// CHỨC NĂNG XÁC NHẬN ĐÃ GIAO CHO ĐVVC (TAB CHỜ LẤY HÀNG)
-// =====================================================================
-
-/**
- * Khởi tạo sự kiện cho các nút "Xác nhận đã giao cho ĐVVC"
- */
 function initShipConfirmButtons() {
     document.querySelectorAll('.ship-confirm-btn').forEach(btn => {
-        // Xóa event listener cũ (nếu có) để tránh duplicate
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
 
@@ -104,20 +103,16 @@ function initShipConfirmButtons() {
     });
 }
 
-/**
- * Xử lý xác nhận giao cho ĐVVC
- */
+
 function handleShipConfirm(orderId, buttonElement) {
     if (!confirm('Xác nhận đã giao đơn hàng này cho đơn vị vận chuyển?')) {
         return;
     }
 
-    // Hiển thị loading trên button
     const originalText = buttonElement.textContent;
     buttonElement.disabled = true;
     buttonElement.textContent = 'Đang xử lý...';
 
-    // Gửi request
     fetch(`${BASE_URL}/admin/orders`, {
         method: 'POST',
         headers: {
@@ -128,18 +123,12 @@ function handleShipConfirm(orderId, buttonElement) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Hiển thị thông báo thành công
                 showNotification('success', data.message || 'Đã xác nhận giao cho ĐVVC thành công!');
-
-                // Reload trang sau 1 giây để cập nhật dữ liệu
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
             } else {
-                // Hiển thị lỗi
                 showNotification('error', 'Lỗi: ' + (data.message || data.error));
-
-                // Khôi phục button
                 buttonElement.disabled = false;
                 buttonElement.textContent = originalText;
             }
@@ -147,18 +136,12 @@ function handleShipConfirm(orderId, buttonElement) {
         .catch(error => {
             console.error('Error:', error);
             showNotification('error', 'Lỗi kết nối: ' + error);
-
-            // Khôi phục button
             buttonElement.disabled = false;
             buttonElement.textContent = originalText;
         });
 }
 
-/**
- * Hiển thị notification
- */
 function showNotification(type, message) {
-    // Tạo element notification
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
@@ -168,15 +151,11 @@ function showNotification(type, message) {
         </div>
     `;
 
-    // Thêm vào body
     document.body.appendChild(notification);
-
-    // Hiển thị
     setTimeout(() => {
         notification.classList.add('show');
     }, 10);
 
-    // Tự động ẩn sau 3 giây
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
@@ -185,36 +164,23 @@ function showNotification(type, message) {
     }, 3000);
 }
 
-// =====================================================================
-// CHỨC NĂNG TÌM KIẾM VỚI PAGINATION ĐỘNG
-// =====================================================================
-
-/**
- * Khởi tạo tìm kiếm với pagination động
- */
 function initSearchWithDynamicPagination(searchInputId, tbodyId, paginationId, pageButtonClass, rowsPerPage = 5) {
     const searchInput = document.getElementById(searchInputId);
     const tbody = document.getElementById(tbodyId);
     const paginationContainer = document.getElementById(paginationId);
 
     if (!searchInput || !tbody || !paginationContainer) {
-        console.error('Không tìm thấy search input, tbody hoặc pagination container');
         return;
     }
 
-    // Tìm icon search
     const searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
 
-    // Hàm thực hiện search
-    const performSearch = function() {
+    const performSearch = function () {
         const keyword = searchInput.value.toLowerCase().trim();
 
         if (!keyword) {
-            // Hiển thị lại TẤT CẢ các rows trước
             const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !isPaginationRow(r));
             allRows.forEach(row => row.style.display = '');
-
-            // Sau đó mới reset pagination
             initDynamicPagination(tbodyId, paginationId, pageButtonClass, rowsPerPage);
             return;
         }
@@ -228,53 +194,38 @@ function initSearchWithDynamicPagination(searchInputId, tbodyId, paginationId, p
 
         allRows.forEach(row => row.style.display = 'none');
         const totalPages = Math.ceil(visibleRows.length / rowsPerPage);
-        paginationContainer.innerHTML = '';
+        let currentPage = 1;
 
-        for (let i = 1; i <= totalPages; i++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = `page-btn ${pageButtonClass}`;
-            pageBtn.dataset.page = i;
-            pageBtn.textContent = i;
-            pageBtn.addEventListener('click', function () {
-                showPage(i, visibleRows, paginationContainer, pageButtonClass, rowsPerPage);
-            });
-            paginationContainer.appendChild(pageBtn);
+        function goToPage(page) {
+            currentPage = page;
+            showPage(page, visibleRows, rowsPerPage);
+            renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
         }
 
-        if (totalPages > 0) {
-            showPage(1, visibleRows, paginationContainer, pageButtonClass, rowsPerPage);
-        }
+        renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
+        if (totalPages > 0) showPage(1, visibleRows, rowsPerPage);
     };
 
-    // Nhấn Enter để search
-    searchInput.addEventListener('keypress', function(e) {
+    searchInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             performSearch();
         }
     });
 
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         if (this.value.trim() === '') {
             performSearch();
         }
     });
 
-    // Click icon để search
     if (searchIcon) {
         searchIcon.style.cursor = 'pointer';
         searchIcon.addEventListener('click', performSearch);
     }
 }
 
-// =====================================================================
-// KHỞI TẠO KHI TRANG TẢI XONG
-// =====================================================================
-
 document.addEventListener('DOMContentLoaded', function () {
-    console.log('🚀 Initializing Order Management with Dynamic Pagination...');
-
-    // Khởi tạo pagination động cho từng tab
 
     // 1. TAB CHỜ XÁC NHẬN
     initDynamicPagination('confirmTableBody', 'tablePagination', 'confirm-page', 5);
@@ -304,47 +255,25 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// =====================================================================
-// QUẢN LÝ TRẠNG THÁI TAB (LƯU VÀ KHÔI PHỤC SAU KHI RELOAD)
-// =====================================================================
-
-/**
- * Lưu tab hiện tại vào localStorage
- */
 function saveCurrentTab(tabIndex) {
     localStorage.setItem('orderManagementActiveTab', tabIndex);
-    console.log('💾 Saved tab:', tabIndex);
 }
 
-/**
- * Lấy tab đã lưu từ localStorage
- */
 function getSavedTab() {
     const saved = localStorage.getItem('orderManagementActiveTab');
     return saved !== null ? parseInt(saved) : null;
 }
 
-/**
- * Xóa tab đã lưu
- */
 function clearSavedTab() {
     localStorage.removeItem('orderManagementActiveTab');
 }
 
-// =====================================================================
-// XỬ LÝ POPUP CHI TIẾT ĐƠN HÀNG (TAB ĐANG GIAO)
-// =====================================================================
 
-/**
- * Khởi tạo sự kiện cho các nút "Xem chi tiết đơn"
- */
 function initOrderDetailButtons() {
     document.querySelectorAll('.btn-de-detail').forEach(btn => {
-        // Xóa event listener cũ
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
 
-        // Thêm event listener mới
         newBtn.addEventListener('click', function () {
             const orderId = this.dataset.orderId;
             showOrderDetailPopup(orderId);
@@ -352,14 +281,10 @@ function initOrderDetailButtons() {
     });
 }
 
-/**
- * Hiển thị popup chi tiết đơn hàng
- */
+
 function showOrderDetailPopup(orderId) {
-    // Hiển thị loading
     showLoadingPopup();
 
-    // Gọi API lấy thông tin đơn hàng
     fetch(`${BASE_URL}/admin/orders?action=detail&orderId=${orderId}`)
         .then(response => response.json())
         .then(data => {
@@ -377,11 +302,7 @@ function showOrderDetailPopup(orderId) {
         });
 }
 
-/**
- * Render popup với dữ liệu thực
- */
 function renderOrderDetailPopup(order) {
-    // Tạo popup HTML
     const popupHTML = `
         <div class="order-detail-popup active" id="orderDetailPopup">
             <div class="popup-overlay" onclick="closeOrderDetailPopup()"></div>
@@ -392,7 +313,6 @@ function renderOrderDetailPopup(order) {
                 </div>
                 
                 <div class="popup-body">
-                    <!-- Thông tin cơ bản -->
                     <div class="info-section">
                         <h4>Thông tin đơn hàng</h4>
                         <div class="info-row">
@@ -421,7 +341,6 @@ function renderOrderDetailPopup(order) {
                         </div>
                     </div>
 
-                    <!-- Sản phẩm -->
                     <div class="info-section">
                         <h4>Sản phẩm (${order.itemCount})</h4>
                         <div class="product-list">
@@ -429,7 +348,6 @@ function renderOrderDetailPopup(order) {
                         </div>
                     </div>
 
-                    <!-- Thông tin thanh toán -->
                     <div class="info-section">
                         <h4>Thông tin thanh toán</h4>
                         <div class="info-row">
@@ -462,7 +380,6 @@ function renderOrderDetailPopup(order) {
                         </div>
                     </div>
 
-                    <!-- Timeline trạng thái -->
                     <div class="info-section">
                         <h4>Trạng thái giao hàng</h4>
                         <div class="info-row timeline">
@@ -478,22 +395,15 @@ function renderOrderDetailPopup(order) {
         </div>
     `;
 
-    // Xóa popup cũ (nếu có)
     const oldPopup = document.getElementById('orderDetailPopup');
     if (oldPopup) {
         oldPopup.remove();
     }
 
-    // Thêm popup mới vào body
     document.body.insertAdjacentHTML('beforeend', popupHTML);
-
-    // Ẩn loading
     hideLoadingPopup();
 }
 
-/**
- * Render danh sách sản phẩm
- */
 function renderProductList(items) {
     if (!items || items.length === 0) {
         return '<p class="no-items">Không có sản phẩm</p>';
@@ -520,9 +430,7 @@ function renderProductList(items) {
     `).join('');
 }
 
-/**
- * Render timeline trạng thái đơn hàng
- */
+
 function renderTimeline(currentStatus) {
     const statuses = [
         {key: 'Pending', label: 'Chờ xác nhận'},
@@ -554,9 +462,7 @@ function renderTimeline(currentStatus) {
     }).join('');
 }
 
-/**
- * Đóng popup chi tiết đơn hàng
- */
+
 function closeOrderDetailPopup() {
     const popup = document.getElementById('orderDetailPopup');
     if (popup) {
@@ -567,9 +473,6 @@ function closeOrderDetailPopup() {
     }
 }
 
-/**
- * Hiển thị loading popup
- */
 function showLoadingPopup() {
     const loadingHTML = `
         <div class="loading-popup" id="loadingPopup">
@@ -577,13 +480,9 @@ function showLoadingPopup() {
             <p>Đang tải thông tin đơn hàng...</p>
         </div>
     `;
-
     document.body.insertAdjacentHTML('beforeend', loadingHTML);
 }
 
-/**
- * Ẩn loading popup
- */
 function hideLoadingPopup() {
     const loadingPopup = document.getElementById('loadingPopup');
     if (loadingPopup) {
@@ -591,46 +490,30 @@ function hideLoadingPopup() {
     }
 }
 
-/**
- * Format số tiền - Hiển thị dạng "48.000 đ"
- */
 function formatCurrency(amount) {
-    // Format số với dấu phân cách hàng nghìn
     const formatted = new Intl.NumberFormat('vi-VN').format(amount);
-    // Thêm " đ" (có khoảng trắng) thay vì ₫
     return formatted + ' đ';
 }
 
-// Export functions để dùng ở nơi khác
 window.initOrderDetailButtons = initOrderDetailButtons;
 window.closeOrderDetailPopup = closeOrderDetailPopup;
 
 
-// =====================================================================
-// CHỨC NĂNG TÌM KIẾM
-// =====================================================================
-/**
- * XỬ LÝ TÌM KIẾM ĐƠN HÀNG THEO TỪNG TAB
- * File này xử lý tìm kiếm cho tất cả các tab trong quản lý đơn hàng
- */
-
 (function () {
     'use strict';
+    // const SEARCH_DELAY = 500;
+    //
+    //
+    // // Mapping giữa tab và status
+    // const TAB_STATUS_MAP = {
+    //     'tab-pending': 'Pending',
+    //     'tab-pickup': 'AwaitingPickup',
+    //     'tab-delivering': 'Shipping',
+    //     'tab-delivered': 'Completed',
+    //     'tab-return': 'Returned',
+    //     'tab-cancelled': 'Cancelled'
+    // };
 
-    // ================== CONSTANTS ==================
-    const SEARCH_DELAY = 500; // Delay 500ms trước khi search (debounce)
-
-    // Mapping giữa tab và status
-    const TAB_STATUS_MAP = {
-        'tab-pending': 'Pending',
-        'tab-pickup': 'AwaitingPickup',
-        'tab-delivering': 'Shipping',
-        'tab-delivered': 'Completed',
-        'tab-return': 'Returned',
-        'tab-cancelled': 'Cancelled'
-    };
-
-    // Mapping giữa input search và tbody tương ứng
     const SEARCH_CONFIG = {
         'pendingSearch': {
             status: 'Pending',
@@ -676,38 +559,31 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     };
 
-    // ================== DEBOUNCE UTILITY ==================
-    let searchTimeouts = {};
+    // let searchTimeouts = {};
+    //
+    // function debounce(func, delay, key) {
+    //     return function (...args) {
+    //         clearTimeout(searchTimeouts[key]);
+    //         searchTimeouts[key] = setTimeout(() => func.apply(this, args), delay);
+    //     };
+    // }
 
-    function debounce(func, delay, key) {
-        return function (...args) {
-            clearTimeout(searchTimeouts[key]);
-            searchTimeouts[key] = setTimeout(() => func.apply(this, args), delay);
-        };
-    }
 
-    // ================== SEARCH FUNCTION ==================
-    /**
-     * Thực hiện tìm kiếm đơn hàng
-     */
     function searchOrders(keyword, config) {
         if (!keyword || keyword.trim() === '') {
             location.reload();
             return;
         }
 
-        const tbody = document.getElementById(config.tbody);          // Dùng config.tbody
-        const paginationContainer = document.getElementById(config.pagination); // Dùng config.pagination
+        const tbody = document.getElementById(config.tbody);
+        const paginationContainer = document.getElementById(config.pagination);
 
         if (!tbody || !paginationContainer) {
-            console.error('Không tìm thấy tbody hoặc pagination container');
             return;
         }
 
-        // Hiển thị loading
         showLoading(tbody);
 
-        // Gọi API tìm kiếm
         fetch(`${BASE_URL}/admin/orders?action=searchByTab&keyword=${encodeURIComponent(keyword)}&status=${config.status}`)
             .then(response => response.json())
             .then(data => {
@@ -723,12 +599,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             });
     }
 
-    // ================== RENDER FUNCTIONS ==================
-    /**
-     * Render kết quả tìm kiếm
-     */
     function renderSearchResults(orders, tbody, config, paginationContainer) {
-        // Xóa tất cả rows trừ pagination, loading, error, no-result
         const rows = tbody.querySelectorAll('tr');
         rows.forEach(row => {
             if (!isPaginationRow(row)) {
@@ -742,15 +613,12 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             return;
         }
 
-        // Render từng đơn hàng theo tab
         const fragment = document.createDocumentFragment();
-
         orders.forEach(order => {
             const row = createOrderRow(order, config.status);
             fragment.appendChild(row);
         });
 
-        // Insert trước pagination row - tìm bất kỳ dạng pagination row nào
         const paginationRow = Array.from(tbody.querySelectorAll('tr')).find(row => isPaginationRow(row));
         if (paginationRow) {
             tbody.insertBefore(fragment, paginationRow);
@@ -758,10 +626,8 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             tbody.appendChild(fragment);
         }
 
-        // Gắn lại sự kiện cho các nút
         attachButtonEvents(tbody, config.status);
 
-        // Filter rows với logic đầy đủ
         const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r =>
             !isPaginationRow(r) &&
             !r.classList.contains('loading-row') &&
@@ -769,32 +635,21 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             !r.classList.contains('no-result-row')
         );
 
-        const totalPages = Math.ceil(allRows.length / 5);
+        const rowsPerPage = 5;
+        const totalPages = Math.ceil(allRows.length / rowsPerPage);
+        let currentPage = 1;
 
-        paginationContainer.innerHTML = '';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = `page-btn ${config.pageButtonClass}`;
-            pageBtn.dataset.page = i;
-            pageBtn.textContent = i;
-
-            pageBtn.addEventListener('click', function () {
-                showPage(i, allRows, paginationContainer, config.pageButtonClass, 5);
-            });
-
-            paginationContainer.appendChild(pageBtn);
+        function goToPage(page) {
+            currentPage = page;
+            showPage(page, allRows, rowsPerPage);
+            renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
         }
 
-        // Hiển thị trang đầu tiên
-        if (totalPages > 0) {
-            showPage(1, allRows, paginationContainer, config.pageButtonClass, 5);
-        }
+        renderPaginationButtons(paginationContainer, totalPages, currentPage, goToPage);
+        if (totalPages > 0) showPage(1, allRows, rowsPerPage);
     }
 
-    /**
-     * Tạo row cho đơn hàng theo từng tab
-     */
+
     function createOrderRow(order, status) {
         const tr = document.createElement('tr');
 
@@ -818,14 +673,10 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
                 tr.innerHTML = createCancelledRow(order);
                 break;
         }
-
         return tr;
     }
 
-    // ================== ROW TEMPLATES ==================
-    /**
-     * Template cho tab CHỜ XÁC NHẬN
-     */
+
     function createPendingRow(order) {
         return `
             <td>${order.orderCode || order.id}</td>
@@ -843,9 +694,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    /**
-     * Template cho tab CHỜ LẤY HÀNG
-     */
     function createPickupRow(order) {
         return `
             <td>${order.orderCode || order.id}</td>
@@ -861,9 +709,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    /**
-     * Template cho tab ĐANG GIAO
-     */
     function createShippingRow(order) {
         return `
             <td>${order.orderCode || order.id}</td>
@@ -877,9 +722,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    /**
-     * Template cho tab ĐÃ GIAO
-     */
     function createCompletedRow(order) {
         return `
             <td>${order.orderCode || order.id}</td>
@@ -898,9 +740,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    /**
-     * Template cho tab TRẢ HÀNG/HOÀN TIỀN
-     */
     function createReturnedRow(order) {
         return `
             <td>${order.orderCode || order.id}</td>
@@ -915,9 +754,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    /**
-     * Template cho tab ĐƠN BỊ HỦY
-     */
     function createCancelledRow(order) {
         const cancelledBy = order.cancelledBy;
         let cancelledByDisplay = '<span style="color: #999;">N/A</span>';
@@ -938,10 +774,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         `;
     }
 
-    // ================== HELPER FUNCTIONS ==================
-    /**
-     * Format currency
-     */
     function formatCurrency(amount) {
         if (!amount) return '0đ';
         return new Intl.NumberFormat('vi-VN', {
@@ -950,9 +782,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }).format(amount);
     }
 
-    /**
-     * Format date
-     */
     function formatDate(dateStr) {
         if (!dateStr) return 'N/A';
         const date = new Date(dateStr);
@@ -964,9 +793,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         return `${day}/${month}/${year} ${hours}:${minutes}`;
     }
 
-    /**
-     * Hiển thị loading
-     */
     function showLoading(tbody) {
         const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
         rows.forEach(row => row.remove());
@@ -988,9 +814,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    /**
-     * Hiển thị lỗi
-     */
     function showError(tbody, message) {
         const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
         rows.forEach(row => row.remove());
@@ -1017,9 +840,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    /**
-     * Hiển thị không có kết quả
-     */
+
     function showNoResults(tbody, message) {
         const rows = tbody.querySelectorAll('tr:not([class*="pagination-row"])');
         rows.forEach(row => row.remove());
@@ -1044,11 +865,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    /**
-     * Gắn lại sự kiện cho các nút sau khi render
-     */
     function attachButtonEvents(tbody, status) {
-        // Xác nhận đơn hàng (tab Pending)
         if (status === 'Pending') {
             tbody.querySelectorAll('.confirm-btn').forEach(btn => {
                 btn.addEventListener('click', handleConfirmOrder);
@@ -1059,14 +876,12 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             });
         }
 
-        // Xác nhận giao ĐVVC (tab AwaitingPickup)
         if (status === 'AwaitingPickup') {
             tbody.querySelectorAll('.ship-confirm-btn').forEach(btn => {
                 btn.addEventListener('click', handleShipConfirm);
             });
         }
 
-        // Xem chi tiết (tab Shipping)
         if (status === 'Shipping') {
             tbody.querySelectorAll('.btn-de-detail').forEach(btn => {
                 btn.addEventListener('click', function () {
@@ -1077,10 +892,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    // ================== EVENT HANDLERS ==================
-    /**
-     * Xử lý xác nhận đơn hàng
-     */
+
     function handleConfirmOrder(e) {
         const orderId = e.target.dataset.orderId;
 
@@ -1108,9 +920,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    /**
-     * Xử lý hủy đơn hàng
-     */
+
     function handleCancelOrder(e) {
         const orderId = e.target.dataset.orderId;
         window.currentCancelOrderId = orderId;
@@ -1118,9 +928,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         document.querySelector('.cancel-popup textarea').value = '';
     }
 
-    /**
-     * Xử lý xác nhận đã giao ĐVVC
-     */
     function handleShipConfirm(e) {
         const orderId = e.target.dataset.orderId;
 
@@ -1148,47 +955,34 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         }
     }
 
-    // ================== INITIALIZATION ==================
-    /**
-     * Khởi tạo tìm kiếm cho tất cả các tab
-     */
+
     function initializeSearch() {
         Object.entries(SEARCH_CONFIG).forEach(([inputId, config]) => {
             const searchInput = document.getElementById(inputId);
 
             if (searchInput) {
-                // Tìm icon search
                 const searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
 
-                // Hàm perform search
-                const performSearch = function() {
+                const performSearch = function () {
                     const keyword = searchInput.value.trim();
                     searchOrders(keyword, config);
                 };
 
-                // Nhấn Enter
-                searchInput.addEventListener('keypress', function(e) {
+                searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         performSearch();
                     }
                 });
 
-                // Click icon
                 if (searchIcon) {
                     searchIcon.style.cursor = 'pointer';
                     searchIcon.addEventListener('click', performSearch);
                 }
-
-                console.log(`✅ Search initialized for: ${inputId}`);
-            } else {
-                console.warn(`⚠️ Search input not found: ${inputId}`);
             }
         });
     }
 
-    // ================== AUTO INIT ==================
-    // Khởi tạo khi DOM đã sẵn sàng
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeSearch);
     } else {

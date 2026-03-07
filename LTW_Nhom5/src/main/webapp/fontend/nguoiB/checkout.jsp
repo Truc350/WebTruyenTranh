@@ -114,12 +114,14 @@
 
                     <label>
                         <input type="radio" name="shipping" value="standard" data-fee="25000" checked>
-                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">Đang tải...</span>
+                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">25.000đ</span>
                     </label><br>
                     <label>
                         <input type="radio" name="shipping" value="express" data-fee="50000">
-                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">Đang tải...</span>
+                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">50.000đ</span>
                     </label>
+
+                    <input type="hidden" name="shippingFee" id="hiddenShippingFee" value="25000">
                 </section>
 
                 <section class="payment">
@@ -582,6 +584,9 @@
     function updateTotal() {
         const selectedShipping = document.querySelector('input[name="shipping"]:checked');
         const shippingFee = selectedShipping ? parseInt(selectedShipping.dataset.fee) || 0 : 0;
+
+        const hiddenFee = document.getElementById('hiddenShippingFee');
+        if (hiddenFee) hiddenFee.value = shippingFee;
 
         let pointsDiscount = 0;
         if (usePointsCheckbox?.checked) pointsDiscount = userPoints;
