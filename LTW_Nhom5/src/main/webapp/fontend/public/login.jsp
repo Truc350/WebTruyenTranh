@@ -93,20 +93,11 @@
             window.location.href = "${pageContext.request.contextPath}/login-google";
         });
     }
-
     // Facebook login
     const facebookBtn = document.getElementById("facebookLogin");
     if (facebookBtn) {
         facebookBtn.addEventListener("click", () => {
-            const clientId   = "4112997315630876";
-            const redirectUri = encodeURIComponent("http://localhost:8080/LTW_Nhom5/login-facebook-callback");
-            const scope       = encodeURIComponent("email,public_profile");
-
-            window.location.href = `https://www.facebook.com/v19.0/dialog/oauth`
-                + `?client_id=${clientId}`
-                + `&redirect_uri=${redirectUri}`
-                + `&scope=${scope}`
-                + `&response_type=code`;
+            window.location.href = "https://www.facebook.com/v18.0/dialog/oauth?client_id=4112997315630876&redirect_uri=http://localhost:8080/LTW_Nhom5/login-facebook-callback&scope=email,public_profile";
         });
     }
 </script>

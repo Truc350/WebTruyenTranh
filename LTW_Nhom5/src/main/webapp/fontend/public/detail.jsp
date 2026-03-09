@@ -132,7 +132,7 @@
                         </button>
                     </c:when>
                     <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1">
+                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=${comic.id}&quantity=1" id="add-to-cart-link">
                             <button class="btn add-to-cart">Thêm vào giỏ hàng</button>
                         </a>
                         <a href="${pageContext.request.contextPath}/checkout?comicId=${comic.id}&quantity=1" id="buy-now-link">
