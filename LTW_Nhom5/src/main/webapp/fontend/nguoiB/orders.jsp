@@ -130,28 +130,28 @@
                                                           style="color: #ff4444; font-weight: 600;">
                 ${itemData.formattedDisplayPrice}đ
             </span>
-                                                    <%-- Badge Flash Sale --%>
-                                                    <%--                                                    <span class="flash-sale-badge">--%>
-                                                    <%--                ⚡ Flash Sale -${itemData.flashSaleDiscount}%--%>
-                                                    <%--            </span>--%>
+<%--                                                    Badge Flash Sale--%>
+                                                    <span class="flash-sale-badge">
+                                                                    ⚡ Flash Sale -${itemData.flashSaleDiscount}%
+                                                                </span>
                                                 </c:when>
 
                                                 <%-- Ưu tiên 2: Giá đã thay đổi (không phải Flash Sale) --%>
-                                                <c:when test="${itemData.priceChanged && !itemData.hasActiveFlashSale}">
-                                                    <%-- Giá gốc bị gạch --%>
-                                                    <del class="original-price">
-                                                        <fmt:formatNumber value="${item.priceAtPurchase}" type="number"
-                                                                          groupingUsed="true"/>đ
-                                                    </del>
-                                                    <%-- Giá mới (màu xanh) --%>
-                                                    <span class="discount-price" style="color: #28a745;">
-                ${itemData.formattedDisplayPrice}đ
-            </span>
-                                                    <%-- Badge giá mới --%>
-                                                    <span class="price-changed-badge">
-                Giá mới
-            </span>
-                                                </c:when>
+<%--                                                <c:when test="${itemData.priceChanged && !itemData.hasActiveFlashSale}">--%>
+<%--                                                    &lt;%&ndash; Giá gốc bị gạch &ndash;%&gt;--%>
+<%--                                                    <del class="original-price">--%>
+<%--                                                        <fmt:formatNumber value="${item.priceAtPurchase}" type="number"--%>
+<%--                                                                          groupingUsed="true"/>đ--%>
+<%--                                                    </del>--%>
+<%--                                                    &lt;%&ndash; Giá mới (màu xanh) &ndash;%&gt;--%>
+<%--                                                    <span class="discount-price" style="color: #28a745;">--%>
+<%--                ${itemData.formattedDisplayPrice}đ--%>
+<%--            </span>--%>
+<%--                                                    &lt;%&ndash; Badge giá mới &ndash;%&gt;--%>
+<%--                                                    <span class="price-changed-badge">--%>
+<%--                Giá mới--%>
+<%--            </span>--%>
+<%--                                                </c:when>--%>
 
                                                 <%-- Giá không đổi --%>
                                                 <c:otherwise>

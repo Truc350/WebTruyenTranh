@@ -15,7 +15,6 @@ import java.util.List;
 @WebServlet("/category")
 public class CategoriesServlet extends HttpServlet {
     private CategoriesDao categoriesDao;
-    //ai làm lấy truyện chỗ này thì thêm comic vô nè
     private ComicDAO comicDAO;
     private static final int PAGE_SIZE = 12;
 
@@ -107,42 +106,6 @@ public class CategoriesServlet extends HttpServlet {
         request.getRequestDispatcher("/fontend/public/CatagoryPage.jsp")
                 .forward(request, response);
     }
-
-//    @Override
-//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        // Lấy id thể loại từ URL: /category?id=3
-//        String idParam = request.getParameter("id");
-//        if (idParam == null || idParam.isEmpty()) {
-//            response.sendRedirect(request.getContextPath() + "/home");
-//            return;
-//        }
-//
-//        int categoryId = Integer.parseInt(idParam);
-//
-//        // Lấy thông tin thể loại để hiển thị tiêu đề
-//        List<Category> allCategories = categoriesDao.listCategories();
-//        Category selectedCategory = null;
-//        for (Category c : allCategories) {
-//            if (c.getId() == categoryId) {
-//                selectedCategory = c;
-//                break;
-//            }
-//        }
-//
-//        if (selectedCategory == null) {
-//            response.sendRedirect(request.getContextPath() + "/home");
-//            System.out.println("select category is null");
-//            return;
-//        }
-//
-//
-//
-//        request.setAttribute("selectedCategory", selectedCategory);
-//
-//
-//        request.getRequestDispatcher("/fontend/public/CatagoryPage.jsp")
-//                .forward(request, response);
-//    }
 
 
     @Override

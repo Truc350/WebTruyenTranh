@@ -169,11 +169,12 @@
         }
 
         .social-toggle-btn.open {
-            background: #fff;
+            /*background: #fff;*/
             transform: rotate(20deg);
         }
 
         .social-items {
+            background: #fff;
             display: flex;
             flex-direction: column-reverse;
             align-items: center;
@@ -187,6 +188,7 @@
         .social-items.open {
             max-height: 200px;
             opacity: 1;
+            background: #fff;
         }
 
         .social-float-btn {
