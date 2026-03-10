@@ -1,7 +1,7 @@
 .footer {
     background: #1b1b1b;
     color: #f1f1f1;
-    padding: 30px 20px; /* Giảm từ 60px → 30px */
+    padding: 30px 20px;
 font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
 }
@@ -10,25 +10,25 @@ font-family: Arial, Helvetica, sans-serif;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    flex-wrap: wrap; /* Cho phép xuống dòng nếu màn hình nhỏ */
-    gap: 20px; /* Giảm từ 40px → 20px */
+    flex-wrap: wrap;
+    gap: 20px;
     max-width: 1300px;
     margin: 0 auto;
 }
 
 .footer-column {
     flex: 1;
-    min-width: 180px; /* Giảm min-width để gọn hơn */
+    min-width: 180px;
     text-align: left;
 }
 
-/* Logo */
+
 .footer-column .logo img {
-    width: 100px; /* Giảm từ 130px */
+    width: 100px;
     height: auto;
     border-radius: 8px;
     transition: transform 0.3s ease, opacity 0.3s;
-    margin-bottom: 10px; /* Giảm khoảng cách */
+    margin-bottom: 10px;
 }
 
 .footer-column .logo img:hover {
@@ -36,12 +36,11 @@ font-family: Arial, Helvetica, sans-serif;
     opacity: 0.9;
 }
 
-/* Tiêu đề */
 .footer-column h4 {
     color: #ffcc00;
-    margin-bottom: 12px; /* Giảm từ 18px */
+    margin-bottom: 12px;
     font-weight: 600;
-    font-size: 18px; /* Giảm từ 18px */
+    font-size: 18px;
     letter-spacing: 0.3px;
     display: flex;
     align-items: center;
@@ -52,11 +51,10 @@ font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
 }
 
-/* Văn bản */
 .footer-column p {
-    font-size: 15px; /* Giảm từ 15px */
+    font-size: 15px;
     color: #ccc;
-    margin-bottom: 6px; /* Giảm khoảng cách */
+    margin-bottom: 6px;
 }
 
 .footer-column p i {
@@ -65,7 +63,6 @@ font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
 }
 
-/* Danh sách liên kết */
 .footer-column ul {
     list-style: none;
     padding: 0;
@@ -73,7 +70,7 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 .footer-column ul li {
-    margin: 6px 0; /* Giảm từ 10px */
+    margin: 6px 0;
 }
 
 .footer-column ul li a {
@@ -87,15 +84,14 @@ font-family: Arial, Helvetica, sans-serif;
     color: #ffcc00;
 }
 
-/* Mạng xã hội */
 .social-links {
-    margin-top: 8px; /* Giảm khoảng cách */
+    margin-top: 8px;
     display: flex;
     gap: 12px;
 }
 
 .social-links a {
-    font-size: 18px; /* Giảm từ 22px */
+    font-size: 18px;
     color: #bbb;
     transition: color 0.3s, transform 0.2s;
 }
@@ -105,7 +101,6 @@ font-family: Arial, Helvetica, sans-serif;
     transform: scale(1.2);
 }
 
-/* Thanh toán */
 .payment-icons {
     display: flex;
     gap: 8px;
@@ -113,28 +108,25 @@ font-family: Arial, Helvetica, sans-serif;
 }
 
 .payment-icons img {
-    width: 40px; /* Giảm từ 48px */
+    width: 40px;
     height: auto;
     border-radius: 4px;
     background: #fff;
     padding: 3px;
 }
-
-/* Bản quyền */
 .footer-bottom {
     text-align: center;
     border-top: 1px solid #333;
-    margin-top: 24px; /* Giảm từ 40px */
-    padding-top: 14px; /* Giảm từ 20px */
+    margin-top: 24px;
+    padding-top: 14px;
     color: #999;
-    font-size: 13px; /* Giảm từ 15px */
+    font-size: 13px;
 }
 
 .footer-bottom strong {
     color: #ffcc00;
 }
 
-/* ===================== RESPONSIVE ===================== */
 @media (max-width: 992px) {
     .footer-container {
         flex-wrap: wrap;

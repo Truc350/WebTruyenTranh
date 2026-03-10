@@ -40,7 +40,6 @@ function setDefaultDate() {
     }
 }
 
-// ==================== TOAST MESSAGES ====================
 function showMessage(message, type = 'info') {
     const oldMsg = document.querySelector('.toast-message');
     if (oldMsg) {
@@ -81,7 +80,6 @@ function showMessage(message, type = 'info') {
 function showToast(message, type = 'success') {
     showMessage(message, type);
 }
-// ==================== SEARCH FUNCTIONALITY ====================
 function searchCategories(page = 1) {
     const keyword = document.getElementById('categorySearchInput').value.trim();
     const tbody = document.getElementById('categoryTableBody');
@@ -98,14 +96,11 @@ function searchCategories(page = 1) {
     const contextPath = getContextPath();
 
     if (!contextPath && contextPath !== '') {
-        console.error('❌ contextPath is not defined!');
         showError('Lỗi cấu hình: contextPath không tồn tại');
         return;
     }
 
     const url = `${contextPath}/admin/categories/search?keyword=${encodeURIComponent(keyword)}&page=${page}`;
-
-    console.log('🔍 Searching categories:', { keyword, page, url });
 
     fetch(url)
         .then(response => {
@@ -117,14 +112,11 @@ function searchCategories(page = 1) {
             return response.json();
         })
         .then(data => {
-            console.log('✅ Search results:', data);
-
             if (data.success) {
                 currentCategoryPage = data.currentPage;
                 currentPage = data.currentPage;
                 updateCategoryTable(data.categories);
                 updateCategoryPagination(data.currentPage, data.totalPages, data.totalCategories);
-
                 if (keyword) {
                     showToast(data.message || `Tìm thấy ${data.totalCategories} kết quả`, 'info');
                 }
@@ -138,15 +130,12 @@ function searchCategories(page = 1) {
         });
 }
 
-
 function handleSearch() {
     const input = document.getElementById('categorySearchInput');
     currentKeyword = input.value.trim();
     console.log('Searching with keyword:', currentKeyword);
     searchCategories(1);
 }
-
-// ==================== LOAD CATEGORIES ====================
 function loadCategories(page = 1) {
     const contextPath = getContextPath();
     const tbody = document.getElementById('categoryTableBody');
@@ -183,8 +172,6 @@ function loadCategories(page = 1) {
             showError('Không thể tải danh sách thể loại!');
         });
 }
-
-// ==================== UPDATE TABLE ====================
 function updateCategoryTable(categories) {
     const tbody = document.getElementById('categoryTableBody');
 
@@ -229,8 +216,6 @@ function updateCategoryTable(categories) {
     tbody.innerHTML = html;
     bindCategoryEventListeners();
 }
-
-// ==================== PAGINATION ====================
 function updateCategoryPagination(currentPage, totalPages, totalCategories) {
     const container = document.getElementById('categoryPaginationContainer');
 
@@ -244,8 +229,6 @@ function updateCategoryPagination(currentPage, totalPages, totalCategories) {
     container.style.display = 'block';
 
     let html = '<div class="pagination">';
-
-    // First & Previous buttons
     if (currentPage > 1) {
         html += `<button class="page-btn nav-btn" onclick="searchCategories(1)">⏮</button>`;
         html += `<button class="page-btn nav-btn" onclick="searchCategories(${currentPage - 1})">◀</button>`;
@@ -253,8 +236,6 @@ function updateCategoryPagination(currentPage, totalPages, totalCategories) {
         html += `<button class="page-btn nav-btn" disabled>⏮</button>`;
         html += `<button class="page-btn nav-btn" disabled>◀</button>`;
     }
-
-    // Page numbers
     const maxVisible = 5;
     let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
     let endPage = Math.min(totalPages, startPage + maxVisible - 1);
@@ -278,7 +259,6 @@ function updateCategoryPagination(currentPage, totalPages, totalCategories) {
         html += `<button class="page-btn" onclick="searchCategories(${totalPages})">${totalPages}</button>`;
     }
 
-    // Next & Last buttons
     if (currentPage < totalPages) {
         html += `<button class="page-btn nav-btn" onclick="searchCategories(${currentPage + 1})">▶</button>`;
         html += `<button class="page-btn nav-btn" onclick="searchCategories(${totalPages})">⏭</button>`;
@@ -323,8 +303,6 @@ function renderPagination(current, total) {
     html += '</div>';
     container.innerHTML = html;
 }
-
-// ==================== ADD CATEGORY ====================
 function openAddPopup() {
     console.log('Opening add popup');
     document.getElementById('newCategoryName').value = '';
@@ -407,7 +385,6 @@ function handleAddCategory() {
         });
 }
 
-// ==================== EDIT CATEGORY ====================
 function openEditPopup(id) {
     console.log('=== Opening Edit Popup ===');
     console.log('Category ID:', id);
@@ -420,7 +397,6 @@ function openEditPopup(id) {
     const dateInput = document.getElementById('editCategoryDate');
 
     if (!popup || !nameInput || !descInput) {
-        console.error('❌ Edit popup elements not found!');
         return;
     }
 
@@ -436,34 +412,24 @@ function openEditPopup(id) {
 
     const contextPath = getContextPath();
     const url = `${contextPath}/admin/getCategoryById?id=${id}`;
-
-    console.log('📡 Fetching from:', url);
-
     fetch(url)
         .then(response => {
-            console.log('📥 Response status:', response.status);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('📦 Response data:', data);
-
             if (data.success && data.category) {
                 const category = data.category;
                 nameInput.value = category.nameCategories || '';
                 descInput.value = category.description || '';
-
-                console.log('✅ Values assigned to inputs');
             } else {
-                console.error('❌ API response failed:', data.message);
                 showMessage(data.message || 'Không tìm thấy thể loại!', 'error');
                 closeEditPopup();
             }
         })
         .catch(error => {
-            console.error('❌ Fetch error:', error);
             showMessage('Không thể tải thông tin thể loại! ' + error.message, 'error');
             closeEditPopup();
         });
@@ -475,7 +441,6 @@ function closeEditPopup() {
         editPopup.style.display = 'none';
     }
     editingCategoryId = null;
-
     const nameInput = document.getElementById('editCategoryName');
     const descInput = document.getElementById('editCategoryDesc');
     if (nameInput) nameInput.value = '';
@@ -483,38 +448,29 @@ function closeEditPopup() {
 }
 
 function handleEditCategory() {
-    console.log('=== Updating Category ===');
     console.log('Editing Category ID:', editingCategoryId);
-
     if (!editingCategoryId) {
         showMessage('Không xác định được thể loại cần sửa!', 'error');
         return;
     }
-
     const name = document.getElementById('editCategoryName').value.trim();
     const description = document.getElementById('editCategoryDesc').value.trim();
-
     if (!name) {
         showMessage('Vui lòng nhập tên thể loại!', 'error');
         return;
     }
-
     if (name.length > 100) {
         showMessage('Tên thể loại không được vượt quá 100 ký tự!', 'error');
         return;
     }
-
     const contextPath = getContextPath();
     const url = `${contextPath}/admin/updateCategory`;
-    console.log('Updating at URL:', url);
-
     const saveBtn = document.getElementById('confirmEditBtn');
     const originalText = saveBtn ? saveBtn.textContent : 'Cập nhật';
     if (saveBtn) {
         saveBtn.disabled = true;
         saveBtn.textContent = 'Đang lưu...';
     }
-
     fetch(url, {
         method: 'POST',
         headers: {
@@ -560,31 +516,23 @@ function handleEditCategory() {
             showMessage('Không thể kết nối đến server! ' + error.message, 'error');
         });
 }
-
-// ==================== DELETE CATEGORY ====================
 function openDeletePopup(id, name) {
     console.log('Opening delete popup for:', id, name);
-
     deletingCategoryId = id;
     deletingCategoryName = name;
-
     const deleteNameElement = document.getElementById('deleteCategoryName');
     const deleteMessageElement = document.getElementById('deleteCategoryMessage');
-
     if (deleteNameElement) {
         deleteNameElement.textContent = `"${name}"`;
     }
-
     if (deleteMessageElement) {
         deleteMessageElement.textContent = `Bạn có chắc chắn muốn xóa thể loại `;
     }
-
     const deletePopup = document.getElementById('deletePopup');
     if (deletePopup) {
         deletePopup.style.display = 'flex';
     }
 }
-
 function closeDeletePopup() {
     const deletePopup = document.getElementById('deletePopup');
     if (deletePopup) {
@@ -593,16 +541,12 @@ function closeDeletePopup() {
     deletingCategoryId = null;
     deletingCategoryName = '';
 }
-
 function handleDeleteCategory() {
-    console.log('=== Deleting Category ===');
     console.log('Category ID:', deletingCategoryId);
-
     if (!deletingCategoryId) {
         showMessage('Không xác định được thể loại cần xóa!', 'error');
         return;
     }
-
     const contextPath = getContextPath();
     const url = `${contextPath}/admin/deleteCategory`;
     console.log('Deleting at URL:', url);
@@ -612,7 +556,6 @@ function handleDeleteCategory() {
         deleteBtn.disabled = true;
         deleteBtn.textContent = 'Đang xóa...';
     }
-
     fetch(url, {
         method: 'POST',
         headers: {
@@ -656,8 +599,6 @@ function handleDeleteCategory() {
             showMessage('Không thể kết nối đến server! ' + error.message, 'error');
         });
 }
-
-// ==================== ERROR DISPLAY ====================
 function showError(message) {
     const tbody = document.getElementById('categoryTableBody');
     tbody.innerHTML = `
@@ -684,7 +625,6 @@ function closeAllPopups() {
     editingCategoryId = null;
 }
 
-// ==================== EVENT LISTENERS ====================
 function bindCategoryEventListeners() {
     // Event listeners are handled by onclick in HTML
     console.log('Category event listeners bound via onclick attributes');
@@ -694,19 +634,16 @@ function initEventListeners() {
     const addBtn = document.querySelector('.add-category-btn');
     if (addBtn) {
         addBtn.addEventListener('click', openAddPopup);
-        console.log('✅ Add button listener attached');
     }
 
     const saveBtn = document.querySelector('#addPopup .save-btn');
     if (saveBtn) {
         saveBtn.addEventListener('click', handleAddCategory);
-        console.log('✅ Save button listener attached');
     }
 
     const searchBtn = document.getElementById('categorySearchBtn');
     if (searchBtn) {
         searchBtn.addEventListener('click', handleSearch);
-        console.log('✅ Search button listener attached');
     }
 
     const searchInput = document.getElementById('categorySearchInput');
@@ -717,7 +654,6 @@ function initEventListeners() {
                 handleSearch();
             }
         });
-        console.log('✅ Search input listener attached');
     }
 
     const deleteConfirmBtn = document.getElementById('confirmDeleteBtn');
@@ -726,7 +662,6 @@ function initEventListeners() {
             e.preventDefault();
             handleDeleteCategory();
         });
-        console.log('✅ Delete confirm button listener attached');
     }
 
     const deleteCancelBtn = document.querySelector('#deletePopup .cancel-btn');
@@ -735,7 +670,6 @@ function initEventListeners() {
             e.preventDefault();
             closeDeletePopup();
         });
-        console.log('✅ Delete cancel button listener attached');
     }
 
     document.querySelectorAll('.popup-overlay').forEach(overlay => {
@@ -754,7 +688,6 @@ function initEditEventListeners() {
             e.preventDefault();
             handleEditCategory();
         });
-        console.log('✅ Edit save button listener attached');
     }
 
     const editCancelBtn = document.querySelector('#editPopup .cancel-btn');
@@ -763,20 +696,11 @@ function initEditEventListeners() {
             e.preventDefault();
             closeEditPopup();
         });
-        console.log('✅ Edit cancel button listener attached');
     }
 }
-
-// ==================== INITIALIZATION ====================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Category Management Initialized');
-    console.log('🔍 Context Path:', getContextPath());
-    console.log('📍 Current URL:', window.location.href);
-
     initEventListeners();
     initEditEventListeners();
     setDefaultDate();
-
-    // Load initial data
     loadCategories(1);
 });

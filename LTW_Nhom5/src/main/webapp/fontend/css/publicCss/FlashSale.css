@@ -120,8 +120,6 @@ html {
 .slot[data-time="22:00"] {
     border: 2px solid #ffd60a;
 }
-
-/* dưới này container item */
 .container-item{
     width: 80vw;
     max-width: 100%;
@@ -217,19 +215,10 @@ html {
 }
 
 .progress-bar {
-    /*width: 100%;*/
-    /*height: 8px;*/
-    /*background-color: #eee;*/
-    /*border-radius: 4px;*/
-    /*overflow: hidden;*/
-    /*margin: 10px 0 6px;*/
    display: none;
 }
 
 .progress-fill {
-    /*height: 100%;*/
-    /*background-color: #d0021b;*/
-    /*transition: width 0.3s ease;*/
     display: none;
 }
 
@@ -266,14 +255,11 @@ a{
     text-decoration: none;
     width: 100%;
 }
-
-/* Hover toàn thẻ */
 .product-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
-/* No products message */
 .no-products {
     grid-column: 1 / -1;
     text-align: center;
@@ -293,7 +279,6 @@ a{
     color: #999;
 }
 
-/* Slot active state */
 .slot.active {
     border: 2px solid #ffd60a !important;
     background: linear-gradient(135deg, rgba(255, 214, 10, 0.1), rgba(255, 152, 0, 0.1));
@@ -304,14 +289,12 @@ a{
     font-weight: bold;
 }
 
-/* Slot hover effect */
 .slot:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(255, 214, 10, 0.3);
     cursor: pointer;
 }
 
-/* Countdown expired state */
 .countdown .expired {
     color: #ff4444;
     font-size: 24px;
@@ -319,7 +302,6 @@ a{
     padding: 10px;
 }
 
-/* Product card hover effect */
 .product-card {
     transition: all 0.3s ease;
 }
@@ -329,7 +311,6 @@ a{
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Add to cart button hover */
 .add-to-cart {
     background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
     border: none;
@@ -354,13 +335,12 @@ a{
     margin-right: 8px;
 }
 
-/* Progress bar animation */
+
 .progress-fill {
     transition: width 0.6s ease;
     background: linear-gradient(90deg, #ffd60a, #ff9800);
 }
 
-/* Loading state */
 .loading {
     text-align: center;
     padding: 40px;
@@ -378,7 +358,6 @@ a{
     60%, 100% { content: '...'; }
 }
 
-/* Responsive cho mobile */
 @media (max-width: 768px) {
     .container-item {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -434,7 +413,6 @@ a{
     }
 }
 
-/* Badge animation */
 .badge {
     animation: pulse 2s ease-in-out infinite;
 }
@@ -448,7 +426,6 @@ a{
     }
 }
 
-/* Sold out overlay */
 .product-card.sold-out::after {
     content: 'HẾT HÀNG';
     position: absolute;
@@ -503,7 +480,6 @@ a{
     font-weight: bold;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .flash-sale-header {
         width: 90vw;

@@ -63,33 +63,6 @@
                     }
                 }
             %>
-
-
-
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">⚡</div>--%>
-<%--                    <p>Hoàn thành đơn hàng</p>--%>
-<%--                </div>--%>
-<%--                <span class="value plus">+200 C-Point</span>--%>
-<%--            </div>--%>
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">⚡</div>--%>
-<%--                    <p>Hoàn thành đơn hàng</p>--%>
-<%--                </div>--%>
-<%--                <span class="value plus">+500 C-Point</span>--%>
-<%--            </div>--%>
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">🎁</div>--%>
-<%--                    <p>Đổi voucher 10K</p>--%>
-<%--                </div>--%>
-<%--                <span class="value minus">-1000 C-Point</span>--%>
-<%--            </div>--%>
         </div>
     </div>
 </main>

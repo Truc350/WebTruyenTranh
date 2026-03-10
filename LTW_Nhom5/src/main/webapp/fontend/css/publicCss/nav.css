@@ -1,4 +1,4 @@
-/* Reset mặc định */
+
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +10,6 @@ body {
     background-color: #f9f9f9;
 }
 
-/* Thanh điều hướng chính */
 .navbar {
     width: 100vw;
     display: flex;
@@ -24,7 +23,6 @@ body {
     z-index: 1000;
 }
 
-/* Logo */
 .logo {
     display: flex;
     align-items: center;
@@ -37,7 +35,7 @@ body {
     height: 100px;
 }
 
-/* Menu chính */
+
 .menu {
     display: flex;
     gap: 20px;
@@ -87,8 +85,6 @@ body {
 .dropdown-content a:hover {
     background-color: #f2f2f2;
 }
-
-/* Hiện submenu khi hover vào .dropdown */
 .dropdown:hover .dropdown-content {
     display: block;
 }
@@ -222,10 +218,6 @@ body {
     left: 10px;
 }
 
-/*.notify-wrapper:hover .notification-panel {*/
-/*    display: block;*/
-/*}*/
-
 .notification-header {
     display: flex;
     justify-content: space-between;
@@ -283,15 +275,14 @@ a {
     text-decoration: none;
 }
 
-/* ========== SEARCH BAR ========== */
 .search-bar {
     position: relative;
-    width: 450px; /* Độ rộng cố định */
+    width: 450px;
 }
 
 .search-box {
     display: block;
-    position: relative; /* Quan trọng để dropdown absolute căn chỉnh theo đây */
+    position: relative;
 }
 
 .search-bar form {
@@ -331,12 +322,12 @@ a {
     padding: 0 10px;
 }
 
-/* ========== DROPDOWN LỊCH SỬ TÌM KIẾM ========== */
+
 .search-history-dropdown {
-    position: absolute; /* Thay đổi từ fixed sang absolute */
-    top: calc(100% + 8px); /* Cách thanh search 8px */
+    position: absolute;
+    top: calc(100% + 8px);
     left: 0;
-    width: 100%; /* Bằng với độ rộng của .search-bar */
+    width: 100%;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -350,8 +341,6 @@ a {
 .search-history-dropdown.show {
     display: block !important;
 }
-
-/* Header của dropdown */
 .history-header {
     display: flex;
     justify-content: space-between;
@@ -403,8 +392,6 @@ a {
 .history-item:hover {
     background-color: #f5f5f5;
 }
-
-/* Tag style cho lịch sử */
 .history-tag {
     display: inline-flex;
     align-items: center;
@@ -434,8 +421,6 @@ a {
 .history-tag .remove:hover {
     color: #ff4c4c;
 }
-
-/* Container cho các tag */
 .history-tags-container {
     padding: 12px;
     display: flex;
@@ -474,7 +459,6 @@ a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* ========== NOTIFICATION BADGE ========== */
 .notification-badge {
     position: absolute;
     top: -8px;
@@ -509,11 +493,10 @@ a {
     font-size: 14px;
 }
 
-/* Notification Panel */
 .notification-panel {
-    display: none; /* Mặc định ẩn */
+    display: none;
     position: absolute;
-    top: 60px; /* Điều chỉnh theo header của bạn */
+    top: 60px;
     right: 0;
     width: 380px;
     max-height: 500px;
@@ -525,7 +508,6 @@ a {
     overflow: hidden;
 }
 
-/* Notification Header */
 .notification-header {
     display: flex;
     justify-content: space-between;
@@ -548,13 +530,12 @@ a {
     font-size: 14px;
 }
 
-/* Notification List */
+
 .notification-list {
     max-height: 400px;
     overflow-y: auto;
 }
 
-/* Notification Item */
 .header-noti-item {
     display: flex;
     gap: 12px;
@@ -576,13 +557,11 @@ a {
     background: #d1e9f7;
 }
 
-/* Notification Icon */
 .noti-icon {
     font-size: 24px;
     flex-shrink: 0;
 }
 
-/* Notification Content */
 .noti-content {
     flex: 1;
     min-width: 0;
@@ -601,7 +580,6 @@ a {
     color: #999;
 }
 
-/* Empty State */
 .empty-noti {
     padding: 40px 20px;
     text-align: center;
@@ -609,7 +587,6 @@ a {
     font-style: italic;
 }
 
-/* Badge */
 .notification-badge {
     display: none;
     position: absolute;
@@ -625,7 +602,6 @@ a {
     text-align: center;
 }
 
-/* Badge Animation */
 @keyframes badge-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.2); }
@@ -635,7 +611,6 @@ a {
     animation: badge-pulse 0.5s ease-in-out;
 }
 
-/* Notify Wrapper */
 .notify-wrapper {
     position: relative;
 }
@@ -648,8 +623,6 @@ a {
     width: 40px;
     height: 40px;
 }
-
-/* ========== NOTIFICATION LIST ========== */
 .notification-list {
     max-height: 400px;
     overflow-y: auto;

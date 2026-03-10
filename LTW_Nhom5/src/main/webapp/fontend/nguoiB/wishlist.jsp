@@ -18,9 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
-
 <jsp:include page="/fontend/public/header.jsp"/>
-
 <main>
     <%
         WishlistDAO wishlistDAO = new WishlistDAO();
@@ -36,7 +34,6 @@
     %>
 
     <jsp:include page="/fontend/nguoiB/ASideUser.jsp"/>
-
     <div class="wishlist-container">
         <c:if test="${not empty sessionScope.successMsg}">
             <div class="alert alert-success"
@@ -151,24 +148,8 @@
                         <i class="fas fa-times-circle"></i> Hết hàng
                     </p>
                     <% } %>
-
-                    <%--                    <div class="wishlist-actions">--%>
-                    <%--                        <button class="add-to-cart-btn"--%>
-                    <%--                                data-comic-id="<%= comic.getId() %>"--%>
-                    <%--                                <%= comic.getStockQuantity() == 0 ? "disabled" : "" %>>--%>
-                    <%--                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ--%>
-                    <%--                        </button>--%>
-                    <%--                        <button class="remove-wishlist-btn"--%>
-                    <%--                                data-comic-id="<%= comic.getId() %>">--%>
-                    <%--                            <i class="fas fa-trash-alt"></i> Xóa--%>
-                    <%--                        </button>--%>
-                    <%--                    </div>--%>
                     <div class="wishlist-actions">
                         <% if (comic.getStockQuantity() > 0) { %>
-                        <%--                        <a href="${pageContext.request.contextPath}/cart?action=add&comicId=<%= comic.getId() %>&quantity=1"--%>
-                        <%--                           class="add-to-cart-btn">--%>
-                        <%--                            <i class="fas fa-shopping-cart"></i> Thêm vào giỏ--%>
-                        <%--                        </a>--%>
                         <a href="${pageContext.request.contextPath}/cart?action=add&comicId=<%= comic.getId() %>&quantity=1&returnUrl=wishlist"
                            class="add-to-cart-btn">
                             <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
@@ -218,7 +199,6 @@
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
-    // Xử lý xóa sản phẩm
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-wishlist-btn') ||
             e.target.closest('.remove-wishlist-btn')) {
@@ -300,7 +280,6 @@
 
 
     function showConfirmPopup(message = 'Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?') {
-        // Inject CSS (chỉ 1 lần)
         if (!document.getElementById('wl-popup-style')) {
             const s = document.createElement('style');
             s.id = 'wl-popup-style';

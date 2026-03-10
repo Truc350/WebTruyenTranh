@@ -15,7 +15,7 @@ body {
     height: 100vh;
 }
 
-/* ==== MAIN CONTENT ==== */
+
 .main-content {
     flex: 1;
     padding: 30px;
@@ -59,7 +59,7 @@ body {
     transform: translateY(-50%);
     font-size: 20px;
     color: #888;
-    pointer-events: none; /* để click không ảnh hưởng input */
+    pointer-events: none;
 }
 
 .btn-add {
@@ -103,7 +103,7 @@ body {
     background-color: #fff1f1;
 }
 
-/* ===== POPUP BASE ===== */
+
 .popup-overlay {
     position: fixed;
     inset: 0;
@@ -113,7 +113,6 @@ body {
     display: none;
     width: 100%;
     height: 100%;
-    /*justify-content: center;*/
     align-items: center;
     z-index: 1000;
 }
@@ -136,7 +135,6 @@ body {
     margin-top: 5px;
 }
 
-/* Nút */
 .btn-row {
     margin-top: 18px;
     display: flex;
@@ -160,7 +158,6 @@ body {
 }
 .btn-save:hover { background: #ff7070; }
 
-/* ===== EDIT POPUP ===== */
 #editPopup .popup-box { width: 420px; }
 .readonly {
     background: #f3f3f3;
@@ -190,7 +187,6 @@ body {
 .edit-btn:hover { color: #0056b3; }
 .delete-btn:hover { color: #ff4c4c; }
 
-/* ==== PAGINATION ==== */
 .pagination-row td {
     text-align: right;
     background-color: #fff;
@@ -229,7 +225,6 @@ body {
     border-color: #FF7A7A;
 }
 
-/* ===== Popup xác nhận xóa ===== */
 #deleteConfirmPopup {
     display: none;
     position: fixed;
@@ -445,7 +440,6 @@ body {
 }
 
 /*popup sửa*/
-/* Cải thiện readonly field cho đẹp hơn */
 .readonly {
     background: #f8fafc;
     padding: 12px 14px;

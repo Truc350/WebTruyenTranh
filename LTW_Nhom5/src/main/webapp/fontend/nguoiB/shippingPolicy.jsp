@@ -284,8 +284,6 @@
     </ul>
     <div class="effective-date">Chính sách sẽ được áp dụng và có hiệu lực từ ngày 17/05/2024.</div>
 </div>
-
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 
 </body>

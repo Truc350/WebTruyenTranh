@@ -29,7 +29,7 @@
             overlay.className = 'msg-overlay';
             overlay.innerHTML =
                 '<div class="msg-popup">' +
-                '<div class="msg-popup-icon">✅</div>' +
+                '<div class="msg-popup-icon"></div>' +
                 '<h3>Thành công</h3>' +
                 '<p><%= message %></p>' +
                 '<button class="msg-btn-ok">OK</button>' +
@@ -53,37 +53,26 @@
     </script>
     <%
         }
-
-        // Lấy thông tin user từ session
         User currentUser = (User) session.getAttribute("currentUser");
-
-        // Parse thông tin từ user
         String fullName = currentUser != null && currentUser.getFullName() != null ? currentUser.getFullName() : "";
         String[] nameParts = fullName.split(" ", 2);
         String ho = nameParts.length > 0 ? nameParts[0] : "";
         String ten = nameParts.length > 1 ? nameParts[1] : "";
-
         String phone = currentUser != null && currentUser.getPhone() != null ? currentUser.getPhone() : "";
         String email = currentUser != null && currentUser.getEmail() != null ? currentUser.getEmail() : "";
         String gender = currentUser != null && currentUser.getGender() != null ? currentUser.getGender() : "male";
-
-        // Parse ngày sinh
         int day = 1, month = 1, year = 2000;
         if (currentUser != null && currentUser.getBirthdate() != null) {
             day = currentUser.getBirthdate().getDayOfMonth();
             month = currentUser.getBirthdate().getMonthValue();
             year = currentUser.getBirthdate().getYear();
         }
-
-        // Parse địa chỉ - có thể chứa CODE hoặc TÊN
         String address = currentUser != null && currentUser.getAddress() != null ? currentUser.getAddress() : "";
         String[] addressParts = address.split(",\\s*");
         String houseNumber = addressParts.length > 0 ? addressParts[0].trim() : "";
         String district = addressParts.length > 1 ? addressParts[1].trim() : "";
         String province = addressParts.length > 2 ? addressParts[2].trim() : "";
         String country = addressParts.length > 3 ? addressParts[3].trim() : "Việt Nam";
-
-        // Kiểm tra xem province và district có phải là CODE hay không
         boolean isProvinceCode = province.matches("\\d+");
         boolean isDistrictCode = district.matches("\\d+");
     %>
@@ -163,18 +152,10 @@
 
         const provinceSelect = document.getElementById("province");
         const districtSelect = document.getElementById("district");
-
-        // Lấy giá trị đã lưu từ server
         const savedProvince = "<%= province %>";
         const savedDistrict = "<%= district %>";
         const isProvinceCode = <%= isProvinceCode %>;
         const isDistrictCode = <%= isDistrictCode %>;
-
-        console.log("📍 Profile address API:", API_BASE);
-        console.log("📍 Saved Province:", savedProvince, "- Is Code:", isProvinceCode);
-        console.log("📍 Saved District:", savedDistrict, "- Is Code:", isDistrictCode);
-
-        //  LOAD TỈNH / THÀNH PHỐ
         fetch(API_BASE + "/p/")
             .then(res => {
                 if (!res.ok) throw new Error("Không load được tỉnh");
@@ -187,12 +168,10 @@
 
                 provinces.forEach(p => {
                     const opt = document.createElement("option");
-                    opt.value = p.name;  // Lưu TÊN vào value
+                    opt.value = p.name;
                     opt.textContent = p.name;
-                    opt.dataset.code = p.code;  // Lưu CODE vào dataset
+                    opt.dataset.code = p.code;
                     opt.dataset.name = p.name;
-
-                    // Chọn tỉnh đã lưu (so sánh cả CODE và TÊN)
                     if (p.name === savedProvince || p.code == savedProvince) {
                         opt.selected = true;
                         selectedProvinceCode = p.code;
@@ -202,7 +181,7 @@
                 });
 
                 provinceSelect.disabled = false;
-                console.log("✅ Provinces loaded:", provinces.length);
+                console.log("Provinces loaded:", provinces.length);
 
                 // Nếu có tỉnh đã lưu, load huyện tương ứng
                 if (selectedProvinceCode) {
@@ -210,11 +189,9 @@
                 }
             })
             .catch(err => {
-                console.error("❌ Lỗi load tỉnh:", err);
+                console.error("Lỗi load tỉnh:", err);
                 alert("Không thể tải danh sách tỉnh/thành phố");
             });
-
-        // Hàm load huyện
         function loadDistricts(provinceCode, districtToSelect = null) {
             districtSelect.innerHTML = '<option>Đang tải...</option>';
             districtSelect.disabled = true;
@@ -244,42 +221,34 @@
 
                     districts.forEach(d => {
                         const opt = document.createElement("option");
-                        opt.value = d.name;  // Lưu TÊN vào value
+                        opt.value = d.name;
                         opt.textContent = d.name;
-                        opt.dataset.code = d.code;  // Lưu CODE vào dataset
+                        opt.dataset.code = d.code;
                         opt.dataset.name = d.name;
-
-                        // Chọn huyện đã lưu (so sánh cả CODE và TÊN)
                         if (districtToSelect && (d.name === districtToSelect || d.code == districtToSelect)) {
                             opt.selected = true;
-                            console.log("✅ Selected district:", d.name);
+                            console.log("Selected district:", d.name);
                         }
 
                         districtSelect.appendChild(opt);
                     });
 
                     districtSelect.disabled = false;
-                    console.log("✅ Districts loaded:", districts.length);
+                    console.log("Districts loaded:", districts.length);
                 })
                 .catch(err => {
-                    console.error("❌ Lỗi load huyện:", err);
+                    console.error("Lỗi load huyện:", err);
                     alert("Không thể tải danh sách huyện");
                 });
         }
-
-        // KHI CHỌN TỈNH → LOAD HUYỆN
         provinceSelect.addEventListener("change", function () {
             const selectedOption = this.options[this.selectedIndex];
             const provinceCode = selectedOption.dataset.code;
-
-            console.log("📍 Province changed:", selectedOption.value, "- Code:", provinceCode);
-
             if (!provinceCode) {
                 districtSelect.innerHTML = '<option value="">Chọn Phường/Xã</option>';
                 districtSelect.disabled = true;
                 return;
             }
-
             loadDistricts(provinceCode);
         });
 

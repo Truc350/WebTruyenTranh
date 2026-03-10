@@ -5,20 +5,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Flash Sale JS loaded');
-
-    // ============================================
-    // 1. COUNTDOWN TIMER
-    // ============================================
     initCountdown();
-
-    // ============================================
-    // 2. SLOT TIME INTERACTIONS
-    // ============================================
     initSlotInteractions();
-
-    // ============================================
-    // 3. PRODUCT CARD ANIMATIONS
-    // ============================================
     initProductCards();
 });
 
@@ -35,37 +23,27 @@ function initCountdown() {
 function initCountdownDynamic() {
     const countdownElement = document.getElementById('countdown');
     const endTimeInput = document.getElementById('flashSaleEndTimeMillis');
-
     if (!countdownElement || !endTimeInput) {
-        console.log('⚠️ No countdown element found');
+        console.log('No countdown element found');
         return;
     }
-
     const targetTime = parseInt(endTimeInput.value);
     const countdownType = endTimeInput.dataset.countdownType || 'end';
-
     if (!targetTime || isNaN(targetTime)) {
-        console.error('❌ Invalid target time');
+        console.error('Invalid target time');
         return;
     }
-
-    console.log(`⏰ Countdown initialized (${countdownType}), target time:`, new Date(targetTime));
-
-    // Clear previous interval
+    console.log(`Countdown initialized (${countdownType}), target time:`, new Date(targetTime));
     if (window.currentCountdownInterval) {
         clearInterval(window.currentCountdownInterval);
     }
-
     function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetTime - now;
-
         if (distance < 0) {
             if (countdownType === 'start') {
-                // Flash Sale vừa bắt đầu
                 countdownElement.innerHTML = '<div class="expired">🎉 Flash Sale đã bắt đầu!</div>';
             } else {
-                // Flash Sale đã kết thúc
                 countdownElement.innerHTML = '<div class="expired">⏰ Flash Sale đã kết thúc!</div>';
             }
 
@@ -73,24 +51,18 @@ function initCountdownDynamic() {
 
             // Reload trang sau 3 giây
             setTimeout(() => {
-                console.log('🔄 Reloading page...');
+                console.log('Reloading page...');
                 location.reload();
             }, 3000);
             return;
         }
-
-        // Tính toán thời gian
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Cập nhật từng ô thời gian
         const hoursElement = document.getElementById('hours');
         const minutesElement = document.getElementById('minutes');
         const secondsElement = document.getElementById('seconds');
-
-        // Nếu có ngày, thêm vào giờ
         const totalHours = days * 24 + hours;
 
         if (hoursElement) hoursElement.textContent = totalHours.toString().padStart(2, '0');
@@ -98,10 +70,7 @@ function initCountdownDynamic() {
         if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
     }
 
-    // Cập nhật ngay lập tức
     updateCountdown();
-
-    // Cập nhật mỗi giây
     window.currentCountdownInterval = setInterval(updateCountdown, 1000);
 }
 
@@ -112,7 +81,7 @@ function initSlotInteractions() {
     const slots = document.querySelectorAll('.slot');
 
     if (slots.length === 0) {
-        console.log('⚠️ No time slots found');
+        console.log('No time slots found');
         return;
     }
 
@@ -121,20 +90,14 @@ function initSlotInteractions() {
             const flashSaleId = this.dataset.flashsaleId;
             const status = this.dataset.status;
 
-            console.log('🎯 Clicked slot:', {
+            console.log('Clicked slot:', {
                 id: flashSaleId,
                 status: status
             });
-
-            // Load dữ liệu cho tất cả các trạng thái
             loadFlashSaleComics(flashSaleId);
-
-            // Cập nhật active state cho slot
             slots.forEach(s => s.classList.remove('active'));
             this.classList.add('active');
         });
-
-        // Hover effect
         slot.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-5px) scale(1.05)';
         });
@@ -144,7 +107,7 @@ function initSlotInteractions() {
         });
     });
 
-    console.log(`✅ Initialized ${slots.length} time slots`);
+    console.log(`Initialized ${slots.length} time slots`);
 }
 
 /**
@@ -156,11 +119,9 @@ async function loadFlashSaleComics(flashSaleId) {
     const flashSaleHeaderContainer = document.querySelector('.flash-sale-header');
 
     if (!productsContainer) {
-        console.error('❌ Products container not found');
+        console.error('Products container not found');
         return;
     }
-
-    // Hiển thị loading
     productsContainer.innerHTML = `
         <div class="loading-container" style="grid-column: 1 / -1; text-align: center; padding: 60px;">
             <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #ff3b30;"></i>
@@ -185,10 +146,8 @@ async function loadFlashSaleComics(flashSaleId) {
         const flashSale = data.data.flashSale;
         const comics = data.data.comics;
 
-        console.log('✅ Loaded Flash Sale:', flashSale);
-        console.log('✅ Comics count:', comics.length);
-
-        // CẬP NHẬT TÊN FLASH SALE
+        console.log('Loaded Flash Sale:', flashSale);
+        console.log('Comics count:', comics.length);
         if (flashSaleHeaderContainer) {
             const discountPercent = Math.round(flashSale.discountPercent || 0);
             flashSaleHeaderContainer.innerHTML = `
@@ -196,18 +155,12 @@ async function loadFlashSaleComics(flashSaleId) {
                 <p class="flash-sale-description">Giảm giá đến <strong>${discountPercent}%</strong></p>
             `;
         }
-
-        // CẬP NHẬT COUNTDOWN theo Flash Sale được chọn
         updateCountdownForFlashSale(flashSale, countdownWrap);
-
-        // Render danh sách comics
         renderComics(comics, productsContainer, contextPath);
-
-        // Khởi tạo lại animations cho product cards
         initProductCards();
 
     } catch (error) {
-        console.error('❌ Error loading Flash Sale:', error);
+        console.error('Error loading Flash Sale:', error);
         productsContainer.innerHTML = `
             <div class="error-container" style="grid-column: 1 / -1; text-align: center; padding: 60px;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff4444;"></i>
@@ -225,7 +178,7 @@ async function loadFlashSaleComics(flashSaleId) {
  */
 function updateCountdownForFlashSale(flashSale, countdownWrap) {
     if (!countdownWrap) {
-        console.error('❌ Countdown wrap not found');
+        console.error('Countdown wrap not found');
         return;
     }
 
@@ -235,22 +188,18 @@ function updateCountdownForFlashSale(flashSale, countdownWrap) {
     const startTimeMillis = flashSale.startTimeMillis;
     const endTimeMillis = flashSale.endTimeMillis;
 
-    console.log('🔄 Updating countdown for Flash Sale:', {
+    console.log('Updating countdown for Flash Sale:', {
         id: flashSale.id,
         name: flashSale.name,
         status: status,
         startTime: new Date(startTimeMillis),
         endTime: new Date(endTimeMillis)
     });
-
-    // Xử lý theo status
     if (status === 'scheduled') {
-        // Flash Sale chưa bắt đầu - đếm ngược đến startTime
         if (countdownLabel) {
             countdownLabel.textContent = 'Bắt đầu sau';
             countdownLabel.style.color = '#ff9800';
         }
-
         if (countdown) {
             countdown.innerHTML = `
                 <div class="time-box" id="hours">00</div>
@@ -260,12 +209,9 @@ function updateCountdownForFlashSale(flashSale, countdownWrap) {
                 <div class="time-box" id="seconds">00</div>
             `;
         }
-
-        // Update hidden input với startTime
         updateHiddenCountdownInput(startTimeMillis, 'start', countdownWrap);
 
     } else if (status === 'active') {
-        // Flash Sale đang diễn ra - đếm ngược đến endTime
         if (countdownLabel) {
             countdownLabel.textContent = 'Kết thúc trong';
             countdownLabel.style.color = '#4caf50';
@@ -280,12 +226,9 @@ function updateCountdownForFlashSale(flashSale, countdownWrap) {
                 <div class="time-box" id="seconds">00</div>
             `;
         }
-
-        // Update hidden input với endTime
         updateHiddenCountdownInput(endTimeMillis, 'end', countdownWrap);
 
     } else if (status === 'ended') {
-        // Flash Sale đã kết thúc
         if (countdownLabel) {
             countdownLabel.textContent = '';
         }
@@ -294,16 +237,14 @@ function updateCountdownForFlashSale(flashSale, countdownWrap) {
             countdown.innerHTML = '<div class="expired">⏰ Flash Sale đã kết thúc!</div>';
         }
 
-        // Clear countdown interval
         if (window.currentCountdownInterval) {
             clearInterval(window.currentCountdownInterval);
             window.currentCountdownInterval = null;
         }
 
-        return; // Không init countdown
+        return;
     }
 
-    // Reinitialize countdown
     initCountdownDynamic();
 }
 
@@ -323,7 +264,7 @@ function updateHiddenCountdownInput(timeMillis, countdownType, countdownWrap) {
     hiddenInput.value = timeMillis;
     hiddenInput.dataset.countdownType = countdownType;
 
-    console.log('✅ Updated countdown input:', {
+    console.log('Updated countdown input:', {
         time: new Date(timeMillis),
         type: countdownType
     });
@@ -348,8 +289,6 @@ function renderComics(comics, container, contextPath) {
     comics.forEach(comic => {
         const soldPercent = Math.min((comic.sold_count / 100) * 100, 100);
         const discountPercent = Math.round(comic.discount_percent);
-
-        // Kiểm tra có deal tốt hơn không
         const hasBetterDeal = comic.has_better_deal === true;
         const betterDealBadge = hasBetterDeal ?
             `<div class="better-deal-badge">
@@ -394,8 +333,6 @@ function renderComics(comics, container, contextPath) {
     });
 
     container.innerHTML = html;
-
-    // Animate progress bars after render
     setTimeout(() => {
         const progressBars = container.querySelectorAll('.progress-fill');
         comics.forEach((comic, index) => {
@@ -414,7 +351,7 @@ function initProductCards() {
     const productCards = document.querySelectorAll('.product-card');
 
     if (productCards.length === 0) {
-        console.log('⚠️ No product cards found');
+        console.log('No product cards found');
         return;
     }
 
@@ -424,8 +361,6 @@ function initProductCards() {
         if (progressBar) {
             const targetWidth = progressBar.style.width;
             progressBar.style.width = '0%';
-
-            // Sử dụng Intersection Observer để animate khi visible
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -440,7 +375,6 @@ function initProductCards() {
             observer.observe(card);
         }
 
-        // Hover effect cho card
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-8px)';
             this.style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)';
@@ -452,44 +386,35 @@ function initProductCards() {
         });
     });
 
-    console.log(`✅ Initialized ${productCards.length} product cards`);
+    console.log(`Initialized ${productCards.length} product cards`);
 }
 
 /**
  * Hàm thêm vào giỏ hàng (được gọi từ nút trong JSP)
  */
 async function addToCart(comicId, event) {
-    // Prevent link navigation
     if (event) {
         event.preventDefault();
         event.stopPropagation();
     }
-
-    console.log('🛒 Adding to cart, comic ID:', comicId);
-
+    console.log('Adding to cart, comic ID:', comicId);
     try {
-        // Lấy contextPath
         const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
-
-        // Gửi GET request đến servlet (vì CartServlet chỉ xử lý GET)
         const url = `${contextPath}/cart?action=add&comicId=${comicId}&quantity=1&buyNow=false&ajax=true`;
-
         const response = await fetch(url, {
             method: 'GET',
-            credentials: 'same-origin' // Gửi cookie session
+            credentials: 'same-origin'
         });
-
-        // Kiểm tra response
         if (response.ok) {
-            showNotification('✅ Đã thêm vào giỏ hàng!', 'success');
+            showNotification('Đã thêm vào giỏ hàng!', 'success');
             updateCartCount();
         } else {
-            showNotification('❌ Có lỗi xảy ra khi thêm vào giỏ hàng!', 'error');
+            showNotification('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'error');
         }
 
     } catch (error) {
-        console.error('❌ Error adding to cart:', error);
-        showNotification('❌ Có lỗi xảy ra khi thêm vào giỏ hàng!', 'error');
+        console.error('Error adding to cart:', error);
+        showNotification(' Có lỗi xảy ra khi thêm vào giỏ hàng!', 'error');
     }
 }
 
@@ -501,8 +426,6 @@ function updateCartCount() {
     if (cartCountElement) {
         const currentCount = parseInt(cartCountElement.textContent) || 0;
         cartCountElement.textContent = currentCount + 1;
-
-        // Animation
         cartCountElement.style.transform = 'scale(1.3)';
         setTimeout(() => {
             cartCountElement.style.transform = 'scale(1)';
@@ -514,9 +437,7 @@ function updateCartCount() {
  * Hiển thị notification
  */
 function showNotification(message, type = 'info') {
-    // Tìm hoặc tạo notification container
     let notificationContainer = document.getElementById('flash-notification-container');
-
     if (!notificationContainer) {
         notificationContainer = document.createElement('div');
         notificationContainer.id = 'flash-notification-container';
@@ -529,8 +450,6 @@ function showNotification(message, type = 'info') {
         `;
         document.body.appendChild(notificationContainer);
     }
-
-    // Tạo notification element
     const notification = document.createElement('div');
     notification.className = `flash-notification ${type}`;
     notification.style.cssText = `
@@ -548,7 +467,6 @@ function showNotification(message, type = 'info') {
         font-weight: 500;
     `;
 
-    // Icon
     const icon = document.createElement('span');
     icon.innerHTML = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
     icon.style.cssText = `
@@ -556,15 +474,11 @@ function showNotification(message, type = 'info') {
         font-weight: bold;
     `;
 
-    // Message
     const messageSpan = document.createElement('span');
     messageSpan.textContent = message;
-
     notification.appendChild(icon);
     notification.appendChild(messageSpan);
     notificationContainer.appendChild(notification);
-
-    // Tự động xóa sau 3 giây
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => {
@@ -582,7 +496,6 @@ function formatCurrency(amount) {
     }).format(amount) + '₫';
 }
 
-// CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
@@ -685,7 +598,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Export functions để có thể gọi từ inline onclick
 window.addToCart = addToCart;
 window.FlashSale = {
     showNotification,
@@ -694,4 +606,4 @@ window.FlashSale = {
     loadFlashSaleComics
 };
 
-console.log('✅ Flash Sale module ready');
+console.log('Flash Sale module ready');

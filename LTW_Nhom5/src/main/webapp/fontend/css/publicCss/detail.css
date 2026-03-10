@@ -191,8 +191,6 @@
     color: yellow;
 }
 
-/* ==================== FLASH SALE STYLES ==================== */
-
 /* Flash Sale Badge - Sản phẩm chi tiết */
 .flash-sale-badge-detail-page {
     display: inline-flex;
@@ -346,7 +344,6 @@
     gap: 10px;
 }
 
-/* Button tăng/giảm số lượng */
 .quantity-control button,
 .quantity-control .quantity-btn {
     width: 32px;
@@ -405,13 +402,11 @@
     pointer-events: none;
 }
 
-/* Khi button bị disable, icon cũng mờ đi */
+
 .quantity-control button:disabled i,
 .quantity-control .quantity-btn:disabled i {
     color: #999;
 }
-
-/* chỗ này container 3 - Related Products */
 .related-products {
     padding: 20px;
     background-color: white;
@@ -522,7 +517,6 @@
     margin: 8px 0;
 }
 
-/* Flash Sale Badge - Product Card */
 .flash-sale-badge {
     position: absolute;
     top: 15px;
@@ -598,7 +592,7 @@
     text-decoration: line-through;
 }
 
-/* ✅ ẨN PHẦN TRĂM GIẢM GIÁ */
+
 .price-section .discount-badge {
     display: none;
 }
@@ -717,7 +711,7 @@ a {
     margin-bottom: 8px;
 }
 
-/* ========== SLIDER SUGGESTION - CLEAN VERSION ========== */
+
 #slider-suggestions .suggest h2 {
     color: white;
     font-size: 26px;
@@ -725,29 +719,26 @@ a {
     margin-bottom: 30px;
 }
 
-/* Container cho mỗi slider */
 #slider-suggestions .product-slider {
     position: relative;
     width: 100%;
     margin-bottom: 30px;
 }
 
-/* Viewport - QUAN TRỌNG */
+
 #slider-suggestions .slider-viewport {
     overflow: hidden;
     width: calc(100% - 100px);
     margin: 0 auto;
 }
 
-/* Track - QUAN TRỌNG */
+
 #slider-suggestions .slider-track {
     display: flex;
     gap: 20px;
     transition: transform 0.4s ease-in-out;
     padding: 10px 0;
 }
-
-/* Product items */
 #slider-suggestions .product-item {
     position: relative;
     flex: 0 0 220px;
@@ -827,8 +818,6 @@ a {
     color: #ff5722;
     font-weight: 600;
 }
-
-/* Flash Sale Badge - Suggested Products Slider */
 .flash-sale-badge-small {
     position: absolute;
     top: 8px;
@@ -849,7 +838,6 @@ a {
 .flash-sale-badge-small i {
     font-size: 9px;
 }
-
 .price-wrapper {
     display: flex;
     flex-direction: row;
@@ -865,7 +853,6 @@ a {
     margin: 0;
 }
 
-/* ARROWS - ĐƠN GIẢN */
 #slider-suggestions .arrow {
     position: absolute;
     top: 50%;
@@ -884,7 +871,6 @@ a {
     font-size: 22px;
     transition: background 0.3s ease;
 }
-
 #slider-suggestions .arrow.prev {
     left: 10px;
 }
@@ -917,7 +903,6 @@ a {
     text-decoration: underline;
 }
 
-/* Thêm vào detail.css */
 .info-popup {
     position: fixed;
     top: 0;
@@ -1084,7 +1069,6 @@ a {
 
 .loading {
     text-align: center;
-    /*padding: 40px;*/
     color: #666;
     font-size: 16px;
 }
@@ -1268,11 +1252,6 @@ a {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
-
-
-/* ==================== PHẦN ĐÁNH GIÁ ==================== */
-
 /* Container đánh giá tổng quan */
 .rating-container {
     background: white;
@@ -1287,8 +1266,6 @@ a {
     margin-bottom: 20px;
     color: #333;
 }
-
-/* Điểm số và sao */
 .rating-score {
     display: flex;
     align-items: center;
@@ -1316,8 +1293,6 @@ a {
     color: #666;
     font-size: 14px;
 }
-
-/* Thanh phân bố rating */
 .rating-bars {
     display: flex;
     flex-direction: column;
@@ -1356,9 +1331,6 @@ a {
     font-size: 14px;
     color: #666;
 }
-
-/* ==================== DANH SÁCH ĐÁNH GIÁ ==================== */
-
 .comment {
     background: white;
     padding: 30px;
@@ -1366,8 +1338,6 @@ a {
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Tab đánh giá */
 .review-tabs {
     display: flex;
     gap: 20px;
@@ -1392,7 +1362,6 @@ a {
     border-bottom-color: #ff4757;
 }
 
-/* Review item */
 .review-item {
     display: flex;
     gap: 20px;
@@ -1404,7 +1373,6 @@ a {
     border-bottom: none;
 }
 
-/* Phần bên trái - Avatar và tên */
 .review-left {
     display: flex;
     flex-direction: column;
@@ -1455,8 +1423,6 @@ a {
     line-height: 1.6;
     margin-bottom: 15px;
 }
-
-/* Ảnh review */
 .review-images {
     display: flex;
     gap: 10px;
@@ -1480,7 +1446,6 @@ a {
     object-fit: cover;
 }
 
-/* Actions */
 .review-actions {
     display: flex;
     gap: 20px;
@@ -1499,9 +1464,6 @@ a {
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
-
-/* Modal xem ảnh */
 .image-modal {
     display: none;
     position: fixed;
@@ -1548,7 +1510,6 @@ a {
     color: #bbb;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .rating-container,
     .comment {

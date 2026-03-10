@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* Khung chung cho alert */
         .alert {
             padding: 15px;
             margin: 15px 0;
@@ -20,16 +19,12 @@
             font-size: 1rem;
             opacity: 0.95;
         }
-
-        /* Thông báo lỗi  */
         .alert-error {
             background-color: #ffebee;
             color: #b71c1c;
             border: 1px solid #ef9a9a;
             border-left: 5px solid #d32f2f;
         }
-
-        /* Thông báo thành công */
         .alert-success {
             background-color: #e8f5e9;
             color: #1b5e20;
@@ -40,27 +35,21 @@
     </style>
 </head>
 <body>
-
 <jsp:include page="/fontend/public/header.jsp"/>
-
 <main>
     <jsp:include page="/fontend/nguoiB/ASideUser.jsp"/>
-
     <div class="change-password-container">
         <h2>Đổi Mật Khẩu</h2>
-
         <c:if test="${not empty error}">
             <div class="alert alert-error">
                 <strong>Lỗi:</strong> ${error}
             </div>
         </c:if>
-
         <c:if test="${not empty success}">
             <div class="alert alert-success">
                 <strong>Thành công:</strong> ${success}
             </div>
         </c:if>
-
         <form action="${pageContext.request.contextPath}/change-password" method="post">
             <div class="form-group">
                 <label for="current-password">Mật khẩu hiện tại*:</label>
@@ -83,7 +72,6 @@
         </form>
     </div>
 </main>
-
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 </body>

@@ -51,7 +51,6 @@
                                placeholder="Nhập số điện thoại" required>
                     </div>
 
-                    <!-- TỈNH/THÀNH PHỐ -->
                     <div class="form-group">
                         <label>Tỉnh/Thành Phố: *</label>
                         <select name="province" id="province" required>
@@ -63,7 +62,6 @@
                         </div>
                     </div>
 
-                    <!-- QUẬN/HUYỆN (thêm mới) -->
                     <div class="form-group">
                         <label>Quận/Huyện: *</label>
                         <select name="district" id="district" required disabled>
@@ -74,8 +72,6 @@
                             <i class="fas fa-spinner fa-spin"></i> Đang tải danh sách quận/huyện...
                         </div>
                     </div>
-
-                    <!-- PHƯỜNG/XÃ -->
                     <div class="form-group">
                         <label>Phường/Xã: *</label>
                         <select name="ward" id="ward" required disabled>
@@ -102,8 +98,6 @@
                             <span class="checkbox-label-text">Đặt địa chỉ này làm địa chỉ mặc định</span>
                         </label>
                     </div>
-
-                    <!-- Hidden inputs địa chỉ mặc định -->
                     <input type="hidden" id="defaultProvince" value="${defaultProvince != null ? defaultProvince : ''}">
                     <input type="hidden" id="defaultDistrict" value="${defaultDistrict != null ? defaultDistrict : ''}">
                     <input type="hidden" id="defaultWard" value="${defaultWard != null ? defaultWard : ''}">
@@ -205,7 +199,6 @@
     </div>
 </div>
 
-<!-- Popup QR -->
 <div class="container-qr-popup" style="display: none;">
     <div class="qr-backdrop"></div>
     <div class="momo-modal" id="momoModal" aria-hidden="true">
@@ -429,8 +422,6 @@
                 opt.value = p.name;
                 opt.dataset.code = p.code;
                 opt.textContent = p.name;
-
-                // Dùng fuzzyMatch thay vì ===
                 if (defaultProvince && fuzzyMatch(p.name, defaultProvince)) {
                     opt.selected = true;
                     autoSelectCode = p.code;
@@ -471,12 +462,9 @@
                 opt.value = d.name;
                 opt.dataset.code = d.code;
                 opt.textContent = d.name;
-
-                // Dùng fuzzyMatch thay vì === để chịu được sai khác tên
                 if (autoSelectDistrict && fuzzyMatch(d.name, autoSelectDistrict)) {
                     opt.selected = true;
                     autoSelectCode = d.code;
-                    // Đồng bộ lại value lưu DB thành tên đúng từ API
                     opt.value = d.name;
                 }
                 districtSelect.appendChild(opt);

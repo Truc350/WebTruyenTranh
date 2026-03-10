@@ -31,8 +31,6 @@
 <div class="container-content">
 
     <div class="container">
-
-        <!-- Bộ lọc giá bên trái -->
         <div id="filter-menu">
             <div class="title-filter">
                 <h2>Bộ lọc sản phẩm</h2>
@@ -42,8 +40,6 @@
 
             <form id="filterForm" method="get" action="${pageContext.request.contextPath}/userCategory">
                 <input type="hidden" name="id" value="${selectedCategory.id}">
-
-                <!-- GIÁ -->
                 <section>
                     <h3>GIÁ:</h3>
                     <ul>
@@ -79,8 +75,6 @@
                         </li>
                     </ul>
                 </section>
-
-                <!-- TÁC GIẢ -->
                 <section>
                     <h3>TÁC GIẢ:</h3>
                     <ul>
@@ -97,8 +91,6 @@
                         </c:if>
                     </ul>
                 </section>
-
-                <!-- NHÀ XUẤT BẢN -->
                 <section>
                     <h3>NHÀ XUẤT BẢN:</h3>
                     <ul>
@@ -115,8 +107,6 @@
                         </c:if>
                     </ul>
                 </section>
-
-                <!-- THỜI GIAN PHÁT HÀNH -->
                 <section>
                     <h3>THỜI GIAN PHÁT HÀNH:</h3>
                     <ul>
@@ -159,7 +149,6 @@
                 </section>
             </form>
         </div>
-
         <script>
             function applyFilters() {
                 document.getElementById('filterForm').submit();
@@ -171,8 +160,6 @@
                 document.getElementById('filterForm').submit();
             }
         </script>
-
-        <!-- content bên phải-->
         <div id="items-listing">
 
             <h1>${selectedCategory.nameCategories}</h1>
@@ -180,8 +167,6 @@
             <div id="sum-items">
                 <p><strong>Tổng sản phẩm hiển thị:</strong> ${comicList.size()}</p>
             </div>
-
-            <!-- Lưới sản phẩm -->
             <section aria-label="Danh sách sản phẩm ${selectedCategory.nameCategories}">
 
                 <c:choose>
@@ -207,15 +192,9 @@
                                              onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
                                         <div class="detail-book">
                                             <p>${comic.nameComics}
-<%--                                                <c:if test="${comic.volume != null}">--%>
-<%--                                                    Tập ${comic.volume}--%>
-<%--                                                </c:if>--%>
                                             </p>
-
-                                            <!-- Giá -->
                                             <c:choose>
                                                 <c:when test="${comic.hasFlashSale}">
-                                                    <!-- Có Flash Sale -->
                                                     <p class="product-price flash">
                                                         <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                                     </p>
@@ -227,13 +206,11 @@
                                                     </p>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <!-- Giá thường -->
                                                     <p class="product-price">
                                                         <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                                                     </p>
                                                 </c:otherwise>
                                             </c:choose>
-
                                             <c:choose>
                                                 <c:when test="${comic.stockQuantity > 0}">
                                                     <p class="sold">Còn hàng: <strong>${comic.stockQuantity}</strong></p>
@@ -257,8 +234,6 @@
         </div>
 
     </div>
-
-    <!-- ========== PHẦN GỢI Ý THÔNG MINH ========== -->
     <c:if test="${not empty recommendations}">
         <div id="slider">
             <div class="suggest">
@@ -273,13 +248,10 @@
                     </c:choose>
                 </h2>
             </div>
-
-            <!-- Duyệt qua từng nhóm gợi ý -->
             <c:forEach var="entry" items="${recommendations}">
                 <c:if test="${not empty entry.value}">
                     <div class="recommendation-section">
                         <h3 class="recommendation-title">
-                            <!-- Icons như cũ -->
                         </h3>
 
                         <div class="product-slider">
@@ -290,7 +262,6 @@
                                         <div class="product-item">
                                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                                 <div style="position: relative;">
-                                                    <!-- Badge Flash Sale -->
                                                     <c:if test="${comic.hasFlashSale}">
                                                         <div class="flash-sale-badge-small">
                                                             <i class="fas fa-bolt"></i>Flash sale
@@ -304,12 +275,7 @@
 
                                                 <p class="product-name">
                                                         ${comic.nameComics}
-<%--                                                    <c:if test="${comic.volume != null}">--%>
-<%--                                                        Tập ${comic.volume}--%>
-<%--                                                    </c:if>--%>
                                                 </p>
-
-                                                <!-- Giá -->
                                                 <c:choose>
                                                     <c:when test="${comic.hasFlashSale}">
                                                         <p class="product-price flash">
@@ -356,23 +322,16 @@
 
 
 </div>
-
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 
 <style>
-    /* Style bổ sung cho trạng thái hết hàng */
     .out-of-stock {
         color: #d32f2f !important;
         font-weight: bold;
     }
-
-    /* Style cho hình ảnh khi load lỗi */
     section[aria-label] article img {
         background-color: #f5f5f5;
     }
-
-    /* Style cho recommendation section */
     .recommendation-section {
         margin-bottom: 30px;
     }
@@ -390,8 +349,6 @@
     .recommendation-title i {
         font-size: 18px;
     }
-
-    /* Link trong slider */
     .product-item a {
         text-decoration: none;
         color: inherit;

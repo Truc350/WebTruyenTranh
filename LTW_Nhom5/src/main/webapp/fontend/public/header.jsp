@@ -15,14 +15,11 @@
     </a>
     <nav class="menu">
         <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
                 <%
                     List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
-
-                    // Nếu chưa có trong request thì tự load
                     if (listCategories == null || listCategories.isEmpty()) {
                         CategoriesDao categoriesDao = new CategoriesDao();
                         listCategories = categoriesDao.listCategories();
@@ -30,7 +27,6 @@
 
                     if (listCategories != null && !listCategories.isEmpty()) {
                         for (Category c : listCategories) {
-                            // Chỉ hiển thị category không bị ẩn
                             if (c.getIs_hidden() == 0) {
                 %>
                 <a href="${pageContext.request.contextPath}/userCategory?id=<%= c.getId() %>">
@@ -84,8 +80,6 @@
                     <i class="fa-solid fa-bell"></i>
                     <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
                 </a>
-
-                <!-- Dropdown thông báo -->
                 <div class="notification-panel" id="notification-panel">
                     <div class="notification-header">
                         <div class="inform-num">
@@ -212,7 +206,6 @@
             object-fit: cover;
         }
 
-        /* Tooltip */
         .social-float-btn {
             position: relative;
         }
@@ -266,8 +259,6 @@
             socialToggle.classList.toggle('open');
             socialItems.classList.toggle('open');
         });
-
-        // Click ngoài thì đóng
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.social-float-container')) {
                 socialToggle.classList.remove('open');
@@ -276,8 +267,6 @@
         });
     </script>
 </header>
-
-<!-- SEARCH HISTORY SCRIPT -->
 <script>
     const searchInput = document.getElementById('searchInput');
     const dropdown = document.getElementById('searchDropdown');
@@ -381,9 +370,6 @@
 
 <c:if test="${not empty sessionScope.currentUser}">
     <script>
-        /**
-         * Load thông báo gần đây cho header dropdown
-         */
         async function loadHeaderNotifications() {
             const url = '${pageContext.request.contextPath}/NotificationServlet/recent?limit=8';
 
@@ -396,30 +382,22 @@
                 }
 
                 const data = await response.json();
-
-                // Cập nhật badge số lượng
                 const count = data.unread_count || 0;
                 const badge = document.getElementById('notification-badge');
                 const badgeCount = document.getElementById('header-badge-count');
-
                 if (badge && badgeCount) {
                     badge.textContent = count;
                     badge.style.display = count > 0 ? 'flex' : 'none';
                     badgeCount.textContent = `(${count})`;
                 }
-
                 const list = document.getElementById('header-notification-list');
                 if (!list) {
                     return;
                 }
-
-                // Nếu không có thông báo
                 if (!data.notifications || data.notifications.length === 0) {
                     list.innerHTML = '<div class="empty-noti">Chưa có thông báo mới</div>';
                     return;
                 }
-
-                // Render danh sách thông báo
                 let html = '';
                 data.notifications.forEach(n => {
                     const unreadClass = (n.is_read === false) ? 'unread' : '';
@@ -444,8 +422,6 @@
                 });
 
                 list.innerHTML = html;
-
-                // Click thông báo → đánh dấu đã đọc
                 document.querySelectorAll('.header-noti-item').forEach(item => {
                     item.addEventListener('click', async function () {
                         const id = this.dataset.id;
@@ -467,7 +443,6 @@
                 }
             }
         }
-
         document.addEventListener('DOMContentLoaded', () => {
 
             const bell = document.getElementById('bell-icon');

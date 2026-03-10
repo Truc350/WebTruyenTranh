@@ -9,11 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comic Store - Giỏ hàng</title>
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/cartCss.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
@@ -27,15 +23,9 @@
       method="post">
 </form>
 
-
-<!-- ===================== MAIN CONTENT ===================== -->
 <main class="wrapper">
-    <!-- CỘT TRÁI: DANH SÁCH SẢN PHẨM (CÓ SCROLL) -->
     <div class="cart-items-container">
-        <!-- Header -->
         <div class="cart-header">GIỎ HÀNG</div>
-
-        <!-- Chọn tất cả -->
         <div class="select-all">
             <input type="checkbox" class="item-checkbox" id="select-all"
                    form="checkoutForm"/>
@@ -43,8 +33,6 @@
             <div class="quantity-header">Số lượng</div>
             <div class="price-header">Thành tiền</div>
         </div>
-
-        <!-- Scrollable Area -->
         <div class="cart-items-scrollable">
             <div class="cart-items">
                 <c:choose>
@@ -59,7 +47,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <!-- SẢN PHẨM TRONG GIỎ HÀNG -->
                         <c:forEach var="item" items="${cartItems}">
                             <div class="cart-item" data-comic-id="${item.comic.id}">
                                 <input type="checkbox" class="item-checkbox" name="selectedComics" value="${item.comic.id}"
@@ -69,19 +56,13 @@
                                 <div class="item-info">
                                     <div class="item-title">${item.comic.nameComics}</div>
                                     <div class="item-subtitle">${item.comic.nameComics}</div>
-
-                                        <%-- ✅ THAY ĐỔI QUAN TRỌNG: Dùng item.finalPrice thay vì item.comic.discountPrice --%>
                                     <div class="item-price" data-price="${item.finalPrice}">
     <span class="discount-price">
         <fmt:formatNumber value="${item.finalPrice}" type="number" groupingUsed="true"/> đ
     </span>
-
-                                            <%-- Hiển thị badge Flash Sale nếu có --%>
                                         <c:if test="${item.flashSaleId != null}">
                                             <span class="flash-sale-badge">⚡ Flash Sale</span>
                                         </c:if>
-
-                                            <%-- Hiển thị giá gốc bị gạch nếu có giảm giá --%>
                                         <c:if test="${item.finalPrice < item.comic.price}">
                                             <del class="original-price">
                                                 <fmt:formatNumber value="${item.comic.price}" type="number" groupingUsed="true"/> đ
@@ -89,16 +70,12 @@
                                         </c:if>
                                     </div>
                                 </div>
-
-                                    <%-- Số lượng --%>
                                 <div class="quantity-control">
                                     <button type="button" class="quantity-btn minus">-</button>
                                     <input type="text" value="${item.quantity}" class="quantity-input" readonly/>
                                     <button type="button" class="quantity-btn plus">+</button>
                                 </div>
-
                                 <div class="item-footer">
-                                        <%-- ✅ THAY ĐỔI: Dùng item.subtotal hoặc item.totalPrice --%>
                                     <div class="item-total">
                                         <fmt:formatNumber value="${item.subtotal}" type="number" groupingUsed="true"/> đ
                                     </div>
@@ -113,36 +90,7 @@
             </div>
         </div>
     </div>
-
-    <!-- CỘT PHẢI: TỔNG KẾT & THANH TOÁN (STICKY) -->
     <div class="cart-summary">
-        <!-- Khuyến mãi -->
-        <%--            <div class="promo-section">--%>
-        <%--                <div class="promo-header">--%>
-        <%--                    <i class="fa-solid fa-tag"></i>--%>
-        <%--                    <span>KHUYẾN MÃI</span>--%>
-        <%--                    <a href="#" class="view-more">Xem thêm ></a>--%>
-        <%--                </div>--%>
-        <%--                <div class="promo-item">--%>
-        <%--                    <div class="promo-info">--%>
-        <%--                        <div class="promo-title">Mã Giảm 10K - Toàn Sàn</div>--%>
-        <%--                        <div class="promo-desc">Đơn hàng từ 130k - Không bao gồm giá trị của các sản phẩm sau Manga,--%>
-        <%--                            Ngoại...--%>
-        <%--                        </div>--%>
-        <%--                        <div class="promo-expiry">HSD: 31/10/2025</div>--%>
-        <%--                        <div class="progress-bar">--%>
-        <%--                            <div class="progress-fill" style="width: 40%;"></div>--%>
-        <%--                        </div>--%>
-        <%--                        <div class="progress-label">Mua thêm 130.000 đ</div>--%>
-        <%--                    </div>--%>
-        <%--                    <button class="btn-buy-more">Mua thêm</button>--%>
-        <%--                </div>--%>
-        <%--                <div class="promo-note">--%>
-        <%--                    <i class="fa-solid fa-circle-info"></i>--%>
-        <%--                    Có thể áp dụng đồng thời nhiều...--%>
-        <%--                </div>--%>
-        <%--            </div>--%>
-        <!-- Tổng tiền -->
         <div class="total-section">
             <div class="total-row">
                 <span>Thành tiền</span>
@@ -157,18 +105,13 @@
                                                             groupingUsed="true"/> đ</span>
             </div>
         </div>
-
-        <!-- Thanh toán -->
         <div class="checkout-section">
             <button type="submit" id="btnCheckout" form="checkoutForm" class="btn-checkout ${not empty cartItems ? 'active' : ''}">THANH
                 TOÁN
             </button>
-            <!--            <div class="checkout-note">(Giảm giá trên web chỉ áp dụng cho bán lẻ)</div>-->
         </div>
     </div>
 </main>
-
-<!-- Modal yêu cầu đăng nhập -->
 <div id="loginModal" class="login-modal">
     <div class="login-modal-content">
         <h3>Bạn cần đăng nhập để mua hàng</h3>
@@ -181,33 +124,21 @@
         </div>
     </div>
 </div>
-
-<!-- Thêm Message Box -->
 <div class="message-box" id="messageBox">
     <span class="close-msg">&times;</span>
     <p id="messageText"></p>
 </div>
-
-<!-- ===================== FOOTER ===================== -->
 <jsp:include page="/fontend/public/Footer.jsp"/>
-
-<!-- JavaScript -->
 <script>
-    // XÓA localStorage khi vừa đăng nhập HOẶC khi giỏ hàng trống
     <c:if test="${not empty sessionScope.clearCartLocalStorage}">
     localStorage.removeItem('cartCheckboxStates');
     <% session.removeAttribute("clearCartLocalStorage"); %>
     </c:if>
-
     <c:if test="${empty cartItems}">
     localStorage.removeItem('cartCheckboxStates');
     </c:if>
-
     const contextPath = '${pageContext.request.contextPath}';
     const isLoggedIn = "${not empty sessionScope.currentUser}" === "true";
-
-
-    // ===== ELEMENTS =====
     const loginModal = document.getElementById("loginModal");
     const closeLoginModal = document.getElementById("closeLoginModal");
     const selectAllCheckbox = document.getElementById("select-all");
@@ -215,8 +146,6 @@
     const totalFinalElement = document.querySelector(".total-final");
     const totalPriceElement = document.querySelector(".total-price");
     const checkoutButton = document.getElementById("btnCheckout");
-
-    // ===== FUNCTIONS =====
     function calculateTotal() {
         const cartItems = document.querySelectorAll(".cart-item");
         let total = 0;
@@ -225,7 +154,6 @@
         cartItems.forEach(item => {
             const checkbox = item.querySelector(".item-checkbox");
             if (checkbox && checkbox.checked) {
-                // ✅ Lấy giá từ data-price (đã là finalPrice)
                 const priceText = item.querySelector(".item-price").dataset.price;
                 const quantity = parseInt(item.querySelector(".quantity-input").value);
                 const price = parseFloat(priceText);
@@ -259,14 +187,12 @@
             }
         }
     }
-
     function updateCartItemCount() {
         const itemCount = document.querySelectorAll(".cart-item").length;
         if (selectAllLabel) {
             selectAllLabel.textContent = "Chọn tất cả (" + itemCount + " sản phẩm)";
         }
     }
-
     function saveCheckboxStates() {
         const states = {};
         document.querySelectorAll(".cart-item").forEach(item => {
@@ -304,15 +230,11 @@
         localStorage.setItem('cartCheckboxStates', JSON.stringify(cleanedStates));
     }
 
-    // ===== INIT =====
     window.addEventListener('DOMContentLoaded', function () {
         restoreCheckboxStates();
         updateCartItemCount();
         calculateTotal();
     });
-
-    // ===== EVENT LISTENERS =====
-    // Chọn tất cả
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener("change", function () {
             const allCheckboxes = document.querySelectorAll(".cart-item .item-checkbox");
@@ -323,8 +245,6 @@
             calculateTotal();
         });
     }
-
-    // Checkbox riêng lẻ
     document.querySelectorAll(".cart-item .item-checkbox").forEach(checkbox => {
         checkbox.addEventListener("change", function () {
             if (!this.checked) {
@@ -340,14 +260,11 @@
             calculateTotal();
         });
     });
-
-    // Tăng/giảm số lượng
     document.querySelectorAll(".quantity-control .quantity-btn").forEach(button => {
         button.addEventListener("click", function () {
             const quantityInput = this.parentElement.querySelector(".quantity-input");
             const comicId = this.closest(".cart-item").getAttribute("data-comic-id");
             let currentValue = parseInt(quantityInput.value);
-
             if (this.classList.contains("plus")) {
                 currentValue++;
             } else if (this.classList.contains("minus") && currentValue > 1) {
@@ -356,8 +273,6 @@
             window.location.href = contextPath + "/cart?action=update&comicId=" + comicId + "&quantity=" + currentValue;
         });
     });
-
-    // Xóa sản phẩm
     document.querySelectorAll(".delete-btn").forEach(button => {
         button.addEventListener("click", function () {
             const comicId = this.closest(".cart-item").getAttribute("data-comic-id");
@@ -366,20 +281,13 @@
             }
         });
     });
-
-    // ===== CHECKOUT HANDLER =====
     const form = document.getElementById("checkoutForm");
-
     form.addEventListener("submit", function (e) {
-
-        // Chưa đăng nhập
         if (!isLoggedIn) {
             e.preventDefault();
             loginModal.style.display = "block";
             return;
         }
-
-        // Chưa chọn sản phẩm
         const checked = document.querySelectorAll(
             ".cart-item .item-checkbox:checked"
         );
@@ -389,21 +297,16 @@
             return;
         }
     });
-
-
-    // ===== MODAL HANDLERS =====
     if (closeLoginModal) {
         closeLoginModal.addEventListener("click", function () {
             if (loginModal) loginModal.style.display = "none";
         });
     }
-
     window.addEventListener("click", function (event) {
         if (event.target === loginModal) {
             loginModal.style.display = "none";
         }
     });
-
     <c:if test="${not empty cartItems}">
     <c:set var="hasFlashSale" value="false" />
     <c:forEach var="item" items="${cartItems}">
@@ -413,16 +316,11 @@
     </c:forEach>
 
     <c:if test="${hasFlashSale}">
-    // Có sản phẩm Flash Sale trong giỏ, tự động refresh mỗi 1 phút
-    console.log('⚡ Giỏ hàng có sản phẩm Flash Sale, sẽ tự động cập nhật giá');
-
     setInterval(function() {
         console.log(' Đang cập nhật giá Flash Sale...');
         location.reload();
-    }, 60000); // Refresh mỗi 60 giây (1 phút)
-
-    // Hiển thị thông báo cho người dùng
-    console.log('💡 Giá sản phẩm Flash Sale sẽ được cập nhật tự động');
+    }, 60000);
+    console.log(' Giá sản phẩm Flash Sale sẽ được cập nhật tự động');
     </c:if>
     </c:if>
 </script>

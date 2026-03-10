@@ -41,8 +41,6 @@ function renderPaginationButtons(paginationContainer, totalPages, currentPage, o
         });
         paginationContainer.appendChild(pageBtn);
     }
-
-    // Nút »
     const nextBtn = document.createElement('button');
     nextBtn.className = 'page-btn next-btn';
     nextBtn.innerHTML = '&#187;';
@@ -95,7 +93,6 @@ function initShipConfirmButtons() {
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
 
-        // Thêm event listener mới
         newBtn.addEventListener('click', function () {
             const orderId = this.dataset.orderId;
             handleShipConfirm(orderId, this);
@@ -227,29 +224,23 @@ function initSearchWithDynamicPagination(searchInputId, tbodyId, paginationId, p
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // 1. TAB CHỜ XÁC NHẬN
     initDynamicPagination('confirmTableBody', 'tablePagination', 'confirm-page', 5);
     initSearchWithDynamicPagination('pendingSearch', 'confirmTableBody', 'tablePagination', 'confirm-page', 5);
 
-    // 2. TAB CHỜ LẤY HÀNG
     initDynamicPagination('pickupTableBody', 'pickupPagination', 'pickup-page', 5);
     initSearchWithDynamicPagination('pickupSearch', 'pickupTableBody', 'pickupPagination', 'pickup-page', 5)
     initShipConfirmButtons();
 
-    // 3. TAB ĐANG GIAO
     initDynamicPagination('deliverTableBody', 'deliveringPagination', 'delivering-page', 5);
     initSearchWithDynamicPagination('deliverSearch', 'deliverTableBody', 'deliveringPagination', 'delivering-page', 5);
     initOrderDetailButtons();
 
-    // 4. TAB ĐÃ GIAO
     initDynamicPagination('deliveredTableBody', 'deliveredPagination', 'delivered-page', 5);
     initSearchWithDynamicPagination('deliveredSearch', 'deliveredTableBody', 'deliveredPagination', 'delivered-page', 5);
 
-    // 5. TAB TRẢ HÀNG/HOÀN TIỀN
     initDynamicPagination('returnTableBody', 'returnPagination', 'return-page', 5);
     initSearchWithDynamicPagination('returnSearch', 'returnTableBody', 'returnPagination', 'return-page', 5);
 
-    // 6. TAB ĐƠN BỊ HỦY
     initDynamicPagination('cancelledTableBody', 'cancelledPagination', 'cancelled-page', 5);
     initSearchWithDynamicPagination('cancelledSearch', 'cancelledTableBody', 'cancelledPagination', 'cancelled-page', 5);
 });
@@ -501,18 +492,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
 
 (function () {
     'use strict';
-    // const SEARCH_DELAY = 500;
-    //
-    //
-    // // Mapping giữa tab và status
-    // const TAB_STATUS_MAP = {
-    //     'tab-pending': 'Pending',
-    //     'tab-pickup': 'AwaitingPickup',
-    //     'tab-delivering': 'Shipping',
-    //     'tab-delivered': 'Completed',
-    //     'tab-return': 'Returned',
-    //     'tab-cancelled': 'Cancelled'
-    // };
 
     const SEARCH_CONFIG = {
         'pendingSearch': {
@@ -558,15 +537,6 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
             noResultMessage: 'Không tìm thấy đơn hàng nào'
         }
     };
-
-    // let searchTimeouts = {};
-    //
-    // function debounce(func, delay, key) {
-    //     return function (...args) {
-    //         clearTimeout(searchTimeouts[key]);
-    //         searchTimeouts[key] = setTimeout(() => func.apply(this, args), delay);
-    //     };
-    // }
 
 
     function searchOrders(keyword, config) {
