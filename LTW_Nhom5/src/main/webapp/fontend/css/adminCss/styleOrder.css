@@ -4,29 +4,22 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 body {
     color: #333;
     width: 100%;
 }
-
 .container {
     display: flex;
     height: 100vh;
 }
-
-/* ==== MAIN CONTENT ==== */
 .main-content {
     flex: 1;
     padding: 30px;
 }
-
 .page-title {
     margin-top: 30px;
     margin-bottom: 30px;
 }
-
-/* ==== ORDER STATUS TABS ==== */
 .order-tabs {
     display: flex;
     align-items: center;
@@ -35,7 +28,6 @@ body {
     border-bottom: 1px solid #e9e9e9;
     padding-bottom: 10px;
 }
-
 .tab-item {
     font-size: 16px;
     color: #333;
@@ -43,17 +35,14 @@ body {
     padding-bottom: 6px;
     transition: color 0.25s ease;
 }
-
 .tab-item:hover {
     color: #ff5e5e;
 }
-
 .tab-item.active {
     color: #ff4c4c;
     font-weight: 600;
     position: relative;
 }
-
 .tab-item.active::after {
     content: "";
     position: absolute;
@@ -65,7 +54,6 @@ body {
     border-radius: 10px;
     transition: width 0.25s ease;
 }
-
 .order-controls {
     display: flex;
     gap: 14px;
@@ -73,14 +61,12 @@ body {
     margin-bottom: 40px;
     margin-top: 40px;
 }
-
 #tab-pending .search-box {
     position: relative;
     display: flex;
     width: 500px;
     height: 40px;
 }
-
 #tab-pending .search-box .search-input {
     width: 100%;
     padding: 8px 35px 8px 12px;
@@ -88,11 +74,9 @@ body {
     border-radius: 6px;
     font-size: 14px;
 }
-
 #tab-pending .search-box .search-input::placeholder {
     font-size: 14px;
 }
-
 #tab-pending .search-box .fa-magnifying-glass {
     position: absolute;
     right: 10px;
@@ -103,7 +87,6 @@ body {
     cursor: pointer;
     transition: 0.2s;
 }
-
 .shipping-select select {
     padding: 9px 12px;
     border-radius: 8px;
@@ -111,14 +94,12 @@ body {
     height: 40px;
     font-size: 14px;
 }
-
 .shipping-select select option {
     padding: 9px 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 14px;
 }
-
 .apply-btn,
 .confirm-all-btn,
 .confirm-btn,
@@ -130,51 +111,41 @@ body {
     transition: 0.3s;
     font-size: 14px;
 }
-
 .apply-btn {
     background: #ff5e5e;
     color: white;
     font-size: 14px;
 }
-
 .confirm-all-btn {
     background: #007bff;
     color: white;
     font-size: 14px;
 }
-
 .confirm-btn {
     background: #28a745;
     color: white;
     font-size: 14px;
 }
-
 .cancel-btn {
     background: #CCCCCC;
 }
-
 .apply-btn:hover {
     background: #ff7070;
 }
-
 .confirm-all-btn:hover {
     background: #0056b3;
 }
-
 .confirm-btn:hover {
     background: #218838;
 }
-
 .cancel-btn:hover {
     background: #b8b8b8;
 }
-
 .order-table {
     /*width: 100%;*/
     border-collapse: collapse;
     border-spacing: 0 5px;
 }
-
 .order-table thead th {
     text-align: left;
     font-weight: 600;
@@ -182,7 +153,6 @@ body {
     background-color: #f9f9f9;
     white-space: nowrap;
 }
-
 .order-table tbody tr {
     background: #fff;
     border-radius: 8px;
@@ -197,12 +167,6 @@ body {
     white-space: nowrap;
 }
 
-/*.order-table td.product-cell,*/
-/*.order-table td:nth-child(8) {*/
-/*    white-space: normal;*/
-/*    max-width: 220px;*/
-/*    word-wrap: break-word;*/
-/*}*/
 
 .order-table td:last-child {
     align-items: center;
@@ -436,11 +400,6 @@ body {
     text-align: right;
     background-color: #fff;
 }
-
-/* =====================================================================
-   POPUP CHI TIẾT ĐƠN HÀNG - FIX CHÍNH GIỮA HOÀN TOÀN
-   ===================================================================== */
-
 .order-detail-popup {
     position: fixed !important;
     top: 0 !important;
@@ -1351,37 +1310,37 @@ tr:not([data-status="Pending"]) .btn-reject {
     text-overflow: ellipsis !important;
 }
 
-/* CỘT 1: MÃ ĐƠN HÀNG */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(1),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(1) {
     width: 140px !important;
 }
 
-/* CỘT 2: KHÁCH HÀNG */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(2),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(2) {
     width: 150px !important;
 }
 
-/* CỘT 3: NGÀY ĐẶT */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(3),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(3) {
     width: 110px !important;
 }
 
-/* CỘT 4: TỔNG TIỀN */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(4),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(4) {
     width: 120px !important;
 }
 
-/* CỘT 5: THANH TOÁN */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(5),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(5) {
     width: 150px !important;
 }
 
-/* CỘT 6: SẢN PHẨM - CHO PHÉP XUỐNG DÒNG */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(6),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(6) {
     width: 250px !important;
@@ -1389,7 +1348,6 @@ tr:not([data-status="Pending"]) .btn-reject {
     line-height: 1.5 !important;
 }
 
-/* CỘT 7: ĐỊA CHỈ - CHO PHÉP XUỐNG DÒNG */
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(7),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(7) {
     width: 500px !important;
@@ -1397,25 +1355,22 @@ tr:not([data-status="Pending"]) .btn-reject {
     line-height: 1.5 !important;
 }
 
-/* CỘT 8: ĐƠN VỊ VẬN CHUYỂN */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(8),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(8) {
     width: 200px !important;
 }
 
-/* CỘT 9: ACTIONS */
+
 #tab-pending .table-scroll-wrapper .order-table th:nth-child(9),
 #tab-pending .table-scroll-wrapper .order-table td:nth-child(9) {
     width: 180px !important;
     text-align: center !important;
 }
-
-/* PAGINATION ROW */
 #tab-pending .pagination-row td {
     border-bottom: none !important;
     background: white !important;
 }
-
 
 #tab-delivered .stars {
     display: flex;
@@ -1423,35 +1378,27 @@ tr:not([data-status="Pending"]) .btn-reject {
     gap: 2px;
     font-size: 18px;
 }
-
 #tab-delivered .stars i {
     color: #FFD43B;
 }
-
 #tab-delivered .stars .fa-regular {
     color: #ddd;
 }
-
 #tab-delivered .stars .rating-text {
     margin-left: 8px;
     font-size: 14px;
     color: #666;
     font-weight: 500;
 }
-
 #tab-delivered .stars .no-rating {
     font-size: 16px;
     color: #999;
     font-weight: 400;
 }
-
-/* Hover effect cho sao */
 #tab-delivered .order-table tbody tr:hover .stars i {
     transform: scale(1.1);
     transition: transform 0.2s ease;
 }
-
-/* Responsive cho rating */
 @media (max-width: 768px) {
     #tab-delivered .stars {
         font-size: 14px;
@@ -1547,8 +1494,6 @@ tr:not([data-status="Pending"]) .btn-reject {
 .action-buttons {
     white-space: nowrap;
 }
-
-/* Popup overlay */
 .popup-desk-overlay {
     position: fixed;
     top: 0;
@@ -1667,11 +1612,6 @@ tr:not([data-status="Pending"]) .btn-reject {
 .no-result-message {
     background-color: #f9fafb;
 }
-
-/* ============================================
-   TAB TRẢ HÀNG/HOÀN TIỀN - FIX TABLE WIDTH & ALIGNMENT
-   ============================================ */
-
 #tab-return .table-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -1679,7 +1619,6 @@ tr:not([data-status="Pending"]) .btn-reject {
     border-radius: 8px;
     background: white;
 }
-
 #tab-return .order-table {
     width: 100%;
     min-width: 1400px;
@@ -1687,61 +1626,49 @@ tr:not([data-status="Pending"]) .btn-reject {
     table-layout: fixed;
 }
 
-/* SET WIDTH CHO TỪNG CỘT */
 #tab-return .order-table th:nth-child(1),
 #tab-return .order-table td:nth-child(1) {
-    width: 120px; /* Mã đơn hàng */
+    width: 120px;
     text-align: left;
 }
-
 #tab-return .order-table th:nth-child(2),
 #tab-return .order-table td:nth-child(2) {
-    width: 180px; /* Khách hàng */
+    width: 180px;
     text-align: left;
 }
 
 #tab-return .order-table th:nth-child(3),
 #tab-return .order-table td:nth-child(3) {
-    width: 250px; /* Lý do hoàn trả */
+    width: 250px;
     white-space: normal !important;
     text-align: left;
 }
 
 #tab-return .order-table th:nth-child(4),
 #tab-return .order-table td:nth-child(4) {
-    width: 150px; /* Số tiền hoàn */
+    width: 150px;
     text-align: left;
 }
 
 #tab-return .order-table th:nth-child(5),
 #tab-return .order-table td:nth-child(5) {
-    width: 150px; /* Tình trạng */
+    width: 150px;
     text-align: left;
 }
 
 #tab-return .order-table th:nth-child(6),
 #tab-return .order-table td:nth-child(6) {
-    width: 100px; /* Chi tiết */
+    width: 100px;
     text-align: center !important;
 }
 
-/* ✅ CỘT HÀNH ĐỘNG - FIX ĐỂ KHÔNG BỊ LỆCH */
-#tab-return .order-table th:nth-child(7),
-#tab-return .order-table td:nth-child(7) {
-    width: 450px !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-    padding: 10px 8px !important;
-}
-
-/* ✅ STYLE CHO CÁC NÚT - ĐẢM BẢO LUÔN CĂNG GIỮA */
 #tab-return .action-buttons {
     display: flex;
     gap: 8px;
     justify-content: center;
     align-items: center;
     white-space: nowrap;
-    min-height: 40px; /* ✅ ĐẢM BẢO HEIGHT ĐỒNG NHẤT */
+    min-height: 40px;
 }
 
 #tab-return .btn-refund,
@@ -1749,10 +1676,10 @@ tr:not([data-status="Pending"]) .btn-reject {
     flex-shrink: 0;
     white-space: nowrap;
     padding: 6px 12px;
-    min-width: 140px; /* ✅ ĐẢM BẢO NÚT RỘNG ĐỦ */
+    min-width: 140px;
 }
 
-/* ✅ STYLE KHI CHỈ CÓ DẤU GẠCH NGANG */
+
 #tab-return .action-buttons span {
     display: inline-block;
     min-height: 36px;
@@ -1760,13 +1687,13 @@ tr:not([data-status="Pending"]) .btn-reject {
     font-size: 18px;
 }
 
-/* HOVER EFFECT */
+
 #tab-return .order-table tbody tr:hover {
     background: #fff5f5;
     transition: 0.25s;
 }
 
-/* SCROLLBAR STYLE */
+
 #tab-return .table-wrapper::-webkit-scrollbar {
     height: 12px;
 }
@@ -1775,63 +1702,47 @@ tr:not([data-status="Pending"]) .btn-reject {
     background: #f1f5f9;
     border-radius: 8px;
 }
-
 #tab-return .table-wrapper::-webkit-scrollbar-thumb {
     background: #94a3b8;
     border-radius: 8px;
 }
-
 #tab-return .table-wrapper::-webkit-scrollbar-thumb:hover {
     background: #64748b;
 }
-
-/* RESPONSIVE */
 @media (max-width: 1600px) {
     #tab-return .order-table {
         min-width: 1600px;
     }
 }
-
-/* HOVER EFFECT */
 #tab-return .order-table tbody tr:hover {
     background: #fff5f5;
     transition: 0.25s;
 }
-
-/* SCROLLBAR STYLE */
 #tab-return .table-wrapper::-webkit-scrollbar {
     height: 12px;
 }
-
 #tab-return .table-wrapper::-webkit-scrollbar-track {
     background: #f1f5f9;
     border-radius: 8px;
 }
-
 #tab-return .table-wrapper::-webkit-scrollbar-thumb {
     background: #94a3b8;
     border-radius: 8px;
 }
-
 #tab-return .table-wrapper::-webkit-scrollbar-thumb:hover {
     background: #64748b;
 }
-
-/* RESPONSIVE - CHO PHÉP SCROLL NGANG */
 @media (max-width: 1600px) {
     #tab-return .order-table {
-        min-width: 1600px; /* Tăng lên nếu màn hình nhỏ */
+        min-width: 1600px;
     }
 }
-
-/* ===== HIỂN THỊ ẢNH MINH CHỨNG TRONG POPUP ===== */
 .proof-images-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 8px;
 }
-
 .proof-image-item {
     width: 100px;
     height: 100px;
@@ -1841,12 +1752,10 @@ tr:not([data-status="Pending"]) .btn-reject {
     cursor: pointer;
     transition: transform 0.2s;
 }
-
 .proof-image-item:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 .proof-image-item img {
     width: 100%;
     height: 100%;
@@ -1857,14 +1766,11 @@ tr:not([data-status="Pending"]) .btn-reject {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
-/* Responsive cho ảnh */
 @media (max-width: 768px) {
     .proof-image-item {
         width: 80px;
         height: 80px;
     }
-
     .image-viewer-content {
         max-width: 95%;
         padding: 10px;
@@ -1876,10 +1782,6 @@ tr:not([data-status="Pending"]) .btn-reject {
         font-size: 28px;
     }
 }
-
-/* ============================================
-   IMAGE VIEWER - XEM ẢNH TO
-   ============================================ */
 
 .image-viewer-overlay {
     position: fixed !important;
@@ -1894,14 +1796,12 @@ tr:not([data-status="Pending"]) .btn-reject {
     justify-content: center !important;
     animation: fadeIn 0.2s ease;
 }
-
 .image-viewer-content {
     position: relative !important;
     max-width: 90% !important;
     max-height: 90% !important;
     animation: zoomIn 0.3s ease;
 }
-
 .image-viewer-content img {
     max-width: 100% !important;
     max-height: 90vh !important;
@@ -1909,7 +1809,6 @@ tr:not([data-status="Pending"]) .btn-reject {
     display: block !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
-
 .close-viewer {
     position: absolute !important;
     top: -40px !important;
@@ -1922,12 +1821,10 @@ tr:not([data-status="Pending"]) .btn-reject {
     transition: color 0.2s, transform 0.2s;
     z-index: 10001 !important;
 }
-
 .close-viewer:hover {
     color: #ff4444 !important;
     transform: scale(1.1);
 }
-
 @keyframes zoomIn {
     from {
         transform: scale(0.8);
@@ -1938,8 +1835,6 @@ tr:not([data-status="Pending"]) .btn-reject {
         opacity: 1;
     }
 }
-
-/* Responsive cho mobile */
 @media (max-width: 768px) {
     .image-viewer-content {
         max-width: 95% !important;
@@ -1970,7 +1865,7 @@ tr:not([data-status="Pending"]) .btn-reject {
 }
 
 .popup-row.reject-reason-row .value {
-    width: 100%; /* ✅ VALUE CHIẾM FULL WIDTH */
+    width: 100%;
     color: #7f1d1d;
     line-height: 1.6;
     padding-left: 0;

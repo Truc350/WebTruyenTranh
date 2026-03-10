@@ -9,7 +9,6 @@ body {
   background-color: #f9f9f9;
 }
 
-/* Thanh điều hướng chính */
 .navbar {
   width: 100vw;
   display: flex;
@@ -102,12 +101,12 @@ body {
   top: 9px;
 }
 
-/* Hiện submenu khi hover vào .dropdown */
+
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
-/* Các hành động bên phải */
+
 .actions {
   display: flex;
   align-items: center;
@@ -137,32 +136,18 @@ body {
 .login-btn {
   display: none;
 }
-
-
-/* bên dưới là css login  */
 .container {
   margin-top: 20px;
 }
 
 .img-Login {
-  /* width: 100%;
-  height: 100vh; */
   background-image: url("../../../img/imgLogin.png");
   background-size: cover;
 }
-
-/* .img-Login .imglogin img {
-  background-size: cover;
-  width: 100vw;
-  height: 90vh;
-} */
-
-
 .img-Login {
   width: 100vw;
   height: 86vh;
 }
-
 
 .container-signup {
   position: absolute;
@@ -373,9 +358,6 @@ a.google:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-
-
-/* code dưới là footer  */
 .footer {
   width: 100vw;
 }
@@ -393,7 +375,6 @@ a.google:active {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: nowrap;
-  /* Prevent wrapping to keep columns horizontal */
   gap: 20px;
   /* Reduced gap for better spacing */
   max-width: 1200px;
@@ -402,11 +383,8 @@ a.google:active {
 
 .footer-column {
   flex: 1;
-  /* Each column takes equal space */
   min-width: 180px;
-  /* Minimum width to prevent squishing */
   text-align: left;
-  /* Align content to the left */
 }
 
 .footer-column .logo img {
@@ -431,8 +409,6 @@ a.google:active {
   margin-right: 8px;
   color: #ffcc00;
 }
-
-/* Liên kết nhanh */
 .footer-column ul {
   list-style: none;
   padding: 0;
@@ -451,14 +427,10 @@ a.google:active {
 .footer-column ul li a:hover {
   color: #ffcc00;
 }
-
-/* Liên hệ */
 .footer-column p i {
   margin-right: 8px;
   color: #ffcc00;
 }
-
-/* Mạng xã hội */
 .social-links {
   margin-top: 10px;
 }
@@ -475,8 +447,6 @@ a.google:active {
   color: #ffcc00;
   transform: scale(1.2);
 }
-
-/* Thanh toán */
 .payment-icons {
   display: flex;
   align-items: center;
@@ -491,8 +461,6 @@ a.google:active {
   background: #fff;
   padding: 4px;
 }
-
-/* Bản quyền */
 .footer-bottom {
   text-align: center;
   border-top: 1px solid #333;
@@ -501,23 +469,18 @@ a.google:active {
   color: #aaa;
   font-size: 14px;
 }
-
 .footer-bottom strong {
   color: #ffcc00;
 }
 
-/* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .footer-container {
     flex-wrap: wrap;
-    /* Allow wrapping on smaller screens */
     justify-content: space-around;
-    /* Center columns when wrapped */
   }
 
   .footer-column {
     flex: 1 1 45%;
-    /* Two columns per row on medium screens */
     margin-bottom: 20px;
   }
 }
@@ -525,20 +488,16 @@ a.google:active {
 @media (max-width: 480px) {
   .footer-column {
     flex: 1 1 100%;
-    /* Stack columns vertically on small screens */
     text-align: center;
-    /* Center text for better appearance */
   }
 
   .payment-icons {
     justify-content: center;
-    /* Center payment icons */
   }
 
   .social-links {
     display: flex;
     justify-content: center;
-    /* Center social icons */
   }
 }
 

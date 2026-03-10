@@ -11,7 +11,6 @@
 <body>
 
 <div class="container">
-    <!-- LEFT -->
     <div class="left">
         <div class="box">
             <img src="${pageContext.request.contextPath}/img/logo.png" class="logo" alt="Logo">
@@ -43,14 +42,11 @@
             </form>
         </div>
     </div>
-
-    <!-- RIGHT -->
     <div class="right">
         <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
     </div>
 </div>
 
-<!-- POPUP SUCCESS -->
 <div class="popup-success" id="successPopup">
     <div class="success-box">
         <h2>Thay đổi mật khẩu thành công</h2>
@@ -59,7 +55,6 @@
 </div>
 
 <script>
-    // Hàm toggle password visibility
     function togglePassword(eyeClass) {
         const eye = document.querySelector("." + eyeClass);
         const input = eye.previousElementSibling;
@@ -75,11 +70,9 @@
         });
     }
 
-    // Khởi tạo toggle cho cả 2 mật khẩu
     togglePassword("toggle1");
     togglePassword("toggle2");
 
-    // Hiển thị popup thành công nếu có
     <c:if test="${success eq true}">
     window.addEventListener('load', function() {
         const successPopup = document.getElementById("successPopup");

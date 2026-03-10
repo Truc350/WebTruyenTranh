@@ -134,17 +134,17 @@ main {
 .profile-form-container,
 .change-password-container,
 .order-history-container {
-    padding: 20px; /* Giảm từ 30px */
+    padding: 20px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 10px; /* Giảm từ 12px */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
-    margin-bottom: 15px; /* Giảm từ 20px */
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 15px;
     width: 100%;
-    max-width: 1000px; /* Giảm từ 800px */
-    min-height: 400px; /* Giảm từ 500px */
+    max-width: 1000px;
+    min-height: 400px;
     box-sizing: border-box;
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
 }
 
 .profile-form-container.hidden,
@@ -155,34 +155,34 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 500px; /* Giảm từ 600px */
+    max-width: 500px;
 }
 
 .change-password-container h2 {
-    font-size: 22px; /* Giảm từ 26px */
+    font-size: 22px;
     color: #333;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
 .change-password-container .form-group {
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
 }
 
 .change-password-container .form-group label {
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
     color: #555;
     font-weight: 500;
-    margin-bottom: 6px; /* Giảm từ 8px */
+    margin-bottom: 6px;
     display: block;
 }
 
 .change-password-container .form-group input[type="password"] {
     width: 100%;
-    padding: 10px; /* Giảm từ 12px */
+    padding: 10px;
     border: 1px solid #d0d0d0;
-    border-radius: 5px; /* Giảm từ 6px */
-    font-size: 16px; /* Giảm từ 16px */
+    border-radius: 5px;
+    font-size: 16px;
     color: #333;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -195,7 +195,7 @@ main {
 }
 
 .change-password-container .password-requirement {
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     color: #777;
     margin-top: 6px; /* Giảm từ 8px */
     line-height: 1.5;
@@ -262,25 +262,25 @@ main {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
 }
 
 .form-group input[type="radio"] {
-    margin-right: 8px; /* Giảm từ 10px */
+    margin-right: 8px;
 }
 
 .save-btn {
     background: #dc3545;
     color: white;
-    padding: 10px 20px; /* Giảm từ 12px 24px */
+    padding: 10px 20px;
     border: none;
-    border-radius: 5px; /* Giảm từ 6px */
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
     font-weight: 500;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: block;
-    margin: 15px auto 0; /* Giảm từ 20px */
+    margin: 15px auto 0;
 }
 
 .save-btn:hover {
@@ -370,7 +370,7 @@ main {
 .diaChi {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Giảm từ 15px */
+    gap: 12px;
     align-items: flex-start;
 }
 
@@ -378,7 +378,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px; /* Giảm từ 5px */
+    gap: 4px;
     width: 100%;
 }
 
@@ -387,22 +387,22 @@ main {
     color: #666;
     text-align: left;
     min-width: auto;
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
 }
 
 .address-group select {
     flex: 1;
-    padding: 6px; /* Giảm từ 8px */
+    padding: 6px;
     border: 1px solid #ddd;
-    border-radius: 3px; /* Giảm từ 4px */
+    border-radius: 3px;
     box-sizing: border-box;
     background-color: #fff;
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
     appearance: none;
     cursor: pointer;
     width: 100%;
     min-width: auto;
-    padding-right: 25px; /* Giảm từ 30px */
+    padding-right: 25px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
@@ -413,42 +413,42 @@ main {
 }
 
 .change-password-container .form-group {
-    margin-bottom: 20px; /*Giảm từ 25px*/
+    margin-bottom: 20px;
 }
 
 .change-password-container .password-requirement {
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 14px;
     color: #666;
-    margin-top: 4px; /* Giảm từ 5px */
+    margin-top: 4px;
 }
 
 .change-password-container .security-note {
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 14px;
     color: #666;
-    margin-top: 8px; /* Giảm từ 10px */
+    margin-top: 8px;
     line-height: 1.5;
 }
 
 .change-password-container .form-group input {
-    width: 250px; /* chiều rộng nhỏ hơn */
-    height: 30px; /* chiều cao nhỏ hơn */
-    padding: 5px 8px; /* khoảng cách bên trong input */
-    font-size: 16px; /* chữ nhỏ hơn */
-    border-radius: 4px; /* bo góc nếu muốn */
-    border: 1px solid #ccc; /* viền input */
+    width: 250px;
+    height: 30px;
+    padding: 5px 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .order-history-container {
-    padding: 20px; /* Giảm từ 30px */
+    padding: 20px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 10px; /* Giảm từ 12px */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 1000px; /* Giảm từ 800px */
-    min-height: 600px; /* Giảm từ 800px */
+    max-width: 1000px;
+    min-height: 600px;
     box-sizing: border-box;
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
 }
 
 .order-history-container.hidden {
@@ -458,13 +458,13 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 500px; /* Giảm từ 600px */
+    max-width: 500px;
 }
 
 .order-history-container h2 {
-    font-size: 24px; /* Giảm từ 26px */
+    font-size: 24px;
     color: #333;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
@@ -472,16 +472,16 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
     flex-wrap: wrap;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 8px;
 }
 
 .filter-tabs {
     display: flex;
     align-items: center;
     position: relative;
-    padding: 8px 30px; /* Giảm từ 10px 40px */
+    padding: 8px 30px;
     overflow: hidden;
 }
 
@@ -491,9 +491,9 @@ main {
     flex-wrap: nowrap;
     overflow-x: auto;
     white-space: nowrap;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 8px;
     scroll-behavior: smooth;
-    padding: 0 30px; /* Giảm từ 40px */
+    padding: 0 30px;
 }
 
 .tabs-container::-webkit-scrollbar {
@@ -506,7 +506,7 @@ main {
 }
 
 .filter-tabs::-webkit-scrollbar {
-    height: 6px; /* Giảm từ 8px */
+    height: 6px;
 }
 
 .filter-tabs::-webkit-scrollbar-track {
@@ -515,7 +515,7 @@ main {
 
 .filter-tabs::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 3px; /* Giảm từ 4px */
+    border-radius: 3px;
 }
 
 .filter-tabs::-webkit-scrollbar-thumb:hover {
@@ -523,12 +523,12 @@ main {
 }
 
 .filter-tab {
-    padding: 6px 12px; /* Giảm từ 8px 16px */
+    padding: 6px 12px;
     border: 1px solid #ccc;
-    border-radius: 15px; /* Giảm từ 20px */
+    border-radius: 15px;
     background-color: #f9f9f9;
     cursor: pointer;
-    font-size: 15px; /* Giảm từ 16px */
+    font-size: 15px;
     transition: background-color 0.3s, color 0.3s;
     white-space: nowrap;
 }
@@ -549,13 +549,13 @@ main {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 25px; /* Giảm từ 30px */
+    width: 25px;
     height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
     transition: background-color 0.3s;
     z-index: 1;
     position: absolute;
@@ -576,15 +576,15 @@ main {
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Giảm từ 20px */
-    max-height: 600px; /* Giảm từ 700px */
+    gap: 15px;
+    max-height: 600px;
     overflow-y: auto;
 }
 
 .order-item {
     border: 1px solid #e0e0e0;
-    border-radius: 6px; /* Giảm từ 8px */
-    padding: 15px; /* Giảm từ 15px */
+    border-radius: 6px;
+    padding: 15px;
     background: #fafafa;
 }
 
@@ -592,15 +592,15 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px; /* Giảm từ 10px */
-    font-size: 14px; /* Giảm từ 14px */
+    margin-bottom: 8px;
+    font-size: 14px;
     color: #666;
 }
 
 .order-status {
-    padding: 3px 10px; /* Giảm từ 4px 12px */
-    border-radius: 15px; /* Giảm từ 20px */
-    font-size: 15px; /* Giảm từ 14px */
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 15px;
     font-weight: bold;
 }
 
@@ -613,9 +613,9 @@ main {
 .order-status.pending {
     color: #d35400;
     background: #fdf5e6;
-    padding: 3px 8px; /* Giảm từ 4px 10px */
-    border-radius: 3px; /* Giảm từ 4px */
-    font-size: 0.8em; /* Giảm từ 0.9em */
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
     font-weight: 500;
 }
 
@@ -630,15 +630,15 @@ main {
 
 .order-content {
     display: flex;
-    gap: 12px; /* Giảm từ 10px */
+    gap: 12px;
     margin-bottom: 8px;
     flex-direction: column;
 }
 
 .product-img {
-    width: 70px; /* Giảm từ 80px */
+    width: 70px;
     height: 70px;
-    border-radius: 6px; /* Giảm từ 6px */
+    border-radius: 6px;
     object-fit: cover;
 }
 
@@ -673,34 +673,34 @@ main {
 
 .order-total {
     text-align: right;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
     color: #333;
-    margin-bottom: 8px; /* Giảm từ 10px */
+    margin-bottom: 8px;
 }
 
 .order-actions {
     display: flex;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 8px;
     justify-content: flex-end;
 }
 
 .action-btn {
-    padding: 5px 10px; /* Giảm từ 6px 12px */
+    padding: 5px 10px;
     border: none;
-    border-radius: 5px; /* Giảm từ 6px */
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     transition: background 0.3s ease;
 }
 
 .order-actions .buy-again {
     background: #28a745;
     color: #fff;
-    padding: 8px 16px; /* Giảm từ 8px 16px */
+    padding: 8px 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 14px;
     transition: background 0.3s ease;
 }
 
@@ -757,11 +757,11 @@ main {
 .action-btn.receive-order {
     background: #28a745;
     color: #fff;
-    padding: 8px 16px; /* Giảm từ 8px 16px */
+    padding: 8px 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 14px */
+    font-size: 14px;
     transition: background 0.3s ease;
 }
 
@@ -820,16 +820,16 @@ main {
 }
 
 .voucher-container {
-    padding: 20px; /* Giảm từ 30px */
+    padding: 20px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 10px; /* Giảm từ 12px */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 700px; /* Giảm từ 800px */
-    min-height: 400px; /* Giảm từ 500px */
+    max-width: 700px;
+    min-height: 400px;
     box-sizing: border-box;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
 }
 
 .voucher-container.hidden {
@@ -839,55 +839,55 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 500px; /* Giảm từ 600px */
+    max-width: 500px;
 }
 
 .voucher-container h2 {
-    font-size: 22px; /* Giảm từ 26px */
+    font-size: 22px;
     color: #333;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
 .voucher-tabs {
     display: flex;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 8px;
     margin-bottom: 15px;
 }
 
 .vouchers-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px; /* Giảm từ 20px */
-    max-height: 600px; /* Giảm từ 700px */
+    gap: 15px;
+    max-height: 600px;
     overflow-y: auto;
 }
 
 .voucher-card {
     background: #f0f8f0;
     border: 1px solid #28a745;
-    border-radius: 10px; /* Giảm từ 12px */
-    padding: 12px; /* Giảm từ 16px */
+    border-radius: 10px;
+    padding: 12px;
     position: relative;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Giảm bóng */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .voucher-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px; /* Giảm từ 10px */
+    margin-bottom: 8px;
 }
 
 .voucher-type {
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     color: #666;
 }
 
 .voucher-status {
-    padding: 3px 6px; /* Giảm từ 4px 8px */
-    border-radius: 10px; /* Giảm từ 12px */
-    font-size: 10px; /* Giảm từ 12px */
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-size: 10px;
     font-weight: bold;
 }
 
@@ -902,31 +902,31 @@ main {
 }
 
 .voucher-body {
-    margin-bottom: 10px; /* Giảm từ 12px */
+    margin-bottom: 10px;
 }
 
 .voucher-title {
-    font-size: 16px; /* Giảm từ 16px */
+    font-size: 16px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 3px; /* Giảm từ 4px */
+    margin-bottom: 3px;
 }
 
 .voucher-desc {
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     color: #666;
-    margin-bottom: 6px; /* Giảm từ 8px */
+    margin-bottom: 6px;
     line-height: 1.4;
 }
 
 .voucher-code {
-    font-size: 16px; /* Giảm từ 18px */
+    font-size: 16px;
     font-weight: bold;
     color: #28a745;
-    margin-bottom: 6px; /* Giảm từ 8px */
+    margin-bottom: 6px;
     background: #fff;
-    padding: 6px; /* Giảm từ 8px */
-    border-radius: 5px; /* Giảm từ 6px */
+    padding: 6px;
+    border-radius: 5px;
     border: 1px dashed #28a745;
 }
 
@@ -934,9 +934,9 @@ main {
     background: none;
     border: 1px solid #007bff;
     color: #007bff;
-    padding: 3px 6px; /* Giảm từ 4px 8px */
-    border-radius: 3px; /* Giảm từ 4px */
-    font-size: 10px; /* Giảm từ 12px */
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 10px;
     cursor: pointer;
 }
 
@@ -949,7 +949,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     color: #666;
 }
 
@@ -957,10 +957,10 @@ main {
     background: #007bff;
     color: #fff;
     border: none;
-    padding: 5px 10px; /* Giảm từ 6px 12px */
-    border-radius: 5px; /* Giảm từ 6px */
+    padding: 5px 10px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
     transition: background 0.3s;
 }
 
@@ -978,21 +978,21 @@ main {
     justify-content: space-between;
     align-items: center;
     cursor: move;
-    padding: 10px 15px; /* Giảm từ 12px 20px */
+    padding: 10px 15px;
     background: #f6f6f6;
     border-bottom: 1px solid #ddd;
-    border-radius: 10px 10px 0 0; /* Giảm từ 12px */
+    border-radius: 10px 10px 0 0;
 }
 
 .wishlist-container {
-    padding: 12px; /* Giảm từ 15px */
+    padding: 12px;
     background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px; /* Giảm từ 10px */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 1000px; /* Giảm từ 800px */
-    min-height: 400px; /* Giảm từ 450px */
+    max-width: 1000px;
+    min-height: 400px;
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -1000,70 +1000,70 @@ main {
 .wishlist-container.hidden {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(8px); /* Giảm từ 10px */
+    transform: translateY(8px);
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 500px; /* Giảm từ 600px */
+    max-width: 500px;
 }
 
 .wishlist-container h2 {
-    font-size: 16px; /* Giảm từ 22px */
+    font-size: 16px;
     color: #1a1a1a;
-    margin-bottom: 12px; /* Giảm từ 15px */
+    margin-bottom: 12px;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.4px; /* Giảm từ 0.5px */
+    letter-spacing: 0.4px;
     display: inline-block;
-    padding-bottom: 2px; /* Giảm từ 3px */
+    padding-bottom: 2px;
 }
 
 .wishlist-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px; /* Giảm từ 15px */
-    max-height: 600px; /* Giảm từ 550px */
+    gap: 15px;
+    max-height: 600px;
     overflow-y: auto;
-    padding-bottom: 8px; /* Giảm từ 10px */
+    padding-bottom: 8px;
 }
 
 .wishlist-item {
     display: block;
-    padding: 8px; /* Giảm từ 10px */
+    padding: 8px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 6px; /* Giảm từ 8px */
+    border-radius: 6px;
     text-align: left;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .wishlist-item:hover {
-    transform: translateY(-1px); /* Giảm từ -2px */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); /* Giảm bóng */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .wishlist-img {
     width: 100%;
-    height: 240px; /* Giảm từ 220px */
+    height: 240px;
     object-fit: cover;
-    border-radius: 5px; /* Giảm từ 6px */
-    border: 1.5px solid #f0f0f0; /* Giảm từ 2px */
-    margin-bottom: 6px; /* Giảm từ 8px */
+    border-radius: 5px;
+    border: 1.5px solid #f0f0f0;
+    margin-bottom: 6px;
     transition: transform 0.3s ease;
 }
 
 .wishlist-item:hover .wishlist-img {
-    transform: scale(1.01); /* Giảm từ 1.02 */
+    transform: scale(1.01);
 }
 
 .wishlist-info {
-    padding: 0 4px; /* Giảm từ 0 5px */
+    padding: 0 4px;
 }
 
 .wishlist-info h3 {
-    margin: 0 0 5px 0; /* Giảm từ 6px */
-    font-size: 14px; /* Giảm từ 14px */
+    margin: 0 0 5px 0;
+    font-size: 14px;
     color: #1a1a1a;
     font-weight: 500;
     line-height: 1.2;
@@ -1099,7 +1099,7 @@ main {
 .wishlist-actions {
     display: flex;
     flex-direction: row;
-    gap: 6px; /* Giảm từ 8px */
+    gap: 6px;
     align-items: center;
     justify-content: center;
 }
@@ -1109,15 +1109,15 @@ main {
     background: linear-gradient(90deg, #28a745 0%, #218838 100%);
     color: #fff;
     border: none;
-    padding: 6px 12px; /* Giảm từ 6px 12px */
-    border-radius: 5px; /* Giảm từ 5px */
+    padding: 6px 12px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 12px */
+    font-size: 14px;
     font-weight: 500;
     width: 100%;
-    max-width: 130px; /* Giảm từ 130px */
+    max-width: 130px;
     transition: all 0.3s ease;
-    box-shadow: 0 1px 2px rgba(40, 167, 69, 0.15); /* Giảm bóng */
+    box-shadow: 0 1px 2px rgba(40, 167, 69, 0.15);
 }
 
 .remove-wishlist-btn {
@@ -1144,26 +1144,26 @@ main {
 
 @media (max-width: 600px) {
     .wishlist-container {
-        padding: 8px; /* Giảm từ 10px */
+        padding: 8px;
     }
 
     .wishlist-grid {
         grid-template-columns: 1fr;
-        gap: 8px; /* Giảm từ 10px */
+        gap: 8px;
     }
 
     .wishlist-img {
-        height: 150px; /* Giảm từ 180px */
+        height: 150px;
     }
 
     .wishlist-info h3 {
-        font-size: 10px; /* Giảm từ 12px */
+        font-size: 10px;
     }
 
     .wishlist-price {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1px; /* Giảm từ 2px */
+        gap: 1px;
     }
 
     .wishlist-actions {
@@ -1174,43 +1174,43 @@ main {
     .remove-wishlist-btn {
         width: 100%;
         max-width: none;
-        padding: 4px 8px; /* Giảm từ 5px 10px */
+        padding: 4px 8px;
     }
 }
 
 .no-wishlist {
     display: none;
     text-align: center;
-    padding: 40px 12px; /* Giảm từ 50px 15px */
+    padding: 40px 12px;
     color: #666;
     background: #fff;
-    border-radius: 6px; /* Giảm từ 8px */
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Giảm bóng */
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .no-wishlist img {
-    width: 80px; /* Giảm từ 100px */
+    width: 80px;
     height: auto;
-    margin-bottom: 10px; /* Giảm từ 12px */
+    margin-bottom: 10px;
 }
 
 .no-wishlist p {
     font-weight: 600;
     color: #555;
-    font-size: 12px; /* Giảm từ 14px */
+    font-size: 12px;
 }
 
 .xu-container {
-    padding: 20px; /* Giảm từ 30px */
+    padding: 20px;
     background: #ffffff;
     border: 1px solid #e0e0e0;
-    border-radius: 10px; /* Giảm từ 12px */
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); /* Giảm bóng */
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     width: 100%;
-    max-width: 1000px; /* Giảm từ 800px */
-    min-height: 400px; /* Giảm từ 500px */
+    max-width: 1000px;
+    min-height: 400px;
     box-sizing: border-box;
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
 }
 
 .xu-container.hidden {
@@ -1220,13 +1220,13 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    max-width: 500px; /* Giảm từ 600px */
+    max-width: 500px;
 }
 
 .xu-container h2 {
-    font-size: 22px; /* Giảm từ 26px */
+    font-size: 22px;
     color: #333;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
     font-weight: 600;
 }
 
@@ -1235,10 +1235,10 @@ main {
     align-items: center;
     justify-content: space-between;
     background: linear-gradient(135deg, #f0f8ff 0%, #e6f7ff 100%);
-    padding: 15px; /* Giảm từ 20px */
-    border-radius: 8px; /* Giảm từ 10px */
-    margin-bottom: 20px; /* Giảm từ 25px */
-    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1); /* Giảm bóng */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
 }
 
 .xu-text {
@@ -1246,46 +1246,46 @@ main {
 }
 
 .xu-text .label {
-    font-size: 16px; /* Giảm từ 18px */
+    font-size: 16px;
     color: #555;
-    margin-bottom: 6px; /* Giảm từ 8px */
+    margin-bottom: 6px;
     font-weight: 500;
 }
 
 .xu-text h1 {
-    font-size: 30px; /* Giảm từ 36px */
+    font-size: 30px;
     color: #007bff;
     margin: 0;
     font-weight: 700;
 }
 
 .xu-icon {
-    width: 60px; /* Giảm từ 80px */
+    width: 60px;
     height: auto;
     opacity: 0.9;
 }
 
 .history {
     background: #f9f9f9;
-    padding: 15px; /* Giảm từ 20px */
-    border-radius: 8px; /* Giảm từ 10px */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Giảm bóng */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .history h3 {
-    font-size: 20px; /* Giảm từ 22px */
+    font-size: 20px;
     color: #333;
-    margin-bottom: 12px; /* Giảm từ 15px */
+    margin-bottom: 12px;
     font-weight: 600;
-    border-bottom: 1.5px solid #e0e0e0; /* Giảm từ 2px */
-    padding-bottom: 6px; /* Giảm từ 8px */
+    border-bottom: 1.5px solid #e0e0e0;
+    padding-bottom: 6px;
 }
 
 .history .item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0; /* Giảm từ 12px */
+    padding: 10px 0;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -1296,23 +1296,23 @@ main {
 .history .left {
     display: flex;
     align-items: center;
-    gap: 8px; /* Giảm từ 10px */
+    gap: 8px;
 }
 
 .history .light-icon {
-    font-size: 18px; /* Giảm từ 20px */
+    font-size: 18px;
     color: #ffc107;
 }
 
 .history .left p {
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
     color: #333;
     margin: 0;
     font-weight: 500;
 }
 
 .history .value {
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
     font-weight: 600;
 }
 
@@ -1340,23 +1340,23 @@ main {
 
 .voucher-popup-content {
     background: #fff;
-    width: 320px; /* Giảm từ 380px */
-    padding: 15px; /* Giảm từ 20px */
-    border-radius: 8px; /* Giảm từ 10px */
+    width: 320px;
+    padding: 15px;
+    border-radius: 8px;
     animation: fadeIn 0.3s ease;
     position: relative;
 }
 
 .close-popup {
     position: absolute;
-    right: 10px; /* Giảm từ 12px */
-    top: 6px; /* Giảm từ 8px */
-    font-size: 22px; /* Giảm từ 26px */
+    right: 10px;
+    top: 6px;
+    font-size: 22px;
     cursor: pointer;
 }
 
 .voucher-detail-row {
-    margin: 8px 0; /* Giảm từ 10px */
+    margin: 8px 0;
     display: flex;
     justify-content: space-between;
 }
@@ -1368,12 +1368,12 @@ main {
 
 .use-voucher-btn {
     width: 100%;
-    padding: 8px; /* Giảm từ 10px */
+    padding: 8px;
     background: #ff3d00;
     color: white;
     border: none;
-    border-radius: 6px; /* Giảm từ 8px */
-    margin-top: 12px; /* Giảm từ 15px */
+    border-radius: 6px;
+    margin-top: 12px;
     cursor: pointer;
 }
 
@@ -1385,34 +1385,27 @@ main {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08) !important;
     width: 100% !important;
     max-width: 1000px !important;
-    /*min-height: 520px !important;   !* giống y hệt mấy cái kia *!*/
     box-sizing: border-box !important;
     min-height: 550px;
 
 }
-
-/* Nếu em vẫn muốn nó cao hơn một chút thì để 550px cũng được */
-
-
 .notification-container .tabs {
     display: flex;
     gap: 10px;
     padding: 8px 20px;
     background: #f8f8f8;
     border-radius: 10px;
-    /* overflow-x: auto;  XÓA DÒNG NÀY */
     white-space: nowrap;
     scrollbar-width: none;
     margin-bottom: 20px;
 
-    justify-content: center; /* căn giữa các tab theo chiều ngang */
-    align-items: center; /* căn giữa theo chiều dọc */
+    justify-content: center;
+    align-items: center;
 }
 
 .notification-container .tabs::-webkit-scrollbar {
     display: none;
 }
-
 .notification-container .tab {
     padding: 10px 20px;
     font-size: 15px;
@@ -1423,36 +1416,23 @@ main {
     transition: all 0.3s ease;
     min-width: fit-content;
 }
-
-/*tab dang chon*/
-/* KHI TAB ĐƯỢC CLICK → CHỮ CHUYỂN THÀNH MÀU ĐỎ NGAY LẬP TỨC */
 .notification-container .tab.active {
     color: #ee4d2d !important;
 }
-
 .notification-container .tab:hover:not(.active) {
     background: #f5f5f5;
     color: #ff4c4c;
 
 }
 
-/*hover*/
 .tab:hover {
     color: #dc3545;
 }
 
 .notification-container.line {
-    /*height: 2px;*/
-    /*background: #ee4d2d;*/
-    /*width: 0;*/
-    /*transition: all 0.4s ease;*/
-    /*margin-top: -2px;*/
-    /*position: relative;*/
     display: none;
 }
 
-/*noi dung con empty*/
-/* =========== CĂN GIỮA CHỮ "KHÔNG CÓ THÔNG BÁO" =========== */
 .notification-container .empty-message {
     position: absolute;
     top: 50%;
@@ -1462,10 +1442,9 @@ main {
     color: #999;
     text-align: center;
     width: 100%;
-    pointer-events: none; /* để không chắn click nếu sau này thêm nút */
+    pointer-events: none;
 }
 
-/* Đảm bảo container cha có position relative để absolute con hoạt động */
 .notification-container {
     position: relative !important;
 }
@@ -1475,7 +1454,6 @@ main {
         opacity: 0;
         transform: translateY(-8px);
     }
-    /* Giảm từ -10px */
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1486,21 +1464,21 @@ main {
     .xu-header {
         flex-direction: column;
         text-align: center;
-        gap: 12px; /* Giảm từ 15px */
+        gap: 12px;
     }
 
     .xu-text h1 {
-        font-size: 24px; /* Giảm từ 28px */
+        font-size: 24px;
     }
 
     .xu-icon {
-        width: 50px; /* Giảm từ 60px */
+        width: 50px;
     }
 
     .history .item {
         flex-direction: column;
         align-items: flex-start;
-        gap: 6px; /* Giảm từ 8px */
+        gap: 6px;
     }
 }
 
@@ -1511,7 +1489,7 @@ main {
 
     .voucher-footer {
         flex-direction: column;
-        gap: 6px; /* Giảm từ 8px */
+        gap: 6px;
     }
 }
 
@@ -1527,7 +1505,7 @@ main {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px; /* Giảm từ 10px */
+        gap: 8px;
     }
 
     .order-actions {
@@ -1535,20 +1513,20 @@ main {
     }
 
     .product-img {
-        width: 60px; /* Giảm từ 60px */
+        width: 60px;
         height: 50px;
     }
 
     .product-info h3 {
-        font-size: 16px; /* Giảm từ 14px */
+        font-size: 16px;
     }
 }
 
 @media (max-width: 900px) {
     main {
         flex-direction: column;
-        padding: 15px; /* Giảm từ 20px */
-        gap: 15px; /* Giảm từ 20px */
+        padding: 15px;
+        gap: 15px;
     }
 
     .profile-container {
@@ -1563,17 +1541,17 @@ main {
 
     .profile-form-container,
     .change-password-container {
-        max-width: 100%; /* Giảm từ 1935px */
-        min-height: 300px; /* Giảm từ 400px */
+        max-width: 100%;
+        min-height: 300px;
     }
 
     .order-history-container {
-        min-height: 500px; /* Giảm từ 600px */
+        min-height: 500px;
         max-width: 100%;
     }
 
     .orders-list {
-        max-height: 400px; /* Giảm từ 500px */
+        max-height: 400px;
     }
 }
 
@@ -1593,26 +1571,26 @@ main {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 500px; /* Giảm từ 550px */
+    width: 500px;
     max-width: 95%;
     background: #fff;
-    padding: 25px; /* Giảm từ 30px */
-    border-radius: 10px; /* Giảm từ 12px */
+    padding: 25px;
+    border-radius: 10px;
     display: none;
     z-index: 101;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); /* Giảm bóng */
-    font-size: 14px; /* Giảm từ 18px */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    font-size: 14px;
 }
 
 .header-review p#title {
-    font-size: 16px; /* Giảm từ 22px */
+    font-size: 16px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 15px; /* Giảm từ 20px */
+    margin-bottom: 15px;
 }
 
 .rating-stars span {
-    font-size: 20px; /* Giảm từ 32px */
+    font-size: 20px;
     cursor: pointer;
     color: #ccc;
 }
@@ -1624,57 +1602,57 @@ main {
 .rating-stars {
     display: flex;
     justify-content: center;
-    gap: 6px; /* Giảm từ 8px */
+    gap: 6px;
 }
 
 .rating-label {
     text-align: center;
-    margin-top: 10px; /* Giảm từ 12px */
-    font-size: 16px; /* Giảm từ 18px */
+    margin-top: 10px;
+    font-size: 16px;
 }
 
 .field,
 .field-img {
-    margin-bottom: 15px; /* Giảm từ 18px */
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    gap: 5px; /* Giảm từ 6px */
+    gap: 5px;
 }
 
 .field input,
 .field textarea {
     width: 100%;
-    padding: 10px; /* Giảm từ 12px */
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 6px; /* Giảm từ 8px */
-    font-size: 14px; /* Giảm từ 17px */
+    border-radius: 6px;
+    font-size: 14px;
 }
 
 #image-upload {
-    font-size: 14px; /* Giảm từ 16px */
+    font-size: 14px;
 }
 
 #image-preview img {
-    width: 80px; /* Giảm từ 90px */
-    margin-right: 5px; /* Giảm từ 6px */
+    width: 80px;
+    margin-right: 5px;
     margin-top: 5px;
-    border-radius: 5px; /* Giảm từ 6px */
+    border-radius: 5px;
 }
 
 .actions-write-review {
     display: flex;
     justify-content: flex-end;
-    gap: 10px; /* Giảm từ 12px */
-    margin-top: 12px; /* Giảm từ 15px */
+    gap: 10px;
+    margin-top: 12px;
 }
 
 .btn-reivew {
-    padding: 8px 14px; /* Giảm từ 10px 20px */
-    border-radius: 6px; /* Giảm từ 8px */
+    padding: 8px 14px;
+    border-radius: 6px;
     background: #ddd;
     border: none;
     cursor: pointer;
-    font-size: 14px; /* Giảm từ 17px */
+    font-size: 14px;
 }
 
 .btn-reivew.primary {
@@ -1682,7 +1660,6 @@ main {
     color: white;
 }
 
-/* Nút X đỏ */
 .remove-image-btn {
     position: absolute;
     top: -8px;
@@ -1706,7 +1683,6 @@ main {
     background: #cc0000;
 }
 
-/* Container ảnh */
 .image-item {
     position: relative;
     display: inline-block;
@@ -1720,7 +1696,6 @@ main {
     border: 1px solid #ddd;
 }
 
-/* Flash Sale Badge */
 .flash-sale-badge {
     display: inline-block;
     background: linear-gradient(135deg, #ff4444, #ff6b6b);
@@ -1734,7 +1709,6 @@ main {
     animation: flashPulse 2s infinite;
 }
 
-/* Price Changed Badge */
 .price-changed-badge {
     display: inline-block;
     background: #28a745;
@@ -1746,14 +1720,12 @@ main {
     margin-left: 8px;
 }
 
-/* Original Price Note */
 .original-price-note {
     font-size: 11px;
     color: #666;
     font-style: italic;
     margin-left: 8px;
 }
-
 @keyframes flashPulse {
     0%, 100% {
         opacity: 1;

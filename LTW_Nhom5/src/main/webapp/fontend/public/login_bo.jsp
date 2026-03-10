@@ -6,16 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <%--    <link rel="stylesheet" href="../css/publicCss/nav.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/Authentic.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/Register.css">--%>
-    <%--    <link rel="stylesheet" href="../css/publicCss/login.css">--%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Authentic.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/Register.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- <script src="../../js/Login.js" defer></script> -->
 </head>
 
 <body>
@@ -29,7 +24,6 @@
         String Username = request.getParameter("username");
         if (Username == null) Username = "";
     %>
-    <!-- phần này dang nhap -->
     <form class="container-signup" action="${pageContext.request.contextPath}/login" method="post">
         <div class="title">
             <h3>Đăng nhập Comic Store</h3>
@@ -53,9 +47,6 @@
             </div>
 
             <button class="btn btn_guiOTP">Đăng nhập</button>
-            <!-- <a href="homePage.jsp">
-            </a> -->
-
             <div class="dktk">
                 <span><a href="#" id="show-register">Đăng ký tài khoản</a></span>
             </div>
@@ -77,11 +68,8 @@
             </div>
         </div>
     </form>
-
-    <!-- phần này dang ki -->
     <div class="container-register">
         <div class="glass-card">
-            <!-- Header -->
             <div class="form-container active" id="registerForm">
                 <div class="form-header">
                     <h2>Tạo tài khoản</h2>
@@ -91,32 +79,24 @@
 
             <div class="auth-form" id="registerFormElement">
                 <div class="input-group">
-                    <!--name-->
                     <div class="input-child">
                         <div class="name-register">
                             <i class="fa-solid fa-user"></i>
                             <input id="firstName" name="firstName" type="text" placeholder="Tên đăng nhập"/>
                         </div>
                     </div>
-
-
-                    <!-- Email -->
                     <div class="input-child">
                         <div class="email-container">
                             <i class="fa-solid fa-envelope"></i>
                             <input id="email" name="email" type="text" placeholder="Địa chỉ Email"/>
                         </div>
                     </div>
-
-                    <!-- Password -->
                     <div class="input-child">
                         <div class="pw-container">
                             <i class="fa-solid fa-lock"></i>
                             <input id="pw" name="pw" type="text" placeholder="Mật khẩu"/>
                         </div>
                     </div>
-
-                    <!-- Confirm Password -->
                     <div class="input-child">
                         <div class="cf-pw-container">
                             <i class="fa-solid fa-lock"></i>
@@ -124,7 +104,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Terms checkbox -->
                 <div class="input-group">
                     <div class="input-container" data-doc="TheDoc">
                         <input id="agree" name="agree" type="checkbox" placeholder="Confirm Password"/>
@@ -149,15 +128,11 @@
         </div>
 
     </div>
-
-
-    <!-- phần này quên xác thuật quên mật khẩu -->
     <div class="forgot-pd-container">
         <h2>Xác thực mail người dùng</h2>
         <div id="forgot-password-form">
             <div class="email-class">
                 <label for="email" class="label-with-icon">Email</label>
-                <!-- <input class="in" type="email" id="email" placeholder="Nhập Email để lấy mã xác thực"> -->
                 <input class="in" type="email" placeholder="Nhập Email để lấy mã xác thực">
             </div>
             <div class="verify">
@@ -187,7 +162,6 @@
 
 <footer class="footer">
     <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
         <div class="footer-column">
             <div class="logo">
                 <a href="#">
@@ -205,7 +179,6 @@
             </p>
         </div>
 
-        <!-- Cột 2: Liên kết nhanh -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
             <ul>
@@ -216,7 +189,6 @@
             </ul>
         </div>
 
-        <!-- Cột 3: Hỗ trợ khách hàng -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
             <ul>
@@ -225,7 +197,6 @@
             </ul>
         </div>
 
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
             <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
@@ -242,7 +213,6 @@
             </div>
         </div>
 
-        <!-- Cột 5: Thanh toán -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>
@@ -260,9 +230,6 @@
 </footer>
 
 <script>
-
-
-    //cái dưới là chuyển form đăng nhập đăng ký\
     document.getElementById("show-register").addEventListener("click", function (event) {
         event.preventDefault();
         document.querySelector(".container-signup").style.display = "none";
@@ -277,14 +244,12 @@
     });
 
 
-    //cái này làm cho xác thực quên mật khẩu
     document.getElementById("show-forgot-pw").addEventListener("click", function (event) {
         event.preventDefault();
         document.querySelector(".container-signup").style.display = "none";
         document.querySelector(".forgot-pd-container").style.display = "block";
     });
 
-    //cái này new-pass khi quên
     const verifyInput = document.getElementById('verify-code');
     const newPassInput = document.getElementById('new-password');
 

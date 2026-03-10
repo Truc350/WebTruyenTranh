@@ -89,7 +89,6 @@
     color: white;
 }
 
-/* Nút nhận thông báo */
 .action-panel {
     display: flex;
     align-items: flex-start;
@@ -127,7 +126,6 @@
     background: #666;
 }
 
-/* ===== PHẦN DANH SÁCH TRUYỆN - GIỐNG HOMEPAGE ===== */
 .series-volumes-container {
     max-width: 1400px;
     margin: 40px auto;

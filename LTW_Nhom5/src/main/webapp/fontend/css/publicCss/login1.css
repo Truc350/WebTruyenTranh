@@ -14,7 +14,7 @@ body {
     height: 100vh;
 }
 
-/* ===== LEFT 2/3 ===== */
+
 .login-section {
     width: 66.666%;
     background: #fff;
@@ -151,7 +151,7 @@ button:hover {
     border: 1px solid #ddd;
 }
 
-/* Error message */
+
 .error-message {
     color: #dc3545;
     background: #f8d7da;
@@ -163,7 +163,6 @@ button:hover {
     text-align: center;
 }
 
-/* ===== RIGHT 1/3 ===== */
 .image-section {
     width: 33.333%;
 }
@@ -173,8 +172,6 @@ button:hover {
     height: 100%;
     object-fit: cover;
 }
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .image-section {
         display: none;
@@ -190,7 +187,6 @@ button:hover {
     }
 }
 
-/* Ẩn nút con mắt mặc định trên Chrome, Edge */
  input[type="password"]::-ms-reveal,
  input[type="password"]::-ms-clear {
      display: none;

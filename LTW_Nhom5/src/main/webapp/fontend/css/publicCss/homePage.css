@@ -1,4 +1,4 @@
-/* Reset mặc định */
+
 * {
   margin: 0;
   padding: 0;
@@ -13,8 +13,6 @@ body {
 .product-section {
   padding: 20px;
 }
-
-/* cái bìa chứa banner des + slider */
 .container-content {
   margin: 20px 150px 0 150px;
 }
@@ -23,7 +21,6 @@ body {
   display: flex;
 }
 
-/* banner */
 .banner {
   width: 100%;
   height: 450px;
@@ -44,7 +41,6 @@ body {
   flex-shrink: 0;
 }
 
-/* dot */
 .dots {
   position: absolute;
   bottom: 15px;
@@ -53,7 +49,6 @@ body {
   display: flex;
   gap: 10px;
 }
-
 .dot {
   width: 14px;
   height: 14px;
@@ -67,7 +62,6 @@ body {
   background-color: white;
 }
 
-/* cái này nút bấm trái phải banner */
 .btn {
   position: absolute;
   top: 50%;
@@ -105,7 +99,6 @@ body {
   padding: 0;
 }
 
-/* phần này là danh mục */
 a {
   text-decoration: none;
 }
@@ -167,9 +160,6 @@ a {
   font-size: 24px;
 }
 
-/* ============================================ */
-/* FLASH SALE SECTION */
-/* ============================================ */
 .flash-sale {
   margin: 40px 0;
   padding: 20px;
@@ -178,7 +168,6 @@ a {
   box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
 }
 
-/* Tiêu đề flash sale */
 .titile-flash-sale {
   display: flex;
   align-items: center;
@@ -211,7 +200,6 @@ a {
   font-weight: bold;
 }
 
-/* Danh sách sản phẩm flash sale */
 .list-product-sale {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -219,7 +207,6 @@ a {
   margin-bottom: 20px;
 }
 
-/* Mỗi sản phẩm */
 .list-product-sale > div {
   background: white;
   border-radius: 12px;
@@ -238,7 +225,6 @@ a {
   color: inherit;
 }
 
-/* Tiêu đề sách */
 .list-product-sale h3 {
   font-size: 16px;
   font-weight: bold;
@@ -251,7 +237,6 @@ a {
   overflow: hidden;
 }
 
-/* Thông tin giá */
 .list-product-sale p {
   margin: 4px 0;
   font-size: 14px;
@@ -287,7 +272,6 @@ a {
   font-weight: bold;
 }
 
-/* Nút xem thêm */
 .more-btn {
   margin-top: 10px;
   text-align: center;
@@ -316,7 +300,6 @@ a {
   transform: scale(0.95);
 }
 
-/* Responsive Flash Sale */
 @media (max-width: 1200px) {
   .list-product-sale {
     grid-template-columns: repeat(3, 1fr);
@@ -342,9 +325,6 @@ a {
   }
 }
 
-/* ============================================ */
-/* SLIDER SECTION */
-/* ============================================ */
 #slider {
   display: flex;
   flex-direction: column;
@@ -388,13 +368,13 @@ a {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  height: 400px; /* Tăng chiều cao để chứa badge */
-  position: relative; /* Để badge position absolute */
+  height: 400px;
+  position: relative;
 }
 
 .product-item img {
   width: 100%;
-  height: 240px; /* Giảm từ 280px xuống 240px */
+  height: 240px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 8px;
@@ -414,7 +394,7 @@ a {
 }
 
 .product-name {
-  font-size: 16px; /* Giảm từ 16px */
+  font-size: 16px;
   color: #333;
   margin: 5px 0;
   height: 40px;
@@ -433,7 +413,7 @@ a {
 }
 
 .original-price {
-  font-size: 14px; /* Giảm từ 14px */
+  font-size: 14px;
   margin: 3px 0;
   display: flex;
   align-items: center;
@@ -476,7 +456,7 @@ a {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Nút mũi tên slider */
+
 .arrow {
   position: absolute;
   top: 50%;
@@ -507,9 +487,6 @@ a {
   right: 5px;
 }
 
-/* ============================================ */
-/* TOP BÁN CHẠY SECTION */
-/* ============================================ */
 .top-truyen {
   gap: 40px;
   margin-top: 20px;
@@ -523,7 +500,6 @@ a {
   margin-top: 50px;
 }
 
-/* Danh sách bên trái */
 .list-book {
   flex: 1;
 }
@@ -577,7 +553,6 @@ a {
   transform: translateX(5px);
 }
 
-/* Chi tiết sách bên phải */
 .sach-chi-tiet {
   display: flex;
   flex: 1.5;
@@ -617,9 +592,6 @@ a {
   padding: 6px 12px;
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /*text-align: center;*/
-  /*position: relative;*/
-  /*top: -5px;*/
 }
 
 .sach-chi-tiet h3 {
@@ -640,7 +612,6 @@ a {
   color: #555;
 }
 
-/* Badge Flash Sale nhỏ */
 .flash-sale-badge-small {
   position: absolute;
   top: 15px;
@@ -654,7 +625,7 @@ a {
   font-weight: bold;
   box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
   animation: pulse-small 2s infinite;
-  margin: 0; /* Xóa margin-bottom */
+  margin: 0;
 }
 
 .flash-sale-badge-small i {
@@ -679,7 +650,6 @@ a {
   50% { opacity: 0.7; }
 }
 
-/* Badge giảm giá màu đỏ khi là Flash Sale */
 .discount-badge.flash-badge {
   background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
   color: white;
@@ -695,11 +665,9 @@ a {
   }
 }
 
-/* Tăng chiều cao product-item khi có Flash Sale badge */
 .product-item {
-  height: 440px; /* Tăng từ 420px lên 440px */
+  height: 440px;
 }
-
 .flash-sale-badge-top {
   position: absolute;
   top: 5px;
@@ -712,7 +680,6 @@ a {
   font-weight: bold;
   animation: pulse-small 2s infinite;
 }
-
 .sach-info {
   flex: 1;
 }

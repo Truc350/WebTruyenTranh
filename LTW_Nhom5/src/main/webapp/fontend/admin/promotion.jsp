@@ -14,25 +14,18 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
-
         <div class="promotion-page">
-
-            <!-- Thanh tìm kiếm + nút thêm -->
             <div class="promo-top">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Tìm kiếm mã...">
                     <i class="fas fa-magnifying-glass"></i>
                 </div>
-
                 <button class="btn-add" id="openAddPopup">
                     <i class="fas fa-plus"></i> Thêm mã
                 </button>
-
                 <select id="statusFilter">
                     <option value="">Tất cả trạng thái</option>
                     <option value="running">Đang chạy</option>
@@ -40,8 +33,6 @@
                     <option value="out">Hết lượt</option>
                 </select>
             </div>
-
-            <!-- Bảng danh sách -->
             <table class="promo-table">
                 <thead>
                 <tr>
@@ -55,7 +46,6 @@
                     <th></th>
                 </tr>
                 </thead>
-
                 <tbody id="promoTableBody">
                 <tr>
                     <td>NEWUSER10</td>
@@ -70,7 +60,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>SIEUSALE15</td>
                     <td>15%</td>
@@ -84,7 +73,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>FREESHIP20</td>
                     <td>-20.000đ</td>
@@ -98,7 +86,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>BLACKFRIDAY50</td>
                     <td>50%</td>
@@ -112,7 +99,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>WELCOME5</td>
                     <td>15.000đ</td>
@@ -126,7 +112,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>VIPMEMBER30</td>
                     <td>30%</td>
@@ -140,7 +125,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
                 <tr>
                     <td>TET2026</td>
                     <td>-50.000đ</td>
@@ -154,8 +138,6 @@
                         <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
-
-                <!-- Phân trang -->
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination" id="tablePagination">
@@ -165,20 +147,16 @@
                         </div>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
 
         </div>
     </div>
 </div>
-<!-- POPUP THÊM MÃ  -->
 <div class="popup-overlay" id="addPopup">
     <div class="popup-box">
         <h3>Thêm mã khuyến mãi</h3>
-
         <div class="popup-grid">
-            <!-- Dòng 1: Mã + Loại -->
             <div>
                 <label>Tên mã</label>
                 <input type="text" id="addCode" placeholder="NEWUSER10" maxlength="20">
@@ -200,8 +178,6 @@
                     <option value="fixed">Số tiền (₫)</option>
                 </select>
             </div>
-
-            <!-- Dòng 2: Giá trị + Đơn tối thiểu -->
             <div>
                 <label>Giá trị giảm</label>
                 <input type="number" id="addValue" min="0" placeholder="10 hoặc 20000">
@@ -210,8 +186,6 @@
                 <label>Đơn tối thiểu</label>
                 <input type="number" id="addMinOrder" min="0" placeholder="0" value="0">
             </div>
-
-            <!-- Dòng 3: Số lượng + Áp dụng cho -->
             <div>
                 <label>Số lượng tối đa</label>
                 <input type="number" id="addMaxUsage" min="1" value="100">
@@ -223,14 +197,10 @@
                     <option value="category">Một thể loại</option>
                 </select>
             </div>
-
-            <!-- Checkbox 1 lần/khách -->
             <div class="checkbox-row">
                 <input type="checkbox" id="addSingleUse">
                 <label for="addSingleUse">Mỗi khách chỉ dùng 1 lần</label>
             </div>
-
-            <!-- Chọn thể loại (ẩn mặc định) -->
             <div id="addCategoryBox" style="grid-column: 1 / -1;">
                 <label>Thể loại</label>
                 <select id="addCategory" disabled>
@@ -245,8 +215,6 @@
                     <option>Giả tưởng</option>
                 </select>
             </div>
-
-            <!-- Ngày bắt đầu + kết thúc -->
             <div class="date-row">
                 <div>
                     <label>Từ ngày</label>
@@ -258,19 +226,16 @@
                 </div>
             </div>
         </div>
-
         <div class="btn-row">
             <button class="btn-cancel" id="closeAddPopup">Hủy</button>
             <button class="btn-save" id="saveAddBtn">Tạo mã</button>
         </div>
     </div>
 </div>
-<!-- ====================== POPUP SỬA MÃ====================== -->
 <div class="popup-overlay" id="editPopup">
     <div class="popup-box">
         <h3>Sửa mã khuyến mãi</h3>
         <div class="popup-grid">
-            <!-- Dòng 1: Mã + Loại -->
             <div>
                 <label>Tên mã</label>
                 <p id="editCode" class="readonly"></p>
@@ -279,8 +244,6 @@
                 <label>Loại giảm giá</label>
                 <p id="editTypeDisplay" class="readonly"></p>
             </div>
-
-            <!-- Dòng 2: Giá trị + Áp dụng cho (không chỉnh được) -->
             <div>
                 <label>Giá trị giảm</label>
                 <p id="editValueDisplay" class="readonly"></p>
@@ -289,8 +252,6 @@
                 <label>Áp dụng cho</label>
                 <p id="editApplyDisplay" class="readonly">Toàn bộ sản phẩm</p>
             </div>
-
-            <!-- Dòng 3: Đơn tối thiểu + Số lượng tối đa -->
             <div>
                 <label>Đơn tối thiểu</label>
                 <input type="number" id="editMinOrder" min="0" placeholder="0">
@@ -299,14 +260,10 @@
                 <label>Số lượng tối đa</label>
                 <input type="number" id="editMaxUsage" min="1">
             </div>
-
-            <!-- Checkbox giới hạn 1 lần/khách -->
             <div class="checkbox-row">
                 <input type="checkbox" id="editSingleUse">
                 <label for="editSingleUse">Mỗi khách chỉ dùng được 1 lần</label>
             </div>
-
-            <!-- Ngày bắt đầu & kết thúc -->
             <div class="date-row">
                 <div>
                     <label>Từ ngày</label>
@@ -325,8 +282,6 @@
         </div>
     </div>
 </div>
-
-<!-- Popup xác nhận xóa -->
 <div class="popup-overlay" id="deleteConfirmPopup">
     <div class="popup-box small">
         <i class="fa-solid fa-triangle-exclamation"></i>
@@ -338,8 +293,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const addPopup       = document.getElementById('addPopup');
@@ -348,12 +301,9 @@
         const tbody          = document.getElementById('promoTableBody');
         const editPopup      = document.getElementById('editPopup');
         const deletePopup    = document.getElementById('deleteConfirmPopup');
-
-        // Hàm ẩn/hiện thể loại
         const toggleCategory = () => {
             addCategoryBox.classList.toggle('hide', addApply.value !== 'category');
         };
-
         // Gắn event change
         addApply.addEventListener('change', () => {
             const categorySelect = document.getElementById('addCategory');
@@ -368,12 +318,8 @@
                 categorySelect.value = ''; // xóa lựa chọn cũ
             }
         });
-
-        // Mở popup Thêm
         document.getElementById('openAddPopup').onclick = () => {
             addPopup.style.display = 'flex';
-
-            // Reset form
             document.getElementById('addCode').value = '';
             document.getElementById('addType').value = '';
             document.getElementById('addValue').value = '';
@@ -383,20 +329,15 @@
             document.getElementById('addStart').value = '';
             document.getElementById('addEnd').value = '';
             addApply.value = 'all';
-
             document.getElementById('addCategory').disabled = true;
             document.getElementById('addCategory').style.opacity = '0.5';
             document.getElementById('addCategory').value = '';
         };
-
         document.getElementById('closeAddPopup').onclick = () => addPopup.style.display = 'none';
-
-        // Tạo mã
         document.getElementById('saveAddBtn').onclick = () => {
             const code = document.getElementById('addCode').value.trim();
             const type = document.getElementById('addType').value;
             const value = document.getElementById('addValue').value;
-
             if (!code || !type || !value) {
                 alert('Vui lòng nhập đầy đủ thông tin bắt buộc!');
                 return;
@@ -405,45 +346,33 @@
                 alert('Vui lòng chọn thể loại!');
                 return;
             }
-
             alert('Tạo mã thành công!');
             addPopup.style.display = 'none';
         };
-
-        // Popup Sửa
         window.openEdit = function(code) {
             const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
             const row = rows.find(r => r.cells[0].textContent.trim() === code);
             if (!row) return alert('Không tìm thấy mã!');
-
             document.getElementById('editCode').textContent = row.cells[0].textContent.trim();
             document.getElementById('editValueDisplay').textContent = row.cells[1].textContent.trim();
             document.getElementById('editTypeDisplay').textContent = row.cells[2].textContent.trim();
             document.getElementById('editApplyDisplay').textContent = 'Toàn bộ sản phẩm';
-
             const minOrder = row.cells[4].textContent.replace(/[^\d]/g, '');
             document.getElementById('editMinOrder').value = minOrder || 0;
-
             const usage = row.cells[3].textContent.trim();
             const maxUsage = usage.split('/')[1]?.trim() || '100';
             document.getElementById('editMaxUsage').value = maxUsage.replace(/\D/g, '');
-
             const [d, m, y] = row.cells[5].textContent.trim().split('/');
             document.getElementById('editEnd').value = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
-
             document.getElementById('editSingleUse').checked = false;
             document.getElementById('editStart').value = '';
-
             editPopup.style.display = 'flex';
         };
-
         document.getElementById('closeEditPopup').onclick = () => editPopup.style.display = 'none';
         document.getElementById('saveEditBtn').onclick = () => {
             alert('Cập nhật thành công!');
             editPopup.style.display = 'none';
         };
-
-        // Xóa
         tbody.addEventListener('click', e => {
             if (e.target.closest('.delete-btn')) deletePopup.style.display = 'flex';
         });
@@ -452,16 +381,11 @@
             alert('Đã xóa mã!');
             deletePopup.style.display = 'none';
         };
-
-        // Click ngoài đóng popup
         [addPopup, editPopup, deletePopup].forEach(p => {
             p.addEventListener('click', e => e.target === p && (p.style.display = 'none'));
         });
-
-        // PHÂN TRANG
         const ROWS_PER_PAGE = 5;
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
-
         document.querySelectorAll('.pro-page').forEach(btn => {
             btn.onclick = () => {
                 const page = +btn.dataset.page;
@@ -472,8 +396,6 @@
             };
         });
         document.querySelector('.pro-page[data-page="1"]')?.click();
-
-        // Active sidebar
         const currentPage = window.location.pathname.split("/").pop();
         document.querySelectorAll(".sidebar a").forEach(link => {
             if (link.getAttribute("href") === currentPage) {
@@ -489,39 +411,30 @@
         const tbody = document.getElementById('promoTableBody');
         const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('pagination-row'));
         const pageButtons = document.querySelectorAll('.pro-page');
-
         function showPage(page){
             const start = (page - 1) * ROWS_PER_PAGE;
             const end = start + ROWS_PER_PAGE;
-
             rows.forEach((r, idx) => {
                 r.style.display = (idx >= start && idx < end) ? "" : "none";
             });
-
             pageButtons.forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.pro-page[data-page="${page}"]`)?.classList.add('active');
-
             currentPage = page;
         }
-
         pageButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 showPage(Number(btn.dataset.page));
             });
         });
-
         showPage(1);
     })();
 </script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
-
         links.forEach(link => {
             const linkPage = link.getAttribute("href");
-
             if (linkPage === current) {
                 link.classList.add("active");
             }

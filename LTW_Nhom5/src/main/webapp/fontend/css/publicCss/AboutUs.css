@@ -11,14 +11,12 @@ body {
   line-height: 1.6;
 }
 
-/* Container chính */
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
 }
-
-/* Hero section */
 .hero {
   display: flex;
   align-items: center;
@@ -45,15 +43,13 @@ body {
   color: #4b5563;
 }
 
-/* Logo image */
+
 .hero #logo {
   max-width: 220px;   
-  height: auto;       /* Giữ tỷ lệ ảnh */
+  height: auto;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
-/* About section */
 .about-us {
   background: #ffffff;
   border-radius: 12px;
@@ -72,8 +68,6 @@ body {
   margin-bottom: 15px;
   font-size: 16px;
 }
-
-/* Mission section */
 .mission {
   background: #ffffff;
   border-radius: 12px;
@@ -95,14 +89,11 @@ body {
   font-size: 16px;
   color: #4b5563;
 }
-
-/* Features section */
 .features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
-
 .feature-card {
   background: #f0f8f0;
   border-radius: 12px;
@@ -110,17 +101,14 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   transition: transform 0.3s ease;
 }
-
 .feature-card:hover {
   transform: translateY(-5px);
 }
-
 .feature-card h4 {
   font-size: 20px;
   color: #457b9d;
   margin-bottom: 10px;
 }
-
 .feature-card p {
   font-size: 15px;
   color: #1f2937;

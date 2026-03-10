@@ -1,10 +1,5 @@
-
-    document.addEventListener('DOMContentLoaded', function () {
-    console.log('🚀 SLIDER INIT');
-
+document.addEventListener('DOMContentLoaded', function () {
     const sliders = document.querySelectorAll('#slider-suggestions .product-slider');
-    console.log('Found sliders:', sliders.length);
-
     sliders.forEach((slider, idx) => {
     const track = slider.querySelector('.slider-track');
     const items = slider.querySelectorAll('.product-item');
@@ -19,14 +14,11 @@
     nextBtn: !!nextBtn,
     viewport: !!viewport
 });
-
     if (!track || !prevBtn || !nextBtn || items.length === 0) {
-    console.error(`❌ Slider ${idx} missing elements`);
+    console.error(`Slider ${idx} missing elements`);
     return;
 }
-
     let position = 0;
-
     function update() {
     const item = items[0];
     const itemStyle = getComputedStyle(item);
@@ -41,11 +33,9 @@
     const maxTranslate = Math.max(0, trackWidth - viewportWidth);
 
     let translateValue = position * moveDistance;
-
-    // 🔥 CHỐT CUỐI – không cho thiếu
     if (translateValue > maxTranslate) {
     translateValue = maxTranslate;
-    position--; // khóa không cho đi thêm
+    position--;
 }
 
     track.style.transform = `translateX(-${translateValue}px)`;
@@ -57,9 +47,6 @@
     nextBtn.addEventListener('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-
-    console.log('▶️ NEXT clicked on slider', idx);
-
     if (!nextBtn.disabled) {
     position++;
     update();
@@ -69,16 +56,11 @@
     prevBtn.addEventListener('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-
-    console.log('◀️ PREV clicked on slider', idx);
-
     if (!prevBtn.disabled) {
     position--;
     update();
 }
 });
-
     update();
-    console.log(`✅ Slider ${idx} initialized`);
 });
 });

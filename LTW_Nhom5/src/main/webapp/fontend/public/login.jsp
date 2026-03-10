@@ -11,12 +11,10 @@
 <body>
 
 <div class="container">
-    <!-- Left 2/3 -->
     <div class="login-section">
         <div class="login-box">
             <form action="${pageContext.request.contextPath}/login" method="post" onsubmit="return validateLogin()">
                 <h2>Đăng nhập</h2>
-                <%-- chỗ này của clinet js--%>
                 <p id="clientError"
                    style="color:red; font-size:14px; font-weight: bold; text-align:center; display:none;">
                 </p>
@@ -63,14 +61,12 @@
 
         </div>
     </div>
-    <!-- Right 1/3 -->
     <div class="image-section">
         <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
     </div>
 </div>
 
 <script>
-    // Toggle password visibility
     const eye = document.getElementById("toggleEye");
     const passwordInput = document.querySelector(".password-box input");
 
@@ -85,15 +81,12 @@
             }
         });
     }
-
-    // Google login
     const googleBtn = document.getElementById("googleLogin");
     if (googleBtn) {
         googleBtn.addEventListener("click", () => {
             window.location.href = "${pageContext.request.contextPath}/login-google";
         });
     }
-    // Facebook login
     const facebookBtn = document.getElementById("facebookLogin");
     if (facebookBtn) {
         facebookBtn.addEventListener("click", () => {
@@ -108,29 +101,25 @@
         const errorBox = document.getElementById("clientError");
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
-
-        // reset lỗi
         errorBox.style.display = "none";
         errorBox.innerText = "";
 
         if (username === "" || password === "") {
             showError("Vui lòng nhập đầy đủ tài khoản và mật khẩu");
-            return false; //CHẶN SUBMIT
+            return false;
         }
 
         if (!passwordRegex.test(password)) {
             showError("Mật khẩu phải hơn 8 ký tự, gồm chữ hoa, chữ thường và ký tự đặc biệt");
-            return false; //CHẶN SUBMIT
+            return false;
         }
 
-        return true; // CHO SUBMIT
+        return true;
     }
 
     function showError(msg) {
         const errorBox = document.getElementById("clientError");
         const serverError = document.getElementById("serverError");
-
-        // Ẩn lỗi server nếu có
         if (serverError) {
             serverError.style.display = "none";
         }

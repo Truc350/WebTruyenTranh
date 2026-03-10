@@ -30,8 +30,6 @@
 
     function updateButtons() {
     const maxScroll = getMaxScroll();
-
-    // Disable/enable buttons
     if (currentPosition <= 0) {
     prevBtn.disabled = true;
     prevBtn.style.opacity = '0.3';
@@ -48,8 +46,6 @@
     nextBtn.style.opacity = '1';
 }
 }
-
-    // Click next
     nextBtn.addEventListener('click', function(e) {
     e.preventDefault();
     const scrollAmount = getScrollAmount();
@@ -59,19 +55,13 @@
     updatePosition();
 });
 
-    // Click prev
     prevBtn.addEventListener('click', function(e) {
     e.preventDefault();
     const scrollAmount = getScrollAmount();
-
     currentPosition = Math.max(currentPosition - scrollAmount, 0);
     updatePosition();
 });
-
-    // Initial state
     updateButtons();
-
-    // Update on window resize
     let resizeTimeout;
     window.addEventListener('resize', function() {
     clearTimeout(resizeTimeout);
@@ -85,8 +75,6 @@
 }, 250);
 });
 }
-
-    // Initialize all sliders when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
     console.log('Initializing sliders...');
     const sliders = document.querySelectorAll('.product-slider');
@@ -96,8 +84,6 @@
     initSlider(slider);
 });
 });
-
-    // Check if jQuery is causing conflicts
     console.log('Page loaded');
     console.log('Sliders found:', document.querySelectorAll('.product-slider').length);
     console.log('Items found:', document.querySelectorAll('.product-item').length);

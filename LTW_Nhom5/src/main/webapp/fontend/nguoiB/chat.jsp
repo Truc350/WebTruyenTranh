@@ -14,12 +14,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/chat.css">
 </head>
 <body>
-
 <jsp:include page="/fontend/public/header.jsp" />
-
-<!-- Chat Container -->
 <div class="chat-container">
-    <!-- Chat Area -->
     <div class="chat-area">
         <div class="chat-header" id="chatHeader">
             <img src="https://i.pravatar.cc/150?img=1" alt="" class="user-avatar">
@@ -29,7 +25,6 @@
             </div>
             <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
         </div>
-
         <div class="chat-messages" id="chatMessages">
             <div class="message received">
                 <div class="bubble">Chào bạn! Mình có thể giúp gì ạ?</div>
@@ -40,13 +35,9 @@
                 <div class="timestamp">10:33</div>
             </div>
         </div>
-
-        <!-- Typing indicator -->
         <div class="typing-indicator" id="typingIndicator" style="display: none;">
             <span></span><span></span><span></span>
         </div>
-
-        <!-- Chat input -->
         <div class="chat-input">
             <label class="input-action" for="imageInput" title="Gửi ảnh">
                 <i class="fas fa-image"></i>
@@ -56,8 +47,6 @@
             <button class="input-action emoji-btn"><i class="fas fa-smile"></i></button>
             <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
         </div>
-
-        <!-- Image preview -->
         <div id="imagePreview" class="image-preview" style="display: none;">
             <img id="previewImg" src="" alt="Preview"/>
             <button class="close-preview" onclick="closePreview()">×</button>
@@ -65,15 +54,9 @@
         </div>
     </div>
 </div>
-
-<!-- ===================== FOOTER ===================== -->
 <jsp:include page="/fontend/public/Footer.jsp" />
-
 <script>
-    // === KEY LƯU TRỮ TRONG LOCALSTORAGE ===
     const STORAGE_KEY = 'comicstore_chat_history';
-
-    // === LOAD DỮ LIỆU TỪ LOCALSTORAGE ===
     let conversations = {};
     try {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -83,8 +66,6 @@
     } catch (e) {
         console.warn("Không thể đọc lịch sử chat:", e);
     }
-
-    // === DỮ LIỆU MẶC ĐỊNH ===
     const defaultConversations = {
         1: {
             user: { name: "ComicStore", avatar: "https://i.pravatar.cc/150?img=1", online: true },
@@ -94,17 +75,12 @@
             ]
         }
     };
-
-    // Gộp dữ liệu mặc định nếu chưa tồn tại
     Object.keys(defaultConversations).forEach(id => {
         if (!conversations[id]) {
             conversations[id] = defaultConversations[id];
         }
     });
-
     const currentUserId = 1;
-
-    // === LƯU VÀO LOCALSTORAGE ===
     function saveToStorage() {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
@@ -112,14 +88,10 @@
             console.warn("Không thể lưu lịch sử chat:", e);
         }
     }
-
-    // === HIỂN THỊ HỘI THOẠI ===
     function loadConversation() {
         const conv = conversations[currentUserId];
         const header = document.getElementById('chatHeader');
         const messagesDiv = document.getElementById('chatMessages');
-
-        // Cập nhật header
         header.innerHTML = `
         <img src="${conv.user.avatar}" alt="" class="user-avatar">
         <div class="header-info">
@@ -128,8 +100,6 @@
         </div>
         <button class="header-action"><i class="fas fa-ellipsis-v"></i></button>
 `;
-
-        // Load tin nhắn
         messagesDiv.innerHTML = '';
         conv.messages.forEach(msg => {
             const messageEl = document.createElement('div');
@@ -140,55 +110,40 @@
         `;
             messagesDiv.appendChild(messageEl);
         });
-
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
-    // === GỬI TIN NHẮN ===
     function sendMessage() {
         const input = document.getElementById('messageInput');
         const text = input.value.trim();
         if (!text) return;
 
         const time = new Date().toLocaleTimeString('vi', { hour: '2-digit', minute: '2-digit' });
-
-        // Thêm tin nhắn gửi
         const messagesDiv = document.getElementById('chatMessages');
         const msg = document.createElement('div');
         msg.className = 'message sent';
         msg.innerHTML = `<div class="bubble">${text}</div><div class="timestamp">${time}</div>`;
         messagesDiv.appendChild(msg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-        // Lưu vào dữ liệu + localStorage
         conversations[currentUserId].messages.push({ text, type: 'sent', time });
         saveToStorage();
-
         input.value = '';
         input.style.height = 'auto';
-
-        // Typing + phản hồi
         showTyping();
         setTimeout(() => {
             hideTyping();
             const reply = getAutoReply();
             const replyTime = new Date().toLocaleTimeString('vi', { hour: '2-digit', minute: '2-digit' });
             addReceivedMessage(reply, replyTime);
-
-            // Lưu phản hồi
             conversations[currentUserId].messages.push({ text: reply, type: 'received', time: replyTime });
             saveToStorage();
         }, 1000 + Math.random() * 1000);
     }
 
-    // === HIỆU ỨNG TYPING ===
     function showTyping() {
         const typing = document.getElementById('typingIndicator');
         typing.style.display = 'flex';
         document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
     }
-
-    // === THÊM TIN NHẬN ===
     function addReceivedMessage(text, time) {
         const messagesDiv = document.getElementById('chatMessages');
         const msg = document.createElement('div');
@@ -197,8 +152,6 @@
         messagesDiv.appendChild(msg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
-    // === PHẢN HỒI TỰ ĐỘNG ===
     function getAutoReply() {
         const replies = [
             "Cảm ơn bạn! Mình đang kiểm tra giúp bạn nhé!",
@@ -209,8 +162,6 @@
         ];
         return replies[Math.floor(Math.random() * replies.length)];
     }
-
-    // === ENTER GỬI TIN ===
     document.getElementById('messageInput').addEventListener('keypress', e => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -218,14 +169,12 @@
         }
     });
 
-    // === TỰ ĐỘNG RESIZE ===
     const textarea = document.getElementById('messageInput');
     textarea.addEventListener('input', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });
 
-    // === KHỞI TẠO ===
     document.addEventListener('DOMContentLoaded', () => {
         loadConversation();
     });

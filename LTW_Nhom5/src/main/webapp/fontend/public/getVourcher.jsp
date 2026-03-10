@@ -26,8 +26,6 @@
 
             <div class="voucher-time">
                 <h1>Ưu đãi khung giờ ngập tràn</h2>
-
-                    <!-- Voucher 1: Mã giảm 10K - Toàn sàn -->
                     <div class="voucher-card" data-voucher='{
                         "value": "Giảm 10.000 VNĐ",
                         "condition": "Đơn hàng từ 130.000 VNĐ",
@@ -55,8 +53,6 @@
                             <button class="copy-code-btn">Copy mã</button>
                         </div>
                     </div>
-
-                    <!-- Voucher 2: Mã giảm 20K - Toàn sàn -->
                     <div class="voucher-card" data-voucher='{
                         "value": "Giảm 20.000 VNĐ",
                         "condition": "Đơn hàng từ 240.000 VNĐ",
@@ -84,8 +80,6 @@
                             <button class="copy-code-btn">Copy mã</button>
                         </div>
                     </div>
-
-                    <!-- Voucher 3: Mã giảm 40K - Toàn sàn -->
                     <div class="voucher-card" data-voucher='{
                         "value": "Giảm 40.000 VNĐ",
                         "condition": "Đơn hàng từ 490.000 VNĐ",
@@ -113,8 +107,6 @@
                             <button class="copy-code-btn">Copy mã</button>
                         </div>
                     </div>
-
-                    <!-- Voucher 4: Mã giảm 80K - Toàn sàn -->
                     <div class="voucher-card" data-voucher='{
                         "value": "Giảm 80.000 VNĐ",
                         "condition": "Đơn hàng từ 990.000 VNĐ",
@@ -147,8 +139,6 @@
 
             <div class="voucher-ship">
                 <h1>Ưu đãi vận chuyển ngập tràn</h1>
-
-                <!-- Voucher 1 -->
                 <div class="voucher-card" data-voucher='{
                     "value": "Giảm 10.000 VNĐ",
                     "condition": "Đơn hàng từ 130.000 VNĐ",
@@ -172,8 +162,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Voucher 2 -->
                 <div class="voucher-card" data-voucher='{
                     "value": "Giảm 20.000 VNĐ",
                     "condition": "Đơn hàng từ 200.000 VNĐ",
@@ -197,8 +185,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Voucher 3 -->
                 <div class="voucher-card" data-voucher='{
                     "value": "Miễn phí vận chuyển",
                     "condition": "Đơn hàng từ 50.000 VNĐ",
@@ -222,8 +208,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Voucher 4 -->
                 <div class="voucher-card" data-voucher='{
                     "value": "Giảm 5.000 VNĐ",
                     "condition": "Không yêu cầu giá trị đơn hàng",
@@ -247,8 +231,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Voucher 5 -->
                 <div class="voucher-card" data-voucher='{
                     "value": "Giảm 15.000 VNĐ",
                     "condition": "Dành cho khách hàng mới",
@@ -276,7 +258,6 @@
 
             <div class="voucher-other">
                 <h1>Ưu đãi ngoại lệ ngập tràn</h1>
-                <!-- Ưu đãi 1: Giảm 10K cho truyện trinh thám -->
                 <div class="voucher-card" data-voucher='{
                     "exclude": "Không áp dụng cho combo",
                     "expiry": "30/11/2025",
@@ -300,8 +281,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Ưu đãi 2: Giảm 15K cho đơn hàng từ 3 cuốn trở lên -->
                 <div class="voucher-card" data-voucher='{
                     "exclude": "Không áp dụng cho truyện đang giảm giá",
                     "expiry": "15/12/2025",
@@ -326,8 +305,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Ưu đãi 3: Giảm 20K cho truyện hành động -->
                 <div class="voucher-card" data-voucher='{
                     "exclude": "Không áp dụng cho bản đặc biệt",
                     "expiry": "31/12/2025",
@@ -351,8 +328,6 @@
                         <button class="copy-code-btn">Copy mã</button>
                     </div>
                 </div>
-
-                <!-- Ưu đãi 4: Giảm 12K cho đơn hàng đặt vào cuối tuần -->
                 <div class="voucher-card" data-voucher='{
                     "exclude": "Không áp dụng cho đơn hàng Flash Sale",
                     "expiry": "01/01/2026",
@@ -377,8 +352,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- popup vourcher -->
             <div id="voucher-detail-popup" class="voucher-popup" style="display: none;">
                 <div class="voucher-popup-content">
                     <span class="close-popup" onclick="closeVoucherPopup()">&times;</span>
@@ -424,11 +397,10 @@
 
     <footer class="footer">
         <div class="footer-container">
-            <!-- Cột 1: Giới thiệu -->
             <div class="footer-column">
                 <div class="logo">
                     <a href="#">
-                        <img src="../../img/logo.png" alt="logo"><!--420-780-->
+                        <img src="../../img/logo.png" alt="logo">
                     </a>
                 </div>
                 <p><b>ComicStore</b> là cửa hàng truyện tranh<br> trực tuyến hàng đầu Việt Nam<br> — nơi bạn có thể
@@ -443,7 +415,6 @@
                 </p>
             </div>
 
-            <!-- Cột 2: Liên kết nhanh -->
             <div class="footer-column">
                 <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
                 <ul>
@@ -454,7 +425,6 @@
                 </ul>
             </div>
 
-            <!-- Cột 3: Hỗ trợ khách hàng -->
             <div class="footer-column">
                 <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
                 <ul>
@@ -463,7 +433,6 @@
                 </ul>
             </div>
 
-            <!-- Cột 4: Liên hệ & Mạng xã hội -->
             <div class="footer-column">
                 <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
                 <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
@@ -480,7 +449,6 @@
                 </div>
             </div>
 
-            <!-- Cột 5: Thanh toán -->
             <div class="footer-column">
                 <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
                 <p>Hỗ trợ thanh toán qua:</p>
@@ -501,28 +469,19 @@
 
     <script>
         function showVoucherDetails(button) {
-            // Tìm phần tử voucher-card chứa nút được click
             const voucherCard = button.closest('.voucher-card');
-
-            // Lấy dữ liệu từ thuộc tính data-voucher
             let voucherData = voucherCard.getAttribute('data-voucher');
-
-            // Fix lỗi JSON thiếu dấu phẩy cuối mỗi dòng
             voucherData = voucherData
                 .replace(/(\s*"status":\s*"[^"]+")(\s*"code":)/, '$1,$2') // thêm dấu phẩy giữa status và code
                 .replace(/,\s*}/, '}'); // loại bỏ dấu phẩy cuối cùng nếu có
 
             const voucher = JSON.parse(voucherData);
-
-            // Gán dữ liệu vào popup
             document.getElementById('detail-code').textContent = voucher.code || '';
             document.getElementById('detail-value').textContent = voucher.value || '';
             document.getElementById('detail-condition').textContent = voucher.condition || '';
             document.getElementById('detail-exclude').textContent = voucher.exclude || '';
             document.getElementById('detail-expiry').textContent = voucher.expiry || '';
             document.getElementById('detail-status').textContent = voucher.status || '';
-
-            // Hiển thị popup
             document.getElementById('voucher-detail-popup').style.display = 'block';
         }
 

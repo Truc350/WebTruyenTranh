@@ -13,23 +13,16 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
-    <!-- Main content -->
     <div class="main-content">
         <jsp:include page="/fontend/admin/HeaderAdmin.jsp"/>
-
         <div class="dashboard">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h2>Tổng quan cửa hàng</h2>
-
-                <!-- Bộ lọc thời gian -->
                 <div class="filter-section">
                     <form action="${pageContext.request.contextPath}/admin/dashboard" method="get" id="filterForm">
                         <input type="hidden" name="action" value="filter">
                         <input type="hidden" name="period" id="periodInput" value="${currentPeriod}">
-
                         <div class="filter-tabs">
                             <button type="button" class="filter-tab ${currentPeriod == 'today' ? 'active' : ''}"
                                     onclick="selectPeriod('today')">
@@ -52,7 +45,6 @@
                                 Tùy chỉnh
                             </button>
                         </div>
-
                         <div id="customDateRange" class="custom-date-range"
                              style="display: ${currentPeriod == 'custom' ? 'flex' : 'none'};">
                             <input type="date" name="startDate" value="${startDate}"
@@ -67,8 +59,6 @@
                     </form>
                 </div>
             </div>
-
-            <!-- Thẻ thống kê -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <i class="fa-solid fa-book"></i>
@@ -99,15 +89,10 @@
                     </div>
                 </div>
             </div>
-
-
-            <!-- Biểu đồ doanh thu -->
             <div class="chart-section">
                 <h3 id="chartTitle">Biểu đồ doanh thu</h3>
                 <canvas id="revenueChart"></canvas>
             </div>
-
-            <!-- Top sản phẩm bán chạy -->
             <div class="bestseller-section">
                 <h3>Top 10 sản phẩm bán chạy nhất</h3>
                 <table class="bestseller-table">
@@ -136,8 +121,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Top sản phẩm có đánh giá cao nhất -->
             <div class="bestseller-section">
                 <h3>Top 10 sản phẩm có đánh giá cao nhất</h3>
                 <table class="bestseller-table">
@@ -180,58 +163,42 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Dữ liệu từ server
     const chartData = ${chartData};
     const chartType = '${chartType}';
     const currentPeriod = '${currentPeriod}';
-
-    // Hàm chọn period và submit form
     function selectPeriod(period) {
         document.getElementById('periodInput').value = period;
         if (period !== 'custom') {
             document.getElementById('filterForm').submit();
         }
     }
-
-    // Hàm toggle custom date range
     function toggleCustomDate() {
         const customDateRange = document.getElementById('customDateRange');
         const periodInput = document.getElementById('periodInput');
-
         if (customDateRange.style.display === 'none' || customDateRange.style.display === '') {
             customDateRange.style.display = 'flex';
             periodInput.value = 'custom';
-
-            // Active button
             document.querySelectorAll('.filter-tab').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         } else {
             customDateRange.style.display = 'none';
         }
     }
-
-    // Vẽ biểu đồ doanh thu
     const ctx = document.getElementById('revenueChart').getContext('2d');
-
     let labels = [];
     let data = [];
     let chartTitle = '';
-
     if (chartType === 'monthly') {
-        // Biểu đồ theo tháng (12 tháng)
         chartTitle = 'Doanh thu 12 tháng trong năm';
         labels = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'];
         data = new Array(12).fill(0);
-
         chartData.forEach(item => {
             const monthIndex = item.month - 1;
             data[monthIndex] = item.revenue / 1000000; // Chuyển sang triệu đồng
         });
     } else {
-        // Biểu đồ theo ngày
         if (currentPeriod === 'today') {
             chartTitle = 'Doanh thu hôm nay';
         } else if (currentPeriod === 'week') {
@@ -241,19 +208,14 @@
         } else {
             chartTitle = 'Doanh thu theo ngày';
         }
-
         chartData.forEach(item => {
             const date = new Date(item.date);
             const formattedDate = (date.getDate()) + '/' + (date.getMonth() + 1);
             labels.push(formattedDate);
-            data.push(item.revenue / 1000000); // Chuyển sang triệu đồng
+            data.push(item.revenue / 1000000);
         });
     }
-
-    // Cập nhật tiêu đề biểu đồ
     document.getElementById('chartTitle').textContent = chartTitle;
-
-    // Vẽ biểu đồ
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -296,16 +258,11 @@
             }
         }
     });
-
-    // Highlight menu sidebar
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname;
         const links = document.querySelectorAll(".sidebar li a");
-
         links.forEach(link => {
             const linkHref = link.getAttribute("href");
-
-            // Kiểm tra chính xác URL hiện tại có chứa href của link không
             if (current.endsWith(linkHref) || current.includes(linkHref)) {
                 link.classList.add("active");
             } else {

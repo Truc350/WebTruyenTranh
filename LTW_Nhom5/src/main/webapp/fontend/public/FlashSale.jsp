@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FlashSale.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/FooterStyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <%-- Favicon --%>
     <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/img/favicon.ico">
 </head>
 <body>
@@ -29,7 +28,6 @@
     </div>
 
     <div class="contain-flash">
-        <!-- Countdown -->
         <div class="countdown-wrap">
             <c:choose>
                 <c:when test="${activeFlashSale != null && flashSaleEndTimeMillis != null}">
@@ -41,8 +39,6 @@
                         <span class="sep">:</span>
                         <div class="time-box" id="seconds">00</div>
                     </div>
-
-                    <!-- Hidden input for JavaScript -->
                     <input type="hidden" id="flashSaleEndTimeMillis" value="${flashSaleEndTimeMillis}">
                 </c:when>
                 <c:otherwise>
@@ -50,8 +46,6 @@
                 </c:otherwise>
             </c:choose>
         </div>
-
-        <!-- Slot thời gian -->
         <div class="slot-row" id="slotRow">
             <c:forEach items="${upcomingFlashSales}" var="fs" varStatus="status">
                 <div class="slot ${fs.active ? 'active' : ''}"
@@ -75,7 +69,6 @@
         <p class="flash-sale-description">Giảm giá đến <strong><fmt:formatNumber value="${activeFlashSale.discountPercent}" pattern="#"/>%</strong></p>
     </div>
 </c:if>
-<!-- Danh sách sản phẩm Flash Sale -->
 <div class="container-item" id="flashSaleProducts">
 
     <c:choose>
@@ -84,7 +77,6 @@
                 <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                     <div class="product-card">
                         <img src="${comic.image_url}"
-<%--                        <img src="${pageContext.request.contextPath}${comic.image_url}"--%>
                              alt="${comic.name}"
                              class="product-image"
                              onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'" />

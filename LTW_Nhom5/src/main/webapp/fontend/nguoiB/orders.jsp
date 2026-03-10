@@ -54,12 +54,9 @@
         </div>
 
         <div class="orders-list">
-            <%-- Loop qua các đơn hàng đã được filter từ servlet --%>
             <c:forEach var="orderDetail" items="${orderDetails}">
                 <c:set var="order" value="${orderDetail.order}"/>
                 <c:set var="items" value="${orderDetail.items}"/>
-
-                <%-- Map status sang CSS class và text tiếng Việt --%>
                 <c:set var="statusClass" value=""/>
                 <c:set var="statusText" value=""/>
                 <c:choose>
@@ -99,7 +96,6 @@
                     </div>
 
                     <div class="order-content">
-                            <%-- Loop qua các sản phẩm --%>
                         <c:forEach var="itemData" items="${items}">
                             <c:set var="item" value="${itemData.item}"/>
                             <c:set var="comic" value="${itemData.comic}"/>
@@ -116,42 +112,23 @@
 
                                         <div class="price-details">
                                             <c:choose>
-                                                <%-- Ưu tiên 1: Có Flash Sale --%>
                                                 <c:when test="${itemData.hasActiveFlashSale}">
-                                                    <%-- Giá gốc bị gạch (nếu có) --%>
                                                     <c:if test="${item.priceAtPurchase < comic.price}">
                                                         <del class="original-price">
                                                             <fmt:formatNumber value="${comic.price}" type="number"
                                                                               groupingUsed="true"/>đ
                                                         </del>
                                                     </c:if>
-                                                    <%-- Giá Flash Sale (màu đỏ) --%>
                                                     <span class="discount-price"
                                                           style="color: #ff4444; font-weight: 600;">
                 ${itemData.formattedDisplayPrice}đ
             </span>
-<%--                                                    Badge Flash Sale--%>
                                                     <span class="flash-sale-badge">
                                                                     ⚡ Flash Sale -${itemData.flashSaleDiscount}%
                                                                 </span>
                                                 </c:when>
 
-                                                <%-- Ưu tiên 2: Giá đã thay đổi (không phải Flash Sale) --%>
-<%--                                                <c:when test="${itemData.priceChanged && !itemData.hasActiveFlashSale}">--%>
-<%--                                                    &lt;%&ndash; Giá gốc bị gạch &ndash;%&gt;--%>
-<%--                                                    <del class="original-price">--%>
-<%--                                                        <fmt:formatNumber value="${item.priceAtPurchase}" type="number"--%>
-<%--                                                                          groupingUsed="true"/>đ--%>
-<%--                                                    </del>--%>
-<%--                                                    &lt;%&ndash; Giá mới (màu xanh) &ndash;%&gt;--%>
-<%--                                                    <span class="discount-price" style="color: #28a745;">--%>
-<%--                ${itemData.formattedDisplayPrice}đ--%>
-<%--            </span>--%>
-<%--                                                    &lt;%&ndash; Badge giá mới &ndash;%&gt;--%>
-<%--                                                    <span class="price-changed-badge">--%>
-<%--                Giá mới--%>
-<%--            </span>--%>
-<%--                                                </c:when>--%>
+
 
                                                 <%-- Giá không đổi --%>
                                                 <c:otherwise>
@@ -180,8 +157,6 @@
                     <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>đ
                 </strong></span>
                     </div>
-
-                        <%-- Action buttons dựa vào status --%>
                     <div class="order-actions">
                         <c:choose>
                             <c:when test="${order.status == 'Completed'}">
@@ -203,7 +178,6 @@
                                     Hủy đơn hàng
                                 </button>
                             </c:when>
-
                             <c:when test="${order.status == 'AwaitingPickup'}">
                                 <a href="https://zalo.me/0394158994" target="_blank">
                                     <button class="action-btn contact-seller">Liên hệ</button>
@@ -231,8 +205,6 @@
                     </div>
                 </div>
             </c:forEach>
-
-            <%-- Hiển thị message khi không có đơn hàng --%>
             <c:if test="${empty orderDetails}">
                 <div class="no-orders" style="text-align: center; padding: 60px 20px; color: #666; font-size: 16px;">
                     <div style="margin-bottom: 20px;">
@@ -247,7 +219,6 @@
     </div>
 
 </main>
-<!-- Popup đánh giá -->
 <div class="popup-backdrop-review" style="display: none;"></div>
 <div class="container-write-review" style="display: none;">
     <div class="header-review">
@@ -274,9 +245,6 @@
         <button class="submit-review btn-reivew primary">Gửi nhận xét</button>
     </div>
 </div>
-
-
-<!-- Popup trả hàng -->
 <div class="popup-backdrop-return" style="display: none;"></div>
 <div class="container-write-review" id="return-popup" style="display: none;">
     <div class="header-review">
@@ -318,17 +286,9 @@
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
-
-    // Biến global để lưu orderId hiện tại
     let currentOrderId = null;
-
-    // Biến global cho return
     let currentReturnOrderId = null;
-
-    //Biến global cho cancel
     let currentCancelOrderId = null;
-
-    //Function mở popup hủy đơn hàng
     function openCancelPopup(orderId) {
         currentCancelOrderId = orderId;
         const cancelPopup = document.querySelector('#cancel-popup');
@@ -395,7 +355,6 @@
             });
         });
 
-        // --- Popup đánh giá ---
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
         const evaluateBtn = document.querySelector('#Evaluate');
@@ -418,7 +377,6 @@
         if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewPopup);
         if (popupBackdropReview) popupBackdropReview.addEventListener('click', closeReviewPopup);
 
-        // Rating stars
         const ratingStars = document.querySelectorAll('#rating-stars span');
         ratingStars.forEach(star => {
             star.addEventListener('click', () => {
@@ -429,8 +387,6 @@
                 }
             });
         });
-
-        // Upload ảnh review
         const imageUpload = document.querySelector('#image-upload');
         if (imageUpload) {
             imageUpload.addEventListener('change', function () {
@@ -473,26 +429,19 @@
                     alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");
                     return;
                 }
-
                 if (!currentOrderId) {
                     alert("Không tìm thấy thông tin đơn hàng!");
                     return;
                 }
-
-                // Tạo FormData
                 const formData = new FormData();
                 formData.append('orderId', currentOrderId);
                 formData.append('rating', rating);
                 formData.append('comment', comment);
-
-                // Thêm ảnh
                 if (imageUpload.files.length > 0) {
                     for (let i = 0; i < imageUpload.files.length; i++) {
                         formData.append('images', imageUpload.files[i]);
                     }
                 }
-
-                // Disable nút submit để tránh spam
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.textContent = 'Đang gửi...';
 
@@ -520,9 +469,6 @@
                     });
             });
         }
-
-
-        // === Popup trả hàng ===
         const returnPopup = document.querySelector('#return-popup');
         const popupBackdropReturn = document.querySelector('.popup-backdrop-return');
         const cancelReturnBtn = document.querySelector('.cancel-return');
@@ -542,7 +488,6 @@
             popupBackdropReturn.addEventListener('click', closeReturnPopup);
         }
 
-        // Upload ảnh trả hàng
         const returnImageUpload = document.querySelector('#return-image-upload');
         if (returnImageUpload) {
             returnImageUpload.addEventListener('change', function () {
@@ -573,8 +518,6 @@
                 this.files = dataTransfer.files;
             });
         }
-
-        // Submit trả hàng
         if (submitReturnBtn) {
             submitReturnBtn.addEventListener('click', () => {
                 const reason = document.querySelector('#return-reason').value.trim();
@@ -628,8 +571,6 @@
             });
         }
 
-
-        //Popup hủy đơn hàng
         const cancelPopup = document.querySelector('#cancel-popup');
         const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
         const cancelCancelBtn = document.querySelector('.cancel-cancel');
@@ -697,19 +638,15 @@
 
 
     });
-
-    // FUNCTIONS FOR ORDER ACTIONS
     function openReviewPopup(orderId) {
         currentOrderId = orderId;
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
 
-        // Reset form
         document.querySelector('#comment').value = '';
         document.querySelector('#image-preview').innerHTML = '';
         document.querySelector('#image-upload').value = '';
 
-        // Reset rating stars
         document.querySelectorAll('#rating-stars span').forEach(s => s.classList.remove('active'));
 
         if (reviewContainer && popupBackdropReview) {
@@ -752,7 +689,6 @@
 </script>
 
 <script>
-    // Function mua lại - thêm tất cả sản phẩm trong đơn hàng vào giỏ
     function buyAgain(orderId) {
         const btn = event.target;
 

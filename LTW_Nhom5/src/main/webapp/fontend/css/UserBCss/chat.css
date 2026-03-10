@@ -1,4 +1,4 @@
-/* Reset & Base */
+
 * {
     margin: 0;
     padding: 0;
@@ -10,8 +10,6 @@ body {
     background: white;
     padding: 0;
 }
-
-/* MÀU CHỦ ĐẠO */
 :root {
     --primary: #007bff;
     --primary-dark: #0056b3;
@@ -22,7 +20,6 @@ body {
     --border: #dee2e6;
 }
 
-/* Chat Container */
 .chat-container {
     max-width: 1200px;
     margin: 20px auto;
@@ -36,7 +33,6 @@ body {
     justify-content: center;
 }
 
-/* Chat Area */
 .chat-area {
     width: 100%;
     display: flex;
@@ -196,7 +192,6 @@ body {
     50% { transform: translateY(-8px); }
 }
 
-/* Input */
 .chat-input {
     padding: 16px 20px;
     background: white;
@@ -268,7 +263,6 @@ body {
     transform: scale(0.95);
 }
 
-/* Image Preview */
 .image-preview {
     position: fixed;
     bottom: 80px;
@@ -329,7 +323,6 @@ body {
     to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .chat-container {
         height: 100vh;

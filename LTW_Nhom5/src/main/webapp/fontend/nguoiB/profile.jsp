@@ -1,15 +1,9 @@
-
-
-
-
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.dao.WishlistDAO" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.Comic" %>
 <%@ page import="vn.edu.hcmuaf.fit.ltw_nhom5.model.User" %>
 <%@ page import="java.util.List" %>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,15 +14,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/publicCss/nav.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/UserBCss/profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@300;400;500;700&display=swap"
           rel="stylesheet">
-<%--    body, html, input, button, select, textarea, h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th {--%>
-<%--    font-family: 'Noto Sans', 'Roboto', Arial, sans-serif !important;--%>
-<%--    }--%>
 </head>
 <body>
 
@@ -58,7 +47,6 @@
                 <h2>Huỳnh Trúc</h2>
                 <p class="membership">Thành viên Bạc</p>
                 <p class="C-point">C-Point tích lũy: 0</p>
-                <!--                <button class="add-point">Thêm 30.000 đé nâng hạng Vàng</button>-->
             </div>
         </div>
         <div class="menu">
@@ -67,7 +55,6 @@
                 <li><a href="#">Đổi mật khẩu</a></li>
                 <li><a href="#">Ưu đãi C-Point</a></li>
                 <li><a href="#">Đơn hàng của tôi</a></li>
-                <%--                <li><a href="#">Ví voucher </a></li>--%>
                 <li><a href="#">Thông báo</a></li>
                 <li><a href="#">Sản phẩm yêu thích</a></li>
             </ul>
@@ -93,7 +80,6 @@
             <div class="form-group">
                 <label for="email">Email: </label>
                 <input type="email" id="email" name="email" value="" placeholder="Nhập email" required>
-                <!--                <button type="button" class="edit-btn">Chỉnh sửa</button>-->
             </div>
             <div class="form-group">
                 <div class="genders">
@@ -148,8 +134,6 @@
     </div>
     <div class="change-password-container" style="display: none;">
         <h2>Đổi Mật Khẩu</h2>
-
-        <%-- Thông báo lỗi (màu đỏ) --%>
         <% if (request.getAttribute("error") != null) { %>
         <div class="alert" style="
     background-color: #ffebee;          /* Nền đỏ rất nhạt */
@@ -165,8 +149,6 @@
             <strong>Lỗi:</strong> <%= request.getAttribute("error") %>
         </div>
         <% } %>
-
-        <%-- Thông báo thành công (cũng dùng tông đỏ nhạt như yêu cầu) --%>
         <% if (request.getAttribute("success") != null) { %>
         <div class="alert" style="
     background-color: #ffebee;
@@ -215,7 +197,6 @@
             <div class="filter-tabs">
                 <button class="scroll-btn scroll-left" title="Cuộn trái">&lt;</button>
                 <div class="tabs-container">
-                    <!--                    <button class="filter-tab active" data-filter="all">Tất cả</button>-->
                     <button class="filter-tab" data-filter="pending">Chờ xác nhận</button>
                     <button class="filter-tab" data-filter="shipping">Vận chuyển</button>
                     <button class="filter-tab" data-filter="delivery">Chờ giao hàng</button>
@@ -225,11 +206,6 @@
                 </div>
                 <button class="scroll-btn scroll-right" title="Cuộn phải">&gt;</button>
             </div>
-            <!--            <div class="search-bar">-->
-            <!--                <input type="text" placeholder="Bán chỗ tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên Sản phẩm"-->
-            <!--                       class="search-input">-->
-            <!--                <button class="search-btn"><i class="fas fa-search"></i></button>-->
-            <!--            </div>-->
         </div>
         <div class="orders-list">
             <div class="order-item" data-status="completed">
@@ -698,19 +674,13 @@
             <div class="tab active">Tất cả</div>
             <div class="tab">Đơn Hàng</div>
             <div class="tab">Sự kiện</div>
-            <%--            <div class="tab">Mã giảm giá</div>--%>
-            <%--            <div class="tab">Xác nhận</div>--%>
         </div>
         <div class="line"></div>
         <div class="empty-message">Không có thông báo.</div>
     </div>
 
-
-    <!--    popup đánh giá-->
-    <!-- BACKDROP NỀN MỜ -->
     <div class="popup-backdrop-review" style="display: none;"></div>
 
-    <!-- POPUP ĐÁNH GIÁ -->
     <div class="container-write-review" style="display: none;">
         <div class="header-review">
             <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
@@ -721,13 +691,7 @@
                 <span data-value="4">★</span>
                 <span data-value="5">★</span>
             </div>
-            <!--            <p class="rating-label" id="rating-label">Chọn số sao</p>-->
         </div>
-
-        <%--        <div class="field">--%>
-        <%--            <label for="display-name" class="nameDisplay">Tên hiển thị khi đánh giá</label>--%>
-        <%--            <input id="display-name" type="text" placeholder="Nhập tên sẽ hiển thị khi đánh giá"/>--%>
-        <%--        </div>--%>
 
         <div class="field">
             <label for="comment" class="nameDisplay">Nhận xét</label>
@@ -749,7 +713,6 @@
 
 </main>
 
-<!-- Popup chi tiết mã giảm giá -->
 <div id="voucher-detail-popup" class="voucher-popup" style="display: none;">
     <div class="voucher-popup-content">
         <span class="close-popup" onclick="closeVoucherPopup()">&times;</span>
@@ -790,56 +753,30 @@
     </div>
 </div>
 
-
-<!-- ===================== FOOTER ===================== -->
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
-<!------------------------------------------------------------------------------------------------>
-
 <script>
-    <!--    hien thi popup danh gia-->
-
-    // Note: The closeReviewPopup function is already referenced in the HTML onclick
-
-    // -------------------------------------------------------------------------------------
-
-    // chi tiet ma giam gia
-    // Function to show voucher details in the popup
     function showVoucherDetails(button) {
-        // Get the voucher card element
         const voucherCard = button.closest('.voucher-card');
-
-        // Get the voucher data from the data-voucher attribute
         const voucherData = JSON.parse(voucherCard.getAttribute('data-voucher'));
-
-        // Populate the popup fields with voucher data
         document.getElementById('detail-code').textContent = voucherData.code;
         document.getElementById('detail-value').textContent = voucherData.value;
         document.getElementById('detail-condition').textContent = voucherData.condition;
         document.getElementById('detail-exclude').textContent = voucherData.exclude;
         document.getElementById('detail-expiry').textContent = voucherData.expiry;
         document.getElementById('detail-status').textContent = voucherData.status;
-
-        // Show the popup
         document.getElementById('voucher-detail-popup').style.display = 'flex';
     }
 
-    // Function to close the popup
     function closeVoucherPopup() {
         document.getElementById('voucher-detail-popup').style.display = 'none';
     }
-
-
-    // ---------------------------------------------------------------------------------------------------------
-
     document.addEventListener('DOMContentLoaded', function () {
-        // --- Xử lý popup voucher-container ---
         const voucherContainer = document.querySelector('.voucher-container');
         const popupBackdrop = document.querySelector('.popup-backdrop');
         const voucherSelect = document.querySelector('.voucher-select');
         const closePopupBtn = document.querySelector('.close-popup-btn');
 
-        // Hàm đóng popup voucher
         function closeVoucherPopup() {
             if (voucherContainer) {
                 voucherContainer.classList.remove('popup-active');
@@ -850,7 +787,6 @@
             }
         }
 
-        // Xử lý nhấn voucher-select
         if (voucherSelect) {
             voucherSelect.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -870,7 +806,6 @@
             });
         }
 
-        // Đóng voucher popup khi nhấn nền mờ
         if (popupBackdrop) {
             popupBackdrop.addEventListener('click', function (e) {
                 if (e.target === popupBackdrop) {
@@ -879,22 +814,17 @@
             });
         }
 
-        // Đóng voucher popup khi nhấn nút đóng
         if (closePopupBtn) {
             closePopupBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 closeVoucherPopup();
             });
         }
-
-        // Ngăn click trong voucher-container lan ra ngoài
         if (voucherContainer) {
             voucherContainer.addEventListener('click', function (e) {
                 e.stopPropagation();
             });
         }
-
-        // Xử lý nút Copy mã
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
                 const code = e.target.closest('.voucher-card')?.querySelector('.voucher-code')?.textContent;
@@ -908,7 +838,6 @@
             }
         });
 
-        // Xử lý nút Chi tiết
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('voucher-detail-btn')) {
                 const title = e.target.closest('.voucher-card')?.querySelector('.voucher-title')?.textContent;
@@ -917,21 +846,17 @@
                 }
             }
         });
-
-        // --- Xử lý popup đánh giá ---
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
         const evaluateBtn = document.querySelector('#Evaluate');
         const cancelReviewBtn = document.querySelector('.cancel-review');
         const submitReviewBtn = document.querySelector('.submit-review');
 
-// Mở popup
         evaluateBtn.addEventListener('click', () => {
             reviewContainer.style.display = 'block';
             popupBackdropReview.style.display = 'block';
         });
 
-// Đóng popup
         function closeReviewPopup() {
             reviewContainer.style.display = 'none';
             popupBackdropReview.style.display = 'none';
@@ -940,9 +865,7 @@
         cancelReviewBtn.addEventListener('click', closeReviewPopup);
         popupBackdropReview.addEventListener('click', closeReviewPopup);
 
-// Chọn sao
         const ratingStars = document.querySelectorAll('#rating-stars span');
-        // const ratingLabel = document.querySelector('#rating-label');
 
         ratingStars.forEach(star => {
             star.addEventListener('click', () => {
@@ -951,10 +874,8 @@
                 for (let i = 0; i < value; i++) {
                     ratingStars[i].classList.add('active');
                 }
-                // ratingLabel.textContent = `${value} sao`;
             });
         });
-// Preview ảnh - TỐI ĐA 3 ẢNH
         document.querySelector('#image-upload').addEventListener('change', function () {
             const preview = document.querySelector('#image-preview');
             const files = Array.from(this.files).slice(0, 3); // Chỉ lấy 3 ảnh đầu
@@ -978,13 +899,11 @@
                 }
             });
 
-            // Cập nhật lại input để chỉ giữ 3 ảnh
             const dataTransfer = new DataTransfer();
             files.forEach(file => dataTransfer.items.add(file));
             this.files = dataTransfer.files;
         });
-        4
-// Gửi đánh giá
+
         submitReviewBtn.addEventListener('click', () => {
             const name = document.querySelector('#display-name').value.trim();
             const comment = document.querySelector('#comment').value.trim();
@@ -1013,15 +932,12 @@
         const menuItems = document.querySelectorAll('.menu ul li');
         const notificationContainer = document.querySelector('.notification-container');
 
-
-        // Fallback tĩnh cho huyện
         const fallbackDistricts = {
             '1': [{code: '001', name: 'Ba Đình'}, {code: '002', name: 'Hoàn Kiếm'}, {code: '003', name: 'Cầu Giấy'}],
             '79': [{code: '268', name: 'Quận 1'}, {code: '269', name: 'Quận 3'}, {code: '270', name: 'Quận 7'}],
             '48': [{code: '161', name: 'Hải Châu'}, {code: '162', name: 'Thanh Khê'}]
         };
 
-        // Load tỉnh/thành
         fetch('https://provinces.open-api.vn/api/?depth=1')
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -1038,7 +954,6 @@
             })
             .catch(error => console.error('Error loading provinces:', error));
 
-        // Load huyện khi chọn tỉnh
         provinceSelect.addEventListener('change', function () {
             const provinceCode = this.value;
             districtSelect.innerHTML = '<option value="" disabled selected>Đang tải huyện...</option>';
@@ -1071,7 +986,6 @@
             }
         });
 
-        // Hàm load fallback tĩnh
         function loadFallbackDistricts(provinceCode) {
             districtSelect.innerHTML = '<option value="" disabled selected>Chọn huyện</option>';
             const districts = fallbackDistricts[provinceCode] || [{code: 'none', name: 'Không có dữ liệu'}];
@@ -1084,23 +998,20 @@
             console.log('Đã load fallback huyện cho tỉnh', provinceCode);
         }
 
-        // Xử lý click menu item
         menuItems.forEach(item => {
             item.addEventListener('click', function (e) {
                 menuItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
                 const text = this.querySelector('a').textContent.trim();
 
-                // Hide all containers
                 profileForm.style.display = 'none';
                 changePasswordForm.style.display = 'none';
                 orderHistoryForm.style.display = 'none';
                 voucherContainer.style.display = 'none';
                 wishlistContainer.style.display = 'none';
-                xuContainer.style.display = 'none'; // Hide xu-container by default
+                xuContainer.style.display = 'none';
                 notificationContainer.style.display = 'none';
 
-                // Show the appropriate container based on menu item
                 if (text === 'Đổi mật khẩu') {
                     changePasswordForm.style.display = 'block';
                 } else if (text === 'Đơn hàng của tôi') {
@@ -1117,7 +1028,6 @@
                     xuContainer.style.display = 'block'; // Show xu-container
                 } else if (text == 'Thông báo') {
                     notificationContainer.style.display = 'block';
-                    // tải lại danh sách thông báo(cso thể gọi API ở đây)
                     loadNotifications();
                 } else {
                     profileForm.style.display = 'block'; // Default to profile form
@@ -1125,18 +1035,14 @@
                 e.preventDefault();
             });
         });
-
-
-        // Đặt active mặc định cho "Thông tin tài khoản"
         menuItems[0].classList.add('active');
         profileForm.style.display = 'block';
         changePasswordForm.style.display = 'none';
         orderHistoryForm.style.display = 'none';
         voucherContainer.style.display = 'none';
         wishlistContainer.style.display = 'none';
-        xuContainer.style.display = 'none'; // Ensure xu-container is hidden initially
+        xuContainer.style.display = 'none';
 
-        // Xử lý cuộn cho nút trái/phải
         const tabsContainer = document.querySelector('.tabs-container');
         const scrollLeftBtn = document.querySelector('.scroll-left');
         const scrollRightBtn = document.querySelector('.scroll-right');
@@ -1148,8 +1054,6 @@
         scrollRightBtn.addEventListener('click', () => {
             tabsContainer.scrollBy({left: 150, behavior: 'smooth'});
         });
-
-        // Xử lý lọc đơn hàng theo tab
         const filterTabs = document.querySelectorAll('.filter-tab');
         const orderItems = document.querySelectorAll('.order-item');
         const noOrdersMessage = document.querySelector('.no-orders');
@@ -1175,11 +1079,7 @@
                 noOrdersMessage.style.display = visibleCount === 0 ? 'block' : 'none';
             });
         });
-
-        // Kích hoạt tab mặc định (ví dụ: "Hoàn thành")
         document.querySelector('.filter-tab.active').click();
-
-        // Xử lý nút Copy mã (nếu có voucher)
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('copy-code-btn') && !e.target.disabled) {
                 const code = e.target.closest('.voucher-card').querySelector('.voucher-code').textContent;
@@ -1190,16 +1090,12 @@
                 });
             }
         });
-
-        // Xử lý nút Chi tiết (nếu có voucher)
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('voucher-detail-btn')) {
                 const title = e.target.closest('.voucher-card').querySelector('.voucher-title').textContent;
                 alert('Chi tiết voucher: ' + title + '\n(Ở đây có thể mở modal hoặc trang mới)');
             }
         });
-
-        // Xử lý nút Thêm vào giỏ và Xóa trong wishlist
         document.addEventListener('click', function (e) {
             if (e.target.classList.contains('add-to-cart-btn')) {
                 const title = e.target.closest('.wishlist-item').querySelector('h3').textContent;
@@ -1216,7 +1112,6 @@
 
 
 <script>
-    // CHUÔNG THÔNG BÁO TRÊN HEADER - HOẠT ĐỘNG NHƯ CŨ, SIÊU MƯỢT
     const bellIcon = document.querySelector('.bell-icon');
     const notificationPanel = document.querySelector('.notification-panel');
 
@@ -1226,15 +1121,11 @@
             e.stopPropagation();
             notificationPanel.style.display = (notificationPanel.style.display === 'block') ? 'none' : 'block';
         });
-
-        // Click ngoài thì đóng
         document.addEventListener('click', function (e) {
             if (!bellIcon.contains(e.target) && !notificationPanel.contains(e.target)) {
                 notificationPanel.style.display = 'none';
             }
         });
-
-        // Click vào panel không bị đóng
         notificationPanel.addEventListener('click', function (e) {
             e.stopPropagation();
         });
@@ -1242,7 +1133,6 @@
 </script>
 
 <script>
-    // CHỈ CẦN ĐOẠN NÀY LÀ ĐỦ - SIÊU GỌN
     document.querySelectorAll('.notification-container .tab').forEach(tab => {
         tab.addEventListener('click', function () {
             document.querySelectorAll('.notification-container .tab').forEach(t =>
@@ -1257,8 +1147,6 @@
     async function loadNotifications() {
         const container = document.querySelector('.notification-container');
         if (!container || container.style.display === 'none') return;
-
-        // Xác định loại filter từ tab active
         const activeTab = container.querySelector('.tab.active');
         let type = 'ALL';
         if (activeTab) {
@@ -1266,11 +1154,8 @@
             if (tabText === 'Đơn Hàng') type = 'ORDER';
             if (tabText === 'Sự kiện') type = 'EVENT';
         }
-
-        // Tạo khu vực hiển thị danh sách thông báo
         let listArea = document.getElementById('notification-list-area');
         if (!listArea) {
-            // Xóa nội dung cũ (empty-message)
             container.innerHTML = `
             <div class="tabs">
                 <div class="tab active">Tất cả</div>
@@ -1284,8 +1169,6 @@
             </div>
         `;
             listArea = document.getElementById('notification-list-area');
-
-            // Gắn lại sự kiện cho các tab mới tạo
             document.querySelectorAll('.notification-container .tab').forEach(tab => {
                 tab.addEventListener('click', function () {
                     document.querySelectorAll('.notification-container .tab').forEach(t => t.classList.remove('active'));
@@ -1293,8 +1176,6 @@
                     loadNotifications();
                 });
             });
-
-            // Gắn sự kiện đánh dấu tất cả
             document.getElementById('mark-all-read-btn').addEventListener('click', markAllRead);
         }
 
@@ -1356,32 +1237,20 @@
             alert('Lỗi thực hiện');
         }
     }
-
-    // Gọi load khi mở tab Thông báo (đã có trong menu click và #notifications)
 </script>
 
 <script>
-    // Tự động mở tab "Thông báo" nếu URL có #notifications
     document.addEventListener('DOMContentLoaded', function () {
         if (window.location.hash === '#notifications') {
-            // Tìm menu item "Thông báo" và click nó
             const menuItems = document.querySelectorAll('.menu ul li');
             menuItems.forEach(item => {
                 const linkText = item.querySelector('a').textContent.trim();
                 if (linkText === 'Thông báo') {
-                    // Xóa active cũ
                     menuItems.forEach(i => i.classList.remove('active'));
-                    // Thêm active cho tab Thông báo
                     item.classList.add('active');
-
-                    // Ẩn tất cả container
                     document.querySelectorAll('.profile-form-container, .change-password-container, .order-history-container, .voucher-container, .wishlist-container, .xu-container, .notification-container')
                         .forEach(el => el.style.display = 'none');
-
-                    // Hiện tab thông báo
                     document.querySelector('.notification-container').style.display = 'block';
-
-                    // Gọi hàm load thông báo (nếu bạn đã có hàm loadNotifications)
                     if (typeof loadNotifications === 'function') {
                         loadNotifications();
                     }
@@ -1390,8 +1259,6 @@
         }
     });
 </script>
-
-
 <script>
     document.querySelectorAll('.remove-wishlist-btn').forEach(btn => {
         btn.addEventListener('click', function () {
@@ -1421,7 +1288,6 @@
 
 
 <script>
-    // Xử lý xóa sản phẩm khỏi wishlist
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-wishlist-btn') ||
             e.target.closest('.remove-wishlist-btn')) {
@@ -1434,8 +1300,6 @@
             if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
                 return;
             }
-
-            // Disable button và hiển thị loading
             btn.disabled = true;
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
@@ -1486,9 +1350,6 @@
                 });
         }
     });
-
-    // Xử lý thêm vào giỏ hàng
-    // Xử lý thêm vào giỏ hàng bằng AJAX
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('add-to-cart-btn') ||
             e.target.closest('.add-to-cart-btn')) {
@@ -1499,14 +1360,10 @@
                 e.target : e.target.closest('.add-to-cart-btn');
             const comicId = btn.dataset.comicId;
             const comicName = btn.closest('.wishlist-item').querySelector('h3 a').textContent;
-
-            // Kiểm tra hết hàng
             if (btn.disabled) {
                 showWishlistToast('Sản phẩm đã hết hàng', 'error');
                 return;
             }
-
-            // Disable button và hiển thị loading
             btn.disabled = true;
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang thêm...';
@@ -1522,17 +1379,11 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Hiển thị popup success
                         showAddToCartPopup(comicName, data.cartCount);
-
-                        // Cập nhật số lượng giỏ hàng trên header
                         updateCartCountBadge(data.cartCount);
-
-                        // Reset button
                         btn.disabled = false;
                         btn.innerHTML = originalHTML;
                     } else {
-                        // Hiển thị lỗi
                         showWishlistToast(data.message || 'Không thể thêm vào giỏ', 'error');
                         btn.disabled = false;
                         btn.innerHTML = originalHTML;
@@ -1547,7 +1398,6 @@
         }
     });
 
-    // Hàm hiển thị popup thêm vào giỏ thành công
     function showAddToCartPopup(productName, cartCount) {
         // Xóa popup cũ nếu có
         const oldPopup = document.querySelector('.cart-success-popup');
@@ -1598,7 +1448,6 @@
         }
     }
 
-    // Cập nhật badge số lượng giỏ hàng trên header
     function updateCartCountBadge(count) {
         const badge = document.querySelector('.cart-count, .cart-badge, #cart-count');
         if (badge) {
@@ -1607,38 +1456,30 @@
             setTimeout(() => badge.classList.remove('bounce'), 500);
         }
     }
-    // Hàm hiển thị toast notification cho wishlist
     function showWishlistToast(message, type = 'success') {
-        // Xóa toast cũ nếu có
         const oldToast = document.querySelector('.wishlist-toast');
         if (oldToast) {
             oldToast.remove();
         }
 
-        // Icon theo type
         const icons = {
             success: '<i class="fas fa-check-circle"></i>',
             error: '<i class="fas fa-exclamation-circle"></i>',
             info: '<i class="fas fa-info-circle"></i>'
         };
 
-        // Tạo toast
         const toast = document.createElement('div');
         toast.className = 'wishlist-toast ' + type;
         toast.innerHTML = icons[type] + ' ' + message;
         document.body.appendChild(toast);
 
-        // Hiển thị với animation
         setTimeout(() => toast.classList.add('show'), 10);
 
-        // Tự động ẩn sau 3 giây
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
         }, 3000);
     }
-
-    // Thêm hover effect cho links
     document.querySelectorAll('.wishlist-container a[href*="login"], .wishlist-container a[href*="home"]').forEach(link => {
         link.addEventListener('mouseenter', function() {
             this.style.transform = 'scale(1.05)';

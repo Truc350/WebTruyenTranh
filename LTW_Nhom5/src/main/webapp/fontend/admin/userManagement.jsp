@@ -15,17 +15,11 @@
 <body>
 
 <div class="container">
-    <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
         <h2 class="page-title">Quản lý người dùng</h2>
-
         <div class="user-management">
-
-            <!-- Search bar -->
             <div class="search-filter-container">
                 <form method="get" action="${pageContext.request.contextPath}/admin/user-management" id="searchForm">
                     <div class="search-box">
@@ -36,7 +30,6 @@
                                value="${param.search != null ? param.search : ''}">
                         <i class="fas fa-magnifying-glass"></i>
                     </div>
-
                     <select id="levelFilter" name="level" class="level-filter">
                         <option value="">Tất cả cấp độ</option>
                         <option value="Normal" ${param.level == 'Normal' ? 'selected' : ''}>Normal</option>
@@ -46,8 +39,6 @@
                     </select>
                 </form>
             </div>
-
-
             <table id="userTable" class="user-table">
                 <thead>
                 <tr>
@@ -59,7 +50,6 @@
                     <th></th>
                 </tr>
                 </thead>
-
                 <tbody id="userTableBody">
                 <c:choose>
                     <c:when test="${not empty users}">
@@ -133,8 +123,6 @@
                         </tr>
                     </c:otherwise>
                 </c:choose>
-
-                <!-- Phân trang -->
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination" id="tablePagination"></div>
@@ -143,8 +131,6 @@
                 </tbody>
             </table>
         </div>
-
-        <!-- Popup -->
         <div id="upgradePopup" class="popup-overlay">
             <div class="popup-box">
                 <h3>Nâng cấp thành viên</h3>
@@ -156,23 +142,17 @@
                     <option value="Gold">Vàng (10%)</option>
                     <option value="Platinum">Kim cương (15%)</option>
                 </select>
-
                 <div class="popup-actions">
                     <button id="upgradeConfirm">Xác nhận</button>
                     <button id="upgradeCancel">Hủy</button>
                 </div>
             </div>
         </div>
-
-        <!-- Popup Xem chi tiết - IMPROVED -->
         <div id="detailPopup" class="popup-overlay">
             <div class="popup-box">
-                <!-- Header -->
                 <div class="popup-header">
                     <h3>Thông tin khách hàng</h3>
                 </div>
-
-                <!-- Body -->
                 <div class="popup-body">
                     <div class="info-row">
                 <span class="info-label">
@@ -180,21 +160,18 @@
                 </span>
                         <span class="info-value" id="detailName"></span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     </i>Email:
                 </span>
                         <span class="info-value" id="detailEmail"></span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     Số điện thoại:
                 </span>
                         <span class="info-value" id="detailPhone">Chưa cập nhật</span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     Cấp thành viên:
@@ -203,21 +180,18 @@
                     <span class="level-badge" id="detailLevelBadge"></span>
                 </span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     </i>Tổng chi tiêu:
                 </span>
                         <span class="info-value" id="detailSpent" style="color: #28a745; font-weight: 600;"></span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     Điểm tích lũy:
                 </span>
                         <span class="info-value" id="detailPoints" style="color: #ffc107; font-weight: 600;"></span>
                     </div>
-
                     <div class="info-row">
                 <span class="info-label">
                     </i>Ngày tham gia:
@@ -225,8 +199,6 @@
                         <span class="info-value" id="detailCreatedAt">01/01/2024</span>
                     </div>
                 </div>
-
-                <!-- Footer -->
                 <div class="popup-footer">
                     <button class="btn-close" onclick="document.getElementById('detailPopup').style.display='none'">
                         Đóng
@@ -234,7 +206,6 @@
                 </div>
             </div>
         </div>
-
         <div id="lockPopup" class="popup-overlay">
             <div class="popup-box">
                 <h3>Xác nhận khóa tài khoản</h3>
@@ -249,11 +220,9 @@
         </div>
     </div>
 </div>
-
 <script>
     const BASE_URL = '${pageContext.request.contextPath}';
 </script>
-
 <script src="${pageContext.request.contextPath}/js/userManagement.js"></script>
 
 </body>

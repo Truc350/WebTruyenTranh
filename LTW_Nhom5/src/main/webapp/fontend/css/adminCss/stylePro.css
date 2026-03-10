@@ -1,4 +1,4 @@
-/* style.css - Fixed Single Scrollbar */
+
 
 * {
     margin: 0;
@@ -10,22 +10,21 @@
 body {
     color: #333;
     width: 100%;
-    overflow: hidden; /* Ngăn scroll ở body */
+    overflow: hidden;
 }
 
 .container {
     display: flex;
     height: 100vh;
-    overflow: hidden; /* Ngăn scroll ở container */
+    overflow: hidden;
 }
 
-/* ===== MAIN CONTENT - CHỈ MỘT SCROLL DỌC ===== */
 .main-content {
     flex: 1;
     padding: 30px;
     background-color: white;
-    overflow-y: auto;       /* scroll dọc chính */
-    overflow-x: hidden;     /* ngăn scroll ngang ở main */
+    overflow-y: auto;
+    overflow-x: hidden;
     height: 100vh;
 }
 
@@ -36,10 +35,10 @@ body {
 
 .table-container {
     min-width: 800px;
-    overflow: visible; /* Bỏ scroll */
+    overflow: visible;
 }
 
-/* Search + Add */
+
 .search-add {
     display: flex;
     margin-bottom: 40px;
@@ -126,38 +125,37 @@ body {
 
 
 .table-wrapper {
-    width: 100%;           /* Chiều rộng tối đa của vùng chứa */
-    overflow-x: auto;      /* Tự động hiện thanh cuộn ngang khi bảng quá rộng */
-    -webkit-overflow-scrolling: touch; /* Giúp cuộn mượt hơn trên thiết bị di động */
-    margin-bottom: 1rem;   /* Khoảng cách phía dưới bảng */
-    border: 1px solid #ddd; /* Tùy chọn: tạo khung để dễ nhìn thấy vùng cuộn */
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
 }
 
-/* Đảm bảo bảng không bị co lại quá mức */
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 800px;      /* Quan trọng: ép bảng phải rộng ít nhất 800px để kích hoạt scroll */
+    min-width: 800px;
 }
 
 .table-wrapper::-webkit-scrollbar {
-    height: 8px;           /* Độ dày của thanh cuộn ngang */
+    height: 8px;
 }
 
 .table-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;   /* Màu nền của thanh cuộn */
+    background: #f1f1f1;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-    background: #888;      /* Màu của thanh kéo */
+    background: #888;
     border-radius: 4px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #555;      /* Màu thanh kéo khi di chuột qua */
+    background: #555;
 }
 
-/* Table */
+
 table {
     width: 100%;
     min-width: 700px;
@@ -169,26 +167,21 @@ table {
 table, tbody, tr, td {
     overflow: visible !important;
 }
-
 table th, table td {
     padding: 12px;
     border-bottom: 1px solid #e8e8e8;
     text-align: left;
 }
-
 .table-wrapper tbody tr:hover {
     background-color: #fff1f1;
 }
-
 .table-container {
     overflow: visible !important;
     position: relative;
 }
-
 .table-container.menu-open tbody tr:hover {
     background-color: inherit !important;
 }
-
 tbody tr:hover .more-btn {
     opacity: 1;
     pointer-events: auto;
@@ -248,7 +241,7 @@ th, td {
 }
 
 .pagination-info {
-    display: none; /* Ẩn text info */
+    display: none;
 }
 
 .pagination-info strong {
@@ -265,7 +258,7 @@ th, td {
     padding: 0;
 }
 
-/* Ô chứa nút sửa và 3 chấm */
+
 .action-cell {
     display: flex;
     align-items: center;
@@ -274,7 +267,7 @@ th, td {
     position: relative;
 }
 
-/* Nút 3 chấm */
+
 .more-btn {
     background: transparent;
     border: none;
@@ -293,13 +286,13 @@ th, td {
     background-color: #f3f3f3;
 }
 
-/* Khung chứa menu */
+
 .menu-container {
     position: relative;
     display: inline-block;
 }
 
-/* Menu thả xuống */
+
 .dropdown-menu {
     display: none;
     position: fixed;
@@ -338,7 +331,7 @@ th, td {
     display: block;
 }
 
-/* ---------- POPUP THÊM TRUYỆN ---------- */
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -350,7 +343,7 @@ th, td {
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    overflow-y: auto; /* Cho phép scroll trong popup nếu cần */
+    overflow-y: auto;
 }
 
 .modal-rectangle {
@@ -437,7 +430,7 @@ th, td {
     border-color: #ff4c4c;
 }
 
-/* Khung upload ảnh */
+
 .image-upload {
     width: 100%;
     height: 260px;
@@ -529,7 +522,7 @@ th, td {
     }
 }
 
-/* ----- POPUP CHỈNH SỬA TRUYỆN ----- */
+
 #editModal .modal-rectangle {
     width: 800px;
     background-color: #fff;
@@ -547,7 +540,7 @@ th, td {
     object-fit: cover;
 }
 
-/* ===== POPUP XÓA TRUYỆN ===== */
+
 .delete-modal {
     width: 450px;
     background-color: #fff;
@@ -649,7 +642,7 @@ th, td {
     background-color: #c0392b;
 }
 
-/* ----- POPUP XÁC NHẬN XÓA ----- */
+
 .confirm-box {
     background-color: #fff;
     border-radius: 10px;
@@ -665,7 +658,7 @@ th, td {
     gap: 10px;
 }
 
-/* ---------- POPUP REVIEW ---------- */
+
 .review-popup {
     display: none;
     position: fixed;
@@ -765,7 +758,7 @@ th, td {
     margin: -8px 0 8px 0;
 }
 
-/*Thêm ảnh cho truyen (4 ảnh)*/
+
 .images-grid {
     display: grid;
     grid-template-columns: repeat(2, 150px);
@@ -800,7 +793,7 @@ th, td {
     display: block;
 }
 
-/* Custom scrollbar cho main-content */
+
 .main-content::-webkit-scrollbar {
     width: 10px;
 }
@@ -818,7 +811,7 @@ th, td {
     background: #ff4c4c;
 }
 
-/* Nút thùng rác */
+
 .trash-btn {
     background: transparent;
     border: none;
@@ -863,28 +856,28 @@ th, td {
 
 
 .filter-select {
-    width: 220px;              /* độ rộng */
-    padding: 8px 12px;         /* khoảng cách trong */
-    border: 2px solid #d9534f; /* viền đỏ */
-    border-radius: 6px;        /* bo góc */
-    background-color: #fff;    /* nền trắng */
-    font-size: 14px;           /* cỡ chữ */
-    color: #333;               /* màu chữ */
-    appearance: none;          /* bỏ style mặc định */
+    width: 220px;
+    padding: 8px 12px;
+    border: 2px solid #d9534f;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg fill='%23d9534f' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
-    background-position: right 10px center; /* icon mũi tên */
+    background-position: right 10px center;
     background-size: 12px;
 }
 
-/* Khi hover */
+
 .filter-select:hover {
     border-color: #c9302c;
 }
 
-/* Khi focus */
+
 .filter-select:focus {
     outline: none;
     box-shadow: 0 0 5px rgba(217,83,79,0.5);

@@ -9,7 +9,7 @@ function renderUserPagination(paginationContainer, totalPages, currentPage, onPa
     const groupStart = groupIndex * windowSize + 1;
     const groupEnd   = Math.min(groupStart + windowSize - 1, totalPages);
 
-    // Nút «
+
     const prevBtn = document.createElement('button');
     prevBtn.className = 'page-btn prev-btn';
     prevBtn.innerHTML = '&#171;';
@@ -74,7 +74,6 @@ function initUserPagination() {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ========== TÌM KIẾM VÀ LỌC ==========
     document.getElementById('searchInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); document.getElementById('searchForm').submit(); }
     });
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('searchForm').submit();
     });
 
-    // ========== KEBAB MENU ==========
     document.querySelectorAll('.kebab-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -118,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
         box.addEventListener('click', e => e.stopPropagation());
     });
 
-    // ========== XEM CHI TIẾT ==========
     document.querySelectorAll('.view-detail').forEach(item => {
         item.addEventListener('click', function (e) {
             e.preventDefault();
@@ -213,27 +210,27 @@ document.addEventListener('DOMContentLoaded', function () {
                         const violations = data.violations.join('\n• ');
                         document.getElementById('lockUserId').value = userId;
                         document.getElementById('lockMessage').innerHTML =
-                            '<strong style="color:#dc3545;">⚠️ KHÓA VĨNH VIỄN TÀI KHOẢN</strong>' +
+                            '<strong style="color:#dc3545;"> KHÓA VĨNH VIỄN TÀI KHOẢN</strong>' +
                             '<div style="margin:15px 0;padding:10px;background:#fff3cd;border-left:4px solid #ffc107;border-radius:4px;">' +
                             '<strong>Người dùng:</strong> ' + userName + '<br>' +
                             '<strong style="color:#dc3545;">Vi phạm phát hiện (' + data.violationCount + '):</strong><br>• ' +
                             violations.replace(/\\n/g, '<br>• ') +
                             '</div>' +
                             '<div style="background:#f8d7da;padding:10px;border-radius:4px;margin-top:10px;">' +
-                            '<strong style="color:#721c24;">⚠️ CẢNH BÁO:</strong> Hành động này KHÔNG THỂ HOÀN TÁC!' +
+                            '<strong style="color:#721c24;"> CẢNH BÁO:</strong> Hành động này KHÔNG THỂ HOÀN TÁC!' +
                             '</div>';
 
                         document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
                         document.getElementById('lockPopup').style.display = 'flex';
                     } else {
-                        alert('❌ KHÔNG THỂ KHÓA TÀI KHOẢN\n\n👤 Người dùng: ' + userName + '\n\n📋 Lý do: Chưa có vi phạm nào được ghi nhận');
+                        alert(' KHÔNG THỂ KHÓA TÀI KHOẢN\n\n👤 Người dùng: ' + userName + '\n\n Lý do: Chưa có vi phạm nào được ghi nhận');
                         document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
                     }
                 })
                 .catch(error => {
                     if (document.body.contains(loadingAlert)) document.body.removeChild(loadingAlert);
                     console.error('Error:', error);
-                    alert('⚠️ Có lỗi xảy ra khi kiểm tra vi phạm.');
+                    alert(' Có lỗi xảy ra khi kiểm tra vi phạm.');
                 });
         });
     });
@@ -250,10 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(r => r.json())
             .then(data => {
-                if (data.status === 'success') { alert('✅ KHÓA THÀNH CÔNG\n\n' + data.message); location.reload(); }
-                else { alert('❌ KHÓA THẤT BẠI\n\n' + data.message); this.disabled = false; this.textContent = 'Khóa vĩnh viễn'; }
+                if (data.status === 'success') { alert('KHÓA THÀNH CÔNG\n\n' + data.message); location.reload(); }
+                else { alert(' KHÓA THẤT BẠI\n\n' + data.message); this.disabled = false; this.textContent = 'Khóa vĩnh viễn'; }
             })
-            .catch(() => { alert('⚠️ Có lỗi xảy ra.'); this.disabled = false; this.textContent = 'Khóa vĩnh viễn'; });
+            .catch(() => { alert(' Có lỗi xảy ra.'); this.disabled = false; this.textContent = 'Khóa vĩnh viễn'; });
 
         document.getElementById('lockPopup').style.display = 'none';
     });

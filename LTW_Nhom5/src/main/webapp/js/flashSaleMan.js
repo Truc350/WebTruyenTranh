@@ -24,7 +24,6 @@ function initializeSidebar() {
 }
 
 function initializeModals() {
-    // Popup thêm
     document.getElementById("openAddPopup")?.addEventListener("click", () => {
         document.getElementById("addFlashSaleModal").classList.add("show");
     });
@@ -33,13 +32,9 @@ function initializeModals() {
         document.getElementById("addFlashSaleModal").classList.remove("show");
         resetAddForm();
     });
-
-    // Popup xem
     document.getElementById("closeViewFlashSale")?.addEventListener("click", () => {
         document.getElementById("viewFlashSaleModal").classList.remove("show");
     });
-
-    // Popup chỉnh sửa
     document.getElementById("closeEditFlashSale")?.addEventListener("click", () => {
         closeEditModal();
     });
@@ -49,8 +44,6 @@ function initializeAddFlashSale() {
     const comicSearchInput = document.getElementById('comicSearchInput');
     const searchResults = document.getElementById('searchResults');
     const selectedProductList = document.getElementById('selectedProductList');
-
-    // Tìm kiếm khi gõ
     comicSearchInput?.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         const keyword = this.value.trim();
@@ -92,32 +85,22 @@ function initializeAddFlashSale() {
                 });
         }, 400);
     });
-
-    // Ẩn kết quả khi click ra ngoài
     document.addEventListener('click', (e) => {
         if (searchResults && !comicSearchInput?.contains(e.target) && !searchResults.contains(e.target)) {
             searchResults.style.display = 'none';
         }
     });
-
-    // Nút tạo Flash Sale
     document.getElementById('createFlashSaleBtn')?.addEventListener('click', createFlashSale);
 }
 
 function addComicToAddList(id, name) {
     const selectedProductList = document.getElementById('selectedProductList');
-
-    // Kiểm tra trùng
     if (document.getElementById('comic-' + id)) {
         showNotifyPopup('Truyện này đã được thêm rồi!', 'error');
         return;
     }
-
-    // Xóa placeholder
     const placeholder = selectedProductList.querySelector('p');
     if (placeholder) placeholder.remove();
-
-    // Tạo item mới
     const item = document.createElement('div');
     item.id = 'comic-' + id;
     item.className = 'comic-item';
@@ -152,8 +135,6 @@ function addComicToAddList(id, name) {
     };
 
     selectedProductList.appendChild(item);
-
-    // Reset search
     document.getElementById('searchResults').style.display = 'none';
     document.getElementById('comicSearchInput').value = '';
 }
@@ -221,15 +202,12 @@ function resetAddForm() {
     document.getElementById('searchResults').innerHTML = '';
     document.getElementById('searchResults').style.display = 'none';
 }
-
-// ========== CHỈNH SỬA FLASH SALE ==========
 function initializeEditFlashSale() {
     const editComicSearchInput = document.getElementById('editComicSearchInput');
     const editSearchResults = document.getElementById('editSearchResults');
     const applyBtn = document.getElementById('applySelectedComicBtn');
     const updateBtn = document.getElementById('updateFlashSaleBtn');
 
-    // Tìm kiếm truyện
     editComicSearchInput?.addEventListener('input', function () {
         clearTimeout(debounceTimer);
         const keyword = this.value.trim();
@@ -278,7 +256,6 @@ function initializeEditFlashSale() {
         }, 400);
     });
 
-    // Nút áp dụng
     applyBtn?.addEventListener('click', () => {
         if (!selectedComicForApply) {
             showNotifyPopup('Vui lòng chọn một truyện từ kết quả tìm kiếm!', 'error'); return;
@@ -290,17 +267,12 @@ function initializeEditFlashSale() {
             showNotifyPopup('Truyện này đã có trong danh sách!', 'error'); return;
             return;
         }
-
         addComicToEditList(selectedComicForApply.id, selectedComicForApply.name);
-
-        // Reset
         selectedComicForApply = null;
         editComicSearchInput.value = '';
         editSearchResults.style.display = 'none';
         showSuccessToast('Đã thêm truyện vào danh sách!');
     });
-
-    // Ẩn kết quả khi click ngoài
     document.addEventListener('click', (e) => {
         if (editSearchResults &&
             !editComicSearchInput?.contains(e.target) &&
@@ -309,13 +281,9 @@ function initializeEditFlashSale() {
             editSearchResults.style.display = 'none';
         }
     });
-
-    // Mở popup edit
     document.querySelectorAll('.openEditFlashSale').forEach(btn => {
         btn.addEventListener('click', () => openEditModal(btn.dataset.id));
     });
-
-    // Cập nhật Flash Sale
     updateBtn?.addEventListener('click', updateFlashSale);
 }
 
@@ -326,31 +294,21 @@ function selectComicForApply(id, name, element) {
         showNotifyPopup('Truyện này đã có trong danh sách Flash Sale!', 'error');
         return;
     }
-
-    // Bỏ highlight các item khác
     document.querySelectorAll('.search-result-item').forEach(item => {
         item.classList.remove('selected');
     });
-
-    // Highlight item được chọn
     element.classList.add('selected');
     selectedComicForApply = {id, name};
 }
 
 function addComicToEditList(id, name) {
     const editProductList = document.getElementById('editProductList');
-
-    // Kiểm tra trùng
     if (editProductList.querySelector(`input[data-comic-id="${id}"]`)) {
         showNotifyPopup('Truyện này đã có trong danh sách!', 'error');
         return;
     }
-
-    // Xóa empty message
     const emptyMsg = editProductList.querySelector('p');
     if (emptyMsg) emptyMsg.remove();
-
-    // Tạo label mới
     const label = document.createElement('label');
     label.style.cssText = `
         display: flex;
@@ -375,8 +333,6 @@ function addComicToEditList(id, name) {
 
     label.onmouseover = () => label.style.background = '#f3f3f3';
     label.onmouseout = () => label.style.background = '#fafafa';
-
-    // Nút xóa
     label.querySelector('.remove-comic-edit-btn').onclick = (e) => {
         e.stopPropagation();
         if (confirm(`Bạn có chắc muốn xóa "${name}" khỏi danh sách?`)) {
@@ -745,18 +701,15 @@ function initializeSearch() {
 }
 
 function reattachEventListeners() {
-    // Gắn lại event cho các nút sau khi filter
     document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            // Trigger delete logic
         });
     });
 
     document.querySelectorAll('.btn-view').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            // Trigger view logic
         });
     });
 
@@ -767,7 +720,6 @@ function reattachEventListeners() {
     });
 }
 
-// ========== UTILITY FUNCTIONS ==========
 function convertToISO(formattedTime) {
     if (!formattedTime) return '';
     const [time, date] = formattedTime.split(' ');
@@ -799,7 +751,6 @@ function showSuccessToast(message) {
     }, 3000);
 }
 
-// ========== CSS ANIMATIONS ==========
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {

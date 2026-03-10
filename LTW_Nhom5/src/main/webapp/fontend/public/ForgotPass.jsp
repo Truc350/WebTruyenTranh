@@ -10,7 +10,6 @@
 <body>
 
 <div class="container">
-    <!-- LEFT -->
     <div class="left">
         <div class="box">
             <img src="${pageContext.request.contextPath}/img/logo.png" class="logo">
@@ -39,14 +38,10 @@
             </form>
         </div>
     </div>
-
-    <!-- RIGHT -->
     <div class="image-section">
         <img src="${pageContext.request.contextPath}/img/anhLogin.png" alt="Books">
     </div>
 </div>
-
-<!-- POPUP OTP -->
 <div class="popup" id="otpPopup" style="display:none;">
     <div class="popup-content">
         <span class="close" id="closePopup">&times;</span>
@@ -67,20 +62,14 @@
 <script>
     const popup = document.getElementById("otpPopup");
     const closeBtn = document.getElementById("closePopup");
-
-    // Đóng popup khi click X
     closeBtn.onclick = () => {
         popup.style.display = "none";
     }
-
-    // Đóng popup khi click ra ngoài
     window.onclick = (e) => {
         if (e.target === popup) {
             popup.style.display = "none";
         }
     }
-
-    // MỞ POPUP KHI có otpSent trong session
     <c:if test="${sessionScope.otpSent eq true}">
     window.onload = () => {
         popup.style.display = "flex";

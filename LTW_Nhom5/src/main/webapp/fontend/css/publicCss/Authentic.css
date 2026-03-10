@@ -14,20 +14,17 @@
   background-color: #f9f9f9;
 }
 
-/* Tiêu đề */
 .forgot-pd-container h2 {
   text-align: center;
   margin-top: 40px;
   color: #ff4c4c;
 }
 
-/* Nhóm nhập liệu */
 .email-class,
 .verify-title {
   margin-bottom: 20px;
 }
 
-/* Nhãn có biểu tượng */
 .label-with-icon {
   display: block;
   font-weight: bold;
@@ -38,7 +35,6 @@
   margin-top: 30px;
 }
 
-/* Ô nhập liệu */
 #forgot-password-form input {
   width: 100%;
   padding: 10px;
@@ -47,7 +43,6 @@
   box-sizing: border-box;
 }
 
-/* new pass */
 .new-pass {
   margin-top: 20px;
   display: flex;
@@ -73,9 +68,6 @@
   color: #999;
   cursor: not-allowed;
 }
-
-
-
 /* Thông báo gửi mã */
 #remind {
   margin-bottom: 16px;

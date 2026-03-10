@@ -5,21 +5,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const editForm = document.getElementById('editForm');
     const updateBtn = editModal.querySelector('.save-btn');
     const cancelBtn = editModal.querySelector('.cancel-btn');
-
-    // XỬ LÝ NÚT SỬA
     document.addEventListener('click', function (e) {
         if (e.target.closest('.edit-btn')) {
             const btn = e.target.closest('.edit-btn');
             const comicId = btn.dataset.comicId;
-
             if (comicId) {
                 console.log('Opening edit modal for comic:', comicId);
                 openEditModal(comicId);
             }
         }
     });
-
-    // CLOSE MODAL
     if (cancelBtn) {
         cancelBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -28,39 +23,29 @@ document.addEventListener('DOMContentLoaded', function () {
             resetEditForm();
         });
     }
-
-    // Click ngoài modal
     editModal.addEventListener('click', (e) => {
         if (e.target === editModal) {
             editModal.style.display = 'none';
             resetEditForm();
         }
     });
-
     setupEditImageUpload();
-
-    // XỬ LÝ NÚT CẬP NHẬT
     updateBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log('Update button clicked!');
-
         if (!validateEditForm()) {
             return;
         }
-
         if (!currentEditingComicId) {
             showNotification('Không tìm thấy ID truyện', 'error');
             return;
         }
-
         const formData = new FormData();
         formData.append('comicId', currentEditingComicId);
         formData.append('nameComics', document.querySelector('#editForm [name="nameComics"]').value.trim());
         formData.append('author', document.querySelector('#editForm [name="author"]').value.trim());
         formData.append('publisher', document.querySelector('#editForm [name="publisher"]').value.trim());
         formData.append('description', document.querySelector('#editForm [name="description"]').value.trim());
-
         const priceStr = document.querySelector('#editForm [name="price"]').value.replace(/[^\d]/g, '');
         formData.append('price', priceStr);
         formData.append('stockQuantity', document.querySelector('#editForm [name="stockQuantity"]').value);
@@ -124,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// ✅ HÀM MỞ MODAL
 async function openEditModal(comicId) {
     const editModal = document.getElementById('editModal');
     currentEditingComicId = comicId;
@@ -135,7 +119,7 @@ async function openEditModal(comicId) {
 
     try {
         const url = contextPath + '/admin/products/get?id=' + comicId;
-        console.log('📥 Fetching data from:', url);
+        console.log('Fetching data from:', url);
 
         const response = await fetch(url);
 
@@ -145,8 +129,8 @@ async function openEditModal(comicId) {
 
         const result = await response.json();
 
-        console.log('📦 Full Response:', result);
-        console.log('📦 Comic Data:', result.comic);
+        console.log(' Full Response:', result);
+        console.log('Comic Data:', result.comic);
 
         if (result.success && result.comic) {
             await populateEditForm(result.comic);
@@ -154,15 +138,13 @@ async function openEditModal(comicId) {
             throw new Error(result.message || 'Không thể tải dữ liệu truyện');
         }
     } catch (error) {
-        console.error('❌ Error loading comic:', error);
+        console.error('Error loading comic:', error);
         showNotification('Lỗi tải dữ liệu: ' + error.message, 'error');
         editModal.style.display = 'none';
     }
 }
-
-// ✅ ĐIỀN DỮ LIỆU VÀO FORM
 async function populateEditForm(comic) {
-    console.log('📝 Populating form with data:', comic);
+    console.log('Populating form with data:', comic);
 
     const formLeft = document.getElementById('editForm').querySelector('.form-left');
 
@@ -181,14 +163,14 @@ async function populateEditForm(comic) {
         <div class="form-group">
             <label>Bộ truyện:</label>
             <select name="seriesId">
-                <option value="">⏳ Đang tải bộ truyện...</option>
+                <option value="">Đang tải bộ truyện...</option>
             </select>
         </div>
 
         <div class="form-group">
             <label>Thể loại: <span style="color: red;">*</span></label>
             <select name="categoryId" required>
-                <option value="">⏳ Đang tải thể loại...</option>
+                <option value="">Đang tải thể loại...</option>
             </select>
         </div>
 
@@ -225,62 +207,43 @@ async function populateEditForm(comic) {
         </div>
     `;
 
-    console.log('✅ Form HTML rendered');
-
-    // ✅ CHỜ DOM CẬP NHẬT
+    console.log('Form HTML rendered');
     await new Promise(resolve => setTimeout(resolve, 100));
 
-    // ✅ LOAD CATEGORIES VÀ SERIES
     await loadCategoriesForEdit(comic.categoryId);
     await loadSeriesForEdit(comic.seriesId);
 
-    // ✅ LOAD DESCRIPTION
     const descTextarea = document.querySelector('#editModal [name="description"]');
     if (descTextarea) {
         descTextarea.value = comic.description || '';
-        console.log('✅ Description loaded');
+        console.log(' Description loaded');
     }
-
-    // ✅ LOAD ẢNH BÌA (THUMBNAIL) - TỪ COMIC.THUMBNAILURL
     await loadThumbnailImage(comic.thumbnailUrl);
-
-    // ✅ LOAD 3 ẢNH CHI TIẾT - TỪ COMIC_IMAGES
     await loadDetailImages(comic.id);
-
-    console.log('🎉 Form population complete!');
+    console.log('Form population complete!');
 }
-
-// ✅ HÀM LOAD ẢNH BÌA (BOX ĐẦU TIÊN)
 async function loadThumbnailImage(thumbnailUrl) {
-    console.log('🖼️ Loading thumbnail:', thumbnailUrl);
-
+    console.log('Loading thumbnail:', thumbnailUrl);
     if (!thumbnailUrl) {
         console.warn('⚠️ No thumbnail URL');
         return;
     }
-
     await new Promise(resolve => setTimeout(resolve, 200));
-
     const imageBoxes = document.querySelectorAll('#editModal .image-upload');
     if (imageBoxes.length === 0) {
-        console.error('❌ No image boxes found!');
+        console.error('No image boxes found!');
         return;
     }
-
-    // ✅ BOX ĐẦU TIÊN = ẢNH BÌA
     const thumbnailBox = imageBoxes[0];
     const preview = thumbnailBox.querySelector('.imgPreview');
     const icon = thumbnailBox.querySelector('.icon');
     const label = thumbnailBox.querySelector('.label');
 
     if (!preview) {
-        console.error('❌ No preview element in thumbnail box');
+        console.error('No preview element in thumbnail box');
         return;
     }
-
-    // ✅ XỬ LÝ ĐƯỜNG DẪN ẢNH
     let fullImageUrl = thumbnailUrl;
-
     if (!fullImageUrl.startsWith('http') &&
         !fullImageUrl.startsWith(contextPath) &&
         !fullImageUrl.startsWith('/')) {
@@ -290,17 +253,15 @@ async function loadThumbnailImage(thumbnailUrl) {
     }
 
     console.log('🔗 Final thumbnail URL:', fullImageUrl);
-
-    // ✅ XỬ LÝ LỖI KHI LOAD ẢNH
     preview.onerror = function () {
-        console.error('❌ Failed to load thumbnail:', fullImageUrl);
+        console.error('Failed to load thumbnail:', fullImageUrl);
         preview.style.display = 'none';
         if (icon) icon.style.display = 'block';
         if (label) label.style.display = 'block';
     };
 
     preview.onload = function () {
-        console.log('✅ Thumbnail loaded successfully');
+        console.log('Thumbnail loaded successfully');
         preview.style.display = 'block';
         if (icon) icon.style.display = 'none';
         if (label) label.style.display = 'none';
@@ -315,38 +276,30 @@ async function loadThumbnailImage(thumbnailUrl) {
     preview.style.objectFit = 'cover';
     preview.style.zIndex = '10';
 }
-z
-// ✅ HÀM LOAD 3 ẢNH CHI TIẾT (BOX 2, 3, 4)
 async function loadDetailImages(comicId) {
-    console.log('🖼️ Loading detail images for comic:', comicId);
-
+    console.log('Loading detail images for comic:', comicId);
     try {
         const url = contextPath + '/admin/products/images?comicId=' + comicId;
-        console.log('📥 Fetching images from:', url);
+        console.log('Fetching images from:', url);
 
         const response = await fetch(url);
         const result = await response.json();
 
-        console.log('📦 Images response:', result);
+        console.log('Images response:', result);
 
         if (result.success && result.images && result.images.length > 0) {
             await new Promise(resolve => setTimeout(resolve, 200));
 
             const imageBoxes = document.querySelectorAll('#editModal .image-upload');
 
-            console.log('📸 Images from DB:', result.images.length);
-            console.log('🖼️ Image boxes in DOM:', imageBoxes.length);
+            console.log('Images from DB:', result.images.length);
+            console.log('Image boxes in DOM:', imageBoxes.length);
 
             if (imageBoxes.length < 2) {
-                console.error('❌ Not enough image boxes!');
+                console.error('Not enough image boxes!');
                 return;
             }
-
-            // ✅ BOX 1 = THUMBNAIL (ĐÃ LOAD Ở TRÊN)
-            // ✅ BOX 2, 3, 4 = DETAIL IMAGES
-
             const maxImages = Math.min(result.images.length, 3);
-
             for (let i = 0; i < maxImages; i++) {
                 const img = result.images[i];
                 const boxIndex = i + 1; // Box 2, 3, 4
@@ -358,7 +311,7 @@ async function loadDetailImages(comicId) {
                 const icon = box.querySelector('.icon');
                 const label = box.querySelector('.label');
 
-                console.log(`📷 Processing detail image ${i + 1}:`, {
+                console.log(` Processing detail image ${i + 1}:`, {
                     url: img.imageUrl,
                     type: img.imageType,
                     hasPreview: !!preview
@@ -366,7 +319,6 @@ async function loadDetailImages(comicId) {
 
                 if (preview && img.imageUrl) {
                     let fullImageUrl = img.imageUrl;
-
                     if (!fullImageUrl.startsWith('http') &&
                         !fullImageUrl.startsWith(contextPath) &&
                         !fullImageUrl.startsWith('/')) {
@@ -375,17 +327,17 @@ async function loadDetailImages(comicId) {
                         fullImageUrl = contextPath + fullImageUrl;
                     }
 
-                    console.log(`🔗 Final detail image ${i + 1} URL:`, fullImageUrl);
+                    console.log(` Final detail image ${i + 1} URL:`, fullImageUrl);
 
                     preview.onerror = function () {
-                        console.error(`❌ Failed to load detail image ${i + 1}:`, fullImageUrl);
+                        console.error(`Failed to load detail image ${i + 1}:`, fullImageUrl);
                         preview.style.display = 'none';
                         if (icon) icon.style.display = 'block';
                         if (label) label.style.display = 'block';
                     };
 
                     preview.onload = function () {
-                        console.log(`✅ Detail image ${i + 1} loaded successfully`);
+                        console.log(` Detail image ${i + 1} loaded successfully`);
                         preview.style.display = 'block';
                         if (icon) icon.style.display = 'none';
                         if (label) label.style.display = 'none';
@@ -400,42 +352,42 @@ async function loadDetailImages(comicId) {
                     preview.style.objectFit = 'cover';
                     preview.style.zIndex = '10';
                 } else {
-                    console.error(`❌ Failed to load detail image ${i + 1}:`, {
+                    console.error(`Failed to load detail image ${i + 1}:`, {
                         hasPreview: !!preview,
                         imageUrl: img.imageUrl
                     });
                 }
             }
         } else {
-            console.warn('⚠️ No detail images found');
+            console.warn('No detail images found');
         }
     } catch (error) {
-        console.error('❌ Error loading detail images:', error);
+        console.error('Error loading detail images:', error);
     }
 }
 
 // LOAD CATEGORIES
 async function loadCategoriesForEdit(selectedCategoryId) {
-    console.log('📋 loadCategoriesForEdit called with:', selectedCategoryId);
+    console.log('loadCategoriesForEdit called with:', selectedCategoryId);
 
     try {
         const url = contextPath + '/admin/categories/list';
-        console.log('📥 Fetching categories from:', url);
+        console.log('Fetching categories from:', url);
 
         const response = await fetch(url);
         const result = await response.json();
 
-        console.log('📦 Categories response:', result);
+        console.log('Categories response:', result);
 
         const categorySelect = document.querySelector('#editForm [name="categoryId"]');
 
         if (!categorySelect) {
-            console.error('❌ Category select not found!');
+            console.error(' Category select not found!');
             return;
         }
 
         if (result.success && result.categories) {
-            console.log('✅ Categories loaded:', result.categories.length);
+            console.log('Categories loaded:', result.categories.length);
 
             let options = '<option value="">-- Chọn thể loại --</option>';
 
@@ -444,42 +396,41 @@ async function loadCategoriesForEdit(selectedCategoryId) {
                 options += `<option value="${cat.id}" ${selected}>${cat.nameCategories}</option>`;
 
                 if (selected) {
-                    console.log('✅ Selected category:', cat.nameCategories);
+                    console.log('Selected category:', cat.nameCategories);
                 }
             });
 
             categorySelect.innerHTML = options;
-            console.log('✅ Category select updated');
+            console.log('Category select updated');
         } else {
-            console.error('❌ Failed to load categories:', result.message);
+            console.error('Failed to load categories:', result.message);
         }
     } catch (error) {
-        console.error('❌ Error loading categories:', error);
+        console.error('Error loading categories:', error);
     }
 }
 
-// LOAD SERIES
 async function loadSeriesForEdit(selectedSeriesId) {
-    console.log('📚 loadSeriesForEdit called with:', selectedSeriesId);
+    console.log('loadSeriesForEdit called with:', selectedSeriesId);
 
     try {
         const url = contextPath + '/admin/series/list';
-        console.log('📥 Fetching series from:', url);
+        console.log('Fetching series from:', url);
 
         const response = await fetch(url);
         const result = await response.json();
 
-        console.log('📦 Series response:', result);
+        console.log('Series response:', result);
 
         const seriesSelect = document.querySelector('#editForm [name="seriesId"]');
 
         if (!seriesSelect) {
-            console.error('❌ Series select not found!');
+            console.error('Series select not found!');
             return;
         }
 
         if (result.success && result.series) {
-            console.log('✅ Series loaded:', result.series.length);
+            console.log('Series loaded:', result.series.length);
 
             let options = '<option value="">-- Chọn bộ truyện --</option>';
 
@@ -488,21 +439,19 @@ async function loadSeriesForEdit(selectedSeriesId) {
                 options += `<option value="${s.id}" ${selected}>${s.seriesName}</option>`;
 
                 if (selected) {
-                    console.log('✅ Selected series:', s.seriesName);
+                    console.log('Selected series:', s.seriesName);
                 }
             });
 
             seriesSelect.innerHTML = options;
-            console.log('✅ Series select updated');
+            console.log('Series select updated');
         } else {
-            console.error('❌ Failed to load series:', result.message);
+            console.error('Failed to load series:', result.message);
         }
     } catch (error) {
-        console.error('❌ Error loading series:', error);
+        console.error('Error loading series:', error);
     }
 }
-
-// SETUP UPLOAD ẢNH MỚI
 function setupEditImageUpload() {
     const uploadBoxes = document.querySelectorAll('#editModal .image-upload');
 
@@ -570,8 +519,6 @@ function setupEditImageUpload() {
         }
     });
 }
-
-// VALIDATE FORM
 function validateEditForm() {
     const nameComics = document.querySelector('#editForm [name="nameComics"]').value.trim();
     const author = document.querySelector('#editForm [name="author"]').value.trim();
@@ -601,8 +548,6 @@ function validateEditForm() {
 
     return true;
 }
-
-// RESET FORM
 function resetEditForm() {
     currentEditingComicId = null;
 
@@ -625,8 +570,6 @@ function resetEditForm() {
     const errorMsg = document.querySelector('#editModal .error-message');
     if (errorMsg) errorMsg.remove();
 }
-
-// HIỂN THỊ LỖI
 function showEditErrors(errors) {
     const errorHtml = errors.map(err => `<li>${err}</li>`).join('');
     const errorDiv = document.createElement('div');
@@ -649,8 +592,6 @@ function showEditErrors(errors) {
 
     setTimeout(() => errorDiv.remove(), 5000);
 }
-
-// HIỂN THỊ THÔNG BÁO
 function showNotification(message, type = 'info') {
     const oldNotif = document.querySelector('.notification-popup');
     if (oldNotif) oldNotif.remove();
@@ -684,8 +625,6 @@ function showNotification(message, type = 'info') {
         }
     }, 5000);
 }
-
-// CSS ANIMATION
 if (!document.querySelector('#notification-styles')) {
     const style = document.createElement('style');
     style.id = 'notification-styles';
@@ -698,7 +637,6 @@ if (!document.querySelector('#notification-styles')) {
     document.head.appendChild(style);
 }
 
-// HELPER FUNCTIONS
 function formatPriceInput(price) {
     return new Intl.NumberFormat('vi-VN').format(price);
 }

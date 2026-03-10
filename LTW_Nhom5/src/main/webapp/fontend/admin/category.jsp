@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/fontend/css/adminCss/adminHeader.css">
-
-    <!-- Toast Message CSS -->
     <style>
-        /* Toast Message Styles */
         .toast-message {
             position: fixed;
             top: -100px;
@@ -28,39 +25,30 @@
             transition: top 0.3s ease-in-out;
             font-size: 14px;
         }
-
         .toast-message.show {
             top: 20px;
         }
-
         .toast-message i {
             font-size: 20px;
         }
-
         .toast-success {
             border-left: 4px solid #4caf50;
         }
-
         .toast-success i {
             color: #4caf50;
         }
-
         .toast-error {
             border-left: 4px solid #f44336;
         }
-
         .toast-error i {
             color: #f44336;
         }
-
         .toast-info {
             border-left: 4px solid #2196f3;
         }
-
         .toast-info i {
             color: #2196f3;
         }
-
         .toast-message span {
             flex: 1;
             color: #333;
@@ -69,18 +57,12 @@
 </head>
 <body>
 <div class="container">
-
-    <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
-
         <h2 class="page-title">Quản lý thể loại</h2>
-
         <div class="table-container">
             <div class="search-add">
-                <!-- THANH TÌM KIẾM -->
                 <div class="search-box">
                     <input type="text"
                            id="categorySearchInput"
@@ -90,14 +72,11 @@
                         <i class="fas fa-magnifying-glass"></i>
                     </button>
                 </div>
-
-                <!-- NÚT THÊM THỂ LOẠI -->
                 <div class="action-buttons">
                     <button class="add-category-btn">+ Thêm thể loại</button>
                 </div>
             </div>
         </div>
-
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -114,7 +93,6 @@
         </div>
         <div id="categoryPaginationContainer" class="pagination-container"></div>
 
-        <!--Thêm thể loại-->
         <div class="popup-overlay" id="addPopup">
             <div class="popup-box">
                 <h3>Thêm thể loại</h3>
@@ -124,36 +102,27 @@
                 <textarea id="newCategoryDesc" rows="4" placeholder="Nhập mô tả (tùy chọn)"></textarea>
                 <label>Ngày tạo:</label>
                 <input type="date" id="newCategoryCreatedDate" readonly>
-
                 <div class="popup-actions">
                     <button class="save-btn">Lưu</button>
                     <button class="cancel-btn" onclick="closeAddPopup()">Hủy</button>
                 </div>
             </div>
         </div>
-
-        <!-- Popup SỬA thể loại -->
         <div class="popup-overlay" id="editPopup">
             <div class="popup-box">
                 <h3>Chỉnh sửa thể loại</h3>
-
                 <label>Tên thể loại:</label>
                 <input type="text" id="editCategoryName">
-
                 <label>Mô tả:</label>
                 <textarea id="editCategoryDesc" rows="4"></textarea>
-
                 <label>Ngày chỉnh sửa:</label>
                 <input type="date" id="editCategoryDate" readonly>
-
                 <div class="popup-actions">
                     <button class="save-btn" id="confirmEditBtn">Cập nhật</button>
                     <button class="cancel-btn" onclick="closeEditPopup()">Hủy</button>
                 </div>
             </div>
         </div>
-
-        <!-- Xóa thể loại -->
         <div class="popup-overlay" id="deletePopup">
             <div class="popup-box">
                 <h3>Bạn có chắc muốn xóa?</h3>
@@ -165,10 +134,8 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
 <script>
     window.contextPath = '<%=request.getContextPath()%>';
     console.log('Context path set to:', window.contextPath);

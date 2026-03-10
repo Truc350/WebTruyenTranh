@@ -18,7 +18,6 @@
 
 
     <div class="container">
-        <!-- Hero -->
         <div>
             <section class="hero">
                 <div class="hero-text">
@@ -31,8 +30,6 @@
                 </div>
             </section>
         </div>
-
-        <!-- About -->
         <section class="about-us" id="about">
 
             <h2>Về chúng tôi</h2>
@@ -46,8 +43,6 @@
                 đắm chìm trong thế giới truyện tranh một cách trọn vẹn nhất.
             </p>
         </section>
-
-        <!-- Mission -->
         <section class="mission" id="mission">
             <h3>Sứ mệnh của chúng tôi</h3>
             <p>
@@ -56,8 +51,6 @@
                 khơi nguồn cảm hứng và nuôi dưỡng đam mê.
             </p>
         </section>
-
-        <!-- Features -->
         <section class="features" id="features">
             <article class="feature-card">
                 <h4>Kho truyện phong phú</h4>
@@ -65,13 +58,11 @@
                     life...</p>
                 <p>Cập nhật liên tục các bộ truyện hot, trending và mới phát hành.</p>
             </article>
-
             <article class="feature-card">
                 <h4>Tư vấn chọn truyện</h4>
                 <p>Gợi ý truyện theo sở thích, độ tuổi và tâm trạng của bạn.</p>
                 <p>Đội ngũ biên tập viên am hiểu truyện tranh luôn sẵn sàng hỗ trợ.</p>
             </article>
-
             <article class="feature-card">
                 <h4>Trải nghiệm đọc truyện đỉnh cao</h4>
                 <p>Chất lượng hình ảnh sắc nét, bản dịch chuẩn chỉnh.</p>
@@ -79,11 +70,7 @@
             </article>
         </section>
     </div>
-
 </body>
-
-
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 
 

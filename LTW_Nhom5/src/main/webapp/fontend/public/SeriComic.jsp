@@ -31,15 +31,11 @@
         <div class="contain1">
             <div class="contain-header">
                 <h2 class="manga-title">${series.seriesName}</h2>
-
-                <%-- Hiển thị tác giả --%>
                 <c:if test="${not empty seriesAuthors}">
                     <p class="series-detail">
                         <strong>Tác giả:</strong> ${seriesAuthors}
                     </p>
                 </c:if>
-
-                <%-- Hiển thị nhà xuất bản --%>
                 <c:if test="${not empty seriesPublishers}">
                     <p class="series-detail">
                         <strong>Nhà xuất bản:</strong> ${seriesPublishers}
@@ -66,7 +62,6 @@
     </div>
 </div>
 
-<!-- Danh sách các tập truyện trong series -->
 <div class="series-volumes-container">
 
     <c:choose>
@@ -77,7 +72,6 @@
                         <div class="product-item">
                             <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
                                 <div style="position: relative;">
-                                    <!-- Badge Flash Sale -->
                                     <c:if test="${comic.hasFlashSale}">
                                         <div class="flash-sale-badge">
                                             <i class="fas fa-bolt"></i> FLASH SALE
@@ -90,11 +84,8 @@
                                 </div>
 
                                 <p class="product-name">${comic.nameComics}</p>
-
-                                <!-- Giá với Flash Sale -->
                                 <c:choose>
                                     <c:when test="${comic.hasFlashSale}">
-                                        <!-- Có Flash Sale -->
                                         <p class="product-price flash">
                                             <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                         </p>
@@ -106,14 +97,11 @@
                                         </p>
                                     </c:when>
                                     <c:otherwise>
-                                        <!-- Giá thường -->
                                         <p class="product-price">
                                             <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                                         </p>
                                     </c:otherwise>
                                 </c:choose>
-
-                                <!-- Sold count -->
                                 <c:choose>
                                     <c:when test="${comic.totalSold != null && comic.totalSold > 0}">
                                         <p class="sold">Đã bán: <strong>${comic.totalSold}</strong></p>
@@ -136,14 +124,10 @@
         </c:otherwise>
     </c:choose>
 </div>
-
-
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 </body>
 <script>
-    // Toggle notification button
     const notifyBtn = document.getElementById("notifyBtn");
 
     if (notifyBtn) {
@@ -155,21 +139,16 @@
                 notifyBtn.classList.remove('subscribed');
                 icon.className = 'fas fa-bell';
                 notifyBtn.innerHTML = '<i class="fas fa-bell"></i> Nhận thông báo';
-
-                // TODO: Gọi API hủy đăng ký thông báo
                 showToast('Đã hủy nhận thông báo', 'info');
             } else {
                 notifyBtn.classList.add('subscribed');
                 icon.className = 'fas fa-bell-slash';
                 notifyBtn.innerHTML = '<i class="fas fa-bell-slash"></i> Hủy thông báo';
-
-                // TODO: Gọi API đăng ký thông báo
                 showToast('Đã đăng ký nhận thông báo khi có tập mới', 'success');
             }
         });
     }
 
-    // Toast notification
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;

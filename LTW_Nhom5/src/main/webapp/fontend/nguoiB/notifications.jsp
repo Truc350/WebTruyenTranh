@@ -36,14 +36,10 @@
         </div>
     </div>
 </main>
-
 <jsp:include page="/fontend/public/Footer.jsp"/>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         loadNotifications();
-
-        // Tab switching
         document.querySelectorAll('.notification-container .tab').forEach(tab => {
             tab.addEventListener('click', function () {
                 document.querySelectorAll('.notification-container .tab').forEach(t =>
@@ -79,9 +75,7 @@
                 document.getElementById('mark-all-read-btn').style.display = 'none';
                 return;
             }
-
             document.getElementById('mark-all-read-btn').style.display = 'block';
-
             let html = '';
             data.notifications.forEach(function(n) {
                 const unreadStyle = n.is_read ? '' : 'background:#f0f8ff;font-weight:600;border-left:4px solid #007bff;padding-left:16px;';
@@ -89,7 +83,6 @@
                 const message = (n.message || '').replace(/\n/g, '<br>');
                 const formattedDate = n.formatted_date || '';
                 const notiId = n.id || 0;
-
                 let icon = '<i class="fa-solid fa-bell" style="color:#666;"></i>';
                 if (n.type === 'ORDER_CONFIRMED')  icon = '<i class="fa-solid fa-circle-check" style="color:#28a745;"></i>';
                 else if (n.type === 'ORDER_SHIPPED')   icon = '<i class="fa-solid fa-truck" style="color:#007bff;"></i>';
@@ -110,9 +103,7 @@
                     +   '</div>'
                     + '</div>';
             });
-
             listArea.innerHTML = html;
-
             const hash = window.location.hash;
             if (hash && hash.startsWith('#noti-')) {
                 const targetEl = document.querySelector(hash);
