@@ -21,8 +21,6 @@ public class UserShippingAddressDAO {
 
     /**
      * Tạo địa chỉ giao hàng mới
-     * @param address Thông tin địa chỉ
-     * @return ID của địa chỉ mới tạo, trả về 0 nếu thất bại
      */
     public int createShippingAddress(UserShippingAddress address) {
         return jdbi.withHandle(handle -> {
@@ -49,24 +47,9 @@ public class UserShippingAddressDAO {
         });
     }
 
-    /**
-     * Lấy địa chỉ theo ID
-     * @param id ID của địa chỉ
-     * @return Optional chứa UserShippingAddress nếu tìm thấy
-     */
-    public Optional<UserShippingAddress> getAddressById(int id) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM user_shipping_addresses WHERE id = ? AND is_deleted = false")
-                        .bind(0, id)
-                        .mapToBean(UserShippingAddress.class)
-                        .findFirst()
-        );
-    }
 
     /**
      * Lấy tất cả địa chỉ của user
-     * @param userId ID của user
-     * @return Danh sách địa chỉ
      */
     public List<UserShippingAddress> getAddressesByUserId(int userId) {
         return jdbi.withHandle(handle ->
@@ -81,8 +64,6 @@ public class UserShippingAddressDAO {
 
     /**
      * Lấy địa chỉ mặc định của user
-     * @param userId ID của user
-     * @return Optional chứa địa chỉ mặc định nếu có
      */
     public Optional<UserShippingAddress> getDefaultAddress(int userId) {
         return jdbi.withHandle(handle ->
@@ -95,48 +76,15 @@ public class UserShippingAddressDAO {
     }
 
     /**
-     * Cập nhật địa chỉ
-     * @param address Thông tin địa chỉ mới
-     * @return true nếu cập nhật thành công
-     */
-    public boolean updateAddress(UserShippingAddress address) {
-        return jdbi.withHandle(handle -> {
-            String sql = "UPDATE user_shipping_addresses SET " +
-                    "recipient_name = ?, phone = ?, province = ?, district = ?, " +
-                    "ward = ?, street_address = ?, is_default = ?, updated_at = ? " +
-                    "WHERE id = ? AND is_deleted = false";
-
-            int updated = handle.createUpdate(sql)
-                    .bind(0, address.getRecipientName())
-                    .bind(1, address.getPhone())
-                    .bind(2, address.getProvince())
-                    .bind(3, address.getDistrict())
-                    .bind(4, address.getWard())
-                    .bind(5, address.getStreetAddress())
-                    .bind(6, address.isDefault())
-                    .bind(7, LocalDate.now())
-                    .bind(8, address.getId())
-                    .execute();
-
-            return updated > 0;
-        });
-    }
-
-    /**
      * Đặt địa chỉ làm mặc định (và bỏ mặc định các địa chỉ khác)
-     * @param addressId ID địa chỉ
-     * @param userId ID user
-     * @return true nếu thành công
      */
     public boolean setDefaultAddress(int addressId, int userId) {
         return jdbi.inTransaction(handle -> {
-            // Bỏ mặc định tất cả địa chỉ của user
             handle.createUpdate("UPDATE user_shipping_addresses SET is_default = false " +
                             "WHERE user_id = ? AND is_deleted = false")
                     .bind(0, userId)
                     .execute();
 
-            // Đặt địa chỉ được chọn làm mặc định
             int updated = handle.createUpdate("UPDATE user_shipping_addresses " +
                             "SET is_default = true, updated_at = ? " +
                             "WHERE id = ? AND user_id = ? AND is_deleted = false")
@@ -157,33 +105,9 @@ public class UserShippingAddressDAO {
                     .execute();
         });
     }
-    /**
-     * Xóa địa chỉ (soft delete)
-     * @param addressId ID địa chỉ
-     * @param userId ID user (để đảm bảo user chỉ xóa địa chỉ của mình)
-     * @return true nếu xóa thành công
-     */
-    public boolean deleteAddress(int addressId, int userId) {
-        return jdbi.withHandle(handle -> {
-            String sql = "UPDATE user_shipping_addresses " +
-                    "SET is_deleted = true, deleted_at = ?, updated_at = ? " +
-                    "WHERE id = ? AND user_id = ?";
-
-            int updated = handle.createUpdate(sql)
-                    .bind(0, LocalDate.now())
-                    .bind(1, LocalDate.now())
-                    .bind(2, addressId)
-                    .bind(3, userId)
-                    .execute();
-
-            return updated > 0;
-        });
-    }
 
     /**
      * Kiểm tra địa chỉ đã tồn tại chưa (dựa trên thông tin giống nhau)
-     * @param address Thông tin địa chỉ cần kiểm tra
-     * @return Optional chứa địa chỉ nếu đã tồn tại
      */
     public Optional<UserShippingAddress> findExistingAddress(UserShippingAddress address) {
         return jdbi.withHandle(handle ->
@@ -205,8 +129,6 @@ public class UserShippingAddressDAO {
 
     /**
      * Đếm số địa chỉ của user
-     * @param userId ID user
-     * @return Số lượng địa chỉ
      */
     public int countAddressesByUserId(int userId) {
         return jdbi.withHandle(handle ->

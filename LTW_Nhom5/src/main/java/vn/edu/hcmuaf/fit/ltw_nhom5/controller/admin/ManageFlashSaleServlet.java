@@ -30,7 +30,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Hiển thị danh sách Flash Sale
         List<FlashSale> flashSales = flashSaleDAO.getAllFlashSales();
         request.setAttribute("flashSales", flashSales);
         request.setAttribute("timeFormatter", TIME_FORMATTER);
@@ -59,9 +58,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Xử lý update Flash Sale
-     */
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -101,9 +97,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Xử lý xóa Flash Sale
-     */
     private void handleDelete(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String idStr = request.getParameter("id");
@@ -127,9 +120,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Xử lý xem chi tiết Flash Sale
-     */
     private void handleDetail(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String idStr = request.getParameter("id");
@@ -142,17 +132,14 @@ public class ManageFlashSaleServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idStr.trim());
 
-            // Lấy thông tin Flash Sale
             FlashSale fs = flashSaleDAO.getById(id);
             if (fs == null) {
                 sendJsonResponse(response, false, "Không tìm thấy Flash Sale!");
                 return;
             }
 
-            // Lấy danh sách comics áp dụng
             List<Map<String, Object>> comics = flashSaleComicsDAO.getComicsByFlashSaleId(id);
 
-            // Tạo JSON response
             StringBuilder json = new StringBuilder();
             json.append("{\"success\":true,\"data\":{");
             json.append("\"id\":").append(fs.getId()).append(",");
@@ -163,7 +150,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
             json.append("\"status\":\"").append(fs.getStatus()).append("\",");
             json.append("\"comics\":[");
 
-            // Thêm danh sách comics
             for (int i = 0; i < comics.size(); i++) {
                 Map<String, Object> comic = comics.get(i);
                 if (i > 0) json.append(",");
@@ -176,7 +162,6 @@ public class ManageFlashSaleServlet extends HttpServlet {
 
             json.append("]}}");
 
-            // Trả về JSON
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(json.toString());
@@ -189,9 +174,7 @@ public class ManageFlashSaleServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Gửi JSON response đơn giản
-     */
+
     private void sendJsonResponse(HttpServletResponse response, boolean success, String message)
             throws IOException {
         response.setContentType("application/json");
@@ -200,9 +183,7 @@ public class ManageFlashSaleServlet extends HttpServlet {
         response.getWriter().write(json);
     }
 
-    /**
-     * Escape ký tự đặc biệt trong JSON
-     */
+
     private String escapeJson(String str) {
         if (str == null) return "";
         return str.replace("\\", "\\\\")

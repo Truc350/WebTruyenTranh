@@ -47,24 +47,16 @@ public class LoginServlet extends HttpServlet {
             User user = userOpt.get();
             if (PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
                 OrderViolationService.getInstance().resetLoginFailureCount(user.getId());
-                System.out.println("Đăng nhập thành công - User: " + user.getUsername());
 
-                // ===== BƯỚC 1: LẤY SESSION CŨ VÀ IN DEBUG =====
                 HttpSession oldSession = request.getSession(false);
                 if (oldSession != null) {
                     Cart oldCart = (Cart) oldSession.getAttribute("cart");
-                    System.out.println("Session ID cũ: " + oldSession.getId());
                     if (oldCart != null) {
-                        System.out.println("Giỏ hàng cũ có: " + oldCart.getItems().size() + " sản phẩm");
-                        oldCart.getItems().forEach(item -> {
-                            System.out.println("  - " + item.getComic().getNameComics());
-                        });
                     }
                     oldSession.invalidate();
                 }
 
                 HttpSession newSession = request.getSession(true); // true = tạo mới nếu chưa có
-                System.out.println("Session ID mới: " + newSession.getId());
 
 //                check admin
                 boolean isAdmin = "ADMIN".equalsIgnoreCase(user.getRole());
@@ -82,7 +74,6 @@ public class LoginServlet extends HttpServlet {
                     return;
                 }
                 Cart newCart = new Cart();
-                System.out.println("Giỏ hàng mới có: " + newCart.getItems().size() + " sản phẩm");
 
 //                Lưu vào session mới
                 newSession.setAttribute("cart", newCart);
@@ -90,15 +81,11 @@ public class LoginServlet extends HttpServlet {
                 newSession.setAttribute("clearCartLocalStorage", true);
 
 
-//                request.getSession().setAttribute("currentUser", user);
-//                response.sendRedirect(request.getContextPath() + "/home");
-
                 // Tắt cache để buộc browser load lại trang mới
                 response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
                 response.setHeader("Pragma", "no-cache");
                 response.setDateHeader("Expires", 0);
 
-                // Kiểm tra có redirect URL không (từ checkout)
                 String redirectUrl = (String) request.getSession().getAttribute("redirectAfterLogin");
 
                 if (redirectUrl != null) {
@@ -109,15 +96,12 @@ public class LoginServlet extends HttpServlet {
                 }
             } else {
                 OrderViolationService.getInstance().incrementLoginFailureCount(usernameOrEmail);
-                System.out.println("Sai mật khẩu - User: " + usernameOrEmail);
-
                 OrderViolationService.getInstance().checkLoginFailureViolation(usernameOrEmail);
 
                 request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
                 request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
             }
         } else {
-            System.out.println("Không tìm thấy user: " + usernameOrEmail);
             request.setAttribute("error", "Hãy nhập đúng tài khoản và mật khẩu!");
             request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
         }
@@ -126,13 +110,11 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Nếu đã login rồi thì redirect về home
         if (request.getSession().getAttribute("currentUser") != null) {
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        // Chưa login thì hiển thị form
         request.getRequestDispatcher("/fontend/public/login.jsp").forward(request, response);
     }
 

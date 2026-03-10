@@ -34,49 +34,35 @@ public class SearchCategoryServlet extends HttpServlet {
                         new LocalDateTimeAdapter()
                 )
                 .create();
-
-        System.out.println("✓ SearchCategoryServlet initialized");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Set encoding
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
         try {
-            // Lấy parameters
             String keyword = request.getParameter("keyword");
             String pageParam = request.getParameter("page");
 
-            // Log request info
-            System.out.println("=== Search Category Request ===");
-            System.out.println("Keyword: " + keyword);
-            System.out.println("Page: " + pageParam);
-
-            // Validate và parse parameters
             int page = 1;
-            int pageSize = 10; // Số item mỗi trang
+            int pageSize = 10;
 
             if (pageParam != null && !pageParam.trim().isEmpty()) {
                 try {
                     page = Integer.parseInt(pageParam);
                     if (page < 1) page = 1;
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid page number: " + pageParam);
                     page = 1;
                 }
             }
 
-            // Prepare response data
             Map<String, Object> responseData = new HashMap<>();
 
-            // Nếu keyword rỗng hoặc null, load tất cả categories
             if (keyword == null || keyword.trim().isEmpty()) {
-                System.out.println("Loading all categories (page " + page + ")");
 
                 List<Category> categories = categoriesDao.getCategoriesByPage(page, pageSize);
                 int totalCategories = categoriesDao.getTotalCategories();
@@ -90,12 +76,8 @@ public class SearchCategoryServlet extends HttpServlet {
                 responseData.put("pageSize", pageSize);
                 responseData.put("message", "Loaded " + categories.size() + " categories");
 
-                System.out.println("✓ Loaded all categories successfully");
-
             } else {
-                // Tìm kiếm theo keyword
                 keyword = keyword.trim();
-                System.out.println("Searching with keyword: '" + keyword + "'");
 
                 List<Category> categories = categoriesDao.searchCategoriesByName(keyword, page, pageSize);
                 int totalResults = categoriesDao.countSearchResults(keyword);
@@ -114,23 +96,15 @@ public class SearchCategoryServlet extends HttpServlet {
                 } else {
                     responseData.put("message", "Tìm thấy " + totalResults + " kết quả");
                 }
-
-                System.out.println("✓ Search completed - Found " + totalResults + " results");
             }
 
-            // Log response
-            System.out.println("Response data: " + responseData);
-
-            // Gửi response
             PrintWriter out = response.getWriter();
             out.print(gson.toJson(responseData));
             out.flush();
 
         } catch (Exception e) {
-            System.err.println("✗ Error in SearchCategoryServlet:");
             e.printStackTrace();
 
-            // Gửi error response
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", "Lỗi server: " + e.getMessage());

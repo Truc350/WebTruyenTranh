@@ -29,7 +29,6 @@ public class ProductManagementServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("ProductManagementServlet initializing...");
         try {
             comicDAO = new ComicDAO();
             categoriesDao = new CategoriesDao();
@@ -45,18 +44,13 @@ public class ProductManagementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("ProductManagementServlet.doGet() được gọi!");
-        System.out.println("Request URI: " + request.getRequestURI());
-
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // Kiểm tra xem có phải request AJAX không
         String ajaxRequest = request.getHeader("X-Requested-With");
         boolean isAjax = "XMLHttpRequest".equals(ajaxRequest);
 
         try {
-            // PARSE PARAMETERS
             int page = 1;
             String pageParam = request.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
@@ -98,22 +92,18 @@ public class ProductManagementServlet extends HttpServlet {
             if (hiddenFilter != null) {
                 comics = comicDAO.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
                 totalComics = comicDAO.countAllComicsWithFilter(hiddenFilter);
-                System.out.println("Filtering by isHidden=" + hiddenFilter);
             } else {
                 comics = comicDAO.getAllComicsAdmin(page, limit);
                 totalComics = comicDAO.countAllComics();
-                System.out.println("Loading all comics (no filter)");
             }
 
             int totalPages = (int) Math.ceil((double) totalComics / limit);
-            System.out.println("Loaded " + comics.size() + " comics (Total: " + totalComics + ", Pages: " + totalPages + ")");
 
             if (isAjax || request.getParameter("ajax") != null) {
                 response.setContentType("application/json; charset=UTF-8");
 
                 Map<String, Object> result = new HashMap<>();
 
-                // response
                 List<Map<String, Object>> simplifiedComics = new ArrayList<>();
                 for (Comic comic : comics) {
                     Map<String, Object> dto = new HashMap<>();
@@ -138,61 +128,41 @@ public class ProductManagementServlet extends HttpServlet {
                 response.getWriter().write(gson.toJson(result));
                 response.getWriter().flush();
 
-                System.out.println("JSON response sent");
                 return;
             }
 
 
             List<Category> categories = categoriesDao.getAllCategories();
-            System.out.println("Loaded " + categories.size() + " categories");
-
-            // Debug: In ra tên các thể loại
-            if (categories != null && !categories.isEmpty()) {
-                System.out.println("   Categories list:");
-                for (Category cat : categories) {
-                    System.out.println("   - ID: " + cat.getId() + ", Name: " + cat.getNameCategories());
-                }
-            } else {
-                System.out.println(" khong co category nao duoc tim thay");
-            }
 
             List<?> seriesList = seriesDAO.getAllSeries();
-            System.out.println("Loaded " + seriesList.size() + " series");
 
             request.setAttribute("categories", categories);
             request.setAttribute("seriesList", seriesList);
 
-
-            // Lấy messages từ session
             String successMessage = (String) request.getSession().getAttribute("successMessage");
             String errorMessage = (String) request.getSession().getAttribute("errorMessage");
 
             if (successMessage != null) {
                 request.setAttribute("successMessage", successMessage);
                 request.getSession().removeAttribute("successMessage");
-                System.out.println("Success message: " + successMessage);
             }
 
             if (errorMessage != null) {
                 request.setAttribute("errorMessage", errorMessage);
                 request.getSession().removeAttribute("errorMessage");
-                System.out.println("Error message: " + errorMessage);
             }
 
-            // Đánh dấu rằng trang đã được load qua Servlet
             request.setAttribute("loadedFromServlet", true);
             request.setAttribute("currentHiddenFilter", hiddenFilter);
             request.setAttribute("currentPage", page);
 
 
-            // Forward sang JSP
             request.getRequestDispatcher("/fontend/admin/productManagement.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
 
             if (isAjax || request.getParameter("ajax") != null) {
-                // Trả về JSON error
                 response.setContentType("application/json; charset=UTF-8");
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
@@ -211,7 +181,6 @@ public class ProductManagementServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Nếu có POST request, chuyển sang GET
         doGet(request, response);
     }
 }

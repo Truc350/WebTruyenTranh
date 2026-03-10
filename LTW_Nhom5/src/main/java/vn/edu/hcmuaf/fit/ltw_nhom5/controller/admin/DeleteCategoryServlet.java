@@ -34,7 +34,6 @@ public class DeleteCategoryServlet extends HttpServlet {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Đọc JSON từ request body
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = req.getReader();
             String line;
@@ -42,14 +41,12 @@ public class DeleteCategoryServlet extends HttpServlet {
                 sb.append(line);
             }
 
-            // Parse JSON
             @SuppressWarnings("unchecked")
             Map<String, Object> data = gson.fromJson(sb.toString(), Map.class);
 
             Double idDouble = (Double) data.get("id");
             int id = idDouble != null ? idDouble.intValue() : 0;
 
-            // Validate
             if (id <= 0) {
                 response.put("success", false);
                 response.put("message", "ID không hợp lệ!");
@@ -57,7 +54,6 @@ public class DeleteCategoryServlet extends HttpServlet {
                 return;
             }
 
-            // Xóa (soft delete)
             boolean result = categoriesDao.deleteCategory(id);
 
             if (result) {
