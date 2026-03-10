@@ -44,7 +44,6 @@ public class ComicDetailServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Lấy ID từ parameter
             String idParam = request.getParameter("id");
             if (idParam == null || idParam.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/home");
@@ -53,7 +52,6 @@ public class ComicDetailServlet extends HttpServlet {
 
             int comicId = Integer.parseInt(idParam);
 
-            // ========== LẤY THÔNG TIN CHI TIẾT TRUYỆN (ĐÃ CÓ FLASH SALE) ==========
             Comic comic = comicService.getComicById(comicId);
 
             if (comic == null) {
@@ -61,34 +59,25 @@ public class ComicDetailServlet extends HttpServlet {
                 return;
             }
             int totalSell = comicDAO.getTotalSoldByComicId(comic.getId());
-            // Lấy danh sách ảnh của truyện
             var images = comicService.getComicImages(comicId);
-
-            // Lấy danh sách truyện tương tự (ĐÃ CÓ FLASH SALE)
             var relatedComics = comicService.getRelatedComics(comicId);
-
-            // Lấy đánh giá của truyện
             var reviews = comicService.getComicReviews(comicId);
             double avgRating = comicService.getAverageRating(comicId);
 
-            // Lấy phân bố rating
             ReviewDAO reviewDAO = new ReviewDAO();
             Map<Integer, Integer> ratingDistribution = reviewDAO.getRatingDistribution(comicId);
             int totalReviews = reviews.size();
 
-            // ========== LẤY TÊN SERIES ==========
             String seriesName = null;
             if (comic.getSeriesId() != null && comic.getSeriesId() > 0) {
                 try {
                     seriesName = comicService.getSeriesName(comic.getSeriesId());
                 } catch (Exception e) {
-                    System.out.println("⚠️ ComicService.getSeriesName() failed: " + e.getMessage());
 
                     try {
                         Optional<Series> seriesOpt = seriesDAO.getSeriesById(comic.getSeriesId());
                         if (seriesOpt.isPresent()) {
                             seriesName = seriesOpt.get().getSeriesName();
-                            System.out.println("✅ Series name from SeriesDAO: " + seriesName);
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -100,27 +89,22 @@ public class ComicDetailServlet extends HttpServlet {
                 }
             }
 
-            // ========== GỢI Ý TRUYỆN (ĐÃ TÍCH HỢP FLASH SALE) ==========
             User currentUser = (User) request.getSession().getAttribute("currentUser");
             Integer userId = (currentUser != null) ? currentUser.getId() : null;
 
-            // Lấy danh sách gợi ý với Flash Sale
             List<Comic> suggestedComics = recommendationService.getDetailPageSuggestions(
                     userId,
                     comicId,
                     24
             );
 
-            // Xác định loại gợi ý
             String suggestionType = recommendationService.getSuggestionType(userId, comicId);
 
-            // Fallback nếu không có gợi ý
             if (suggestedComics.isEmpty()) {
                 suggestedComics = recommendationService.getRecommendations(null, 24);
                 suggestionType = "popular";
             }
 
-            // ========== SET ATTRIBUTES ==========
             request.setAttribute("seriesName", seriesName);
             request.setAttribute("comic", comic);
             request.setAttribute("images", images);
@@ -133,16 +117,14 @@ public class ComicDetailServlet extends HttpServlet {
             request.setAttribute("suggestionType", suggestionType);
             request.setAttribute("totalSell", totalSell);
 
-            // Forward đến trang detail
+
             request.getRequestDispatcher("/fontend/public/detail.jsp")
                     .forward(request, response);
 
         } catch (NumberFormatException e) {
-            System.err.println(">>> ERROR - NumberFormatException: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/home");
         } catch (Exception e) {
-            System.err.println(">>> ERROR - Exception: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/error");
         }

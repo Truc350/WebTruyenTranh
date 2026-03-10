@@ -27,13 +27,10 @@ public class ProxyServlet extends HttpServlet {
 
         String targetUrl;
 
-        // Xử lý các endpoint
         if (pathInfo == null || pathInfo.equals("/") || pathInfo.isEmpty()) {
-            // GET /api/provinces -> GET /p/
             targetUrl = API_BASE + "/p/";
 
         } else if (pathInfo.startsWith("/p/")) {
-            // GET /api/provinces/p/79 -> GET /p/79
             targetUrl = API_BASE + pathInfo;
             if (queryString != null) {
                 targetUrl += "?" + queryString;
@@ -44,8 +41,6 @@ public class ProxyServlet extends HttpServlet {
             response.getWriter().write("{\"error\": \"Unknown endpoint: " + pathInfo + "\"}");
             return;
         }
-
-        System.out.println("🔄 Proxy request to: " + targetUrl);
 
         HttpURLConnection conn = null;
         BufferedReader in = null;
@@ -74,25 +69,22 @@ public class ProxyServlet extends HttpServlet {
                 }
 
                 String jsonResponse = content.toString();
-                System.out.println("✅ Response length: " + jsonResponse.length());
 
                 response.getWriter().write(jsonResponse);
 
             } else {
-                System.err.println("❌ API error: " + responseCode);
                 response.setStatus(responseCode);
                 response.getWriter().write("{\"error\": \"API returned code " + responseCode + "\"}");
             }
 
         } catch (Exception e) {
-            System.err.println("💥 Exception: " + e.getMessage());
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
 
         } finally {
             if (in != null) {
-                try { in.close(); } catch (IOException e) { /* ignore */ }
+                try { in.close(); } catch (IOException e) { }
             }
             if (conn != null) {
                 conn.disconnect();

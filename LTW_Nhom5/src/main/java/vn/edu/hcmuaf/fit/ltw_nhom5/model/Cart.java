@@ -31,21 +31,16 @@ public class Cart {
         CartItem existingItem = get(comic.getId());
 
         if(existingItem != null) {
-            // Đã có trong giỏ, cập nhật số lượng
             existingItem.updateQuantity(quantity);
 
-            // Cập nhật Flash Sale info nếu có
             if (flashSaleId != null && flashSalePrice != null) {
                 existingItem.updateFlashSale(flashSaleId, flashSalePrice);
             } else {
-                // Không có Flash Sale → Đảm bảo dùng giá discount
                 if (existingItem.getFlashSaleId() == null) {
                     existingItem.setPriceAtPurchase(comic.getDiscountPrice());
                 }
             }
         } else {
-            // ✅ Chưa có, thêm mới
-            // Constructor sẽ tự động dùng comic.getDiscountPrice() nếu không có Flash Sale
             CartItem newItem = new CartItem(comic, quantity, flashSaleId, flashSalePrice);
             data.put(comic.getId(), newItem);
         }
@@ -91,29 +86,6 @@ public class Cart {
             total.updateAndGet(v -> v + item.getTotalPrice());
         });
         return total.get();
-    }
-
-    /**
-     * Xóa Flash Sale info khỏi một item cụ thể
-     */
-    public void removeFlashSaleFromItem(int comicId) {
-        CartItem item = get(comicId);
-        if (item != null) {
-            item.removeFlashSale();
-        }
-    }
-
-    /**
-     * Xóa tất cả Flash Sale info khỏi giỏ hàng
-     */
-    public void clearAllFlashSales() {
-        for (CartItem item : getItems()) {
-            item.removeFlashSale();
-        }
-    }
-
-    public void updateCustomerInfo(User user) {
-        this.user = user;
     }
 
     public User getUser() {

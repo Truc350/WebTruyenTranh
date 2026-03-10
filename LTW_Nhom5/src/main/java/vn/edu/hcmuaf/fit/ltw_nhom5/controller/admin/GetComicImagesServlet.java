@@ -18,13 +18,10 @@ public class GetComicImagesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing GetComicImagesServlet...");
         try {
             comicDAO = new ComicDAO();
             gson = new Gson();
-            System.out.println("✅ GetComicImagesServlet initialized successfully!");
         } catch (Exception e) {
-            System.err.println("❌ Error initializing servlet: " + e.getMessage());
             e.printStackTrace();
             throw new ServletException(e);
         }
@@ -51,18 +48,14 @@ public class GetComicImagesServlet extends HttpServlet {
             }
 
             int comicId = Integer.parseInt(comicIdParam);
-            System.out.println("🖼️ Getting images for comic ID: " + comicId);
 
-            // Lấy danh sách ảnh
             List<ComicImage> images = comicDAO.getComicImages(comicId);
 
             if (images == null || images.isEmpty()) {
-                System.out.println("⚠️ No images found for comic ID: " + comicId);
                 result.put("success", true);
                 result.put("images", new ArrayList<>());
                 result.put("message", "Truyện chưa có ảnh");
             } else {
-                // Chuyển đổi sang DTO đơn giản
                 List<Map<String, Object>> imageList = new ArrayList<>();
 
                 for (ComicImage img : images) {
@@ -77,17 +70,14 @@ public class GetComicImagesServlet extends HttpServlet {
 
                 result.put("success", true);
                 result.put("images", imageList);
-                System.out.println("✅ Found " + images.size() + " images");
             }
 
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid comic ID format: " + e.getMessage());
             result.put("success", false);
             result.put("message", "Comic ID không hợp lệ");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi server: " + e.getMessage());

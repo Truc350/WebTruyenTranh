@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class PointTransaction {
     private int id;
     private int userId;
-    private int orderId; // Nullable
+    private int orderId;
     private int points;
     private String transactionType; // EARN, SPEND, REFUND
     private String description;

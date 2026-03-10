@@ -29,10 +29,9 @@ public class User implements Serializable {
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    // Thêm vào User.java
     private Integer failedLoginAttempts;
 
-    // Constructor rỗng (bắt buộc cho Jdbi mapToBean)
+
     public User() {
     }
 

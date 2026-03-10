@@ -18,11 +18,6 @@ public class CloudinaryService {
 
     /**
      * Upload ảnh từ Part (multipart/form-data) lên Cloudinary
-     *
-     * @param filePart Part từ request.getPart()
-     * @param folder Thư mục trên Cloudinary (VD: "comics/covers")
-     * @return URL của ảnh trên Cloudinary
-     * @throws IOException
      */
     public static String uploadImage(Part filePart, String folder) throws IOException {
         if (filePart == null || filePart.getSize() == 0) {
@@ -62,8 +57,6 @@ public class CloudinaryService {
             // Lấy URL của ảnh
             String imageUrl = (String) uploadResult.get("secure_url");
 
-            System.out.println("Image uploaded to Cloudinary: " + imageUrl);
-
             return imageUrl;
 
         } catch (Exception e) {
@@ -75,29 +68,20 @@ public class CloudinaryService {
 
     /**
      * Xóa ảnh trên Cloudinary theo public_id
-     *
-     * @param publicId Public ID của ảnh (VD: "comics/covers/abc123")
-     * @return true nếu xóa thành công
      */
     public static boolean deleteImage(String publicId) {
         try {
             Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             String resultStatus = (String) result.get("result");
 
-            System.out.println("Delete image result: " + resultStatus);
-
             return "ok".equals(resultStatus);
         } catch (Exception e) {
-            System.err.println("Error deleting image: " + e.getMessage());
             return false;
         }
     }
 
     /**
      * Lấy public_id từ URL Cloudinary
-     *
-     * @param imageUrl URL của ảnh
-     * @return public_id
      */
     public static String getPublicIdFromUrl(String imageUrl) {
         if (imageUrl == null || !imageUrl.contains("cloudinary.com")) {
@@ -110,16 +94,13 @@ public class CloudinaryService {
             if (parts.length < 2) return null;
 
             String afterUpload = parts[1];
-            // Bỏ version (v1234567890)
             String withoutVersion = afterUpload.replaceFirst("v\\d+/", "");
-            // Bỏ extension
             int lastDot = withoutVersion.lastIndexOf('.');
             if (lastDot > 0) {
                 return withoutVersion.substring(0, lastDot);
             }
             return withoutVersion;
         } catch (Exception e) {
-            System.err.println("Error parsing public_id: " + e.getMessage());
             return null;
         }
     }

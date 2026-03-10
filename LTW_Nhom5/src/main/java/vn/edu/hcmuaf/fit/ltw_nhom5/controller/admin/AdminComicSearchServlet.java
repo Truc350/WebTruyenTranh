@@ -39,7 +39,6 @@ public class AdminComicSearchServlet extends HttpServlet {
 
         List<Comic> comics = new ArrayList<>();
 
-        // Không có keyword thì trả về mảng rỗng
         if (keyword == null || keyword.trim().isEmpty()) {
             sendJsonResponse(response, comics);
             return;
@@ -56,12 +55,10 @@ public class AdminComicSearchServlet extends HttpServlet {
             if (result != null) comics.addAll(result);
 
         } else {
-            // Mặc định: tìm tất cả (smartSearch)
             List<Comic> result = comicDAO.smartSearch(keyword);
             if (result != null) comics.addAll(result);
         }
 
-        // Thêm các tập cùng series
         if (!comics.isEmpty()) {
             Comic first = comics.get(0);
             if (first.getSeriesId() != null) {
@@ -76,7 +73,6 @@ public class AdminComicSearchServlet extends HttpServlet {
             }
         }
 
-        //  trả về  id và name
         List<Map<String, Object>> simplifiedComics = new ArrayList<>();
         for (Comic comic : comics) {
             Map<String, Object> map = new HashMap<>();
