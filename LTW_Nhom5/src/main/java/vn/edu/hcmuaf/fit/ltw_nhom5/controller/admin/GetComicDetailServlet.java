@@ -18,13 +18,10 @@ public class GetComicDetailServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing GetComicDetailServlet...");
         try {
             comicDAO = new ComicDAO();
             gson = new Gson();
-            System.out.println("✅ GetComicDetailServlet initialized!");
         } catch (Exception e) {
-            System.err.println("❌ Error initializing: " + e.getMessage());
             throw new ServletException(e);
         }
     }
@@ -50,9 +47,6 @@ public class GetComicDetailServlet extends HttpServlet {
             }
 
             int comicId = Integer.parseInt(idParam);
-            System.out.println("📖 Getting comic detail for ID: " + comicId);
-
-            // Lấy thông tin truyện
             Comic comic = comicDAO.getComicById2(comicId);
 
             if (comic == null) {
@@ -61,7 +55,6 @@ public class GetComicDetailServlet extends HttpServlet {
                 result.put("message", "Không tìm thấy truyện");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             } else {
-                // Chuyển đổi sang DTO
                 Map<String, Object> comicData = new HashMap<>();
                 comicData.put("id", comic.getId());
                 comicData.put("nameComics", comic.getNameComics());
@@ -82,17 +75,14 @@ public class GetComicDetailServlet extends HttpServlet {
                 result.put("success", true);
                 result.put("comic", comicData);
 
-                System.out.println("✅ Comic loaded: " + comic.getNameComics());
             }
 
         } catch (NumberFormatException e) {
-            System.err.println("❌ Invalid ID format: " + e.getMessage());
             result.put("success", false);
             result.put("message", "ID không hợp lệ");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi server: " + e.getMessage());

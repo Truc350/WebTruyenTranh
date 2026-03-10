@@ -29,22 +29,13 @@ public class UserManagementServlet extends HttpServlet {
 
             List<User> users;
 
-            // Xử lý tìm kiếm và lọc
             if (search != null && !search.trim().isEmpty() && levelFilter != null && !levelFilter.trim().isEmpty()) {
-                // Tìm kiếm và lọc kết hợp
                 users = userDao.searchAndFilterCustomers(search, levelFilter);
-                System.out.println("user lấy số: "+1);
             } else if (search != null && !search.trim().isEmpty()) {
-                // Chỉ tìm kiếm
-                System.out.println("user lấy số: "+2);
                 users = userDao.searchCustomers(search);
             } else if (levelFilter != null && !levelFilter.trim().isEmpty()) {
-                // Chỉ lọc theo level
-                System.out.println("user lấy số: "+3);
                 users = userDao.filterCustomersByMembershipLevel(levelFilter);
             } else {
-                // Lấy tất cả
-                System.out.println("user lấy số: "+4);
                 users = userDao.getAllCustomers();
             }
 
@@ -52,7 +43,6 @@ public class UserManagementServlet extends HttpServlet {
             if (users != null && !users.isEmpty()) {
                 System.out.println("First user: " + users.get(0));
             }
-            System.out.println("============================");
 
             request.setAttribute("users", users);
             request.getRequestDispatcher("/fontend/admin/userManagement.jsp").forward(request, response);
@@ -75,15 +65,12 @@ public class UserManagementServlet extends HttpServlet {
             UserDao userDao = new UserDao(JdbiConnector.get());
 
             if ("upgrade".equals(action)) {
-                // Nâng cấp membership
                 int userId = Integer.parseInt(request.getParameter("userId"));
                 String newLevel = request.getParameter("newLevel");
 
-                // Kiểm tra xem user có đủ điều kiện không
                 Map<String, Object> eligibility = userDao.checkUpgradeEligibility(userId, newLevel);
 
                 if ((boolean) eligibility.get("eligible")) {
-                    // Đủ điều kiện -> Nâng cấp
                     boolean success = userDao.upgradeMembershipLevel(userId, newLevel);
 
                     if (success) {
@@ -96,14 +83,12 @@ public class UserManagementServlet extends HttpServlet {
                         );
                     }
                 } else {
-                    // CHƯA ĐỦ ĐIỀU KIỆN
                     response.getWriter().write(
                             "{\"status\":\"error\",\"message\":\"" + eligibility.get("message") + "\"}"
                     );
                 }
 
             } else if ("lock".equals(action)) {
-                // Khóa tài khoản
                 int userId = Integer.parseInt(request.getParameter("userId"));
 
                 boolean success = userDao.lockUserAccount(userId);
@@ -115,17 +100,14 @@ public class UserManagementServlet extends HttpServlet {
                 }
 
             } else if ("syncSpent".equals(action)) {
-                // Đồng bộ total_spent từ orders
                 String syncType = request.getParameter("syncType");
 
                 if ("all".equals(syncType)) {
-                    // Đồng bộ cho tất cả users
                     int updated = userDao.syncAllUsersTotalSpent();
                     response.getWriter().write(
                             "{\"status\":\"success\",\"message\":\"Đã cập nhật " + updated + " users\",\"count\":" + updated + "}"
                     );
                 } else if ("one".equals(syncType)) {
-                    // Đồng bộ cho 1 user
                     int userId = Integer.parseInt(request.getParameter("userId"));
                     boolean success = userDao.syncTotalSpentFromOrders(userId);
 
@@ -144,7 +126,6 @@ public class UserManagementServlet extends HttpServlet {
                     );
                 }
             }  else if ("check-violation".equals(action)) {
-                // ✅ THÊM: Endpoint kiểm tra vi phạm
                 handleCheckViolation(request, response);
             }
             else {
@@ -157,9 +138,7 @@ public class UserManagementServlet extends HttpServlet {
         }
     }
 
-    /**
-     * ✅ THÊM: Kiểm tra vi phạm trước khi cho phép khóa
-     */
+
     private void handleCheckViolation(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         try {
@@ -168,7 +147,6 @@ public class UserManagementServlet extends HttpServlet {
             UserDao userDao = UserDao.getInstance();
             Map<String, Object> violationInfo = userDao.checkUserViolation(userId);
 
-            // Trả về JSON
             Gson gson = new Gson();
             response.getWriter().write(gson.toJson(violationInfo));
 

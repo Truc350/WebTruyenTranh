@@ -35,7 +35,6 @@ public class UserNotificationServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Kiểm tra user đã đăng nhập
         User user = (User) request.getSession().getAttribute("currentUser");
         if (user == null) {
             response.setStatus(401);
@@ -44,7 +43,6 @@ public class UserNotificationServlet extends HttpServlet {
         }
 
         String pathInfo = request.getPathInfo();
-        System.out.println("📡 Request pathInfo: " + pathInfo + " - User ID: " + user.getId());
 
         try {
             if ("/count".equals(pathInfo)) {
@@ -79,7 +77,6 @@ public class UserNotificationServlet extends HttpServlet {
         }
 
         String pathInfo = request.getPathInfo();
-        System.out.println("📡 POST pathInfo: " + pathInfo + " - User ID: " + user.getId());
 
         try {
             if ("/mark-read".equals(pathInfo)) {
@@ -97,10 +94,7 @@ public class UserNotificationServlet extends HttpServlet {
         }
     }
 
-    /**
-     * GET /NotificationServlet/count
-     * Trả về số lượng thông báo chưa đọc
-     */
+
     private void handleCount(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
@@ -112,10 +106,6 @@ public class UserNotificationServlet extends HttpServlet {
         response.getWriter().write(gson.toJson(json));
     }
 
-    /**
-     * GET /NotificationServlet/recent?limit=8
-     * Trả về danh sách thông báo gần đây
-     */
     private void handleRecent(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
@@ -125,8 +115,6 @@ public class UserNotificationServlet extends HttpServlet {
         List<Notification> notifications = notificationDAO.getRecent(user.getId(), limit);
         int unreadCount = notificationDAO.countUnread(user.getId());
 
-
-        // Format date cho từng notification
         for (Notification noti : notifications) {
             if (noti.getCreatedAt() != null) {
                 noti.setFormattedCreatedAt(formatRelativeTime(noti.getCreatedAt()));
@@ -141,10 +129,6 @@ public class UserNotificationServlet extends HttpServlet {
         response.getWriter().write(gson.toJson(result));
     }
 
-    /**
-     * GET /NotificationServlet/list?page=1&pageSize=20&type=ORDER
-     * Trả về danh sách phân trang với filter theo type
-     */
     private void handleList(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
@@ -161,7 +145,6 @@ public class UserNotificationServlet extends HttpServlet {
 
         List<Notification> notifications = notificationDAO.getList(user.getId(), typeFilter, page, pageSize);
 
-        // Format date và thêm title
         for (Notification noti : notifications) {
             if (noti.getCreatedAt() != null) {
                 String formattedDate = formatRelativeTime(noti.getCreatedAt());
@@ -186,10 +169,6 @@ public class UserNotificationServlet extends HttpServlet {
         response.getWriter().write(jsonResponse);
     }
 
-    /**
-     * POST /NotificationServlet/mark-read?id=123
-     * Đánh dấu 1 thông báo đã đọc
-     */
     private void handleMarkRead(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
@@ -207,10 +186,6 @@ public class UserNotificationServlet extends HttpServlet {
         response.getWriter().write("{\"success\": true}");
     }
 
-    /**
-     * POST /NotificationServlet/mark-all-read
-     * Đánh dấu tất cả thông báo đã đọc
-     */
     private void handleMarkAllRead(HttpServletRequest request, HttpServletResponse response, User user)
             throws IOException {
 
@@ -219,46 +194,38 @@ public class UserNotificationServlet extends HttpServlet {
         response.getWriter().write("{\"success\": true}");
     }
 
-    /**
-     * Tạo title cho notification dựa trên type
-     */
     private String generateTitle(String type) {
         if (type == null) return "Thông báo";
 
         switch (type) {
             case "ORDER_CONFIRMED":
-                return "✅ Đơn hàng đã được xác nhận";
+                return "Đơn hàng đã được xác nhận";
             case "ORDER_SHIPPED":
-                return "🚚 Đơn hàng đang được giao";
+                return "Đơn hàng đang được giao";
             case "ORDER_DELIVERED":
-                return "📦 Đơn hàng đã giao thành công";
+                return "Đơn hàng đã giao thành công";
             case "ORDER_CANCELLED":
-                return "❌ Đơn hàng đã bị hủy";
+                return "Đơn hàng đã bị hủy";
             case "REFUND_APPROVED":
-                return "💰 Yêu cầu hoàn tiền đã được chấp nhận";
+                return "Yêu cầu hoàn tiền đã được chấp nhận";
             case "REFUND_REJECTED":
-                return "⛔ Yêu cầu hoàn tiền bị từ chối";
+                return "Yêu cầu hoàn tiền bị từ chối";
             case "ORDER_UPDATE":
-                return "📋 Cập nhật đơn hàng";
+                return "Cập nhật đơn hàng";
             case "PROMOTION":
-                return "🎉 Khuyến mãi mới";
+                return "Khuyến mãi mới";
             case "SYSTEM":
-                return "🔔 Thông báo hệ thống";
+                return "Thông báo hệ thống";
             default:
-                return "📬 Thông báo";
+                return "Thông báo";
         }
     }
 
-    /**
-     * Format thời gian tương đối (vừa xong, 5 phút trước, 2 giờ trước, ...)
-     * Hỗ trợ LocalDateTime
-     */
     private String formatRelativeTime(LocalDateTime createdAt) {
         if (createdAt == null) {
             return "";
         }
 
-        // Chuyển LocalDateTime sang epoch milliseconds
         long createdAtMillis = createdAt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long diff = System.currentTimeMillis() - createdAtMillis;
 
@@ -276,7 +243,6 @@ public class UserNotificationServlet extends HttpServlet {
         } else if (days < 7) {
             return days + " ngày trước";
         } else {
-            // Format LocalDateTime thành string
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             return createdAt.format(formatter);
         }

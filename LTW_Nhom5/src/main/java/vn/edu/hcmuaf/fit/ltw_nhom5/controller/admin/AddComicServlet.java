@@ -47,19 +47,10 @@ public class AddComicServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            System.out.println("========== ADD COMIC REQUEST ==========");
-
-            // 1. Lấy dữ liệu từ form
             Comic comic = extractComicFromRequest(request);
             String authorName = request.getParameter("author");
             String publisherName = request.getParameter("publisher");
 
-            System.out.println("Comic Name: " + comic.getNameComics());
-            System.out.println("Author: " + authorName);
-            System.out.println("Category ID: " + comic.getCategoryId());
-            System.out.println("Series ID: " + comic.getSeriesId());
-
-            // 2. Validate
             List<String> errors = validateComic(comic);
             if (!errors.isEmpty()) {
                 result.put("success", false);
@@ -69,7 +60,6 @@ public class AddComicServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Kiểm tra trùng
             if (comicDAO.isComicNameExist(comic.getNameComics(), comic.getSeriesId(), comic.getVolume())) {
                 result.put("success", false);
                 result.put("message", "Truyện này đã tồn tại");
@@ -77,17 +67,14 @@ public class AddComicServlet extends HttpServlet {
                 return;
             }
 
-            // 4. UPLOAD ẢNH BÌA LÊN CLOUDINARY
             Part coverPart = request.getPart("coverImage");
             if (coverPart != null && coverPart.getSize() > 0) {
                 try {
                     String coverUrl = CloudinaryService.uploadImage(coverPart, "comics/covers");
                     if (coverUrl != null) {
                         comic.setThumbnailUrl(coverUrl);
-                        System.out.println("✅ Cover uploaded: " + coverUrl);
                     }
                 } catch (IOException e) {
-                    System.err.println("❌ Error uploading cover: " + e.getMessage());
                     result.put("success", false);
                     result.put("message", "Lỗi upload ảnh bìa: " + e.getMessage());
                     response.getWriter().write(gson.toJson(result));
@@ -95,7 +82,6 @@ public class AddComicServlet extends HttpServlet {
                 }
             }
 
-            // 5. Xử lý Author & Publisher
             int authorId = -1;
             int publisherId = -1;
 
@@ -107,11 +93,10 @@ public class AddComicServlet extends HttpServlet {
                 publisherId = comicDAO.findOrCreatePublisher(publisherName.trim());
             }
 
-            // 6. Gán tên vào Comic
+
             comic.setAuthor(authorName != null ? authorName.trim() : null);
             comic.setPublisher(publisherName != null ? publisherName.trim() : null);
 
-            // 7. Insert Comic vào DB
             int comicId = comicDAO.insertComic(comic);
 
             if (comicId <= 0) {
@@ -121,19 +106,14 @@ public class AddComicServlet extends HttpServlet {
                 return;
             }
 
-            System.out.println("✅ Comic created with ID: " + comicId);
-
-            // 8. Link với Author
             if (authorId > 0) {
                 comicDAO.linkComicAuthor(comicId, authorId);
             }
 
-            // 9. Link với Publisher
             if (publisherId > 0) {
                 comicDAO.linkComicPublisher(comicId, publisherId);
             }
 
-            // 10. UPLOAD ẢNH CHI TIẾT LÊN CLOUDINARY
             List<ComicImage> detailImages = new ArrayList<>();
 
             for (int i = 1; i <= 3; i++) {
@@ -149,10 +129,8 @@ public class AddComicServlet extends HttpServlet {
                             img.setSortOrder(i);
                             detailImages.add(img);
 
-                            System.out.println("✅ Detail image " + i + " uploaded: " + imageUrl);
                         }
                     } catch (IOException e) {
-                        System.err.println("⚠️ Warning: Could not upload detail image " + i + ": " + e.getMessage());
                     }
                 }
             }
@@ -161,7 +139,6 @@ public class AddComicServlet extends HttpServlet {
                 comicDAO.insertComicImages(detailImages);
             }
 
-            // ✅ 11. TẠO RESPONSE VỚI THÔNG TIN ĐẦY ĐỦ
             Map<String, Object> comicData = new HashMap<>();
             comicData.put("id", comicId);
             comicData.put("nameComics", comic.getNameComics());
@@ -171,7 +148,6 @@ public class AddComicServlet extends HttpServlet {
             comicData.put("stockQuantity", comic.getStockQuantity());
             comicData.put("thumbnailUrl", comic.getThumbnailUrl());
 
-            // ✅ Lấy tên category
             String categoryName = "Chưa phân loại";
             if (comic.getCategoryId() != null) {
                 try {
@@ -183,12 +159,11 @@ public class AddComicServlet extends HttpServlet {
                         }
                     }
                 } catch (Exception e) {
-                    System.err.println("⚠️ Could not load category name: " + e.getMessage());
+                    System.err.println("Could not load category name: " + e.getMessage());
                 }
             }
             comicData.put("categoryName", categoryName);
 
-            // ✅ Lấy tên series bằng hàm getSeriesNameById()
             String seriesName = "-";
             if (comic.getSeriesId() != null) {
                 try {
@@ -197,22 +172,18 @@ public class AddComicServlet extends HttpServlet {
                         seriesName = name;
                     }
                 } catch (Exception e) {
-                    System.err.println("⚠️ Could not load series name: " + e.getMessage());
+                    System.err.println("Could not load series name: " + e.getMessage());
                 }
             }
             comicData.put("seriesName", seriesName);
 
-            // 12. Thành công
             result.put("success", true);
             result.put("message", "Thêm truyện thành công");
             result.put("comicId", comicId);
             result.put("comic", comicData);
 
-            System.out.println("✅ Response: " + gson.toJson(result));
-            System.out.println("======================================");
 
         } catch (Exception e) {
-            System.err.println("❌ Error in AddComicServlet: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi: " + e.getMessage());

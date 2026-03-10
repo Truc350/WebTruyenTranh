@@ -310,38 +310,5 @@ public class Comic {
         this.publisherName = publisherName;
     }
 
-    /**
-     * lay gia cuoi cung
-     *
-     * @return
-     */
-    public double getFinalPrice() {
-        if (hasFlashSale && flashSalePrice != null) {
-            return flashSalePrice;
-        }
-        return getDiscountPrice();
-    }
-
-    /**
-     * lay phan tram giam gia cuoi cung
-     */
-    public double getFinalDiscountPercent() {
-        if (hasFlashSale && flashSaleDiscount != null) {
-            return flashSaleDiscount;
-        }
-        if (discountPercent != null) {
-            return discountPercent;
-        }
-        return 0;
-    }
-
-    /**
-     * Kiểm tra có giảm giá không (Flash Sale hoặc discount thường)
-     */
-
-    public boolean hasAnyDiscount() {
-        return hasFlashSale || hasDiscount();
-    }
-
 
 }

@@ -193,57 +193,6 @@ public class StatisticsDAO {
     }
 
     /**
-     * Lấy thống kê tổng hợp trong tuần hiện tại
-     */
-    public Map<String, Object> getWeeklyStats() {
-        LocalDate today = LocalDate.now();
-        LocalDate weekStart = today.minusDays(today.getDayOfWeek().getValue() - 1);
-        LocalDate weekEnd = weekStart.plusDays(6);
-
-        Map<String, Object> stats = new HashMap<>();
-        stats.put("comicsOnSale", countComicsOnSale());
-        stats.put("totalOrders", countOrders(weekStart, weekEnd, null));
-        stats.put("revenue", getTotalRevenue(weekStart, weekEnd));
-        stats.put("newCustomers", countNewCustomers(weekStart, weekEnd));
-
-        return stats;
-    }
-
-    /**
-     * Lấy thống kê tổng hợp trong tháng hiện tại
-     */
-    public Map<String, Object> getMonthlyStats() {
-        LocalDate today = LocalDate.now();
-        LocalDate monthStart = today.withDayOfMonth(1);
-        LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
-
-        Map<String, Object> stats = new HashMap<>();
-        stats.put("comicsOnSale", countComicsOnSale());
-        stats.put("totalOrders", countOrders(monthStart, monthEnd, null));
-        stats.put("revenue", getTotalRevenue(monthStart, monthEnd));
-        stats.put("newCustomers", countNewCustomers(monthStart, monthEnd));
-
-        return stats;
-    }
-
-    /**
-     * Lấy thống kê tổng hợp trong năm hiện tại
-     */
-    public Map<String, Object> getYearlyStats() {
-        LocalDate today = LocalDate.now();
-        LocalDate yearStart = today.withDayOfYear(1);
-        LocalDate yearEnd = today.withDayOfYear(today.lengthOfYear());
-
-        Map<String, Object> stats = new HashMap<>();
-        stats.put("comicsOnSale", countComicsOnSale());
-        stats.put("totalOrders", countOrders(yearStart, yearEnd, null));
-        stats.put("revenue", getTotalRevenue(yearStart, yearEnd));
-        stats.put("newCustomers", countNewCustomers(yearStart, yearEnd));
-
-        return stats;
-    }
-
-    /**
      * Lấy thống kê theo khoảng thời gian tùy chỉnh
      */
     public Map<String, Object> getCustomStats(LocalDate startDate, LocalDate endDate) {
@@ -281,11 +230,6 @@ public class StatisticsDAO {
     }
     /**
      * lay top 10 san pham co danh gia cao nhat
-     */
-    /**
-     * Lấy top 10 sản phẩm có đánh giá cao nhất
-     * @param limit Số lượng sản phẩm cần lấy
-     * @return Danh sách sản phẩm có rating cao nhất
      */
     public List<Map<String, Object>> getTopRatedComics(int limit) {
         String sql = """

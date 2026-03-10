@@ -26,7 +26,6 @@ public class AdminProductManagementServlet extends HttpServlet {
                         (com.google.gson.JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) ->
                                 new com.google.gson.JsonPrimitive(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                 .create();
-
     }
 
 
@@ -39,7 +38,6 @@ public class AdminProductManagementServlet extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
 
         try {
-            // Lấy parameters
             String keyword = request.getParameter("keyword");
             String pageStr = request.getParameter("page");
             String hiddenFilterStr = request.getParameter("hiddenFilter");
@@ -54,7 +52,6 @@ public class AdminProductManagementServlet extends HttpServlet {
                 }
             }
 
-            //XỬ LÝ hiddenFilter
             Integer hiddenFilter = null;
             if (hiddenFilterStr != null && !hiddenFilterStr.trim().isEmpty()) {
                 try {
@@ -66,31 +63,19 @@ public class AdminProductManagementServlet extends HttpServlet {
 
             int limit = 8;
 
-            // Tìm kiếm
             List<Comic> comics;
             int totalComics;
 
             if (keyword != null && !keyword.trim().isEmpty()) {
-                //GỌI METHOD MỚI CÓ FILTER
                 comics = comicService.searchComicsAdminWithFilter(keyword.trim(), null, null, hiddenFilter, page, limit);
                 totalComics = comicService.countComicsAdminWithFilter(keyword.trim(), null, null, hiddenFilter);
             } else {
-                // GỌI METHOD MỚI CÓ FILTER
                 comics = comicService.getAllComicsAdminWithFilter(page, limit, hiddenFilter);
                 totalComics = comicService.countAllComicsWithFilter(hiddenFilter);
             }
-//            if (keyword != null && !keyword.trim().isEmpty()) {
-//                comics = comicService.searchComicsAdmin(keyword.trim(), null, null, page, limit);
-//                totalComics = comicService.countComicsAdmin(keyword.trim(), null, null);
-//            } else {
-//                comics = comicService.getAllComicsAdmin(page, limit);
-//                totalComics = comicService.countAllComics();
-//            }
 
-            // Tính số trang
             int totalPages = (int) Math.ceil((double) totalComics / limit);
 
-            // CONVERT TO SIMPLE DTO
             List<Map<String, Object>> simplifiedComics = new ArrayList<>();
             for (Comic comic : comics) {
                 Map<String, Object> dto = new HashMap<>();
@@ -105,14 +90,12 @@ public class AdminProductManagementServlet extends HttpServlet {
                 simplifiedComics.add(dto);
             }
 
-            // Tạo response JSON
             Map<String, Object> result = new HashMap<>();
-            result.put("comics", simplifiedComics);  // ← Dùng DTO thay vì Comic
+            result.put("comics", simplifiedComics);
             result.put("currentPage", page);
             result.put("totalPages", totalPages);
             result.put("totalComics", totalComics);
 
-            // Trả JSON
             String jsonResponse = gson.toJson(result);
 
             response.getWriter().write(jsonResponse);

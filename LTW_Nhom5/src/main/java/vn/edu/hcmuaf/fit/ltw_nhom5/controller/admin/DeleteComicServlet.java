@@ -34,7 +34,6 @@ public class DeleteComicServlet extends HttpServlet {
         JsonObject jsonResponse = new JsonObject();
 
         try {
-            // ✅ ĐỌC TỪ FORM DATA thay vì JSON
             String comicIdsParam = request.getParameter("comicIds");
 
             if (comicIdsParam == null || comicIdsParam.trim().isEmpty()) {
@@ -44,7 +43,6 @@ public class DeleteComicServlet extends HttpServlet {
                 return;
             }
 
-            // ✅ Xử lý nhiều ID (ngăn cách bởi dấu phẩy)
             String[] comicIds = comicIdsParam.split(",");
             int successCount = 0;
             int failCount = 0;
@@ -54,7 +52,6 @@ public class DeleteComicServlet extends HttpServlet {
                 try {
                     int comicId = Integer.parseInt(idStr.trim());
 
-                    // Kiểm tra truyện tồn tại
                     Comic comic = comicsDAO.getComicById(comicId);
                     if (comic == null) {
                         failCount++;
@@ -62,12 +59,10 @@ public class DeleteComicServlet extends HttpServlet {
                         continue;
                     }
 
-                    // Thực hiện soft delete
                     boolean deleted = comicsDAO.softDeleteComicSafely(comicId);
 
                     if (deleted) {
                         successCount++;
-                        // Log hoạt động
                         logActivity(request, "SOFT_DELETE_COMIC", String.valueOf(comicId), comic.getNameComics());
                     } else {
                         failCount++;
@@ -80,7 +75,6 @@ public class DeleteComicServlet extends HttpServlet {
                 }
             }
 
-            // ✅ Trả về kết quả
             if (successCount > 0 && failCount == 0) {
                 jsonResponse.addProperty("success", true);
                 jsonResponse.addProperty("message",
@@ -105,9 +99,6 @@ public class DeleteComicServlet extends HttpServlet {
         out.flush();
     }
 
-    /**
-     * Log hoạt động xóa truyện
-     */
     private void logActivity(HttpServletRequest request, String action,
                              String comicId, String comicName) {
         try {
@@ -120,13 +111,6 @@ public class DeleteComicServlet extends HttpServlet {
                     adminUser = username.toString();
                 }
             }
-
-            System.out.println("[ADMIN LOG] " +
-                    "User: " + adminUser +
-                    " | Action: " + action +
-                    " | Comic ID: " + comicId +
-                    " | Comic Name: " + comicName +
-                    " | Time: " + new java.util.Date());
 
         } catch (Exception e) {
             System.err.println("Error logging activity: " + e.getMessage());

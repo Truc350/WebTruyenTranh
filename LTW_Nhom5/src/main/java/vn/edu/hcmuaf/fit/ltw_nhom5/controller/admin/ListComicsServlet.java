@@ -20,14 +20,11 @@ public class ListComicsServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing ListComicsServlet...");
         try {
             comicDAO = new ComicDAO();
             gson = new Gson();
 
-            System.out.println("✅ ListComicsServlet initialized successfully!");
         } catch (Exception e) {
-            System.err.println("❌ Error initializing servlet: " + e.getMessage());
             e.printStackTrace();
             throw new ServletException(e);
         }
@@ -43,7 +40,6 @@ public class ListComicsServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // ✅ PARSE PAGE
             int page = 1;
             String pageParam = request.getParameter("page");
             if (pageParam != null && !pageParam.isEmpty()) {
@@ -51,7 +47,6 @@ public class ListComicsServlet extends HttpServlet {
                 if (page < 1) page = 1;
             }
 
-            // ✅ PARSE LIMIT
             int limit = 8;
             String limitParam = request.getParameter("limit");
             if (limitParam != null && !limitParam.isEmpty()) {
@@ -60,7 +55,6 @@ public class ListComicsServlet extends HttpServlet {
                 if (limit > 1000) limit = 1000;
             }
 
-            // ✅ PARSE HIDDEN FILTER (QUAN TRỌNG!)
             Integer hiddenFilter = null;
             String hiddenParam = request.getParameter("hiddenFilter");
             if (hiddenParam != null && !hiddenParam.isEmpty()) {
@@ -70,13 +64,10 @@ public class ListComicsServlet extends HttpServlet {
                         hiddenFilter = hiddenValue;
                     }
                 } catch (NumberFormatException e) {
-                    // Ignore invalid value
                 }
             }
 
-            System.out.println(" List params: page=" + page + ", limit=" + limit + ", hiddenFilter=" + hiddenFilter);
 
-            //  GỌI DAO VỚI FILTER
             List<Comic> comics;
             int totalComics;
 
@@ -90,9 +81,7 @@ public class ListComicsServlet extends HttpServlet {
 
             int totalPages = (int) Math.ceil((double) totalComics / limit);
 
-            System.out.println("✅ Loaded " + comics.size() + " comics (filtered: " + hiddenFilter + ")");
 
-            // ✅ BUILD RESPONSE (THÊM isHidden)
             List<Map<String, Object>> simplifiedComics = new ArrayList<>();
             for (Comic comic : comics) {
                 Map<String, Object> dto = new HashMap<>();

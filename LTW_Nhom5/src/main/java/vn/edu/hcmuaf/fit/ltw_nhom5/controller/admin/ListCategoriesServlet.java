@@ -41,7 +41,6 @@ public class ListCategoriesServlet extends HttpServlet {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Lấy tham số từ request
             String pageStr = req.getParameter("page");
             String pageSizeStr = req.getParameter("pageSize");
             String keyword = req.getParameter("keyword");
@@ -52,7 +51,6 @@ public class ListCategoriesServlet extends HttpServlet {
             List<Category> categories;
             int totalRecords;
 
-            // Nếu có từ khóa tìm kiếm
             if (keyword != null && !keyword.trim().isEmpty()) {
                 categories = categoriesDao.searchCategoriesByName(keyword.trim(), page, pageSize);
                 totalRecords = categoriesDao.countSearchResults(keyword.trim());

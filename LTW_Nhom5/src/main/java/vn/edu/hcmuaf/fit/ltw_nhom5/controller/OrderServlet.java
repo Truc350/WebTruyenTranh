@@ -10,7 +10,7 @@ import org.jdbi.v3.core.Jdbi;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.*;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.*;
-//import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.vnpay.VNPayUtils;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +37,6 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.sendRedirect(request.getContextPath() + "/cart");
-//        request.getRequestDispatcher("fontend/admin/order.jsp").forward(request, response);
     }
 
     @Override
@@ -106,15 +105,14 @@ public class OrderServlet extends HttpServlet {
                         + request.getContextPath()
                         + "/vnpay-return";
                 String orderInfo = "Thanh toan don hang - " + recipientName.trim();
-//                String paymentUrl = VNPayUtils.createPaymentUrl(
-//                        user.getId(), totalVnpay, orderInfo, returnURL, ipAddress
-//                );
+                String paymentUrl = VNPayUtils.createPaymentUrl(
+                        user.getId(), totalVnpay, orderInfo, returnURL, ipAddress
+                );
 
-//                response.sendRedirect(paymentUrl);
-                return;// cho callback
+                response.sendRedirect(paymentUrl);
+                return;
             }
 
-            // Lấy thông tin giỏ hàng đã chọn từ session
             @SuppressWarnings("unchecked")
             List<CartItem> selectedItems = (List<CartItem>) session.getAttribute("selectedItems");
 
@@ -124,7 +122,6 @@ public class OrderServlet extends HttpServlet {
                 return;
             }
 
-            // ========== KIỂM TRA TỒN KHO ==========
             for (CartItem item : selectedItems) {
                 int comicId = item.getComic().getId();
                 int requestedQty = item.getQuantity();
@@ -139,12 +136,10 @@ public class OrderServlet extends HttpServlet {
                 }
             }
 
-            // Tính toán giá
             Object subtotalObj = session.getAttribute("checkoutSubtotal");
             double subtotal = subtotalObj != null ? ((Double) subtotalObj) : 0.0;
             double shippingFee = "express".equals(shippingMethod) ? 50000 : 25000;
 
-            // Tính điểm giảm giá (1 điểm = 1.000đ)
             int pointsToUse = 0;
             double pointsDiscount = 0;
             if (usePoints && user.getPoints() > 0) {
@@ -152,15 +147,12 @@ public class OrderServlet extends HttpServlet {
                 pointsDiscount = pointsToUse;
             }
 
-            // Tổng tiền sau khi trừ điểm
             double totalAmount = subtotal + shippingFee - pointsDiscount;
 
-            // Đảm bảo tổng tiền không âm
             if (totalAmount < 0) {
                 totalAmount = 0;
             }
 
-            // ========== TẠO ĐỊA CHỈ GIAO HÀNG ==========
             UserShippingAddress shippingAddress = new UserShippingAddress();
             shippingAddress.setUserId(user.getId());
             shippingAddress.setRecipientName(recipientName.trim());
@@ -174,20 +166,16 @@ public class OrderServlet extends HttpServlet {
 
             boolean setAsDefault = "true".equals(request.getParameter("setDefaultAddress"));
 
-            // Nếu là địa chỉ đầu tiên, luôn set default dù user có tick hay không
             int addressCount = userShippingAddressDAO.countAddressesByUserId(user.getId());
             boolean shouldSetDefault = setAsDefault || addressCount == 0;
             shippingAddress.setDefault(shouldSetDefault);
 
-            // Kiểm tra địa chỉ đã tồn tại chưa
             Optional<UserShippingAddress> existingAddress =
                     userShippingAddressDAO.findExistingAddress(shippingAddress);
 
             int shippingAddressId;
             if (existingAddress.isPresent()) {
-                // Sử dụng địa chỉ đã có
                 shippingAddressId = existingAddress.get().getId();
-                // Nếu user tick "đặt làm mặc định" -> cập nhật lại
                 if (shouldSetDefault) {
                     userShippingAddressDAO.setDefaultAddress(shippingAddressId, user.getId());
                 }
@@ -204,17 +192,16 @@ public class OrderServlet extends HttpServlet {
                 }
             }
 
-            // Tạo đối tượng Order
+
             Order order = new Order();
             order.setUserId(user.getId());
             order.setOrderDate(LocalDateTime.now());
-            order.setStatus("Pending"); // Trạng thái: Đang chờ xử lý
+            order.setStatus("Pending");
             order.setTotalAmount(totalAmount);
-            order.setShippingAddressId(shippingAddressId); // Nếu không dùng shipping_address_id thì set 0
+            order.setShippingAddressId(shippingAddressId);
             order.setRecipientName(recipientName.trim());
             order.setShippingPhone(shippingPhone.trim());
 
-            // Địa chỉ đầy đủ
             String fullAddress = streetAddress.trim() + ", " + ward.trim();
             if (district != null && !district.trim().isEmpty()) {
                 fullAddress += ", " + district.trim();
@@ -222,12 +209,12 @@ public class OrderServlet extends HttpServlet {
             fullAddress += ", " + province.trim();
             order.setShippingAddress(fullAddress);
 
-            order.setShippingProvider(shippingMethod); // standard hoặc express
+            order.setShippingProvider(shippingMethod);
             order.setShippingFee(shippingFee);
             order.setPointUsed(pointsToUse);
             order.setCreatedAt(LocalDateTime.now());
 
-            // Tạo danh sách OrderItem
+
             List<OrderItem> orderItems = new ArrayList<>();
             for (CartItem item : selectedItems) {
                 OrderItem orderItem = new OrderItem();
@@ -237,42 +224,35 @@ public class OrderServlet extends HttpServlet {
                 orderItems.add(orderItem);
             }
 
-            // Lưu đơn hàng vào database
+
             int orderId = orderDAO.createOrderWithPayment(order, orderItems, paymentMethod);
 
             if (orderId > 0) {
                 if ("ewallet".equals(paymentMethod)) {
                     PaymentDAO paymentDAO = new PaymentDAO(JdbiConnector.get());
 
-                    // Tạo transaction ID ngẫu nhiên
                     String transactionId = generateTransactionId();
 
-                    // Lấy payment vừa tạo
                     Optional<Payment> paymentOpt = paymentDAO.getPaymentByOrderId(orderId);
                     if (paymentOpt.isPresent()) {
                         Payment payment = paymentOpt.get();
-
-                        // Cập nhật transaction ID và status thành Completed
                         paymentDAO.updatePaymentStatus(
                                 payment.getId(),
-                                "Completed",  // Trạng thái: Đã thanh toán
+                                "Completed",
                                 transactionId
                         );
                     }
                 }
-                // Xóa các sản phẩm đã đặt khỏi giỏ hàng
                 Cart cart = (Cart) session.getAttribute("cart");
                 @SuppressWarnings("unchecked")
                 List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
 
                 if (cart != null && cartItems != null) {
-                    // Lấy danh sách comic IDs đã mua để so sánh
                     List<Integer> purchasedComicIds = new ArrayList<>();
                     for (CartItem item : selectedItems) {
                         purchasedComicIds.add(item.getComic().getId());
                     }
 
-                    // XÓA TỪ CART OBJECT
                     for (Integer comicId : purchasedComicIds) {
                         cart.removeItem(comicId);
                     }
@@ -283,19 +263,15 @@ public class OrderServlet extends HttpServlet {
                     session.setAttribute("cartItems", cartItems);
                     session.setAttribute("clearCartLocalStorage", Boolean.TRUE);
                 }
-                // Nếu sử dụng điểm, trừ điểm của user
                 if (usePoints && pointsToUse > 0) {
                     int newPoints = user.getPoints() - pointsToUse;
                     if (newPoints < 0) newPoints = 0;
 
-                    // Cập nhật điểm trong database
                     userDAO.updateUserPoints(user.getId(), newPoints);
 
-                    // Cập nhật điểm trong session
                     user.setPoints(newPoints);
                     session.setAttribute("currentUser", user);
 
-                    // Tạo transaction bằng setter thay vì constructor
                     PointTransactionDAO pointTransactionDAO = new PointTransactionDAO(JdbiConnector.get());
                     PointTransaction transaction = new PointTransaction();
                     transaction.setUserId(user.getId());
@@ -318,7 +294,6 @@ public class OrderServlet extends HttpServlet {
                 session.setAttribute("orderPaymentMethod", paymentMethod);
                 session.setAttribute("orderSuccess", "Đặt hàng thành công!");
 
-                // Chuyển đến trang thành công
                 response.sendRedirect(request.getContextPath() + "/order-success");
             } else {
                 session.setAttribute("orderError", "Đặt hàng thất bại. Vui lòng thử lại!");

@@ -24,8 +24,6 @@ public class ComicDAO extends ADao {
     }
 
     public List<Comic> searchCandidate(String keyword) {
-        System.out.println("=== DEBUG searchCandidate ===");
-        System.out.println("Input keyword: " + keyword);
         String normalized = TextUtils.normalize(keyword.toLowerCase());
         String number = keyword.replaceAll("\\D+", "");
 
@@ -48,9 +46,6 @@ public class ComicDAO extends ADao {
                 )
         );
 
-        System.out.println("✅ Total comics from DB: " + allComics.size());
-
-        // Phần filter giữ nguyên như cũ
         String[] words = normalized.split("\\s+");
         List<String> meaningfulWords = new ArrayList<>();
         for (String word : words) {
@@ -100,7 +95,6 @@ public class ComicDAO extends ADao {
             if (result.size() >= 100) break;
         }
 
-        System.out.println("✅ After filter: " + result.size());
         return result;
     }
 
@@ -125,17 +119,14 @@ public class ComicDAO extends ADao {
         String name = TextUtils.normalize(c.getNameComics().toLowerCase());
         int score = 0;
 
-        // 1. Khớp chính xác toàn bộ (cao nhất)
         if (name.equals(fullKeyword)) {
             score += 1000;
         }
 
-        // 2. Chứa toàn bộ cụm từ liên tiếp
         if (name.contains(fullKeyword)) {
             score += 500;
         }
 
-        // 3. Đếm số từ khớp
         int matchCount = 0;
         for (String word : words) {
             if (name.contains(word)) {
@@ -144,40 +135,32 @@ public class ComicDAO extends ADao {
             }
         }
 
-        // 4. Bonus nếu khớp tất cả các từ
         if (matchCount == words.length) {
             score += 200;
         }
 
-        // 5. Khớp đúng số tập/volume (QUAN TRỌNG!)
         if (!number.isEmpty()) {
             try {
                 int targetNum = Integer.parseInt(number);
 
-                // Kiểm tra cột volume
                 if (c.getVolume() != null && c.getVolume() == targetNum) {
                     score += 400;
                 }
 
-                // Kiểm tra trong tên: "tập 4", "tap 4", "volume 4", "vol 4"
                 String numPattern = ".*(tap|volume|vol)\\s*0*" + number + "([^0-9]|$).*";
                 if (name.matches(numPattern)) {
                     score += 300;
                 }
 
             } catch (NumberFormatException e) {
-                // Ignore
             }
         }
 
-        // 6. Ưu tiên tên ngắn hơn (chính xác hơn)
         score -= name.length() / 10;
-
         return score;
     }
 
 
-    // Tìm theo tác giả
     public List<Comic> findByAuthor(String authorName) {
         if (authorName == null || authorName.trim().isEmpty()) {
             return new ArrayList<>();
@@ -201,7 +184,6 @@ public class ComicDAO extends ADao {
                         .list()
         );
 
-        // Filter trong Java
         List<Comic> result = new ArrayList<>();
         Set<Integer> addedIds = new HashSet<>();
 
@@ -218,9 +200,7 @@ public class ComicDAO extends ADao {
         return result;
     }
 
-    /**
-     * Tìm theo thể loại
-     */
+
     public List<Comic> findByCategory(String categoryName) {
         if (categoryName == null || categoryName.trim().isEmpty()) {
             return new ArrayList<>();
@@ -243,7 +223,6 @@ public class ComicDAO extends ADao {
                         .list()
         );
 
-        // Filter trong Java
         List<Comic> result = new ArrayList<>();
         for (Comic c : allComics) {
             if (c.getCategoryName() != null) {
@@ -257,12 +236,10 @@ public class ComicDAO extends ADao {
         return result;
     }
 
-    // Tìm theo nhà xuất bản
     public List<Comic> findByPublisher(String publisherName) {
         if (publisherName == null || publisherName.trim().isEmpty()) {
             return new ArrayList<>();
         }
-
 
         String normalized = TextUtils.normalize(publisherName.toLowerCase());
 
@@ -282,7 +259,6 @@ public class ComicDAO extends ADao {
                         .list()
         );
 
-        // ✅ Filter trong Java
         List<Comic> result = new ArrayList<>();
         Set<Integer> addedIds = new HashSet<>();
 
@@ -300,45 +276,6 @@ public class ComicDAO extends ADao {
 
     }
 
-    // Lấy danh sách tác giả của một comic
-    public List<String> getAuthorsByComicId(int comicId) {
-        String sql = """
-                SELECT a.name
-                FROM Authors a
-                INNER JOIN Comic_Authors ca ON a.id = ca.author_id
-                WHERE ca.comic_id = :comicId
-                  AND a.is_deleted = 0
-                ORDER BY a.name
-                """;
-
-        return jdbi.withHandle(h ->
-                h.createQuery(sql)
-                        .bind("comicId", comicId)
-                        .mapTo(String.class)
-                        .list()
-        );
-    }
-
-    // Lấy danh sách nhà xuất bản của một comic
-    public List<String> getPublishersByComicId(int comicId) {
-        String sql = """
-                SELECT p.name
-                FROM Publishers p
-                INNER JOIN Comic_Publishers cp ON p.id = cp.publisher_id
-                WHERE cp.comic_id = :comicId
-                  AND p.is_deleted = 0
-                ORDER BY p.name
-                """;
-
-        return jdbi.withHandle(h ->
-                h.createQuery(sql)
-                        .bind("comicId", comicId)
-                        .mapTo(String.class)
-                        .list()
-        );
-    }
-
-    // Tìm các tập khác trong cùng series
     public List<Comic> findBySeriesId(int seriesId, int excludeId) {
         String sql = """
                 SELECT c.*
@@ -365,101 +302,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    public List<Comic> smartSearchAll(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        System.out.println("\n=== SMART SEARCH DEBUG ===");
-        System.out.println("Keyword: " + keyword);
-
-        String normalized = TextUtils.normalize(keyword.toLowerCase());
-        Set<Integer> resultIds = new HashSet<>();
-        List<Comic> allResults = new ArrayList<>();
-
-        // PHÁT HIỆN LOẠI KEYWORD
-        String[] words = normalized.split("\\s+");
-        boolean isShortKeyword = words.length <= 2; // "trinh thám", "kim đồng"
-
-        // 1️⃣ Ưu tiên tìm thể loại/tác giả/NXB cho keyword ngắn
-        if (isShortKeyword) {
-            // Thể loại
-            List<Comic> categoryResults = findByCategory(normalized);
-            System.out.println("✅ Category search: " + categoryResults.size());
-            for (Comic c : categoryResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            // Tác giả
-            List<Comic> authorResults = findByAuthor(normalized);
-            System.out.println("✅ Author search: " + authorResults.size());
-            for (Comic c : authorResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            // Nhà xuất bản
-            List<Comic> publisherResults = findByPublisher(normalized);
-            System.out.println("✅ Publisher search: " + publisherResults.size());
-            for (Comic c : publisherResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            // CHỈ TÌM THEO TÊN NẾU CHƯA CÓ KẾT QUẢ
-            if (allResults.isEmpty()) {
-                List<Comic> nameResults = smartSearch(keyword);
-                System.out.println("✅ Name search (fallback): " + nameResults.size());
-                allResults.addAll(nameResults);
-            } else {
-                System.out.println("⏭️ Skip name search (found in category/author/publisher)");
-            }
-        }
-        // 2️⃣ Tìm theo tên cho keyword dài
-        else {
-            List<Comic> nameResults = smartSearch(keyword);
-            System.out.println("✅ Name search: " + nameResults.size());
-            for (Comic c : nameResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            // Bổ sung thể loại/tác giả/NXB
-            List<Comic> categoryResults = findByCategory(normalized);
-            System.out.println("✅ Category search (supplement): " + categoryResults.size());
-            for (Comic c : categoryResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            List<Comic> authorResults = findByAuthor(normalized);
-            System.out.println("✅ Author search (supplement): " + authorResults.size());
-            for (Comic c : authorResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-
-            List<Comic> publisherResults = findByPublisher(normalized);
-            System.out.println("✅ Publisher search (supplement): " + publisherResults.size());
-            for (Comic c : publisherResults) {
-                if (resultIds.add(c.getId())) {
-                    allResults.add(c);
-                }
-            }
-        }
-
-        System.out.println("📊 Total unique results: " + allResults.size());
-        System.out.println("==========================\n");
-
-        return allResults;
-    }
 
     public List<Comic> getTop5BestSellerThisWeek() {
         String sql = """
@@ -485,21 +327,11 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy danh sách gợi ý truyện cá nhân hóa cho người dùng dựa trên Wishlist
-     * Ưu tiên:
-     * 1. Tập tiếp theo của các series đang có trong Wishlist
-     * 2. Truyện cùng thể loại với những truyện trong Wishlist
-     * 3. Nếu chưa đăng nhập hoặc Wishlist rỗng → trả về 12 truyện mới nhất
-     *
-     * @param userId ID người dùng (có thể null nếu chưa login)
-     * @return List<Comic> tối đa 12 cuốn
-     */
+
     public List<Comic> getSuggestedComics(Integer userId) {
         List<Comic> suggested = new ArrayList<>();
 
         if (userId != null) {
-            // 1. Gợi ý tập tiếp theo của series trong wishlist
             String sqlNextVolume = """
                     SELECT c.*
                     """ + buildFlashSaleColumns() + """
@@ -533,7 +365,6 @@ public class ComicDAO extends ADao {
 
             suggested.addAll(nextVolumes);
 
-            // 2. Bổ sung truyện cùng thể loại (không trùng wishlist)
             if (suggested.size() < 12) {
                 int need = 12 - suggested.size();
 
@@ -571,7 +402,6 @@ public class ComicDAO extends ADao {
             }
         }
 
-        // 3. Fallback: Chưa login hoặc Wishlist rỗng → lấy truyện mới nhất
         if (suggested.isEmpty()) {
             String sqlLatest = """
                     SELECT c.*
@@ -593,9 +423,7 @@ public class ComicDAO extends ADao {
         return suggested;
     }
 
-    /**
-     * Lấy thông tin chi tiết truyện theo ID
-     */
+
     public Comic getComicById(int id) {
         String sql = """
                 SELECT c.*
@@ -614,9 +442,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy thông tin chi tiết một truyện theo ID
-     */
 
     public Comic getComicById2(int comicId) {
         String sql = """
@@ -663,9 +488,6 @@ public class ComicDAO extends ADao {
     }
 
 
-    /**
-     * Lấy danh sách ảnh của truyện
-     */
     public List<ComicImage> getComicImages(int comicId) {
         String sql = """
                 SELECT * FROM comic_images
@@ -681,9 +503,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy danh sách truyện tương tự (cùng series hoặc cùng thể loại)
-     */
+
     public List<Comic> getRelatedComics(int comicId) {
         final int LIMIT = 6;
 
@@ -700,7 +520,6 @@ public class ComicDAO extends ADao {
 
         List<Comic> result = new ArrayList<>();
 
-        // 1️⃣ Cùng series - THÊM FLASH SALE
         if (current.getSeriesId() != null && current.getVolume() != null) {
             result.addAll(jdbi.withHandle(h ->
                     h.createQuery("""
@@ -724,12 +543,10 @@ public class ComicDAO extends ADao {
             ));
         }
 
-        // 2️⃣ Build Excluded IDs
         List<Integer> excludedIds = new ArrayList<>();
         excludedIds.add(comicId);
         result.forEach(c -> excludedIds.add(c.getId()));
 
-        // 3️⃣ Cùng thể loại - THÊM FLASH SALE
         if (result.size() < LIMIT) {
             int need = LIMIT - result.size();
 
@@ -754,7 +571,6 @@ public class ComicDAO extends ADao {
             ));
         }
 
-        // 4️⃣ Random nếu vẫn chưa đủ
         List<Integer> finalExcludedIds = new ArrayList<>();
         finalExcludedIds.add(comicId);
         result.forEach(c -> finalExcludedIds.add(c.getId()));
@@ -784,30 +600,7 @@ public class ComicDAO extends ADao {
         return result.size() > LIMIT ? result.subList(0, LIMIT) : result;
     }
 
-    /**
-     * Lấy danh sách đánh giá của truyện
-     */
-    public List<Review> getComicReviews(int comicId) {
-        String sql = """
-                SELECT r.id, r.comic_id, r.user_id, r.rating, r.comment, r.created_at,
-                       u.username 
-                FROM Reviews r
-                JOIN Users u ON r.user_id = u.id
-                WHERE r.comic_id = :comicId
-                ORDER BY r.created_at DESC
-                """;
 
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("comicId", comicId)
-                        .mapToBean(Review.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Tính điểm đánh giá trung bình
-     */
     public double getAverageRating(int comicId) {
         String sql = """
                 SELECT COALESCE(AVG(rating), 0) as avg_rating 
@@ -824,13 +617,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Gợi ý comics dựa trên wishlist của user
-     * Ưu tiên:
-     * 1. Tập tiếp theo của series đang có trong wishlist
-     * 2. Comics cùng thể loại với wishlist
-     * 3. Comics phổ biến (fallback nếu wishlist trống)
-     */
+
     public List<Comic> getRecommendedComics(int userId, int limit) {
         String sql = """
                     WITH wishlist_series AS (
@@ -960,9 +747,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Gợi ý cho user chưa đăng nhập hoặc wishlist trống
-     */
+
     public List<Comic> getPopularComics(int limit) {
         String sql = """
                 SELECT 
@@ -990,99 +775,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy tập tiếp theo của một series
-     */
-    public Comic getNextVolume(int seriesId, int currentVolume) {
-        String sql = """
-                SELECT c.*
-                """ + buildFlashSaleColumns() + """
-                FROM Comics c
-                """ + buildFlashSaleJoin() + """
-                    WHERE c.series_id = :seriesId
-                    AND c.volume = :nextVolume
-                    AND c.is_deleted = 0
-                    AND c.stock_quantity > 0
-                    LIMIT 1
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .bind("nextVolume", currentVolume + 1)
-                        .mapToBean(Comic.class)
-                        .findOne()
-                        .orElse(null)
-        );
-    }
-
-    /**
-     * Lấy comics cùng thể loại
-     */
-    public List<Comic> getComicsByCategory(int categoryId, int excludeComicId, int limit) {
-        String sql = """
-                SELECT c.*
-                """ + buildFlashSaleColumns() + """
-                FROM Comics c
-                """ + buildFlashSaleJoin() + """
-                    WHERE c.category_id = :categoryId
-                    AND c.id != :excludeId
-                    AND c.is_deleted = 0
-                    AND c.stock_quantity > 0
-                    ORDER BY RAND()
-                    LIMIT :limit
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("categoryId", categoryId)
-                        .bind("excludeId", excludeComicId)
-                        .bind("limit", limit)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Lấy top comics bán chạy trong tuần
-     */
-    public List<Comic> getTopSellingComics(int limit) {
-        String sql = """
-                SELECT c.*, 
-                    COALESCE(SUM(oi.quantity), 0) as totalSold
-                """ + buildFlashSaleColumns() + """
-                FROM Comics c
-                LEFT JOIN Order_Items oi ON c.id = oi.comic_id
-                LEFT JOIN Orders o ON oi.order_id = o.id
-                    AND o.order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-                    AND o.status NOT IN ('cancelled', 'returned')
-                """ + buildFlashSaleJoin() + """
-                    WHERE c.is_deleted = 0
-                    GROUP BY c.id
-                    ORDER BY totalSold DESC, c.created_at DESC
-                    LIMIT :limit
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("limit", limit)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-
-//    /**
-//     * Lấy comic theo ID
-//     */
-//    public Comic getComicById1(int id) {
-//        return jdbi.withHandle(handle ->
-//                handle.createQuery("SELECT * FROM Comics WHERE id = :id AND is_deleted = 0")
-//                        .bind("id", id)
-//                        .mapToBean(Comic.class)
-//                        .findOne()
-//                        .orElse(null)
-//        );
-//    }
 
     /**
      * debug
@@ -1104,7 +796,6 @@ public class ComicDAO extends ADao {
                 """;
 
         jdbi.withHandle(handle -> {
-            System.out.println("\n========== WISHLIST DEBUG (User " + userId + ") ==========");
             handle.createQuery(sql)
                     .bind("userId", userId)
                     .mapToMap()
@@ -1115,31 +806,11 @@ public class ComicDAO extends ADao {
                         System.out.println("  - Category: " + row.get("category_name") + " (ID: " + row.get("category_id") + ")");
                         System.out.println("---");
                     });
-            System.out.println("=============================================\n");
             return null;
         });
     }
 
-    public void debugRecommendations(int userId, int limit) {
-        debugWishlist(userId);
 
-        List<Comic> recommendations = getRecommendedComics(userId, limit);
-
-        System.out.println("\n========== RECOMMENDATIONS DEBUG ==========");
-        System.out.println("Total recommendations: " + recommendations.size());
-
-        for (int i = 0; i < recommendations.size(); i++) {
-            Comic c = recommendations.get(i);
-            System.out.println((i + 1) + ". " + c.getNameComics());
-            System.out.println("   - Series ID: " + c.getSeriesId() + ", Volume: " + c.getVolume());
-            System.out.println("   - Category ID: " + c.getCategoryId());
-        }
-        System.out.println("==========================================\n");
-    }
-
-    /**
-     * Tìm kiếm truyện với nhiều điều kiện
-     */
     public List<Comic> searchComicsAdmin(String keyword, String author, Integer categoryId,
                                          int page, int limit) {
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -1161,7 +832,6 @@ public class ComicDAO extends ADao {
                          OR LOWER(s.series_name) LIKE :keyword
                 """);
 
-        // Nếu keyword chứa số → tìm theo volume
         String numberOnly = keyword.replaceAll("\\D+", "");
         if (!numberOnly.isEmpty()) {
             sql.append(" OR c.volume = :volume");
@@ -1186,13 +856,11 @@ public class ComicDAO extends ADao {
                     .bind("limit", limit)
                     .bind("offset", (page - 1) * limit);
 
-            // Bind volume nếu có số
             if (!numberOnly.isEmpty()) {
                 try {
                     int volumeNumber = Integer.parseInt(numberOnly);
                     query.bind("volume", volumeNumber);
                 } catch (NumberFormatException e) {
-                    // Ignore
                 }
             }
 
@@ -1208,9 +876,6 @@ public class ComicDAO extends ADao {
         });
     }
 
-    /**
-     * Đếm số truyện (không dùng SearchFilter)
-     */
     public int countComicsAdmin(String keyword, String author, Integer categoryId) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return 0;
@@ -1231,7 +896,6 @@ public class ComicDAO extends ADao {
                     OR LOWER(s.series_name) LIKE :keyword
                 """);
 
-        // Nếu keyword chứa số → tìm theo volume
         String numberOnly = keyword.replaceAll("\\D+", "");
         if (!numberOnly.isEmpty()) {
             sql.append(" OR c.volume = :volume");
@@ -1239,7 +903,6 @@ public class ComicDAO extends ADao {
 
         sql.append(")");
 
-        // Thêm điều kiện filter nếu có
         if (author != null && !author.isEmpty()) {
             sql.append(" AND LOWER(c.author) LIKE :author");
         }
@@ -1252,13 +915,11 @@ public class ComicDAO extends ADao {
             var query = handle.createQuery(sql.toString())
                     .bind("keyword", "%" + searchTerm + "%");
 
-            // Bind volume nếu có số
             if (!numberOnly.isEmpty()) {
                 try {
                     int volumeNumber = Integer.parseInt(numberOnly);
                     query.bind("volume", volumeNumber);
                 } catch (NumberFormatException e) {
-                    // Ignore
                 }
             }
 
@@ -1274,9 +935,6 @@ public class ComicDAO extends ADao {
         });
     }
 
-    /**
-     * Lấy danh sách tất cả truyện cho admin với phân trang
-     */
     public List<Comic> getAllComicsAdmin(int page, int limit) {
         int offset = (page - 1) * limit;
 
@@ -1303,9 +961,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Đếm tổng số truyện
-     */
+
     public int countAllComics() {
         String sql = "SELECT COUNT(*) FROM Comics WHERE is_deleted = 0";
         return jdbi.withHandle(handle ->
@@ -1315,9 +971,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * them truyen tranh
-     */
     public int insertComic(Comic comic) {
         String sql = """
                 INSERT INTO Comics (name_comics, author, publisher, description, price,stock_quantity, status, thumbnail_url, category_id,volume,series_id ,is_deleted, deleted_at,created_at, updated_at)
@@ -1347,37 +1000,12 @@ public class ComicDAO extends ADao {
                         .orElse(-1);
             });
         } catch (UnableToExecuteStatementException e) {
-            System.err.println("Error inserting comic: " + e.getMessage());
             e.printStackTrace();
             return -1;
         }
     }
 
-    public boolean insertComicImage(ComicImage image) {
-        String sql = """
-                    INSERT INTO comic_images (comic_id, image_url, image_type, sort_order, created_at)
-                    VALUES (?, ?, ?, ?, ?)
-                """;
 
-        try {
-            return jdbi.withHandle(handle ->
-                    handle.createUpdate(sql)
-                            .bind(0, image.getComicId())
-                            .bind(1, image.getImageUrl())
-                            .bind(2, image.getImageType())
-                            .bind(3, image.getSortOrder())
-                            .bind(4, LocalDateTime.now())
-                            .execute() > 0
-            );
-        } catch (Exception e) {
-            System.err.println("Error inserting comic image: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /*
-    them nhieu anh cung luc
-     */
     public boolean insertComicImages(List<ComicImage> images) {
         if (images == null || images.isEmpty()) {
             return true;
@@ -1401,14 +1029,11 @@ public class ComicDAO extends ADao {
             });
             return true;
         } catch (Exception e) {
-            System.err.println("Error batch inserting comic images: " + e.getMessage());
             return false;
         }
     }
 
-    /**
-     * Kiem tra truyen da ton tai chua
-     */
+
     public boolean isComicNameExist(String name, Integer seriesId, Integer volume) {
         String sql = """
                 SELECT COUNT(*) FROM Comics
@@ -1430,26 +1055,8 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy thông tin truyện theo ID
-     */
-    public Optional<Comic> getComicById1(int id) {
-        String sql = """
-                select c*
-                from Comics c 
-                left join categories cat on c.category_id = cat.id
-                left join series s ON c.series_id = s.id
-                WHERE c.id = ? AND c.is_deleted = false
-                """;
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, id)
-                        .mapToBean(Comic.class)
-                        .findFirst());
-    }
 
     public int findOrCreateAuthor(String authorName) {
-        // Tìm author hiện có
         String findSql = "SELECT id FROM authors WHERE LOWER(name) = LOWER(:name) AND is_deleted = 0 LIMIT 1";
         Optional<Integer> existingId = jdbi.withHandle(handle ->
                 handle.createQuery(findSql)
@@ -1462,7 +1069,6 @@ public class ComicDAO extends ADao {
             return existingId.get();
         }
 
-        // Tạo mới author
         String insertSql = "INSERT INTO authors (name, is_deleted) VALUES (:name, :isDeleted)";
         return jdbi.withHandle(handle ->
                 handle.createUpdate(insertSql)
@@ -1475,9 +1081,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * tim hoac tao publisher moi
-     */
+
     public int findOrCreatePublisher(String publisherName) {
         // Tìm publisher hiện có
         String findSql = "SELECT id FROM publishers WHERE LOWER(name) = LOWER(:name) AND is_deleted = 0 LIMIT 1";
@@ -1517,7 +1121,6 @@ public class ComicDAO extends ADao {
                             .execute() > 0
             );
         } catch (Exception e) {
-            System.err.println("Error linking comic-author: " + e.getMessage());
             return false;
         }
     }
@@ -1533,59 +1136,11 @@ public class ComicDAO extends ADao {
                             .execute() > 0
             );
         } catch (Exception e) {
-            System.err.println("Error linking comic-publisher: " + e.getMessage());
             return false;
         }
     }
-// ✅ THÊM METHOD NÀY VÀO ComicDAO.java
-
-    /**
-     * Lấy thông tin chi tiết của comic bao gồm seriesName và categoryName
-     * Dùng sau khi insert để trả về frontend
-     */
-    public Comic getComicWithDetails(int comicId) {
-        String sql = """
-                    SELECT 
-                        c.id,
-                        c.name_comics,
-                        c.author,
-                        c.publisher,
-                        c.description,
-                        c.price,
-                        c.stock_quantity,
-                        c.thumbnail_url,
-                        c.category_id,
-                        c.series_id,
-                        c.volume,
-                        c.status,
-                        c.created_at,
-                        c.updated_at,
-                        s.series_name AS seriesName,
-                        cat.name_categories AS categoryName
-                    FROM Comics c
-                    LEFT JOIN Series s ON c.series_id = s.id
-                    LEFT JOIN Categories cat ON c.category_id = cat.id
-                    WHERE c.id = :comicId
-                    AND c.is_deleted = 0
-                    LIMIT 1
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("comicId", comicId)
-                        .mapToBean(Comic.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-    }
 
 
-    /**
-     * cap nhat thon tin truyen
-     *
-     * @param comic
-     * @return
-     */
     public boolean updateComic(Comic comic) {
         String sql = "UPDATE comics SET " +
                 "name_comics = ?, " +
@@ -1616,9 +1171,7 @@ public class ComicDAO extends ADao {
         ) > 0;
     }
 
-    /**
-     * Cập nhật tác giả của truyện
-     */
+
     public void updateComicAuthor(int comicId, int authorId) {
         String deleteSql = "DELETE FROM comic_authors WHERE comic_id = ?";
         String insertSql = "INSERT INTO comic_authors (comic_id, author_id) VALUES (?, ?)";
@@ -1629,9 +1182,6 @@ public class ComicDAO extends ADao {
         });
     }
 
-    /**
-     * Cập nhật nhà xuất bản của truyện
-     */
     public void updateComicPublisher(int comicId, int publisherId) {
         String deleteSql = "DELETE FROM comic_publishers WHERE comic_id = ?";
         String insertSql = "INSERT INTO comic_publishers (comic_id, publisher_id) VALUES (?, ?)";
@@ -1642,9 +1192,7 @@ public class ComicDAO extends ADao {
         });
     }
 
-    /**
-     * Xóa tất cả ảnh của một truyện
-     */
+
     public void deleteComicImages(int comicId) {
         String sql = "DELETE FROM comic_images WHERE comic_id = ?";
 
@@ -1653,9 +1201,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Soft delete một truyện
-     */
+
     public boolean softDeleteComic(int comicId) {
         String sql = "UPDATE comics SET " +
                 "is_deleted = 1, " +
@@ -1669,12 +1215,7 @@ public class ComicDAO extends ADao {
         ) > 0;
     }
 
-    /**
-     * Kiểm tra tồn kho của sản phẩm
-     *
-     * @param comicId ID sản phẩm
-     * @return Số lượng tồn kho
-     */
+
     public int getStockQuantity(int comicId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT stock_quantity FROM comics WHERE id = ?")
@@ -1685,43 +1226,13 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Kiểm tra có đủ hàng không
-     *
-     * @param comicId           ID sản phẩm
-     * @param requestedQuantity Số lượng cần
-     * @return true nếu đủ hàng
-     */
+
     public boolean hasEnoughStock(int comicId, int requestedQuantity) {
         int stock = getStockQuantity(comicId);
         return stock >= requestedQuantity;
     }
 
-    /**
-     * Giảm tồn kho sau khi đặt hàng
-     *
-     * @param comicId  ID sản phẩm
-     * @param quantity Số lượng cần trừ
-     * @return true nếu thành công
-     */
-    public boolean reduceStock(int comicId, int quantity) {
-        return jdbi.withHandle(handle -> {
-            String sql = "UPDATE comics SET stock_quantity = stock_quantity - ? " +
-                    "WHERE id = ? AND stock_quantity >= ?";
 
-            int updated = handle.createUpdate(sql)
-                    .bind(0, quantity)
-                    .bind(1, comicId)
-                    .bind(2, quantity)
-                    .execute();
-
-            return updated > 0;
-        });
-    }
-
-    /**
-     * Kiểm tra truyện có đang được tham chiếu không
-     */
     public boolean isComicReferenced(int comicId) {
         String sql = """
                 SELECT COUNT(*) FROM (
@@ -1739,9 +1250,7 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Soft delete với kiểm tra ràng buộc
-     */
+
     public boolean softDeleteComicSafely(int comicId) {
         // Kiểm tra ràng buộc trước
         if (isComicReferenced(comicId)) {
@@ -1761,9 +1270,7 @@ public class ComicDAO extends ADao {
         return row > 0;
     }
 
-    /**
-     * Tìm kiếm truyện với bộ lọc ẩn/hiện
-     */
+
     public List<Comic> searchComicsAdminWithFilter(String keyword, String author,
                                                    Integer categoryId, Integer hiddenFilter,
                                                    int page, int limit) {
@@ -1784,11 +1291,10 @@ public class ComicDAO extends ADao {
         // Thêm điều kiện lọc ẩn/hiện
         if (hiddenFilter != null) {
             if (hiddenFilter == 0) {
-                sql.append(" AND c.is_hidden = 0 "); // Chỉ hiển thị truyện không ẩn
+                sql.append(" AND c.is_hidden = 0 ");
             } else if (hiddenFilter == 1) {
-                sql.append(" AND c.is_hidden = 1 "); // Chỉ hiển thị truyện đã ẩn
+                sql.append(" AND c.is_hidden = 1 ");
             }
-            // Nếu hiddenFilter = -1 hoặc null: hiển thị tất cả
         }
 
         sql.append("""
@@ -1799,7 +1305,6 @@ public class ComicDAO extends ADao {
                          OR LOWER(s.series_name) LIKE :keyword
                 """);
 
-        // Nếu keyword chứa số → tìm theo volume
         String numberOnly = keyword.replaceAll("\\D+", "");
         if (!numberOnly.isEmpty()) {
             sql.append(" OR c.volume = :volume");
@@ -1906,7 +1411,6 @@ public class ComicDAO extends ADao {
                     int volumeNumber = Integer.parseInt(numberOnly);
                     query.bind("volume", volumeNumber);
                 } catch (NumberFormatException e) {
-                    // Ignore
                 }
             }
 
@@ -1982,150 +1486,6 @@ public class ComicDAO extends ADao {
     }
 
 
-    public List<Comic> getComicsByCategory1(int categoryId) {
-        String sql = """
-                SELECT c.id, c.name_comics, c.author, c.publisher, c.description, 
-                       c.price, c.stock_quantity, c.status, c.thumbnail_url, 
-                       c.category_id, c.series_id, c.is_deleted, 
-                       cat.name_categories AS categoryName,
-                       s.series_name AS seriesName
-                """ + buildFlashSaleColumns() + """
-                FROM comics c
-                LEFT JOIN categories cat ON c.category_id = cat.id
-                LEFT JOIN series s ON c.series_id = s.id
-                """ + buildFlashSaleJoin() + """
-                    WHERE c.category_id = :categoryId
-                      AND c.is_deleted = 0
-                      AND c.is_hidden = 0
-                      AND c.status = 'available'
-                    ORDER BY c.created_at DESC, c.name_comics ASC
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("categoryId", categoryId)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Lấy danh sách comics theo category với các bộ lọc
-     */
-    public List<Comic> getComicsByCategoryWithFilters(
-            int categoryId,
-            List<String> priceRanges,
-            List<String> authors,
-            List<String> publishers,
-            List<String> years) {
-
-        StringBuilder sql = new StringBuilder("""
-                    SELECT DISTINCT c.*, 
-                           cat.name_categories AS categoryName,
-                           s.series_name AS seriesName
-                    FROM comics c
-                    LEFT JOIN categories cat ON c.category_id = cat.id
-                    LEFT JOIN series s ON c.series_id = s.id
-                    LEFT JOIN comic_authors ca ON c.id = ca.comic_id
-                    LEFT JOIN authors a ON ca.author_id = a.id
-                    LEFT JOIN comic_publishers cp ON c.id = cp.comic_id
-                    LEFT JOIN publishers p ON cp.publisher_id = p.id
-                    WHERE c.category_id = :categoryId
-                      AND c.is_deleted = 0
-                      AND c.is_hidden = 0
-                      AND c.status = 'available'
-                """);
-
-        // Thêm điều kiện lọc giá
-        if (priceRanges != null && !priceRanges.isEmpty()) {
-            sql.append(" AND (");
-            for (int i = 0; i < priceRanges.size(); i++) {
-                if (i > 0) sql.append(" OR ");
-
-                switch (priceRanges.get(i)) {
-                    case "0-15000":
-                        sql.append("c.price BETWEEN 0 AND 15000");
-                        break;
-                    case "15000-30000":
-                        sql.append("c.price BETWEEN 15000 AND 30000");
-                        break;
-                    case "30000-50000":
-                        sql.append("c.price BETWEEN 30000 AND 50000");
-                        break;
-                    case "50000-70000":
-                        sql.append("c.price BETWEEN 50000 AND 70000");
-                        break;
-                    case "70000-100000":
-                        sql.append("c.price BETWEEN 70000 AND 100000");
-                        break;
-                    case "100000+":
-                        sql.append("c.price > 100000");
-                        break;
-                }
-            }
-            sql.append(")");
-        }
-
-        // Thêm điều kiện lọc tác giả
-        if (authors != null && !authors.isEmpty()) {
-            sql.append(" AND a.name IN (<authors>)");
-        }
-
-        // Thêm điều kiện lọc nhà xuất bản
-        if (publishers != null && !publishers.isEmpty()) {
-            sql.append(" AND p.name IN (<publishers>)");
-        }
-
-        // Thêm điều kiện lọc thời gian
-        if (years != null && !years.isEmpty()) {
-            sql.append(" AND (");
-            for (int i = 0; i < years.size(); i++) {
-                if (i > 0) sql.append(" OR ");
-
-                switch (years.get(i)) {
-                    case "recent":
-                        sql.append("YEAR(c.created_at) = YEAR(CURDATE())");
-                        break;
-                    case "2024":
-                        sql.append("YEAR(c.created_at) = 2024");
-                        break;
-                    case "2023":
-                        sql.append("YEAR(c.created_at) = 2023");
-                        break;
-                    case "2022":
-                        sql.append("YEAR(c.created_at) = 2022");
-                        break;
-                    case "2021":
-                        sql.append("YEAR(c.created_at) = 2021");
-                        break;
-                    case "2020":
-                        sql.append("YEAR(c.created_at) = 2020");
-                        break;
-                    case "before2020":
-                        sql.append("YEAR(c.created_at) < 2020");
-                        break;
-                }
-            }
-            sql.append(")");
-        }
-
-        sql.append(" ORDER BY c.created_at DESC, c.name_comics ASC");
-
-        return jdbi.withHandle(handle -> {
-            var query = handle.createQuery(sql.toString())
-                    .bind("categoryId", categoryId);
-
-            if (authors != null && !authors.isEmpty()) {
-                query.bindList("authors", authors);
-            }
-
-            if (publishers != null && !publishers.isEmpty()) {
-                query.bindList("publishers", publishers);
-            }
-
-            return query.mapToBean(Comic.class).list();
-        });
-    }
 
     /**
      * Lấy danh sách tác giả trong một category
@@ -2176,25 +1536,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    public List<Comic> getComicsBySeriesId(int seriesId) {
-        String sql = """
-                SELECT c.*
-                """ + buildFlashSaleColumns() + """
-                FROM comics c
-                """ + buildFlashSaleJoin() + """
-                    WHERE c.series_id = :seriesId
-                      AND c.is_deleted = 0
-                      AND c.is_hidden = 0
-                    ORDER BY c.volume ASC
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
 
     public Map<Integer, Integer> getTotalSoldBySeriesId(int seriesId) {
         return JdbiConnector.get().withHandle(handle ->
@@ -2256,7 +1597,6 @@ public class ComicDAO extends ADao {
                             .list()
             );
         } catch (Exception e) {
-            System.err.println("❌ Error in getComicsByAuthor: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -2294,144 +1634,13 @@ public class ComicDAO extends ADao {
                             .list()
             );
         } catch (Exception e) {
-            System.err.println("❌ Error in getComicsByPublisher: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
 
-    /**
-     * lay sanh sach comics với thông tin Flash Sale (nếu có)
-     */
 
-    public List<Comic> getComicsWithFlashSale(int limit, int offset) {
-        String sql = """
-                    SELECT 
-                        c.*,
-                        c.name_comics,
-                        c.thumbnail_url,
-                        c.price,
-                        c.stock_quantity,
-                
-                        -- Flash Sale Info (chỉ lấy Flash Sale có discount cao nhất)
-                        fs.id AS flash_sale_id,
-                        fs.name AS flash_sale_name,
-                        fs.discount_percent AS flash_sale_discount,
-                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
-                
-                        -- Flag có Flash Sale không
-                        CASE 
-                            WHEN fs.id IS NOT NULL THEN 1 
-                            ELSE 0 
-                        END AS has_flash_sale,
-                
-                        -- Số lượng đã bán
-                        COALESCE(
-                            (SELECT SUM(oi.quantity) 
-                             FROM order_items oi
-                             JOIN orders o ON oi.order_id = o.id
-                             WHERE oi.comic_id = c.id 
-                               AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
-                            0
-                        ) AS totalSold
-                
-                    FROM comics c
-                
-                    -- LEFT JOIN để lấy Flash Sale (nếu có)
-                    LEFT JOIN (
-                        SELECT 
-                            fsc.comic_id,
-                            fs.id,
-                            fs.name,
-                            fs.discount_percent,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY fsc.comic_id 
-                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
-                            ) AS rn
-                        FROM flashsale_comics fsc
-                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
-                        WHERE fs.status = 'active'
-                          AND fs.start_time <= NOW()
-                          AND fs.end_time >= NOW()
-                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
-                
-                    WHERE c.is_deleted = 0 
-                      AND c.is_hidden = 0
-                      AND c.stock_quantity > 0
-                
-                    ORDER BY c.created_at DESC
-                    LIMIT ? OFFSET ?
-                """;
 
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, limit)
-                        .bind(1, offset)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Lấy chi tiết comic với thông tin Flash Sale
-     */
-    public Comic getComicByIdWithFlashSale(int id) {
-        String sql = """
-                    SELECT 
-                        c.*,
-                        cat.name_categories,
-                        s.series_name,
-                
-                        -- Flash Sale Info
-                        fs.id AS flash_sale_id,
-                        fs.name AS flash_sale_name,
-                        fs.discount_percent AS flash_sale_discount,
-                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
-                
-                        -- Flag có Flash Sale không
-                        CASE 
-                            WHEN fs.id IS NOT NULL THEN 1 
-                            ELSE 0 
-                        END AS has_flash_sale
-                
-                    FROM comics c
-                    LEFT JOIN categories cat ON c.category_id = cat.id
-                    LEFT JOIN series s ON c.series_id = s.id
-                
-                    -- LEFT JOIN Flash Sale
-                    LEFT JOIN (
-                        SELECT 
-                            fsc.comic_id,
-                            fs.id,
-                            fs.name,
-                            fs.discount_percent,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY fsc.comic_id 
-                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
-                            ) AS rn
-                        FROM flashsale_comics fsc
-                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
-                        WHERE fs.status = 'active'
-                          AND fs.start_time <= NOW()
-                          AND fs.end_time >= NOW()
-                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
-                
-                    WHERE c.id = ? 
-                      AND c.is_deleted = 0
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, id)
-                        .mapToBean(Comic.class)
-                        .findOne()
-                        .orElse(null)
-        );
-    }
-
-    /**
-     * Lấy popular comics với Flash Sale (đã có từ trước)
-     */
     public List<Comic> getPopularComicsWithFlashSale(int limit) {
         String sql = """
                     SELECT 
@@ -2490,71 +1699,6 @@ public class ComicDAO extends ADao {
         );
     }
 
-    /**
-     * Search comics với Flash Sale
-     */
-    public List<Comic> searchComicsWithFlashSale(String keyword, int limit, int offset) {
-        String sql = """
-                    SELECT 
-                        c.*,
-                        cat.name_categories,
-                
-                        -- Flash Sale Info
-                        fs.id AS flash_sale_id,
-                        fs.name AS flash_sale_name,
-                        fs.discount_percent AS flash_sale_discount,
-                        ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
-                
-                        CASE 
-                            WHEN fs.id IS NOT NULL THEN 1 
-                            ELSE 0 
-                        END AS has_flash_sale
-                
-                    FROM comics c
-                    LEFT JOIN categories cat ON c.category_id = cat.id
-                
-                    LEFT JOIN (
-                        SELECT 
-                            fsc.comic_id,
-                            fs.id,
-                            fs.name,
-                            fs.discount_percent,
-                            ROW_NUMBER() OVER (
-                                PARTITION BY fsc.comic_id 
-                                ORDER BY fs.discount_percent DESC, fs.end_time ASC
-                            ) AS rn
-                        FROM flashsale_comics fsc
-                        JOIN flashsale fs ON fsc.flashsale_id = fs.id
-                        WHERE fs.status = 'active'
-                          AND fs.start_time <= NOW()
-                          AND fs.end_time >= NOW()
-                    ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
-                
-                    WHERE c.is_deleted = 0 
-                      AND c.is_hidden = 0
-                      AND (
-                          c.name_comics LIKE ? 
-                          OR c.author LIKE ? 
-                          OR cat.name_categories LIKE ?
-                      )
-                
-                    ORDER BY c.name_comics
-                    LIMIT ? OFFSET ?
-                """;
-
-        String searchPattern = "%" + keyword + "%";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, searchPattern)
-                        .bind(1, searchPattern)
-                        .bind(2, searchPattern)
-                        .bind(3, limit)
-                        .bind(4, offset)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
 
     /**
      * JOIN với Flash Sale active
@@ -2599,13 +1743,7 @@ public class ComicDAO extends ADao {
                 """;
     }
 
-    /**
-     * Gợi ý comics dựa trên wishlist của user (ĐÃ TÍCH HỢP FLASH SALE)
-     * Ưu tiên:
-     * 1. Tập tiếp theo của series đang có trong wishlist
-     * 2. Comics cùng thể loại với wishlist
-     * 3. Comics phổ biến (fallback nếu wishlist trống)
-     */
+
     public List<Comic> getRecommendedComicsWithFlashSale(int userId, int limit) {
         String sql = """
                 WITH wishlist_series AS (
@@ -2761,117 +1899,6 @@ public class ComicDAO extends ADao {
     }
 
 
-    /**
-     * Lấy danh sách gợi ý truyện cá nhân hóa (ĐÃ TÍCH HỢP FLASH SALE)
-     */
-    public List<Comic> getSuggestedComicsWithFlashSale(Integer userId) {
-        List<Comic> suggested = new ArrayList<>();
-
-        if (userId != null) {
-            // 1. Gợi ý tập tiếp theo của series trong wishlist
-            String sqlNextVolume = """
-                    SELECT c.*
-                    """ + buildFlashSaleColumns() + """
-                    FROM comics c
-                    """ + buildFlashSaleJoin() + """
-                        WHERE c.series_id IN (
-                            SELECT DISTINCT c2.series_id
-                            FROM comics c2
-                            JOIN wishlist w ON c2.id = w.comic_id
-                            WHERE w.user_id = :userId
-                              AND c2.is_deleted = 0
-                        )
-                        AND c.volume = (
-                            SELECT MAX(c3.volume) + 1
-                            FROM comics c3
-                            JOIN wishlist w2 ON c3.id = w2.comic_id
-                            WHERE c3.series_id = c.series_id
-                              AND w2.user_id = :userId
-                              AND c3.is_deleted = 0
-                        )
-                        AND c.is_deleted = 0 
-                        AND c.is_hidden = 0
-                        AND c.stock_quantity > 0
-                        LIMIT 8
-                    """;
-
-            List<Comic> nextVolumes = jdbi.withHandle(handle ->
-                    handle.createQuery(sqlNextVolume)
-                            .bind("userId", userId)
-                            .mapToBean(Comic.class)
-                            .list()
-            );
-
-            suggested.addAll(nextVolumes);
-
-            // 2. Bổ sung truyện cùng thể loại
-            if (suggested.size() < 12) {
-                int need = 12 - suggested.size();
-
-                String sqlSameCategory = """
-                        SELECT c.*
-                        """ + buildFlashSaleColumns() + """
-                        FROM comics c
-                        """ + buildFlashSaleJoin() + """
-                            WHERE c.category_id IN (
-                                SELECT DISTINCT c2.category_id
-                                FROM comics c2
-                                JOIN wishlist w ON c2.id = w.comic_id
-                                WHERE w.user_id = :userId
-                                  AND c2.is_deleted = 0
-                            )
-                            AND c.id NOT IN (
-                                SELECT comic_id 
-                                FROM wishlist 
-                                WHERE user_id = :userId
-                            )
-                            AND c.is_deleted = 0
-                            AND c.is_hidden = 0
-                            AND c.stock_quantity > 0
-                            ORDER BY RAND()
-                            LIMIT :limit
-                        """;
-
-                List<Comic> sameCategory = jdbi.withHandle(handle ->
-                        handle.createQuery(sqlSameCategory)
-                                .bind("userId", userId)
-                                .bind("limit", need)
-                                .mapToBean(Comic.class)
-                                .list()
-                );
-
-                suggested.addAll(sameCategory);
-            }
-        }
-
-        // 3. Fallback: Truyện mới nhất
-        if (suggested.isEmpty()) {
-            String sqlLatest = """
-                    SELECT c.*
-                    """ + buildFlashSaleColumns() + """
-                    FROM comics c
-                    """ + buildFlashSaleJoin() + """
-                        WHERE c.is_deleted = 0
-                        AND c.is_hidden = 0
-                        AND c.stock_quantity > 0
-                        ORDER BY c.created_at DESC
-                        LIMIT 12
-                    """;
-
-            suggested = jdbi.withHandle(handle ->
-                    handle.createQuery(sqlLatest)
-                            .mapToBean(Comic.class)
-                            .list()
-            );
-        }
-
-        return suggested;
-    }
-
-
-    /**
-     * Tìm kiếm tất cả với Flash Sale
-     */
     public List<Comic> smartSearchAllWithFlashSale(String keyword) {
         String sql = """
                     SELECT 
@@ -3599,7 +2626,6 @@ public class ComicDAO extends ADao {
                             .one()
             );
         } catch (UnableToExecuteStatementException e) {
-            System.err.println("Lỗi khi lấy totalSold cho comicId=" + comicId);
             e.printStackTrace();
             return 0;
         }
@@ -3627,20 +2653,12 @@ public class ComicDAO extends ADao {
                             .orElse(0)
             );
         } catch (Exception e) {
-            System.err.println("Error counting comics by category " + categoryId + ":");
             e.printStackTrace();
             return 0;
         }
     }
 
-    /**
-     * Lấy danh sách truyện theo thể loại với phân trang
-     *
-     * @param categoryId - ID thể loại
-     * @param page       - Trang hiện tại (bắt đầu từ 1)
-     * @param pageSize   - Số truyện trên mỗi trang
-     * @return Danh sách truyện
-     */
+
     public List<Comic> getComicsByCategoryPaginated(int categoryId, int page, int pageSize) {
         String sql = """
                 SELECT 
@@ -3670,8 +2688,6 @@ public class ComicDAO extends ADao {
         int offset = (page - 1) * pageSize;
 
         try {
-            System.out.println("Getting comics by category - CategoryId: " + categoryId +
-                    ", Page: " + page + ", PageSize: " + pageSize + ", Offset: " + offset);
 
             List<Comic> result = jdbi.withHandle(handle ->
                     handle.createQuery(sql)
@@ -3682,155 +2698,11 @@ public class ComicDAO extends ADao {
                             .list()
             );
 
-            System.out.println("Retrieved " + result.size() + " comics");
             return result;
         } catch (Exception e) {
-            System.err.println("Error in getComicsByCategoryPaginated:");
             e.printStackTrace();
             return new ArrayList<>();
         }
-    }
-
-    /**
-     * Lấy tất cả truyện theo thể loại (không phân trang) - để backward compatibility
-     */
-    public List<Comic> getComicsByCategory(int categoryId) {
-        String sql = """
-                SELECT 
-                    c.id,
-                    c.title,
-                    c.description,
-                    c.author,
-                    c.thumbnail_url as thumbnailUrl,
-                    c.category_id as categoryId,
-                    c.status,
-                    c.view_count as viewCount,
-                    c.is_deleted as isDeleted,
-                    c.is_hidden as isHidden,
-                    c.created_at as createdAt,
-                    c.updated_at as updatedAt,
-                    cat.name_categories as categoryName
-                FROM comics c
-                LEFT JOIN categories cat ON c.category_id = cat.id
-                WHERE c.category_id = :categoryId 
-                  AND c.is_deleted = 0 
-                  AND c.is_hidden = 0 
-                  AND c.status = 'available'
-                ORDER BY c.created_at DESC
-                """;
-
-        try {
-            return jdbi.withHandle(handle ->
-                    handle.createQuery(sql)
-                            .bind("categoryId", categoryId)
-                            .mapToBean(Comic.class)
-                            .list()
-            );
-        } catch (Exception e) {
-            System.err.println("Error getting comics by category " + categoryId + ":");
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
-    }
-    public List<Comic> getComicsBySeriesWithPagination(int seriesId, int page, int pageSize) {
-        int offset = (page - 1) * pageSize;
-
-        String sql = """
-        SELECT * FROM comics
-        WHERE series_id = :seriesId
-        AND is_deleted = 0
-        AND is_hidden = 0
-        ORDER BY volume ASC
-        LIMIT :limit OFFSET :offset
-    """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
-    }
-    public int countComicsBySeries(int seriesId) {
-        String sql = """
-        SELECT COUNT(*) FROM comics
-        WHERE series_id = :seriesId
-        AND is_deleted = 0
-        AND is_hidden = 0
-    """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .mapTo(Integer.class)
-                        .one()
-        );
-    }
-    public List<Comic> getComicsBySeriesWithPaginationAndFlashSale(
-            int seriesId, int page, int pageSize) {
-
-        int offset = (page - 1) * pageSize;
-
-        String sql = """
-        SELECT 
-            c.*,
-            s.series_name,
-
-            -- Flash Sale Info
-            fs.id AS flash_sale_id,
-            fs.name AS flash_sale_name,
-            fs.discount_percent AS flash_sale_discount,
-            ROUND(c.price * (1 - fs.discount_percent / 100), 0) AS flash_sale_price,
-
-            CASE WHEN fs.id IS NOT NULL THEN 1 ELSE 0 END AS has_flash_sale,
-
-            COALESCE(
-                (SELECT SUM(oi.quantity) 
-                 FROM order_items oi
-                 JOIN orders o ON oi.order_id = o.id
-                 WHERE oi.comic_id = c.id 
-                   AND o.status IN ('pending', 'confirmed', 'shipping', 'completed')),
-                0
-            ) AS totalSold
-
-        FROM comics c
-        LEFT JOIN series s ON c.series_id = s.id
-
-        LEFT JOIN (
-            SELECT 
-                fsc.comic_id,
-                fs.id,
-                fs.name,
-                fs.discount_percent,
-                ROW_NUMBER() OVER (
-                    PARTITION BY fsc.comic_id 
-                    ORDER BY fs.discount_percent DESC, fs.end_time ASC
-                ) AS rn
-            FROM flashsale_comics fsc
-            JOIN flashsale fs ON fsc.flashsale_id = fs.id
-            WHERE fs.status = 'active'
-              AND fs.start_time <= NOW()
-              AND fs.end_time >= NOW()
-        ) AS fs ON c.id = fs.comic_id AND fs.rn = 1
-
-        WHERE c.series_id = :seriesId
-          AND c.is_deleted = 0
-          AND c.is_hidden = 0
-
-        ORDER BY c.volume ASC
-        LIMIT :limit OFFSET :offset
-    """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("seriesId", seriesId)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
-                        .mapToBean(Comic.class)
-                        .list()
-        );
     }
 
 }

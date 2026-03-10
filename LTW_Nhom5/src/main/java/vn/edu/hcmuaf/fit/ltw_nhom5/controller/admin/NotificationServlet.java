@@ -18,7 +18,6 @@ public class NotificationServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         notificationDAO = NotificationDAO.getInstance();
-        System.out.println("✅ [NotificationServlet] Initialized successfully");
     }
 
     @Override
@@ -30,30 +29,24 @@ public class NotificationServlet extends HttpServlet {
 
         try {
             if (path.endsWith("mark-notification-read")) {
-                // Đánh dấu 1 thông báo đã đọc
                 String idParam = request.getParameter("id");
                 if (idParam != null) {
                     int id = Integer.parseInt(idParam);
                     notificationDAO.markAsread(id);
                     response.getWriter().write("{\"success\": true}");
-                    System.out.println("✅ [NotificationAction] Marked notification #" + id + " as read");
                 } else {
                     response.getWriter().write("{\"success\": false, \"error\": \"Missing id parameter\"}");
                 }
             } else if (path.endsWith("mark-all-notifications-read")) {
-                // Đánh dấu tất cả thông báo admin đã đọc
                 notificationDAO.markAllAsRead(ADMIN_ID);
                 response.getWriter().write("{\"success\": true}");
-                System.out.println("✅ [NotificationAction] Marked all admin notifications as read");
             } else {
                 response.getWriter().write("{\"success\": false, \"error\": \"Unknown action\"}");
             }
         } catch (NumberFormatException e) {
             response.getWriter().write("{\"success\": false, \"error\": \"Invalid ID format\"}");
-            System.err.println("❌ [NotificationAction] Invalid ID format: " + e.getMessage());
         } catch (Exception e) {
             response.getWriter().write("{\"success\": false, \"error\": \"" + e.getMessage() + "\"}");
-            System.err.println("❌ [NotificationAction] Error: " + e.getMessage());
             e.printStackTrace();
         }
     }

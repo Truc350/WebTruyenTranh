@@ -138,7 +138,6 @@ public class VNPayReturnServlet extends HttpServlet {
             order.setPointUsed(pointsToUse);
             order.setCreatedAt(LocalDateTime.now());
 
-            // 10. Tạo OrderItems (copy y chang từ OrderServlet)
             List<OrderItem> orderItems = new ArrayList<>();
             for (CartItem item : selectedItems) {
                 OrderItem orderItem = new OrderItem();

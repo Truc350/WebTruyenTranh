@@ -61,16 +61,13 @@ public class FlashSaleDAO extends ADao {
     public boolean deleteById(int id) {
         String sql = "DELETE FROM FlashSale WHERE id = ?";
 
-        // Xóa liên kết trong bảng trung gian FlashSale_Comics (nếu có ràng buộc foreign key)
         String deleteLinksSql = "DELETE FROM FlashSale_Comics WHERE flashsale_id = ?";
 
         return jdbi.withHandle(handle -> {
-            // Xóa liên kết trước (nếu bảng trung gian có foreign key)
             handle.createUpdate(deleteLinksSql)
                     .bind(0, id)
                     .execute();
 
-            // Xóa FlashSale chính
             int rows = handle.createUpdate(sql)
                     .bind(0, id)
                     .execute();
@@ -131,71 +128,6 @@ public class FlashSaleDAO extends ADao {
         jdbi.useHandle(handle -> handle.createUpdate(sql).execute());
     }
 
-
-    public List<FlashSale> getUpcomingFlashSales(int limit) {
-        String sql = """
-                    SELECT *
-                    FROM FlashSale
-                    WHERE (status = 'scheduled' OR status = 'active')
-                      AND end_time >= NOW()
-                    ORDER BY start_time ASC
-                    LIMIT ?
-                """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, limit)
-                        .mapToBean(FlashSale.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Update Flash Sale với transaction
-     */
-    public boolean updateFlashSaleWithComics(int id, String name, double discountPercent,
-                                             LocalDateTime startTime, LocalDateTime endTime,
-                                             List<Integer> comicIds) {
-        return jdbi.inTransaction(handle -> {
-            // Update flash sale
-            int updated = handle.createUpdate("""
-                                UPDATE FlashSale 
-                                SET name = :name,
-                                    discount_percent = :discountPercent,
-                                    start_time = :startTime,
-                                    end_time = :endTime
-                                WHERE id = :id
-                            """)
-                    .bind("name", name)
-                    .bind("discountPercent", discountPercent)
-                    .bind("startTime", startTime)
-                    .bind("endTime", endTime)
-                    .bind("id", id)
-                    .execute();
-
-            if (updated == 0) return false;
-
-            // Delete old links
-            handle.createUpdate("DELETE FROM FlashSale_Comics WHERE flashsale_id = ?")
-                    .bind(0, id)
-                    .execute();
-
-            // Insert new links
-            if (comicIds != null && !comicIds.isEmpty()) {
-                var batch = handle.prepareBatch(
-                        "INSERT INTO FlashSale_Comics (flashsale_id, comic_id) VALUES (?, ?)"
-                );
-                for (int comicId : comicIds) {
-                    batch.bind(0, id).bind(1, comicId).add();
-                }
-                batch.execute();
-            }
-
-            return true;
-        });
-    }
-
-
     /**
      * Lấy danh sách Flash Sale đang active và sắp diễn ra
      * Sắp xếp theo thời gian bắt đầu
@@ -234,78 +166,6 @@ public class FlashSaleDAO extends ADao {
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
                         .bind("status", status)
-                        .mapToBean(FlashSale.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Kiểm tra xem có Flash Sale nào đang active không
-     */
-    public boolean hasActiveFlashSale() {
-        updateStatuses();
-
-        String sql = """
-        SELECT COUNT(*) 
-        FROM FlashSale
-        WHERE status = 'active'
-          AND start_time <= NOW()
-          AND end_time >= NOW()
-    """;
-
-        return jdbi.withHandle(handle -> {
-            Integer count = handle.createQuery(sql)
-                    .mapTo(Integer.class)
-                    .one();
-            return count != null && count > 0;
-        });
-    }
-
-/**
- * Lấy Flash Sale tiếp theo sẽ bắt đầu
- */
-public FlashSale getNextScheduledFlashSale() {
-    updateStatuses();
-
-    String sql = """
-        SELECT *
-        FROM FlashSale
-        WHERE status = 'scheduled'
-          AND start_time > NOW()
-        ORDER BY start_time ASC
-        LIMIT 1
-    """;
-
-    return jdbi.withHandle(handle ->
-            handle.createQuery(sql)
-                    .mapToBean(FlashSale.class)
-                    .findOne()
-                    .orElse(null)
-    );
-}
-
-
-    /**
-     * Lấy tất cả Flash Sale (cho admin)
-     */
-    public List<FlashSale> getAllFlashSalesForUser() {
-        updateStatuses();
-
-        String sql = """
-        SELECT *
-        FROM FlashSale
-        WHERE status IN ('active', 'scheduled')
-        ORDER BY 
-            CASE 
-                WHEN status = 'active' THEN 1
-                WHEN status = 'scheduled' THEN 2
-                ELSE 3
-            END,
-            start_time ASC
-    """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
                         .mapToBean(FlashSale.class)
                         .list()
         );

@@ -17,18 +17,18 @@ public class VerifyOtpServlet extends HttpServlet {
         String sessionCode = (String) request.getSession().getAttribute("otp");
 
         if (sessionCode != null && sessionCode.equals(code)) {
-            // OTP đúng → XÓA TẤT CẢ attributes liên quan
+            // OTP đúng -> xóa tất cả attributes liên quan
             request.getSession().removeAttribute("otpSent");
             request.getSession().removeAttribute("otpError");
 
             // Chuyển sang trang tạo mật khẩu
             response.sendRedirect(request.getContextPath() + "/fontend/public/reset-password.jsp");
         } else {
-            // OTP sai → giữ otpSent và báo lỗi
+            // OTP sai -> giữ otpSent và báo lỗi
             request.getSession().setAttribute("otpSent", true);
             request.getSession().setAttribute("otpError", "Mã xác thực không đúng!");
 
-            // QUAN TRỌNG: Phải dùng forward để giữ otpSent
+            // dùng forward để giữ otpSent
             request.getRequestDispatcher("/fontend/public/ForgotPass.jsp").forward(request, response);
         }
     }

@@ -12,7 +12,6 @@ public class Banner {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

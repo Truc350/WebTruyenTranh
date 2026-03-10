@@ -54,15 +54,6 @@ public class WishlistDAO {
         ) > 0;
     }
 
-    // Lấy danh sách comic ID trong wishlist
-    public List<Integer> getWishlistComicIds(int userId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT comic_id FROM Wishlist WHERE user_id = :userId ORDER BY added_at DESC")
-                        .bind("userId", userId)
-                        .mapTo(Integer.class)
-                        .list()
-        );
-    }
 
     // Lấy số lượng sản phẩm trong wishlist
     public int getWishlistCount(int userId) {

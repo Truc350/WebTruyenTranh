@@ -30,9 +30,7 @@ public class FilterComicByCategoryServlet extends HttpServlet {
         try {
             this.comicsDao = new ComicDAO();
             this.categoriesDao = new CategoriesDao();
-            System.out.println("✅ FilterComicByCategoryServlet initialized successfully!");
         } catch (Exception e) {
-            System.err.println("❌ Error initializing FilterComicByCategoryServlet:");
             e.printStackTrace();
             throw new ServletException("Failed to initialize servlet", e);
         }
@@ -42,24 +40,14 @@ public class FilterComicByCategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        System.out.println("========================================");
-        System.out.println("✅ FilterComicByCategoryServlet.doGet() called!");
-        System.out.println("========================================");
-
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
         try {
-            // Lấy parameters
             String categoryIdStr = request.getParameter("categoryId");
             String pageStr = request.getParameter("page");
 
-            System.out.println("📥 Parameters received:");
-            System.out.println("  - categoryId: " + categoryIdStr);
-            System.out.println("  - page: " + pageStr);
-
-            // Validate categoryId
             if (categoryIdStr == null || categoryIdStr.trim().isEmpty()) {
                 sendErrorResponse(response, "Vui lòng chọn thể loại!", 400);
                 return;
@@ -73,7 +61,6 @@ public class FilterComicByCategoryServlet extends HttpServlet {
                 return;
             }
 
-            // Validate page
             int page = 1;
             if (pageStr != null && !pageStr.trim().isEmpty()) {
                 try {
@@ -86,55 +73,36 @@ public class FilterComicByCategoryServlet extends HttpServlet {
                 }
             }
 
-            System.out.println("📊 Processing request:");
-            System.out.println("  - Category ID: " + categoryId);
-            System.out.println("  - Page: " + page);
-            System.out.println("  - Comics per page: " + COMICS_PER_PAGE);
-
-            // Kiểm tra thể loại có tồn tại không
             Category category = categoriesDao.getCategoryById(categoryId);
             if (category == null) {
                 sendErrorResponse(response, "Thể loại không tồn tại!", 404);
                 return;
             }
 
-            System.out.println("✅ Category found: " + category.getNameCategories());
-
-            // Đếm tổng số truyện trong thể loại
             int totalComics = comicsDao.countComicsByCategory(categoryId);
-            System.out.println("📚 Total comics in category: " + totalComics);
 
             if (totalComics == 0) {
                 sendSuccessResponse(response, null, category, page, 0, 0);
                 return;
             }
 
-            // Tính tổng số trang
             int totalPages = (int) Math.ceil((double) totalComics / COMICS_PER_PAGE);
-            System.out.println("📄 Total pages: " + totalPages);
 
-            // Validate page không vượt quá totalPages
             if (page > totalPages) {
                 page = totalPages;
             }
 
-            // Lấy danh sách truyện theo thể loại và trang
             List<Comic> comics = comicsDao.getComicsByCategoryPaginated(categoryId, page, COMICS_PER_PAGE);
-            System.out.println("✅ Retrieved " + comics.size() + " comics for page " + page);
 
-            // Trả về response thành công
             sendSuccessResponse(response, comics, category, page, totalPages, totalComics);
 
         } catch (Exception e) {
-            System.err.println("❌ Error in FilterComicByCategoryServlet:");
             e.printStackTrace();
             sendErrorResponse(response, "Có lỗi xảy ra khi lọc truyện: " + e.getMessage(), 500);
         }
     }
 
-    /**
-     * Gửi response thành công
-     */
+
     private void sendSuccessResponse(HttpServletResponse response,
                                      List<Comic> comics,
                                      Category category,
@@ -164,12 +132,8 @@ public class FilterComicByCategoryServlet extends HttpServlet {
         out.print(new Gson().toJson(result));
         out.flush();
 
-        System.out.println("✅ Response sent successfully");
     }
 
-    /**
-     * Gửi response lỗi
-     */
     private void sendErrorResponse(HttpServletResponse response, String message, int statusCode)
             throws IOException {
 
@@ -182,7 +146,6 @@ public class FilterComicByCategoryServlet extends HttpServlet {
         out.print(new Gson().toJson(result));
         out.flush();
 
-        System.err.println("❌ Error response sent: " + message);
     }
 
     @Override
