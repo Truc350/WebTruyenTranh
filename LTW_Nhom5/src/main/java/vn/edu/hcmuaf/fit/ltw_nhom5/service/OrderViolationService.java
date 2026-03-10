@@ -30,7 +30,6 @@ public class OrderViolationService {
         OrderDAO orderDAO = new OrderDAO();
         int cancelCount = OrderHistoryDAO.countUserCancelledOrdersLastHour(userId);
 
-        System.out.println("🔍 User " + userId + " đã hủy " + cancelCount + " đơn trong 1 giờ qua");
 
         // 2. Nếu vi phạm (>= 5 đơn)
         if (cancelCount >= VIOLATION_THRESHOLD) {
@@ -46,29 +45,23 @@ public class OrderViolationService {
                     String.format("Đã hủy %d đơn hàng trong vòng 1 giờ", cancelCount)
             );
 
-            System.out.println("⚠️ Đã gửi thông báo vi phạm cho admin về user " + userId);
         }
     }
 
     /**
      * Kiểm tra đăng nhập thất bại nhiều lần
      * Sử dụng cột failed_login_attempts trong bảng Users
-     *
-     * @param username Username hoặc email đã nhập
      */
     public void checkLoginFailureViolation(String username) {
         // Tìm user theo username hoặc email
         Optional<User> userOpt = UserDao.getInstance().findByUsernameOrEmail(username);
 
         if (!userOpt.isPresent()) {
-            System.out.println("⚠️ [LoginViolation] User không tồn tại: " + username);
             return;
         }
 
         User user = userOpt.get();
         int failCount = user.getFailedLoginAttempts();
-
-        System.out.println("🔍 [LoginViolation] User " + user.getId() + " (" + username + ") đã thất bại " + failCount + " lần");
 
         // Nếu vi phạm (>= 5 lần)
         if (failCount >= VIOLATION_THRESHOLD) {
@@ -79,7 +72,6 @@ public class OrderViolationService {
                     String.format("Đã đăng nhập thất bại %d lần liên tiếp. Nghi ngờ tấn công brute-force.", failCount)
             );
 
-            System.out.println("⚠️ [LoginViolation] Đã gửi thông báo vi phạm cho admin về user " + user.getId());
         }
     }
 
@@ -90,13 +82,10 @@ public class OrderViolationService {
      */
     public void resetLoginFailureCount(int userId) {
         UserDao.getInstance().resetFailedLoginAttempts(userId);
-        System.out.println("✅ [LoginViolation] Đã reset failed_login_attempts cho user " + userId);
     }
 
     /**
      * Tăng số lần đăng nhập thất bại lên 1
-     *
-     * @param username Username hoặc email đã nhập
      */
     public void incrementLoginFailureCount(String username) {
         Optional<User> userOpt = UserDao.getInstance().findByUsernameOrEmail(username);

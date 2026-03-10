@@ -22,7 +22,6 @@ public class CartFlashSaleUpdateFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         flashSaleComicsDAO = new FlashSaleComicsDAO();
         flashSaleDAO = new FlashSaleDAO();
-        System.out.println("✅ CartFlashSaleUpdateFilter initialized");
     }
 
     @Override
@@ -71,17 +70,12 @@ public class CartFlashSaleUpdateFilter implements Filter {
                         item.setFlashSaleId(newFlashSaleId);
                         item.setPriceAtPurchase(newFlashSalePrice);
 
-                        System.out.println("🔄 Updated Flash Sale for comic ID " + comicId +
-                                ": " + newFlashSalePrice + "₫");
                     }
                 }
             } else {
                 // Comic KHÔNG còn trong Flash Sale active
                 if (item.isInFlashSale()) {
                     item.removeFlashSale();
-
-                    System.out.println("⏰ Flash Sale ended for comic ID " + comicId +
-                            ". Price reverted to: " + item.getComic().getPrice() + "₫");
                 }
             }
         }
@@ -89,6 +83,6 @@ public class CartFlashSaleUpdateFilter implements Filter {
 
     @Override
     public void destroy() {
-        System.out.println("❌ CartFlashSaleUpdateFilter destroyed");
+        System.out.println("CartFlashSaleUpdateFilter destroyed");
     }
 }

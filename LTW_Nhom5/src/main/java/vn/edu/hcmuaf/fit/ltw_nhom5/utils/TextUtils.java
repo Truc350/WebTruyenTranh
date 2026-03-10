@@ -26,10 +26,5 @@ public class TextUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(normalize("Chú Thuật Hồi Chiến Tập 4"));
-        // Expected: "chu thuat hoi chien tap 4"
-
-        System.out.println(normalize("shin tập 50"));
-        // Expected: "shin tap 50"
     }
 }
