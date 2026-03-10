@@ -106,4 +106,12 @@ public class Category {
                 ", createdAt=" + createdAt +
                 '}';
     }
+
+    public int getIs_hidden() {
+        return is_hidden;
+    }
+
+    public void setIs_hidden(int is_hidden) {
+        this.is_hidden = is_hidden;
+    }
 }
