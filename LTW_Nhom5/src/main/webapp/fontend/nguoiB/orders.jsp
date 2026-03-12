@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<fmt:setLocale value="vi_VN"/>
+<fmt:setBundle basename="java.text.DecimalFormatSymbols"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +117,7 @@
                                                     <c:if test="${item.priceAtPurchase < comic.price}">
                                                         <del class="original-price">
                                                             <fmt:formatNumber value="${comic.price}" type="number"
-                                                                              groupingUsed="true"/>đ
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
                                                     <span class="discount-price"
@@ -136,7 +137,7 @@
                                                     <c:if test="${comic.discountPrice < comic.price}">
                                                         <del class="original-price">
                                                             <fmt:formatNumber value="${comic.price}" type="number"
-                                                                              groupingUsed="true"/>đ
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
                                                     <%-- Giá hiện tại --%>
@@ -154,7 +155,7 @@
 
                     <div class="order-total">
                 <span>Tổng tiền: <strong>
-                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>đ
+                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/> đ
                 </strong></span>
                     </div>
                     <div class="order-actions">
@@ -395,7 +396,7 @@
                 preview.innerHTML = '';
 
                 if (this.files.length > 3) {
-                    alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+                    showToastUser('Bạn chỉ được tải lên tối đa 3 ảnh!', 'error');
                 }
 
                 files.forEach(file => {
@@ -426,11 +427,11 @@
                 const imageUpload = document.querySelector('#image-upload');
 
                 if (!comment || rating === 0) {
-                    alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");
+                    showToastUser('Vui lòng nhập đầy đủ thông tin và chọn số sao!', 'error');
                     return;
                 }
                 if (!currentOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error');
                     return;
                 }
                 const formData = new FormData();
@@ -452,18 +453,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Gửi đánh giá thành công!');
+                            showToastUser('Gửi đánh giá thành công!');
                             closeReviewPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitReviewBtn.disabled = false;
                             submitReviewBtn.textContent = 'Gửi nhận xét';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitReviewBtn.disabled = false;
                         submitReviewBtn.textContent = 'Gửi nhận xét';
                     });
@@ -496,7 +497,7 @@
                 preview.innerHTML = '';
 
                 if (this.files.length > 3) {
-                    alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+                    showToastUser('Bạn chỉ được tải lên tối đa 3 ảnh!', 'error');
                 }
 
                 files.forEach(file => {
@@ -524,12 +525,12 @@
                 const returnImageUpload = document.querySelector('#return-image-upload');
 
                 if (!reason) {
-                    alert("Vui lòng nhập lý do trả hàng!");
+                    showToastUser('Vui lòng nhập lý do trả hàng!', 'error'); return;
                     return;
                 }
 
                 if (!currentReturnOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error'); return;
                     return;
                 }
 
@@ -553,18 +554,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Gửi yêu cầu trả hàng thành công!');
+                            showToastUser('Gửi yêu cầu trả hàng thành công!');
                             closeReturnPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitReturnBtn.disabled = false;
                             submitReturnBtn.textContent = 'Gửi yêu cầu';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitReturnBtn.disabled = false;
                         submitReturnBtn.textContent = 'Gửi yêu cầu';
                     });
@@ -596,12 +597,12 @@
                 const reason = document.querySelector('#cancel-reason').value.trim();
 
                 if (!reason) {
-                    alert("Vui lòng nhập lý do hủy đơn hàng!");
+                    showToastUser('Vui lòng nhập lý do hủy đơn hàng!', 'error');
                     return;
                 }
 
                 if (!currentCancelOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error');
                     return;
                 }
 
@@ -618,18 +619,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Hủy đơn hàng thành công!');
+                            showToastUser('Hủy đơn hàng thành công!');
                             closeCancelPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitCancelBtn.disabled = false;
                             submitCancelBtn.textContent = 'Xác nhận hủy';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitCancelBtn.disabled = false;
                         submitCancelBtn.textContent = 'Xác nhận hủy';
                     });
@@ -669,15 +670,15 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Xác nhận thành công!');
+                        showToastUser('Xác nhận nhận hàng thành công!');
                         location.reload();
                     } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                        showToastUser('Có lỗi xảy ra, vui lòng thử lại!', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Có lỗi xảy ra!');
+                    showToastUser('Có lỗi xảy ra!', 'error');
                 });
         });
     }
@@ -778,6 +779,26 @@
                 close(false);
             }
         });
+    }
+</script>
+
+<script>
+    function showToastUser(message, type = 'success') {
+        const existing = document.getElementById('user-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'user-toast';
+        toast.classList.add(type);
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 </script>
 </body>

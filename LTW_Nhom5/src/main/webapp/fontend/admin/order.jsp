@@ -617,14 +617,14 @@
     // Xác nhận hủy
     document.querySelector('.confirm-cancel').addEventListener('click', function () {
         if (!currentCancelOrderId) {
-            alert('Không xác định được đơn hàng cần hủy');
+            showToast('Không xác định được đơn hàng cần hủy', 'error');
             return;
         }
 
         const reason = document.querySelector('.cancel-popup textarea').value.trim();
 
         if (!reason) {
-            alert('Vui lòng nhập lý do hủy');
+            showToast('Vui lòng nhập lý do hủy', 'error');
             return;
         }
 
@@ -639,16 +639,16 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(data.message);
                     document.querySelector('.cancel-popup').style.display = 'none';
-                    location.reload();
+                    showToast(data.message || 'Hủy đơn hàng thành công!');
+                    setTimeout(() => location.reload(), 1500);
                 } else {
-                    alert('Lỗi: ' + data.message);
+                    showToast('Lỗi: ' + data.message, 'error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Lỗi kết nối: ' + error);
+                showToast('Lỗi kết nối: ' + error, 'error');
             });
     });
 </script>
@@ -683,38 +683,6 @@
                 btn.disabled = false;
                 btn.textContent = 'Xác nhận tất cả';
             });
-    });
-</script>
-
-<script>
-    // Xác nhận đã giao cho ĐVVC
-    document.querySelectorAll('.ship-confirm-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const orderId = this.dataset.orderId;
-
-            if (confirm('Xác nhận đã giao cho đơn vị vận chuyển?')) {
-                fetch(`${BASE_URL}/admin/orders`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `action=confirmShipped&orderId=${orderId}`
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert('Lỗi: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Lỗi kết nối: ' + error);
-                    });
-            }
-        });
     });
 </script>
 
@@ -947,7 +915,7 @@
         }
     });
     window.handleImageError = function (img) {
-        console.error('❌ Failed to load image:', img.src);
+        console.error('Failed to load image:', img.src);
         img.parentElement.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #f3f4f6; color: #9ca3af;">
             <i class="fas fa-image" style="font-size: 48px; margin-bottom: 8px;"></i>

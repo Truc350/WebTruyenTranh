@@ -1882,3 +1882,37 @@ main {
     transition: all .2s ease;
 }
 .msg-btn-ok:hover { background: linear-gradient(90deg, #218838, #1e7e34); transform: translateY(-1px); }
+
+#user-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    z-index: 99999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+#user-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+#user-toast.success {
+    background: #22c55e;
+}
+
+#user-toast.error {
+    background: #ef4444;
+}
+
+#user-toast.warning {
+    background: #f59e0b;
+}

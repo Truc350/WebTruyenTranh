@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<fmt:setLocale value="vi_VN"/>
+<fmt:setBundle basename="java.text.DecimalFormatSymbols"/>
 <!doctype html>
 <html lang="en">
 
@@ -112,11 +114,11 @@
 
                     <label>
                         <input type="radio" name="shipping" value="standard" data-fee="25000" checked>
-                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">25.000đ</span>
+                        Giao hàng Tiêu Chuẩn - <span id="standardFeeDisplay">25.000 đ</span>
                     </label><br>
                     <label>
                         <input type="radio" name="shipping" value="express" data-fee="50000">
-                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">50.000đ</span>
+                        Giao hàng Hỏa Tốc - <span id="expressFeeDisplay">50.000 đ</span>
                     </label>
 
                     <input type="hidden" name="shippingFee" id="hiddenShippingFee" value="25000">
@@ -135,7 +137,7 @@
                 <section class="promotion">
                     <h2>Điểm thưởng:</h2>
                     <div class="usePoint">
-                        <p>Sử dụng <strong>${user.points != null ? user.points : 0}</strong> xu (1 xu = 1.000đ)</p>
+                        <p>Sử dụng <strong>${user.points != null ? user.points : 0}</strong> xu (1 xu = 1đ)</p>
                         <input type="checkbox" name="usePoints" id="usePoints">
                     </div>
                 </section>
@@ -160,11 +162,11 @@
                             <c:choose>
                                 <c:when test="${item.flashSalePrice != null}">
                                     <fmt:formatNumber value="${item.flashSalePrice * item.quantity}"
-                                                      type="number" groupingUsed="true"/>đ
+                                                      type="number" groupingUsed="true"/> đ
                                 </c:when>
                                 <c:otherwise>
                                     <fmt:formatNumber value="${item.comic.discountPrice * item.quantity}"
-                                                      type="number" groupingUsed="true"/>đ
+                                                      type="number" groupingUsed="true"/> đ
                                 </c:otherwise>
                             </c:choose>
                         </span>
@@ -175,13 +177,13 @@
             <div class="summary-row">
                 <p>Tạm tính:</p>
                 <span id="subtotal">
-                    <fmt:formatNumber value="${checkoutSubtotal}" type="number" groupingUsed="true"/>đ
+                    <fmt:formatNumber value="${checkoutSubtotal}" type="number" groupingUsed="true"/> đ
                 </span>
             </div>
             <div class="summary-row">
                 <p>Phí vận chuyển:</p>
                 <span id="shippingFee">
-                    <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/>đ
+                    <fmt:formatNumber value="${shippingFee}" type="number" groupingUsed="true"/> đ
                 </span>
             </div>
             <div class="summary-row" id="pointsDiscountRow" style="display: none;">
@@ -191,7 +193,7 @@
             <div class="summary-row total-row">
                 <p><strong>TỔNG THANH TOÁN:</strong></p>
                 <span id="totalAmount">
-                    <fmt:formatNumber value="${checkoutTotal}" type="number" groupingUsed="true"/>đ
+                    <fmt:formatNumber value="${checkoutTotal}" type="number" groupingUsed="true"/> đ
                 </span>
             </div>
             <button type="button" id="checkout-qr">ĐẶT HÀNG</button>
@@ -374,7 +376,7 @@
             if (stdFee !== null) {
                 stdRadio.dataset.fee = stdFee;
                 stdRadio.disabled = false;
-                if (stdDisplay) stdDisplay.textContent = formatNumber(stdFee) + 'đ';
+                if (stdDisplay) stdDisplay.textContent = formatNumber(stdFee) + ' đ';
             } else {
                 stdRadio.disabled = true;
                 if (stdDisplay) stdDisplay.textContent = 'Không khả dụng';
@@ -384,7 +386,7 @@
             if (expFee !== null) {
                 expRadio.dataset.fee = expFee;
                 expRadio.disabled = false;
-                if (expDisplay) expDisplay.textContent = formatNumber(expFee) + 'đ';
+                if (expDisplay) expDisplay.textContent = formatNumber(expFee) + ' đ';
             } else {
                 expRadio.disabled = true;
                 if (expDisplay) expDisplay.textContent = 'Không khả dụng';
@@ -584,16 +586,16 @@
 
         const total = subtotal + shippingFee - pointsDiscount;
 
-        if (shippingFeeSpan) shippingFeeSpan.textContent = formatNumber(shippingFee) + 'đ';
+        if (shippingFeeSpan) shippingFeeSpan.textContent = formatNumber(shippingFee) + ' đ';
 
         if (usePointsCheckbox?.checked) {
             if (pointsDiscountRow) pointsDiscountRow.style.display = 'flex';
-            if (pointsDiscountSpan) pointsDiscountSpan.textContent = '-' + formatNumber(pointsDiscount) + 'đ';
+            if (pointsDiscountSpan) pointsDiscountSpan.textContent = '-' + formatNumber(pointsDiscount) + ' đ';
         } else {
             if (pointsDiscountRow) pointsDiscountRow.style.display = 'none';
         }
 
-        if (totalAmountSpan) totalAmountSpan.textContent = formatNumber(total) + 'đ';
+        if (totalAmountSpan) totalAmountSpan.textContent = formatNumber(total) + ' đ';
     }
 
     shippingRadios.forEach(r => r.addEventListener('change', updateTotal));

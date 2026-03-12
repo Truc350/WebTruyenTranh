@@ -7,6 +7,14 @@ public class CartItem {
     private Integer flashSaleId;    // ID của Flash Sale (nếu có)
     private Double flashSalePrice;  // Giá Flash Sale (nếu có)
 
+    public CartItem(Comic comic, int quantity, Double priceAtPurchase) {
+        this.comic = comic;
+        this.quantity = quantity;
+        this.priceAtPurchase = priceAtPurchase;
+        this.flashSaleId = null;
+        this.flashSalePrice = null;
+    }
+
     public CartItem(Comic comic, int quantity, Integer flashSaleId, Double flashSalePrice) {
         this.comic = comic;
         this.quantity = quantity;
@@ -20,11 +28,15 @@ public class CartItem {
         }
     }
 
-    /**
-     * Kiểm tra xem item này có đang trong Flash Sale không
-     */
     public boolean isInFlashSale() {
         return flashSaleId != null && flashSalePrice != null;
+    }
+
+    public double getCurrentPrice() {
+        if (flashSalePrice != null) {
+            return flashSalePrice;
+        }
+        return priceAtPurchase;
     }
 
     public double getFinalPrice() {
@@ -34,29 +46,25 @@ public class CartItem {
         if (priceAtPurchase != null) {
             return priceAtPurchase;
         }
-        // Fallback về giá có discount của comic
         return comic.getDiscountPrice();
     }
 
-    /**
-     * Tổng tiền của item này
-     */
+
     public double getTotalPrice() {
         return getFinalPrice() * quantity;
     }
 
 
-    /**
-     * Cập nhật số lượng
-     */
+    public double getSubtotal() {
+        return getTotalPrice();
+    }
+
+
     public void updateQuantity(int additionalQuantity) {
         this.quantity += additionalQuantity;
     }
 
-    /**
-     * Xóa thông tin Flash Sale (khi Flash Sale kết thúc)
-     * và đặt lại giá về giá có discount (nếu có) hoặc giá gốc
-     */
+
     public void removeFlashSale() {
         if (flashSaleId != null) {
             this.flashSaleId = null;
@@ -76,6 +84,7 @@ public class CartItem {
         }
     }
 
+    // Getters và Setters
     public Comic getComic() {
         return comic;
     }
@@ -110,5 +119,13 @@ public class CartItem {
 
     public Double getFlashSalePrice() {
         return flashSalePrice;
+    }
+
+    public void setFlashSalePrice(Double flashSalePrice) {
+        this.flashSalePrice = flashSalePrice;
+        // Cập nhật luôn priceAtPurchase
+        if (flashSalePrice != null) {
+            this.priceAtPurchase = flashSalePrice;
+        }
     }
 }

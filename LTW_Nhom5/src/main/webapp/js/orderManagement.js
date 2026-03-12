@@ -16,10 +16,9 @@ function renderPaginationButtons(paginationContainer, totalPages, currentPage, o
     const windowSize = 3;
 
     const groupIndex = Math.floor((currentPage - 1) / windowSize);
-    const groupStart = groupIndex * windowSize + 1;          // trang đầu nhóm
+    const groupStart = groupIndex * windowSize + 1;
     const groupEnd   = Math.min(groupStart + windowSize - 1, totalPages);
 
-    // Nút «
     const prevBtn = document.createElement('button');
     prevBtn.className = 'page-btn prev-btn';
     prevBtn.innerHTML = '&#171;';
@@ -29,7 +28,6 @@ function renderPaginationButtons(paginationContainer, totalPages, currentPage, o
     });
     paginationContainer.appendChild(prevBtn);
 
-    // Các nút số trang
     for (let i = groupStart; i <= groupEnd; i++) {
         const pageBtn = document.createElement('button');
         pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
@@ -102,10 +100,6 @@ function initShipConfirmButtons() {
 
 
 function handleShipConfirm(orderId, buttonElement) {
-    if (!confirm('Xác nhận đã giao đơn hàng này cho đơn vị vận chuyển?')) {
-        return;
-    }
-
     const originalText = buttonElement.textContent;
     buttonElement.disabled = true;
     buttonElement.textContent = 'Đang xử lý...';
@@ -848,7 +842,7 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
 
         if (status === 'AwaitingPickup') {
             tbody.querySelectorAll('.ship-confirm-btn').forEach(btn => {
-                btn.addEventListener('click', handleShipConfirm);
+                btn.addEventListener('click', handleShipConfirmInline);
             });
         }
 
@@ -865,28 +859,22 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
 
     function handleConfirmOrder(e) {
         const orderId = e.target.dataset.orderId;
-
         if (confirm('Xác nhận đơn hàng này?')) {
             fetch(BASE_URL + '/admin/orders', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'action=confirm&orderId=' + orderId
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
-                        location.reload();
+                        showToast(data.message);
+                        setTimeout(() => location.reload(), 1500);
                     } else {
-                        alert('Lỗi: ' + data.message);
+                        showToast('Lỗi: ' + data.message, 'error');
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Lỗi kết nối: ' + error);
-                });
+                .catch(error => showToast('Lỗi kết nối: ' + error, 'error'));
         }
     }
 
@@ -898,38 +886,15 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
         document.querySelector('.cancel-popup textarea').value = '';
     }
 
-    function handleShipConfirm(e) {
+    function handleShipConfirmInline(e) {
         const orderId = e.target.dataset.orderId;
-
-        if (confirm('Xác nhận đã giao cho đơn vị vận chuyển?')) {
-            fetch(`${BASE_URL}/admin/orders`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=confirmShipped&orderId=${orderId}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        location.reload();
-                    } else {
-                        alert('Lỗi: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Lỗi kết nối: ' + error);
-                });
-        }
+        handleShipConfirm(orderId, e.target);
     }
 
 
     function initializeSearch() {
         Object.entries(SEARCH_CONFIG).forEach(([inputId, config]) => {
             const searchInput = document.getElementById(inputId);
-
             if (searchInput) {
                 const searchIcon = searchInput.parentElement.querySelector('i.fa-magnifying-glass');
 
@@ -937,14 +902,12 @@ window.closeOrderDetailPopup = closeOrderDetailPopup;
                     const keyword = searchInput.value.trim();
                     searchOrders(keyword, config);
                 };
-
                 searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
                         performSearch();
                     }
                 });
-
                 if (searchIcon) {
                     searchIcon.style.cursor = 'pointer';
                     searchIcon.addEventListener('click', performSearch);
