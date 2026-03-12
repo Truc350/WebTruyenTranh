@@ -5,9 +5,6 @@ import com.google.gson.JsonParser;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import org.eclipse.tags.shaded.org.apache.bcel.generic.FCMPG;
-import org.json.JSONObject;
-import vn.edu.hcmuaf.fit.ltw_nhom5.dao.FCMTokenDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.dao.NotificationDAO;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 
@@ -27,7 +24,6 @@ public class SaveFCMTokenServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         try {
-            // Kiểm tra user đã login chưa
             User user = (User) request.getSession().getAttribute("currentUser");
             if (user == null) {
                 response.setStatus(401);
@@ -35,7 +31,6 @@ public class SaveFCMTokenServlet extends HttpServlet {
                 return;
             }
 
-            // Đọc request body
             BufferedReader reader = request.getReader();
             StringBuilder sb = new StringBuilder();
             String line;
@@ -43,7 +38,6 @@ public class SaveFCMTokenServlet extends HttpServlet {
                 sb.append(line);
             }
 
-            // Parse JSON
             JsonObject json = JsonParser.parseString(sb.toString()).getAsJsonObject();
             String token = json.get("token").getAsString();
 
@@ -53,7 +47,6 @@ public class SaveFCMTokenServlet extends HttpServlet {
                 return;
             }
 
-            // Lưu vào database
             NotificationDAO.getInstance().saveFCMToken(user.getId(), token);
 
             response.getWriter().write("{\"success\": true, \"message\": \"FCM token saved\"}");

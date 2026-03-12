@@ -105,9 +105,6 @@ public class UserDao {
 
     /**
      * Cap nhat diem thuong cua user
-     *
-     * @param userId
-     * @param newPoints
      */
     public boolean updateUserPoints(int userId, int newPoints) {
         return jdbi.withHandle(handle -> {
@@ -120,57 +117,6 @@ public class UserDao {
         });
     }
 
-    /**
-     * Thêm điểm cho user (tích lũy)
-     *
-     * @param userId      ID của user
-     * @param pointsToAdd Số điểm cần thêm
-     * @return true nếu thành công
-     */
-    public boolean addUserPoints(int userId, int pointsToAdd) {
-        return jdbi.withHandle(handle -> {
-            int updated = handle.createUpdate(
-                            "UPDATE users SET points = points + ? WHERE id = ?")
-                    .bind(0, pointsToAdd)
-                    .bind(1, userId)
-                    .execute();
-            return updated > 0;
-        });
-    }
-
-    /**
-     * Trừ điểm của user
-     *
-     * @param userId           ID của user
-     * @param pointsToSubtract Số điểm cần trừ
-     * @return true nếu thành công
-     */
-    public boolean subtractUserPoints(int userId, int pointsToSubtract) {
-        return jdbi.withHandle(handle -> {
-            int updated = handle.createUpdate(
-                            "UPDATE users SET points = GREATEST(points - ?, 0) WHERE id = ?")
-                    .bind(0, pointsToSubtract)
-                    .bind(1, userId)
-                    .execute();
-            return updated > 0;
-        });
-    }
-
-    /**
-     * Lấy số điểm hiện tại của user
-     *
-     * @param userId ID của user
-     * @return Số điểm của user
-     */
-    public int getUserPoints(int userId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT points FROM users WHERE id = ?")
-                        .bind(0, userId)
-                        .mapTo(Integer.class)
-                        .findOne()
-                        .orElse(0)
-        );
-    }
 
     public boolean updatePassword(int userId, String newPasswordHash) {
         return JdbiConnector.get().withHandle(handle ->
@@ -192,8 +138,6 @@ public class UserDao {
 
     /**
      * Lấy tất cả users (chỉ customer, không lấy admin)
-     *
-     * @return Danh sách user
      */
     public List<User> getAllCustomers() {
         return jdbi.withHandle(handle ->
@@ -205,23 +149,7 @@ public class UserDao {
     }
 
     /**
-     * Đếm tổng số customer
-     *
-     * @return Tổng số customer
-     */
-    public int countAllCustomers() {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM users WHERE role = 'customer' AND is_deleted = false")
-                        .mapTo(Integer.class)
-                        .one()
-        );
-    }
-
-    /**
      * Tìm kiếm user theo tên hoặc email
-     *
-     * @param keyword từ khóa tìm kiếm
-     * @return Danh sách user tìm được
      */
     public List<User> searchCustomers(String keyword) {
         return jdbi.withHandle(handle -> {
@@ -231,10 +159,8 @@ public class UserDao {
                     "SELECT * FROM users WHERE role = 'user' AND is_deleted = 0 AND ("
             );
 
-            // Luôn tìm theo tên, email, username
             sql.append("full_name LIKE :keyword OR email LIKE :keyword OR username LIKE :keyword");
 
-            // Nếu keyword khớp với tên cấp độ, THÊM điều kiện tìm theo membership_level
             if (membershipLevel != null) {
                 sql.append(" OR membership_level = :level");
             }
@@ -261,7 +187,6 @@ public class UserDao {
 
         String lowerKeyword = keyword.toLowerCase().trim();
 
-        // Mapping tiếng Việt và tiếng Anh sang tên cấp độ
         if (lowerKeyword.contains("thường") || lowerKeyword.contains("thuong") ||
                 lowerKeyword.equals("normal")) {
             return "Normal";
@@ -282,9 +207,6 @@ public class UserDao {
 
     /**
      * Lọc user theo cấp độ thành viên
-     *
-     * @param membershipLevel cấp độ (Normal, Silver, Gold, Platinum)
-     * @return Danh sách user theo cấp độ
      */
     public List<User> filterCustomersByMembershipLevel(String membershipLevel) {
         return jdbi.withHandle(handle -> {
@@ -294,17 +216,12 @@ public class UserDao {
                     .mapToBean(User.class)
                     .list();
 
-            System.out.println("Found users: " + users.size());
             return users;
         });
     }
 
     /**
      * Tìm kiếm và lọc kết hợp
-     *
-     * @param keyword         từ khóa tìm kiếm
-     * @param membershipLevel cấp độ thành viên
-     * @return Danh sách user
      */
     public List<User> searchAndFilterCustomers(String keyword, String membershipLevel) {
         StringBuilder sql = new StringBuilder(
@@ -338,10 +255,6 @@ public class UserDao {
 
     /**
      * Nâng cấp membership level của user
-     *
-     * @param userId   ID của user
-     * @param newLevel cấp độ mới (Normal, Silver, Gold, Platinum)
-     * @return true nếu thành công
      */
     public boolean upgradeMembershipLevel(int userId, String newLevel) {
         return jdbi.withHandle(handle ->
@@ -354,9 +267,6 @@ public class UserDao {
 
     /**
      * Khóa tài khoản user (soft delete)
-     *
-     * @param userId ID của user cần khóa
-     * @return true nếu thành công
      */
     public boolean lockUserAccount(int userId) {
         return jdbi.withHandle(handle ->
@@ -364,39 +274,6 @@ public class UserDao {
                                 "deleted_at = NOW(), updated_at = NOW() WHERE id = :id")
                         .bind("id", userId)
                         .execute() > 0
-        );
-    }
-
-    /**
-     * Mở khóa tài khoản user
-     *
-     * @param userId ID của user
-     * @return true nếu thành công
-     */
-    public boolean unlockUserAccount(int userId) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("UPDATE users SET is_active = 1, " +
-                                "deleted_at = NULL, updated_at = NOW() WHERE id = :id")
-                        .bind("id", userId)
-                        .execute() > 0
-        );
-    }
-
-    /**
-     * Lấy thống kê số lượng user theo membership level
-     *
-     * @return Map với key là level, value là số lượng
-     */
-    public List<MembershipStats> getMembershipStatistics() {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT membership_level as level, COUNT(*) as count " +
-                                "FROM users WHERE role = 'user' AND is_deleted = 0 " +
-                                "GROUP BY membership_level")
-                        .map((rs, ctx) -> new MembershipStats(
-                                rs.getString("level"),
-                                rs.getInt("count")
-                        ))
-                        .list()
         );
     }
 
@@ -428,76 +305,9 @@ public class UserDao {
         );
     }
 
-    /**
-     * Lấy số lần đăng nhập thất bại hiện tại
-     */
-    public int getFailedLoginAttempts(int userId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT failed_login_attempts FROM users WHERE id = :id")
-                        .bind("id", userId)
-                        .mapTo(Integer.class)
-                        .findOne()
-                        .orElse(0)
-        );
-    }
-
-    /**
-     * Inner class cho thống kê membership
-     */
-    public static class MembershipStats {
-        private String level;
-        private int count;
-
-        public MembershipStats(String level, int count) {
-            this.level = level;
-            this.count = count;
-        }
-
-        public String getLevel() {
-            return level;
-        }
-
-        public int getCount() {
-            return count;
-        }
-    }
-
-    /**
-     * Cập nhật tổng chi tiêu của user
-     *
-     * @param userId ID của user
-     * @param amount số tiền cần cộng thêm
-     * @return true nếu thành công
-     */
-    public boolean updateTotalSpent(int userId, double amount) {
-        return jdbi.withHandle(handle ->
-                handle.createUpdate("UPDATE users SET total_spent = total_spent + :amount, updated_at = NOW() WHERE id = :id")
-                        .bind("amount", amount)
-                        .bind("id", userId)
-                        .execute() > 0
-        );
-    }
-
-
-    /**
-     * Lấy danh sách user đã bị khóa
-     *
-     * @return Danh sách user bị khóa
-     */
-    public List<User> getLockedUsers() {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM users WHERE role = 'user' AND is_active = 0 " +
-                                "ORDER BY deleted_at DESC")
-                        .mapToBean(User.class)
-                        .list()
-        );
-    }
 
     /**
      * Đồng bộ total_spent từ orders đã completed
-     *
-     * @param userId ID của user
-     * @return true nếu thành công
      */
     public boolean syncTotalSpentFromOrders(int userId) {
         return jdbi.withHandle(handle -> {
@@ -519,8 +329,6 @@ public class UserDao {
 
     /**
      * Đồng bộ total_spent cho TẤT CẢ users
-     *
-     * @return Số lượng user được cập nhật
      */
     public int syncAllUsersTotalSpent() {
         return jdbi.withHandle(handle ->
@@ -540,10 +348,6 @@ public class UserDao {
 
     /**
      * Kiểm tra xem user có đủ điều kiện để nâng cấp lên level mới không
-     *
-     * @param userId   ID của user
-     * @param newLevel Cấp độ muốn nâng lên
-     * @return Map chứa kết quả: {eligible: true/false, message: "...", currentSpent: 0.0, requiredSpent: 0.0}
      */
     public Map<String, Object> checkUpgradeEligibility(int userId, String newLevel) {
         return jdbi.withHandle(handle -> {
@@ -640,7 +444,6 @@ public class UserDao {
 
     /**
      * Kiểm tra user có vi phạm quy định không
-     * @return Map chứa thông tin vi phạm
      */
     public Map<String, Object> checkUserViolation(int userId) {
         Map<String, Object> result = new HashMap<>();

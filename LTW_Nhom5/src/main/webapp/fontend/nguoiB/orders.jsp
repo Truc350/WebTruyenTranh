@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<fmt:setLocale value="vi_VN"/>
+<fmt:setBundle basename="java.text.DecimalFormatSymbols"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,17 +31,23 @@
                 <button class="scroll-btn scroll-left" title="Cuộn trái">&lt;</button>
                 <div class="tabs-container">
                     <button class="filter-tab ${currentFilter == 'pending' ? 'active' : ''}"
-                            data-filter="pending">Chờ xác nhận</button>
+                            data-filter="pending">Chờ xác nhận
+                    </button>
                     <button class="filter-tab ${currentFilter == 'shipping' ? 'active' : ''}"
-                            data-filter="shipping">Vận chuyển</button>
+                            data-filter="shipping">Vận chuyển
+                    </button>
                     <button class="filter-tab ${currentFilter == 'delivery' ? 'active' : ''}"
-                            data-filter="delivery">Chờ giao hàng</button>
+                            data-filter="delivery">Chờ giao hàng
+                    </button>
                     <button class="filter-tab ${currentFilter == 'completed' ? 'active' : ''}"
-                            data-filter="completed">Hoàn thành</button>
+                            data-filter="completed">Hoàn thành
+                    </button>
                     <button class="filter-tab ${currentFilter == 'canceled' ? 'active' : ''}"
-                            data-filter="canceled">Đã hủy</button>
+                            data-filter="canceled">Đã hủy
+                    </button>
                     <button class="filter-tab ${currentFilter == 'refund' ? 'active' : ''}"
-                            data-filter="refund">Trả hàng/Hoàn tiền</button>
+                            data-filter="refund">Trả hàng/Hoàn tiền
+                    </button>
                 </div>
                 <button class="scroll-btn scroll-right" title="Cuộn phải">&gt;</button>
             </div>
@@ -48,38 +55,35 @@
         </div>
 
         <div class="orders-list">
-            <%-- Loop qua các đơn hàng đã được filter từ servlet --%>
             <c:forEach var="orderDetail" items="${orderDetails}">
-                <c:set var="order" value="${orderDetail.order}" />
-                <c:set var="items" value="${orderDetail.items}" />
-
-                <%-- Map status sang CSS class và text tiếng Việt --%>
-                <c:set var="statusClass" value="" />
-                <c:set var="statusText" value="" />
+                <c:set var="order" value="${orderDetail.order}"/>
+                <c:set var="items" value="${orderDetail.items}"/>
+                <c:set var="statusClass" value=""/>
+                <c:set var="statusText" value=""/>
                 <c:choose>
                     <c:when test="${order.status == 'Pending'}">
-                        <c:set var="statusClass" value="pending" />
-                        <c:set var="statusText" value="Chờ xác nhận" />
+                        <c:set var="statusClass" value="pending"/>
+                        <c:set var="statusText" value="Chờ xác nhận"/>
                     </c:when>
                     <c:when test="${order.status == 'AwaitingPickup'}">
-                        <c:set var="statusClass" value="shipping" />
-                        <c:set var="statusText" value="Vận chuyển" />
+                        <c:set var="statusClass" value="shipping"/>
+                        <c:set var="statusText" value="Vận chuyển"/>
                     </c:when>
                     <c:when test="${order.status == 'Shipping'}">
-                        <c:set var="statusClass" value="delivery" />
-                        <c:set var="statusText" value="Chờ giao hàng" />
+                        <c:set var="statusClass" value="delivery"/>
+                        <c:set var="statusText" value="Chờ giao hàng"/>
                     </c:when>
                     <c:when test="${order.status == 'Completed'}">
-                        <c:set var="statusClass" value="completed" />
-                        <c:set var="statusText" value="Hoàn thành" />
+                        <c:set var="statusClass" value="completed"/>
+                        <c:set var="statusText" value="Hoàn thành"/>
                     </c:when>
                     <c:when test="${order.status == 'Cancelled'}">
-                        <c:set var="statusClass" value="canceled" />
-                        <c:set var="statusText" value="Đã hủy" />
+                        <c:set var="statusClass" value="canceled"/>
+                        <c:set var="statusText" value="Đã hủy"/>
                     </c:when>
                     <c:when test="${order.status == 'Returned'}">
-                        <c:set var="statusClass" value="refund" />
-                        <c:set var="statusText" value="Trả hàng/Hoàn tiền" />
+                        <c:set var="statusClass" value="refund"/>
+                        <c:set var="statusText" value="Trả hàng/Hoàn tiền"/>
                     </c:when>
                 </c:choose>
 
@@ -93,10 +97,9 @@
                     </div>
 
                     <div class="order-content">
-                            <%-- Loop qua các sản phẩm --%>
                         <c:forEach var="itemData" items="${items}">
-                            <c:set var="item" value="${itemData.item}" />
-                            <c:set var="comic" value="${itemData.comic}" />
+                            <c:set var="item" value="${itemData.item}"/>
+                            <c:set var="comic" value="${itemData.comic}"/>
 
                             <c:if test="${comic != null}">
                                 <div class="product-item">
@@ -110,46 +113,31 @@
 
                                         <div class="price-details">
                                             <c:choose>
-                                                <%-- Ưu tiên 1: Có Flash Sale --%>
                                                 <c:when test="${itemData.hasActiveFlashSale}">
-                                                    <%-- Giá gốc bị gạch (nếu có) --%>
                                                     <c:if test="${item.priceAtPurchase < comic.price}">
                                                         <del class="original-price">
-                                                            <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true"/>đ
+                                                            <fmt:formatNumber value="${comic.price}" type="number"
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
-                                                    <%-- Giá Flash Sale (màu đỏ) --%>
-                                                    <span class="discount-price" style="color: #ff4444; font-weight: 600;">
+                                                    <span class="discount-price"
+                                                          style="color: #ff4444; font-weight: 600;">
                 ${itemData.formattedDisplayPrice}đ
             </span>
-                                                    <%-- Badge Flash Sale --%>
-                                                    <%--                                                    <span class="flash-sale-badge">--%>
-                                                    <%--                ⚡ Flash Sale -${itemData.flashSaleDiscount}%--%>
-                                                    <%--            </span>--%>
+                                                    <span class="flash-sale-badge">
+                                                                    ⚡ Flash Sale -${itemData.flashSaleDiscount}%
+                                                                </span>
                                                 </c:when>
 
-                                                <%-- Ưu tiên 2: Giá đã thay đổi (không phải Flash Sale) --%>
-                                                <c:when test="${itemData.priceChanged && !itemData.hasActiveFlashSale}">
-                                                    <%-- Giá gốc bị gạch --%>
-                                                    <del class="original-price">
-                                                        <fmt:formatNumber value="${item.priceAtPurchase}" type="number" groupingUsed="true"/>đ
-                                                    </del>
-                                                    <%-- Giá mới (màu xanh) --%>
-                                                    <span class="discount-price" style="color: #28a745;">
-                ${itemData.formattedDisplayPrice}đ
-            </span>
-                                                    <%-- Badge giá mới --%>
-                                                    <span class="price-changed-badge">
-                Giá mới
-            </span>
-                                                </c:when>
+
 
                                                 <%-- Giá không đổi --%>
                                                 <c:otherwise>
                                                     <%-- Giá gốc bị gạch (nếu có giảm giá) --%>
                                                     <c:if test="${comic.discountPrice < comic.price}">
                                                         <del class="original-price">
-                                                            <fmt:formatNumber value="${comic.price}" type="number" groupingUsed="true"/>đ
+                                                            <fmt:formatNumber value="${comic.price}" type="number"
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
                                                     <%-- Giá hiện tại --%>
@@ -167,11 +155,9 @@
 
                     <div class="order-total">
                 <span>Tổng tiền: <strong>
-                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###" />đ
+                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/> đ
                 </strong></span>
                     </div>
-
-                        <%-- Action buttons dựa vào status --%>
                     <div class="order-actions">
                         <c:choose>
                             <c:when test="${order.status == 'Completed'}">
@@ -186,24 +172,23 @@
                             </c:when>
 
                             <c:when test="${order.status == 'Pending'}">
-                                <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
+                                <a href="https://zalo.me/0394158994" target="_blank">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
                                 <button class="action-btn cancel-order" onclick="openCancelPopup(${order.id})">
                                     Hủy đơn hàng
                                 </button>
                             </c:when>
-
                             <c:when test="${order.status == 'AwaitingPickup'}">
-                                <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
+                                <a href="https://zalo.me/0394158994" target="_blank">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
                             </c:when>
 
                             <c:when test="${order.status == 'Shipping'}">
                                 <button class="action-btn contact-seller" onclick="returnOrder(${order.id})">
-                                        Trả hàng
-                                        </button>
+                                    Trả hàng
+                                </button>
                                 <button class="action-btn receive-order" onclick="receiveOrder(${order.id})">
                                     Đã nhận hàng
                                 </button>
@@ -213,7 +198,7 @@
 
                                 <button class="action-btn buy-again" onclick="buyAgain(${order.id})">Mua lại</button>
 
-                                <a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">
+                                <a href="https://zalo.me/0394158994" target="_blank">
                                     <button class="action-btn contact-seller">Liên hệ</button>
                                 </a>
                             </c:when>
@@ -221,8 +206,6 @@
                     </div>
                 </div>
             </c:forEach>
-
-            <%-- Hiển thị message khi không có đơn hàng --%>
             <c:if test="${empty orderDetails}">
                 <div class="no-orders" style="text-align: center; padding: 60px 20px; color: #666; font-size: 16px;">
                     <div style="margin-bottom: 20px;">
@@ -237,89 +220,76 @@
     </div>
 
 </main>
-    <!-- Popup đánh giá -->
-    <div class="popup-backdrop-review" style="display: none;"></div>
-    <div class="container-write-review" style="display: none;">
-        <div class="header-review">
-            <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
-            <div class="rating-stars" id="rating-stars">
-                <span data-value="1">★</span>
-                <span data-value="2">★</span>
-                <span data-value="3">★</span>
-                <span data-value="4">★</span>
-                <span data-value="5">★</span>
-            </div>
-        </div>
-        <div class="field">
-            <label for="comment" class="nameDisplay">Nhận xét</label>
-            <textarea id="comment" placeholder="Nhập nhận xét của bạn"></textarea>
-        </div>
-        <div class="field-img">
-            <label for="image-upload" class="nameDisplay">Tải ảnh</label>
-            <input type="file" id="image-upload" accept="image/*" multiple/>
-            <div id="image-preview"></div>
-        </div>
-        <div class="actions-write-review">
-            <button class="cancel-review btn-reivew">Hủy</button>
-            <button class="submit-review btn-reivew primary">Gửi nhận xét</button>
+<div class="popup-backdrop-review" style="display: none;"></div>
+<div class="container-write-review" style="display: none;">
+    <div class="header-review">
+        <p id="title">VIẾT ĐÁNH GIÁ SẢN PHẨM</p>
+        <div class="rating-stars" id="rating-stars">
+            <span data-value="1">★</span>
+            <span data-value="2">★</span>
+            <span data-value="3">★</span>
+            <span data-value="4">★</span>
+            <span data-value="5">★</span>
         </div>
     </div>
-
-
-    <!-- Popup trả hàng -->
-    <div class="popup-backdrop-return" style="display: none;"></div>
-    <div class="container-write-review" id="return-popup" style="display: none;">
-        <div class="header-review">
-            <p id="title">YÊU CẦU TRẢ HÀNG</p>
-        </div>
-        <div class="field">
-            <label for="return-reason" class="nameDisplay">Lý do trả hàng</label>
-            <textarea id="return-reason" placeholder="Nhập lý do trả hàng của bạn"></textarea>
-        </div>
-        <div class="field-img">
-            <label for="return-image-upload" class="nameDisplay">Tải ảnh (nếu có)</label>
-            <input type="file" id="return-image-upload" accept="image/*" multiple/>
-            <div id="return-image-preview"></div>
-        </div>
-        <div class="actions-write-review">
-            <button class="cancel-return btn-reivew">Hủy</button>
-            <button class="submit-return btn-reivew primary">Gửi yêu cầu</button>
-        </div>
+    <div class="field">
+        <label for="comment" class="nameDisplay">Nhận xét</label>
+        <textarea id="comment" placeholder="Nhập nhận xét của bạn"></textarea>
     </div>
-
-
-
-    <!--Popup hủy đơn hàng -->
-    <div class="popup-backdrop-cancel" style="display: none;"></div>
-    <div class="container-write-review" id="cancel-popup" style="display: none;">
-        <div class="header-review">
-            <p id="title">HỦY ĐƠN HÀNG</p>
-        </div>
-        <div class="field">
-            <label for="cancel-reason" class="nameDisplay"></label>
-            <textarea id="cancel-reason" placeholder="Vui lòng nhập lý do hủy đơn"></textarea>
-        </div>
-        <div class="actions-write-review">
-            <button class="cancel-cancel btn-reivew">Đóng</button>
-            <button class="submit-cancel btn-reivew primary">Xác nhận hủy</button>
-        </div>
+    <div class="field-img">
+        <label for="image-upload" class="nameDisplay">Tải ảnh</label>
+        <input type="file" id="image-upload" accept="image/*" multiple/>
+        <div id="image-preview"></div>
     </div>
+    <div class="actions-write-review">
+        <button class="cancel-review btn-reivew">Hủy</button>
+        <button class="submit-review btn-reivew primary">Gửi nhận xét</button>
+    </div>
+</div>
+<div class="popup-backdrop-return" style="display: none;"></div>
+<div class="container-write-review" id="return-popup" style="display: none;">
+    <div class="header-review">
+        <p id="title">YÊU CẦU TRẢ HÀNG</p>
+    </div>
+    <div class="field">
+        <label for="return-reason" class="nameDisplay">Lý do trả hàng</label>
+        <textarea id="return-reason" placeholder="Nhập lý do trả hàng của bạn"></textarea>
+    </div>
+    <div class="field-img">
+        <label for="return-image-upload" class="nameDisplay">Tải ảnh (nếu có)</label>
+        <input type="file" id="return-image-upload" accept="image/*" multiple/>
+        <div id="return-image-preview"></div>
+    </div>
+    <div class="actions-write-review">
+        <button class="cancel-return btn-reivew">Hủy</button>
+        <button class="submit-return btn-reivew primary">Gửi yêu cầu</button>
+    </div>
+</div>
+
+
+<!--Popup hủy đơn hàng -->
+<div class="popup-backdrop-cancel" style="display: none;"></div>
+<div class="container-write-review" id="cancel-popup" style="display: none;">
+    <div class="header-review">
+        <p id="title">HỦY ĐƠN HÀNG</p>
+    </div>
+    <div class="field">
+        <label for="cancel-reason" class="nameDisplay"></label>
+        <textarea id="cancel-reason" placeholder="Vui lòng nhập lý do hủy đơn"></textarea>
+    </div>
+    <div class="actions-write-review">
+        <button class="cancel-cancel btn-reivew">Đóng</button>
+        <button class="submit-cancel btn-reivew primary">Xác nhận hủy</button>
+    </div>
+</div>
 
 
 <jsp:include page="/fontend/public/Footer.jsp"/>
 
 <script>
-
-    // Biến global để lưu orderId hiện tại
     let currentOrderId = null;
-
-    // Biến global cho return
     let currentReturnOrderId = null;
-
-    //Biến global cho cancel
     let currentCancelOrderId = null;
-
-    //Function mở popup hủy đơn hàng
     function openCancelPopup(orderId) {
         currentCancelOrderId = orderId;
         const cancelPopup = document.querySelector('#cancel-popup');
@@ -361,13 +331,13 @@
         // Nút scroll trái/phải cho tabs
         if (scrollLeftBtn) {
             scrollLeftBtn.addEventListener('click', () => {
-                tabsContainer.scrollBy({ left: -150, behavior: 'smooth' });
+                tabsContainer.scrollBy({left: -150, behavior: 'smooth'});
             });
         }
 
         if (scrollRightBtn) {
             scrollRightBtn.addEventListener('click', () => {
-                tabsContainer.scrollBy({ left: 150, behavior: 'smooth' });
+                tabsContainer.scrollBy({left: 150, behavior: 'smooth'});
             });
         }
 
@@ -386,7 +356,6 @@
             });
         });
 
-        // --- Popup đánh giá ---
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
         const evaluateBtn = document.querySelector('#Evaluate');
@@ -409,7 +378,6 @@
         if (cancelReviewBtn) cancelReviewBtn.addEventListener('click', closeReviewPopup);
         if (popupBackdropReview) popupBackdropReview.addEventListener('click', closeReviewPopup);
 
-        // Rating stars
         const ratingStars = document.querySelectorAll('#rating-stars span');
         ratingStars.forEach(star => {
             star.addEventListener('click', () => {
@@ -420,8 +388,6 @@
                 }
             });
         });
-
-        // Upload ảnh review
         const imageUpload = document.querySelector('#image-upload');
         if (imageUpload) {
             imageUpload.addEventListener('change', function () {
@@ -430,7 +396,7 @@
                 preview.innerHTML = '';
 
                 if (this.files.length > 3) {
-                    alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+                    showToastUser('Bạn chỉ được tải lên tối đa 3 ảnh!', 'error');
                 }
 
                 files.forEach(file => {
@@ -461,29 +427,22 @@
                 const imageUpload = document.querySelector('#image-upload');
 
                 if (!comment || rating === 0) {
-                    alert("Vui lòng nhập đầy đủ thông tin và chọn số sao!");
+                    showToastUser('Vui lòng nhập đầy đủ thông tin và chọn số sao!', 'error');
                     return;
                 }
-
                 if (!currentOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error');
                     return;
                 }
-
-                // Tạo FormData
                 const formData = new FormData();
                 formData.append('orderId', currentOrderId);
                 formData.append('rating', rating);
                 formData.append('comment', comment);
-
-                // Thêm ảnh
                 if (imageUpload.files.length > 0) {
                     for (let i = 0; i < imageUpload.files.length; i++) {
                         formData.append('images', imageUpload.files[i]);
                     }
                 }
-
-                // Disable nút submit để tránh spam
                 submitReviewBtn.disabled = true;
                 submitReviewBtn.textContent = 'Đang gửi...';
 
@@ -494,26 +453,23 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Gửi đánh giá thành công!');
+                            showToastUser('Gửi đánh giá thành công!');
                             closeReviewPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitReviewBtn.disabled = false;
                             submitReviewBtn.textContent = 'Gửi nhận xét';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitReviewBtn.disabled = false;
                         submitReviewBtn.textContent = 'Gửi nhận xét';
                     });
             });
         }
-
-
-        // === Popup trả hàng ===
         const returnPopup = document.querySelector('#return-popup');
         const popupBackdropReturn = document.querySelector('.popup-backdrop-return');
         const cancelReturnBtn = document.querySelector('.cancel-return');
@@ -533,7 +489,6 @@
             popupBackdropReturn.addEventListener('click', closeReturnPopup);
         }
 
-        // Upload ảnh trả hàng
         const returnImageUpload = document.querySelector('#return-image-upload');
         if (returnImageUpload) {
             returnImageUpload.addEventListener('change', function () {
@@ -542,7 +497,7 @@
                 preview.innerHTML = '';
 
                 if (this.files.length > 3) {
-                    alert('Bạn chỉ được tải lên tối đa 3 ảnh!');
+                    showToastUser('Bạn chỉ được tải lên tối đa 3 ảnh!', 'error');
                 }
 
                 files.forEach(file => {
@@ -564,20 +519,18 @@
                 this.files = dataTransfer.files;
             });
         }
-
-        // Submit trả hàng
         if (submitReturnBtn) {
             submitReturnBtn.addEventListener('click', () => {
                 const reason = document.querySelector('#return-reason').value.trim();
                 const returnImageUpload = document.querySelector('#return-image-upload');
 
                 if (!reason) {
-                    alert("Vui lòng nhập lý do trả hàng!");
+                    showToastUser('Vui lòng nhập lý do trả hàng!', 'error'); return;
                     return;
                 }
 
                 if (!currentReturnOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error'); return;
                     return;
                 }
 
@@ -601,26 +554,24 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Gửi yêu cầu trả hàng thành công!');
+                            showToastUser('Gửi yêu cầu trả hàng thành công!');
                             closeReturnPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitReturnBtn.disabled = false;
                             submitReturnBtn.textContent = 'Gửi yêu cầu';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitReturnBtn.disabled = false;
                         submitReturnBtn.textContent = 'Gửi yêu cầu';
                     });
             });
         }
 
-
-        //Popup hủy đơn hàng
         const cancelPopup = document.querySelector('#cancel-popup');
         const popupBackdropCancel = document.querySelector('.popup-backdrop-cancel');
         const cancelCancelBtn = document.querySelector('.cancel-cancel');
@@ -646,12 +597,12 @@
                 const reason = document.querySelector('#cancel-reason').value.trim();
 
                 if (!reason) {
-                    alert("Vui lòng nhập lý do hủy đơn hàng!");
+                    showToastUser('Vui lòng nhập lý do hủy đơn hàng!', 'error');
                     return;
                 }
 
                 if (!currentCancelOrderId) {
-                    alert("Không tìm thấy thông tin đơn hàng!");
+                    showToastUser('Không tìm thấy thông tin đơn hàng!', 'error');
                     return;
                 }
 
@@ -668,18 +619,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            alert('Hủy đơn hàng thành công!');
+                            showToastUser('Hủy đơn hàng thành công!');
                             closeCancelPopup();
                             location.reload();
                         } else {
-                            alert(data.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+                            showToastUser(data.message || 'Có lỗi xảy ra, vui lòng thử lại!', 'error');
                             submitCancelBtn.disabled = false;
                             submitCancelBtn.textContent = 'Xác nhận hủy';
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Có lỗi xảy ra!');
+                        showToastUser('Có lỗi xảy ra!', 'error');
                         submitCancelBtn.disabled = false;
                         submitCancelBtn.textContent = 'Xác nhận hủy';
                     });
@@ -688,19 +639,15 @@
 
 
     });
-
-    // FUNCTIONS FOR ORDER ACTIONS
     function openReviewPopup(orderId) {
         currentOrderId = orderId;
         const reviewContainer = document.querySelector('.container-write-review');
         const popupBackdropReview = document.querySelector('.popup-backdrop-review');
 
-        // Reset form
         document.querySelector('#comment').value = '';
         document.querySelector('#image-preview').innerHTML = '';
         document.querySelector('#image-upload').value = '';
 
-        // Reset rating stars
         document.querySelectorAll('#rating-stars span').forEach(s => s.classList.remove('active'));
 
         if (reviewContainer && popupBackdropReview) {
@@ -714,28 +661,26 @@
     }
 
     function receiveOrder(orderId) {
-        if (confirm('Xác nhận đã nhận hàng?')) {
+        showConfirmPopup('Xác nhận đã nhận hàng?', 'Xác nhận', () => {
             fetch('${pageContext.request.contextPath}/order-history', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: 'action=receive&orderId=' + orderId
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Xác nhận thành công!');
+                        showToastUser('Xác nhận nhận hàng thành công!');
                         location.reload();
                     } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại!');
+                        showToastUser('Có lỗi xảy ra, vui lòng thử lại!', 'error');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Có lỗi xảy ra!');
+                    showToastUser('Có lỗi xảy ra!', 'error');
                 });
-        }
+        });
     }
 
     function returnOrder(orderId) {
@@ -745,47 +690,115 @@
 </script>
 
 <script>
-    // Function mua lại - thêm tất cả sản phẩm trong đơn hàng vào giỏ
     function buyAgain(orderId) {
-        if (!confirm('Bạn muốn thêm tất cả sản phẩm trong đơn hàng này vào giỏ hàng?')) {
-            return;
-        }
-
         const btn = event.target;
-        btn.disabled = true;
-        btn.textContent = 'Đang xử lý...';
 
-        fetch('${pageContext.request.contextPath}/buy-again', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'orderId=' + orderId
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message || 'Đã thêm ' + data.addedCount + ' sản phẩm vào giỏ hàng!');
+        showConfirmPopup('Bạn muốn thêm sản phẩm trong đơn hàng này vào giỏ hàng?', 'Thêm vào giỏ hàng', () => {
+            btn.disabled = true;
+            btn.textContent = 'Đang xử lý...';
 
-                    // Hỏi có muốn chuyển đến giỏ hàng không
-                    if (confirm('Bạn có muốn xem giỏ hàng không?')) {
-                        window.location.href = '${pageContext.request.contextPath}/cart';
+            fetch('${pageContext.request.contextPath}/buy-again', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'orderId=' + orderId
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showConfirmPopup(
+                            data.message || 'Đã thêm ' + data.addedCount + ' sản phẩm vào giỏ hàng! Bạn có muốn xem giỏ hàng không?',
+                            'Xem giỏ hàng',
+                            () => {
+                                window.location.href = '${pageContext.request.contextPath}/cart';
+                            }
+                        );
+                        btn.disabled = false;
+                        btn.textContent = 'Mua lại';
                     } else {
+                        showConfirmPopup(data.message || 'Có lỗi xảy ra!', 'Đóng', null);
                         btn.disabled = false;
                         btn.textContent = 'Mua lại';
                     }
-                } else {
-                    alert(data.message || 'Có lỗi xảy ra!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showConfirmPopup('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'Đóng', null);
                     btn.disabled = false;
                     btn.textContent = 'Mua lại';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
-                btn.disabled = false;
-                btn.textContent = 'Mua lại';
-            });
+                });
+        });
+    }
+
+
+</script>
+<script>
+    function showConfirmPopup(message, confirmText = 'Xác nhận', onConfirm) {
+        if (!document.getElementById('rc-popup-style')) {
+            const s = document.createElement('style');
+            s.id = 'rc-popup-style';
+            s.textContent = `
+            .rc-overlay{position:fixed;inset:0;background:transparent;z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s ease}
+            .rc-overlay.show{opacity:1}
+            .rc-popup{background:#fff;border-radius:12px;padding:24px 24px 18px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;transform:translateY(16px) scale(.97);transition:transform .25s ease,opacity .25s ease;opacity:0}
+            .rc-overlay.show .rc-popup{transform:translateY(0) scale(1);opacity:1}
+            .rc-popup p{margin:0 0 20px;font-size:16px;color:#333;line-height:1.5;font-weight:600}
+            .rc-popup-actions{display:flex;gap:10px}
+            .rc-btn-cancel,.rc-btn-confirm{flex:1;padding:9px 0;border-radius:7px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s ease}
+            .rc-btn-cancel{background:#f3f3f3;color:#555}
+            .rc-btn-cancel:hover{background:#e8e8e8}
+            .rc-btn-confirm{background:linear-gradient(90deg,#28a745,#218838);color:#fff;box-shadow:0 3px 10px rgba(40,167,69,.3)}
+            .rc-btn-confirm:hover{background:linear-gradient(90deg,#218838,#1e7e34);transform:translateY(-1px)}
+        `;
+            document.head.appendChild(s);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'rc-overlay';
+        overlay.innerHTML =
+            '<div class="rc-popup">' +
+            '<p>' + message + '</p>' +
+            '<div class="rc-popup-actions">' +
+            '<button class="rc-btn-cancel">Hủy</button>' +
+            '<button class="rc-btn-confirm">' + confirmText + '</button>' +
+            '</div>' +
+            '</div>';
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => overlay.classList.add('show'));
+
+        function close(confirmed) {
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.remove(), 250);
+            if (confirmed && onConfirm) onConfirm();
+        }
+
+        overlay.querySelector('.rc-btn-confirm').addEventListener('click', () => close(true));
+        overlay.querySelector('.rc-btn-cancel').addEventListener('click', () => close(false));
+        document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', esc);
+                close(false);
+            }
+        });
+    }
+</script>
+
+<script>
+    function showToastUser(message, type = 'success') {
+        const existing = document.getElementById('user-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'user-toast';
+        toast.classList.add(type);
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 </script>
 </body>

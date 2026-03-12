@@ -2,7 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<fmt:setLocale value="vi_VN"/>
+<fmt:setBundle basename="java.text.DecimalFormatSymbols"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,33 +64,6 @@
                     }
                 }
             %>
-
-
-
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">⚡</div>--%>
-<%--                    <p>Hoàn thành đơn hàng</p>--%>
-<%--                </div>--%>
-<%--                <span class="value plus">+200 C-Point</span>--%>
-<%--            </div>--%>
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">⚡</div>--%>
-<%--                    <p>Hoàn thành đơn hàng</p>--%>
-<%--                </div>--%>
-<%--                <span class="value plus">+500 C-Point</span>--%>
-<%--            </div>--%>
-
-<%--            <div class="item">--%>
-<%--                <div class="left">--%>
-<%--                    <div class="light-icon">🎁</div>--%>
-<%--                    <p>Đổi voucher 10K</p>--%>
-<%--                </div>--%>
-<%--                <span class="value minus">-1000 C-Point</span>--%>
-<%--            </div>--%>
         </div>
     </div>
 </main>

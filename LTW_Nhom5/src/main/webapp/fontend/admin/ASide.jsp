@@ -70,8 +70,6 @@
 
         sidebarLinks.forEach(link => {
             const linkPath = new URL(link.href).pathname;
-
-            // Nếu URL hiện tại BẮT ĐẦU BẰNG link (ổn cho servlet + query param)
             if (currentPath.startsWith(linkPath)) {
                 link.classList.add("active");
             }

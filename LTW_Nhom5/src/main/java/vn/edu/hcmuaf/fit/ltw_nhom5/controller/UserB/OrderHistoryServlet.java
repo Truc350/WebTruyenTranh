@@ -49,9 +49,6 @@ public class OrderHistoryServlet extends HttpServlet {
             return;
         }
 
-        System.out.println("========== ORDER HISTORY DEBUG ==========");
-        System.out.println("User: " + user.getUsername() + " (ID: " + user.getId() + ")");
-
         // Lấy filter từ parameter
         String filter = request.getParameter("filter");
         if (filter == null || filter.isEmpty()) {
@@ -76,19 +73,13 @@ public class OrderHistoryServlet extends HttpServlet {
                     .filter(o -> o.getStatus().equals(dbStatus))
                     .collect(java.util.stream.Collectors.toList());
         }
-        System.out.println("Filtered orders: " + filteredOrders.size());
 
-        // NumberFormat để format giá
         NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
 
         // Lấy thông tin chi tiết
         List<Map<String, Object>> orderDetails = new ArrayList<>();
 
         for (Order order : filteredOrders) {
-            System.out.println("\n--- Order #" + order.getId() + " ---");
-            System.out.println("Date: " + order.getOrderDate());
-            System.out.println("Status: " + order.getStatus());
-            System.out.println("Total: " + order.getTotalAmount());
 
             Map<String, Object> orderData = new HashMap<>();
             orderData.put("order", order);
@@ -96,42 +87,29 @@ public class OrderHistoryServlet extends HttpServlet {
             // Kiểm tra đã review chưa
             boolean hasReviewed = reviewDAO.hasUserReviewedOrder(user.getId(), order.getId());
             orderData.put("hasReviewed", hasReviewed);
-            System.out.println("Has reviewed: " + hasReviewed);
 
             // Lấy order items
             List<OrderItem> items = orderDAO.getOrderItems(order.getId());
-            System.out.println("Items count: " + items.size());
 
             List<Map<String, Object>> itemsWithComics = new ArrayList<>();
 
             for (OrderItem item : items) {
-                System.out.println("  Item - Comic ID: " + item.getComicId() +
-                        ", Qty: " + item.getQuantity() +
-                        ", Price: " + item.getPriceAtPurchase());
-
                 Map<String, Object> itemData = new HashMap<>();
                 itemData.put("item", item);
 
                 Comic comic = comicDAO.getComicById(item.getComicId());
-                System.out.println("item.getComicId() " + item.getComicId());
 
                 if (comic != null) {
-                    System.out.println("    ✓ Comic found: " + comic.getNameComics());
-                    System.out.println("      Thumbnail: " + comic.getThumbnailUrl());
                     itemData.put("comic", comic);
 
-                    // ===== THÊM LOGIC XỬ LÝ GIÁ =====
                     double priceAtPurchase = item.getPriceAtPurchase();
                     double currentPrice = comic.getDiscountPrice();
 
-                    // Format giá đã mua
                     itemData.put("formattedPriceAtPurchase", currencyFormat.format(priceAtPurchase));
 
-                    // Kiểm tra có Flash Sale không
                     Map<String, Object> flashSaleInfo = flashSaleComicsDAO.getFlashSaleInfoByComicId(comic.getId());
 
                     if (flashSaleInfo != null) {
-                        // ⚡ Có Flash Sale
                         Object discountObj = flashSaleInfo.get("discount_percent");
                         Double discountPercent = (discountObj instanceof Number)
                                 ? ((Number) discountObj).doubleValue()
@@ -144,21 +122,12 @@ public class OrderHistoryServlet extends HttpServlet {
                             itemData.put("flashSaleDiscount", discountPercent.intValue());
                             itemData.put("formattedDisplayPrice", currencyFormat.format(flashSalePrice));
                             itemData.put("priceChanged", Math.abs(priceAtPurchase - flashSalePrice) > 0.01);
-
-                            System.out.println("      ⚡ Flash Sale: " + discountPercent + "%");
-                            System.out.println("      Flash Sale price: " + currencyFormat.format(flashSalePrice) + "đ");
                         }
                     } else {
-                        // ℹ️ Không có Flash Sale
                         itemData.put("hasActiveFlashSale", false);
                         itemData.put("formattedDisplayPrice", currencyFormat.format(currentPrice));
                         itemData.put("priceChanged", Math.abs(priceAtPurchase - currentPrice) > 0.01);
-
-                        System.out.println("      Current price: " + currencyFormat.format(currentPrice) + "đ");
-                        System.out.println("      Price changed: " + itemData.get("priceChanged"));
                     }
-                } else {
-                    System.out.println("    ✗ Comic NOT FOUND for ID: " + item.getComicId());
                 }
 
                 itemsWithComics.add(itemData);
@@ -167,9 +136,6 @@ public class OrderHistoryServlet extends HttpServlet {
             orderData.put("items", itemsWithComics);
             orderDetails.add(orderData);
         }
-
-        System.out.println("\nTotal orderDetails: " + orderDetails.size());
-        System.out.println("=========================================\n");
 
         request.setAttribute("orderDetails", orderDetails);
         request.setAttribute("currentFilter", filter);
@@ -200,7 +166,6 @@ public class OrderHistoryServlet extends HttpServlet {
                 case "cancel":
                     String cancelReason = request.getParameter("reason");
                     success = orderDAO.cancelOrderWithHistory(orderId, user.getId(), cancelReason);
-                    System.out.println("Cancel order #" + orderId + " with reason: " + cancelReason + " - " + success);
 
                     if (success) {
                         OrderViolationService.getInstance().checkCancelViolation(user.getId());
@@ -213,13 +178,11 @@ public class OrderHistoryServlet extends HttpServlet {
                 case "receive":
                     success = orderDAO.updateOrderStatusWithPoints(orderId, "Completed");
                     message = success ? "Đã xác nhận nhận hàng" : "Không thể cập nhật";
-                    System.out.println("Receive order #" + orderId + ": " + success);
                     break;
 
                 case "return":
                     success = orderDAO.updateOrderStatus(orderId, "Returned");
                     message = success ? "Đã yêu cầu trả hàng" : "Không thể trả hàng";
-                    System.out.println("Return order #" + orderId + ": " + success);
                     break;
 
                 default:
@@ -243,7 +206,6 @@ public class OrderHistoryServlet extends HttpServlet {
                 message.replace("\"", "\\\"").replace("\n", " ")
         );
 
-        System.out.println("📤 Response JSON: " + jsonResponse);
         response.getWriter().write(jsonResponse);
     }
 

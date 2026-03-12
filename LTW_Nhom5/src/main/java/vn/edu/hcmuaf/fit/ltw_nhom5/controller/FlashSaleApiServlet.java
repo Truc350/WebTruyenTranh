@@ -39,7 +39,6 @@ public class FlashSaleApiServlet extends HttpServlet {
             return;
         }
 
-        // Parse path: /api/flash-sale/{id}/comics
         String[] parts = pathInfo.split("/");
 
         if (parts.length < 2) {
@@ -50,12 +49,9 @@ public class FlashSaleApiServlet extends HttpServlet {
         try {
             int flashSaleId = Integer.parseInt(parts[1]);
 
-            // Kiểm tra endpoint
             if (parts.length >= 3 && "comics".equals(parts[2])) {
-                // Endpoint: /api/flash-sale/{id}/comics
                 getFlashSaleComics(flashSaleId, resp);
             } else {
-                // Endpoint: /api/flash-sale/{id}
                 getFlashSaleDetail(flashSaleId, resp);
             }
 
@@ -67,15 +63,10 @@ public class FlashSaleApiServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Lấy thông tin Flash Sale và danh sách comics ĐỘC QUYỀN
-     * CHỈ HIỂN THỊ comics nếu Flash Sale này có discount CAO NHẤT
-     */
+
     private void getFlashSaleComics(int flashSaleId, HttpServletResponse resp) throws IOException {
-        // Cập nhật status trước
         flashSaleDAO.updateStatuses();
 
-        // Lấy thông tin Flash Sale
         FlashSale flashSale = flashSaleDAO.getById(flashSaleId);
 
         if (flashSale == null) {
@@ -83,13 +74,10 @@ public class FlashSaleApiServlet extends HttpServlet {
             return;
         }
 
-        // ✅ ĐỔI TỪ getComicsForFlashSale THÀNH getExclusiveComicsForFlashSale
         List<Map<String, Object>> comics = flashSaleService.getExclusiveComicsForFlashSale(flashSaleId);
 
-        // Tạo response
         Map<String, Object> data = new HashMap<>();
 
-        // Thông tin Flash Sale
         Map<String, Object> flashSaleInfo = new HashMap<>();
         flashSaleInfo.put("id", flashSale.getId());
         flashSaleInfo.put("name", flashSale.getName());
@@ -98,7 +86,6 @@ public class FlashSaleApiServlet extends HttpServlet {
         flashSaleInfo.put("startTime", flashSale.getStartTime().toString());
         flashSaleInfo.put("endTime", flashSale.getEndTime().toString());
 
-        // Thêm timestamps cho countdown
         long startTimeMillis = flashSale.getStartTime()
                 .atZone(ZoneId.systemDefault())
                 .toInstant()
@@ -120,15 +107,9 @@ public class FlashSaleApiServlet extends HttpServlet {
 
         resp.getWriter().write(gson.toJson(response));
 
-        System.out.println("✅ API Response for Flash Sale ID " + flashSaleId +
-                " '" + flashSale.getName() + "' (" + flashSale.getDiscountPercent() + "%)" +
-                " (Status: " + flashSale.getStatus() + ") with " + comics.size() + " EXCLUSIVE comics");
     }
 
-    /**
-     * Lấy thông tin chi tiết Flash Sale
-     * API: GET /api/flash-sale/{id}
-     */
+
     private void getFlashSaleDetail(int flashSaleId, HttpServletResponse resp) throws IOException {
         FlashSale flashSale = flashSaleDAO.getById(flashSaleId);
 
@@ -152,9 +133,7 @@ public class FlashSaleApiServlet extends HttpServlet {
         resp.getWriter().write(gson.toJson(response));
     }
 
-    /**
-     * Gửi error response
-     */
+
     private void sendErrorResponse(HttpServletResponse resp, String message) throws IOException {
         Map<String, Object> response = new HashMap<>();
         response.put("success", false);

@@ -18,10 +18,8 @@ public class ListSeriesServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing ListSeriesServlet...");
         seriesDAO = new SeriesDAO();
         gson = new Gson();
-        System.out.println("✅ ListSeriesServlet initialized!");
     }
 
     @Override
@@ -34,17 +32,13 @@ public class ListSeriesServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            System.out.println("📚 Getting all series...");
-
             List<Series> seriesList = seriesDAO.getAllSeries();
 
             if (seriesList == null || seriesList.isEmpty()) {
-                System.out.println("⚠️ No series found");
                 result.put("success", true);
                 result.put("series", new ArrayList<>());
                 result.put("message", "Chưa có bộ truyện nào");
             } else {
-                // Chuyển đổi sang DTO
                 List<Map<String, Object>> seriesDataList = new ArrayList<>();
 
                 for (Series series : seriesList) {
@@ -59,11 +53,9 @@ public class ListSeriesServlet extends HttpServlet {
 
                 result.put("success", true);
                 result.put("series", seriesDataList);
-                System.out.println("✅ Found " + seriesList.size() + " series");
             }
 
         } catch (Exception e) {
-            System.err.println("❌ Error: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi server: " + e.getMessage());

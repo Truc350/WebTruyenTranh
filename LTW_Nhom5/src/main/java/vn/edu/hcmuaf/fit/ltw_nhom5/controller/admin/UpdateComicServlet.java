@@ -26,10 +26,8 @@ public class UpdateComicServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("🔧 Initializing UpdateComicServlet...");
         comicDAO = new ComicDAO();
         gson = new Gson();
-        System.out.println("✅ UpdateComicServlet initialized!");
     }
 
     @Override
@@ -43,9 +41,6 @@ public class UpdateComicServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            System.out.println("========== UPDATE COMIC REQUEST ==========");
-
-            // 1. Lấy comic ID
             String comicIdStr = request.getParameter("comicId");
             if (comicIdStr == null || comicIdStr.trim().isEmpty()) {
                 result.put("success", false);
@@ -55,9 +50,7 @@ public class UpdateComicServlet extends HttpServlet {
             }
 
             int comicId = Integer.parseInt(comicIdStr);
-            System.out.println("📖 Updating comic ID: " + comicId);
 
-            // 2. Kiểm tra truyện có tồn tại không
             Comic existingComic = comicDAO.getComicById3(comicId);
             if (existingComic == null) {
                 result.put("success", false);
@@ -66,18 +59,12 @@ public class UpdateComicServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Lấy dữ liệu từ form
             Comic comic = extractComicFromRequest(request);
             comic.setId(comicId);
 
             String authorName = request.getParameter("author");
             String publisherName = request.getParameter("publisher");
 
-            System.out.println("Comic Name: " + comic.getNameComics());
-            System.out.println("Author: " + authorName);
-            System.out.println("Publisher: " + publisherName);
-
-            // 4. Validate
             List<String> errors = validateComic(comic);
             if (!errors.isEmpty()) {
                 result.put("success", false);
@@ -87,24 +74,19 @@ public class UpdateComicServlet extends HttpServlet {
                 return;
             }
 
-            // 5. Upload ảnh bìa mới (nếu có)
             Part coverPart = request.getPart("coverImage");
             if (coverPart != null && coverPart.getSize() > 0) {
                 try {
                     String coverUrl = CloudinaryService.uploadImage(coverPart, "comics/covers");
                     if (coverUrl != null) {
                         comic.setThumbnailUrl(coverUrl);
-                        System.out.println("✅ New cover uploaded: " + coverUrl);
                     }
                 } catch (IOException e) {
-                    System.err.println("⚠️ Warning: Could not upload cover: " + e.getMessage());
                 }
             } else {
-                // Giữ nguyên ảnh cũ
                 comic.setThumbnailUrl(existingComic.getThumbnailUrl());
             }
 
-            // 6. Xử lý Author & Publisher
             int authorId = -1;
             int publisherId = -1;
 
@@ -119,7 +101,6 @@ public class UpdateComicServlet extends HttpServlet {
             comic.setAuthor(authorName != null ? authorName.trim() : null);
             comic.setPublisher(publisherName != null ? publisherName.trim() : null);
 
-            // 7. Cập nhật Comic trong DB
             boolean updated = comicDAO.updateComic(comic);
 
             if (!updated) {
@@ -129,9 +110,7 @@ public class UpdateComicServlet extends HttpServlet {
                 return;
             }
 
-            System.out.println("✅ Comic updated successfully");
 
-            // 8. Cập nhật Author & Publisher links
             if (authorId > 0) {
                 comicDAO.updateComicAuthor(comicId, authorId);
             }
@@ -140,7 +119,6 @@ public class UpdateComicServlet extends HttpServlet {
                 comicDAO.updateComicPublisher(comicId, publisherId);
             }
 
-            // 9. Upload ảnh chi tiết mới (nếu có)
             List<ComicImage> newImages = new ArrayList<>();
 
             for (int i = 1; i <= 3; i++) {
@@ -155,11 +133,8 @@ public class UpdateComicServlet extends HttpServlet {
                             img.setImageType("detail");
                             img.setSortOrder(i);
                             newImages.add(img);
-
-                            System.out.println("✅ Detail image " + i + " uploaded: " + imageUrl);
                         }
                     } catch (IOException e) {
-                        System.err.println("⚠️ Warning: Could not upload detail image " + i + ": " + e.getMessage());
                     }
                 }
             }
@@ -168,7 +143,6 @@ public class UpdateComicServlet extends HttpServlet {
             if (!newImages.isEmpty()) {
                 comicDAO.deleteComicImages(comicId);
                 comicDAO.insertComicImages(newImages);
-                System.out.println("✅ Updated " + newImages.size() + " detail images");
             }
 
             // 10. Tạo response
@@ -184,11 +158,7 @@ public class UpdateComicServlet extends HttpServlet {
             result.put("message", "Cập nhật truyện thành công");
             result.put("comic", comicData);
 
-            System.out.println("✅ Response: " + gson.toJson(result));
-            System.out.println("======================================");
-
         } catch (Exception e) {
-            System.err.println("❌ Error in UpdateComicServlet: " + e.getMessage());
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi: " + e.getMessage());
@@ -235,7 +205,6 @@ public class UpdateComicServlet extends HttpServlet {
         }
 
         comic.setStatus("available");
-
         return comic;
     }
 
@@ -257,7 +226,6 @@ public class UpdateComicServlet extends HttpServlet {
         if (comic.getCategoryId() == null) {
             errors.add("Vui lòng chọn thể loại");
         }
-
         return errors;
     }
 }

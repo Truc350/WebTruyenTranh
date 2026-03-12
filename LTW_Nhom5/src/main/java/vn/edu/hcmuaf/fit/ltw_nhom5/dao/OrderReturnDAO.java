@@ -35,7 +35,6 @@ public class OrderReturnDAO {
                     .mapTo(Integer.class)
                     .one();
 
-            System.out.println("Order return created with ID: " + returnId);
             return returnId;
         });
     }
@@ -56,20 +55,6 @@ public class OrderReturnDAO {
     }
 
     /**
-     * Lấy danh sách yêu cầu trả hàng theo order_id
-     */
-    public List<OrderReturn> getReturnsByOrderId(int orderId) {
-        String sql = "SELECT * FROM order_returns WHERE order_id = ? ORDER BY created_at DESC";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, orderId)
-                        .mapToBean(OrderReturn.class)
-                        .list()
-        );
-    }
-
-    /**
      * Lấy ảnh trả hàng theo order_return_id
      */
     public List<OrderReturnImage> getReturnImages(int orderReturnId) {
@@ -83,27 +68,7 @@ public class OrderReturnDAO {
         );
     }
 
-    /**
-     * Cập nhật trạng thái yêu cầu trả hàng
-     */
-    public boolean updateReturnStatus(int returnId, String status) {
-        String sql = "UPDATE order_returns SET status = ? WHERE id = ?";
 
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind(0, status)
-                        .bind(1, returnId)
-                        .execute() > 0
-        );
-    }
-
-    /**
-     * Lấy tất cả yêu cầu trả hàng với thông tin đơn hàng và khách hàng
-     */
-    /**
-     * Lấy tất cả yêu cầu trả hàng với thông tin đơn hàng và khách hàng
-     * ✅ GỘP THEO ĐƠN HÀNG (ORDER_ID) THAY VÌ THEO SẢN PHẨM
-     */
     public List<Map<String, Object>> getAllReturnsWithDetails() {
         String sql = """
         SELECT 
@@ -226,9 +191,6 @@ public class OrderReturnDAO {
                 return false;
             }
 
-            // Hoàn tiền cho khách hàng (tùy logic nghiệp vụ)
-            // TODO: Thêm logic hoàn tiền nếu cần
-
             return true;
         });
     }
@@ -252,11 +214,9 @@ public class OrderReturnDAO {
                             .execute()
             );
 
-            System.out.println("✅ Rejected refund ID: " + returnId);
             return rowsAffected > 0;
 
         } catch (Exception e) {
-            System.err.println("❌ Error rejecting refund: " + e.getMessage());
             e.printStackTrace();
             return false;
         }

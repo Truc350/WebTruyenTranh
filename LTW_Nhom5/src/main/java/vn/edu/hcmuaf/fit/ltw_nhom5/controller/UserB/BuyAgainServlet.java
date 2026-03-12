@@ -26,7 +26,6 @@ public class BuyAgainServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
 
-        // Kiểm tra đăng nhập
         if (currentUser == null) {
             response.getWriter().write("{\"success\":false,\"message\":\"Vui lòng đăng nhập!\"}");
             return;
@@ -35,16 +34,12 @@ public class BuyAgainServlet extends HttpServlet {
         try {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
 
-            System.out.println("===== MUA LẠI ĐơN HÀNG #" + orderId + " =====");
-
-            // Lấy giỏ hàng từ session
             Cart cart = (Cart) session.getAttribute("cart");
             if (cart == null) {
                 cart = new Cart();
                 session.setAttribute("cart", cart);
             }
 
-            // Lấy danh sách sản phẩm trong đơn hàng
             OrderDAO orderDAO = new OrderDAO();
             ComicDAO comicDAO = new ComicDAO();
 
@@ -58,20 +53,15 @@ public class BuyAgainServlet extends HttpServlet {
                 Comic comic = comicDAO.getComicById(item.getComicId());
 
                 if (comic == null) {
-                    System.out.println("✗ Comic ID " + item.getComicId() + " không tồn tại");
                     continue;
                 }
 
-                // Kiểm tra tồn kho
                 CartItem existingItem = cart.get(comic.getId());
                 int currentQtyInCart = (existingItem != null) ? existingItem.getQuantity() : 0;
                 int requestedQty = item.getQuantity();
                 int totalQty = currentQtyInCart + requestedQty;
 
                 if (comic.getStockQuantity() < totalQty) {
-                    System.out.println("✗ " + comic.getNameComics() +
-                            " - Không đủ hàng (còn " + comic.getStockQuantity() +
-                            ", yêu cầu " + totalQty + ")");
                     outOfStockCount++;
                     errorMsg.append(comic.getNameComics())
                             .append(" (chỉ còn ")
@@ -80,19 +70,12 @@ public class BuyAgainServlet extends HttpServlet {
                     continue;
                 }
 
-                // Thêm vào giỏ hàng
                 cart.addItem(comic, requestedQty);
                 addedCount++;
-                System.out.println("✓ Đã thêm " + comic.getNameComics() +
-                        " x" + requestedQty);
             }
 
             // Lưu lại giỏ hàng
             session.setAttribute("cart", cart);
-
-            System.out.println("Kết quả: Thêm " + addedCount + "/" + orderItems.size() +
-                    " sản phẩm");
-            System.out.println("=======================================");
 
             // Tạo response
             Map<String, Object> result = new HashMap<>();
@@ -115,7 +98,6 @@ public class BuyAgainServlet extends HttpServlet {
                 result.put("message", "Không thể thêm sản phẩm nào. Vui lòng kiểm tra lại!");
             }
 
-            // Trả về JSON
             Gson gson = new Gson();
             response.getWriter().write(gson.toJson(result));
 

@@ -66,9 +66,6 @@ document.addEventListener("DOMContentLoaded", function () {
     else imgs.forEach(img => img.addEventListener('load', () => { if (++loaded === imgs.length) { updateSlider(); interval = setInterval(nextSlide, 3000); } }));
 });
 
-// ============================================
-// FLASH SALE COUNTDOWN (TRANG CHỦ)
-// ============================================
 function initFlashSaleCountdown() {
     const countdownElement = document.getElementById('flash-sale-countdown');
 
@@ -78,55 +75,41 @@ function initFlashSaleCountdown() {
     }
 
     const endTimeStr = countdownElement.getAttribute('data-end-time');
-
     if (!endTimeStr) {
-        console.error('❌ No end time data attribute found');
+        console.error(' No end time data attribute found');
         countdownElement.innerHTML = 'Không có thông tin thời gian';
         return;
     }
-
     const endTimeMillis = parseInt(endTimeStr);
-
     if (!endTimeMillis || isNaN(endTimeMillis)) {
-        console.error('❌ Invalid end time:', endTimeStr);
+        console.error('Invalid end time:', endTimeStr);
         countdownElement.innerHTML = 'Thời gian không hợp lệ';
         return;
     }
-
-    console.log('⏰ Flash Sale Countdown initialized');
+    console.log('Flash Sale Countdown initialized');
     console.log('   End time millis:', endTimeMillis);
     console.log('   End time date:', new Date(endTimeMillis));
     console.log('   Current time:', new Date());
-
     let countdownInterval;
-
     function updateCountdown() {
         const now = new Date().getTime();
         const distance = endTimeMillis - now;
-
-        console.log('⏱️ Distance:', distance, 'ms');
-
+        console.log('Distance:', distance, 'ms');
         if (distance < 0) {
             countdownElement.innerHTML = '<span style="color: #f44336;">⏰ Flash Sale đã kết thúc!</span>';
             if (countdownInterval) {
                 clearInterval(countdownInterval);
             }
-
-            // Reload trang sau 3 giây
             setTimeout(() => {
-                console.log('🔄 Reloading page...');
+                console.log('Reloading page...');
                 location.reload();
             }, 3000);
             return;
         }
-
-        // Tính toán thời gian
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Hiển thị
         let timeString = '';
         if (days > 0) {
             timeString = `${days} ngày ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -136,21 +119,12 @@ function initFlashSaleCountdown() {
 
         countdownElement.innerHTML = `⏰ Kết thúc sau: <strong style="font-size: 18px;">${timeString}</strong>`;
     }
-
-    // Cập nhật ngay lập tức
     updateCountdown();
-
-    // Cập nhật mỗi giây
     countdownInterval = setInterval(updateCountdown, 1000);
 }
-
-// Gọi hàm countdown khi DOM đã sẵn sàng
 document.addEventListener("DOMContentLoaded", initFlashSaleCountdown);
-
-//slider
 document.addEventListener("DOMContentLoaded", function () {
     const sliders = document.querySelectorAll('.product-slider');
-
     sliders.forEach(slider => {
         const track = slider.querySelector('.slider-track');
         const prevBtn = slider.querySelector('.arrow.prev');
@@ -203,19 +177,14 @@ document.addEventListener("DOMContentLoaded", function () {
  * Hiển thị chi tiết comic trong popup bên phải
  */
 function showTopComicDetail(index) {
-    // Ẩn tất cả popup
     const allPopups = document.querySelectorAll('.sach-chi-tiet');
     allPopups.forEach(popup => {
         popup.style.display = 'none';
     });
-
-    // Hiển thị popup được chọn
     const selectedPopup = document.querySelector(`.pop-detail-home${index}`);
     if (selectedPopup) {
         selectedPopup.style.display = 'flex';
     }
-
-    // Highlight item được chọn
     const allItems = document.querySelectorAll('.sach-item');
     allItems.forEach((item, i) => {
         if (i === index - 1) {
@@ -225,8 +194,6 @@ function showTopComicDetail(index) {
         }
     });
 }
-
-// Auto-show first item khi load trang
 document.addEventListener('DOMContentLoaded', function() {
     showTopComicDetail(1);
 });

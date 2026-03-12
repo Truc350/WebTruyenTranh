@@ -109,20 +109,13 @@ public class SeriesDAO extends ADao {
         return rows > 0;
     }
 
-    /**
-     * Xóa mềm series (soft delete)
-     */
+
     /**
      * Xóa mềm series (soft delete)
      */
     public boolean deleteSeries(int id) {
-        System.out.println("========================================");
-        System.out.println("SeriesDAO.deleteSeries() called");
-        System.out.println(" Series ID to delete: " + id);
 
         String sql = "UPDATE series SET is_deleted = 1, deleted_at = :deletedAt, updated_at = :updatedAt WHERE id = :id";
-
-        System.out.println("SQL Query: " + sql);
 
         try {
             int rows = jdbi.withHandle(handle -> {
@@ -132,73 +125,22 @@ public class SeriesDAO extends ADao {
                         .bind("updatedAt", LocalDateTime.now())
                         .execute();
 
-                System.out.println(" Rows affected: " + affectedRows);
                 return affectedRows;
             });
 
             boolean result = rows > 0;
-            System.out.println(" Delete result: " + result);
-            System.out.println("========================================");
-
             return result;
 
         } catch (Exception e) {
-            System.err.println(" Error in deleteSeries: " + e.getMessage());
             e.printStackTrace();
-            System.out.println("========================================");
             return false;
         }
-    }
-
-    /**
-     * Đếm tổng số series (để phân trang)
-     */
-    public int countSeries() {
-        String sql = "SELECT COUNT(*) FROM series WHERE is_deleted = 0";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapTo(Integer.class)
-                        .one()
-        );
-    }
-
-    /**
-     * Lấy series có phân trang
-     */
-    public List<Series> getSeriesWithPagination(int page, int pageSize) {
-        int offset = (page - 1) * pageSize;
-        String sql = "SELECT * FROM series WHERE is_deleted = 0 " +
-                "ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
-                        .mapToBean(Series.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Tìm kiếm series theo tên
-     */
-    public List<Series> searchSeriesByName(String keyword) {
-        String sql = "SELECT * FROM series WHERE is_deleted = 0 " +
-                "AND series_name LIKE :keyword ORDER BY created_at DESC";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("keyword", "%" + keyword + "%")
-                        .mapToBean(Series.class)
-                        .list()
-        );
     }
 
     public String getSeriesNameById1(Integer seriesId) {
         if (seriesId == null) {
             return null;
         }
-
         String sql = "SELECT series_name FROM series WHERE id = :id AND is_deleted = 0";
 
         return jdbi.withHandle(handle ->
@@ -261,8 +203,6 @@ public class SeriesDAO extends ADao {
      */
 
     public int countSeriesByVisibility(Boolean isHidden) {
-        System.out.println("🔢 Counting series with filter: " + (isHidden == null ? "ALL" : (isHidden ? "HIDDEN" : "VISIBLE")));
-
         String sql;
         if (isHidden == null) {
             sql = "SELECT COUNT(*) FROM series WHERE is_deleted = 0";
@@ -280,7 +220,6 @@ public class SeriesDAO extends ADao {
             return query.mapTo(Integer.class).one();
         });
 
-        System.out.println("📊 Total count: " + count);
         return count;
     }
 
@@ -289,11 +228,6 @@ public class SeriesDAO extends ADao {
      */
 
     public List<Series> searchSeriesByNameAndVisibility(String keyword, Boolean isHidden) {
-        System.out.println("========================================");
-        System.out.println("🔍 SeriesDAO.searchSeriesByNameAndVisibility()");
-        System.out.println("📝 Keyword: " + keyword);
-        System.out.println("👁️ IsHidden filter: " + (isHidden == null ? "ALL" : (isHidden ? "HIDDEN" : "VISIBLE")));
-
         String sql;
         if (isHidden == null) {
             sql = "SELECT * FROM series WHERE is_deleted = 0 " +
@@ -314,9 +248,6 @@ public class SeriesDAO extends ADao {
 
             return query.mapToBean(Series.class).list();
         });
-
-        System.out.println("📊 Found: " + result.size() + " series");
-        System.out.println("========================================");
 
         return result;
     }

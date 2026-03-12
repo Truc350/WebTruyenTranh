@@ -32,7 +32,6 @@ public class UserCategoryServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
 
-        // ── 1. Lấy category ID ──────────────────────────────────────────
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/home");
@@ -47,7 +46,7 @@ public class UserCategoryServlet extends HttpServlet {
             return;
         }
 
-        // ── 2. Lấy trang hiện tại ───────────────────────────────────────
+
         int currentPage = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null && !pageParam.isEmpty()) {
@@ -59,14 +58,12 @@ public class UserCategoryServlet extends HttpServlet {
             }
         }
 
-        // ── 3. Lấy thông tin category ───────────────────────────────────
         Category selectedCategory = categoriesDao.getCategoryById(categoryId);
         if (selectedCategory == null) {
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        // ── 4. Lấy các bộ lọc ──────────────────────────────────────────
         String[] priceArr     = request.getParameterValues("price");
         String[] authorArr    = request.getParameterValues("author");
         String[] publisherArr = request.getParameterValues("publisher");
@@ -77,12 +74,11 @@ public class UserCategoryServlet extends HttpServlet {
         List<String> selectedPublishers = publisherArr != null ? Arrays.asList(publisherArr) : new ArrayList<>();
         List<String> selectedYears      = yearArr      != null ? Arrays.asList(yearArr)      : new ArrayList<>();
 
-        // ── 5. Lấy danh sách tác giả / NXB cho sidebar lọc ─────────────
+
         List<String> availableAuthors    = comicDAO.getAuthorsByCategory(categoryId);
         List<String> availablePublishers = comicDAO.getPublishersByCategory(categoryId);
 
-        // ── 6. Lấy tất cả comics (có filter + flash sale) ───────────────
-        //    Dùng method sẵn có; sau đó tự phân trang trong Java
+
         List<Comic> allComics = comicDAO.getComicsByCategoryWithFiltersAndFlashSale(
                 categoryId,
                 selectedPrices.isEmpty()     ? null : selectedPrices,
@@ -91,7 +87,6 @@ public class UserCategoryServlet extends HttpServlet {
                 selectedYears.isEmpty()      ? null : selectedYears
         );
 
-        // ── 7. Tính toán phân trang ─────────────────────────────────────
         int totalComics = allComics.size();
         int totalPages  = Math.max(1, (int) Math.ceil((double) totalComics / PAGE_SIZE));
         if (currentPage > totalPages) currentPage = totalPages;
@@ -102,7 +97,6 @@ public class UserCategoryServlet extends HttpServlet {
                 ? new ArrayList<>(allComics.subList(fromIndex, toIndex))
                 : new ArrayList<>();
 
-        // ── 8. Gợi ý (recommendations) ─────────────────────────────────
         HttpSession session = request.getSession(false);
         Integer userId = (session != null) ? (Integer) session.getAttribute("userId") : null;
 
@@ -127,7 +121,6 @@ public class UserCategoryServlet extends HttpServlet {
             );
         }
 
-        // ── 9. Set attributes ───────────────────────────────────────────
         request.setAttribute("selectedCategory",   selectedCategory);
         request.setAttribute("comicList",           comicList);
         request.setAttribute("totalComics",         totalComics);

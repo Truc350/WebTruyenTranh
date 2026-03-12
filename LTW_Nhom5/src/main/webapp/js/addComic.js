@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const cancelBtns = addModal.querySelectorAll('.cancel-btn');
     const addForm = document.getElementById('addForm');
 
-    // Mở modal
     addBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
         resetForm();
     });
 
-    // Đóng modal
     cancelBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Click ngoài modal
     addModal.addEventListener('click', (e) => {
         if (e.target === addModal) {
             addModal.style.display = 'none';
@@ -36,10 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Xử lý upload ảnh
     setupImageUpload();
 
-    // ✅ XỬ LÝ NÚT LƯU
     saveBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -52,52 +47,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData(addForm);
 
-        // ✅ Thêm volume vào formData
         const volumeInput = document.querySelector('[name="volume"]');
         if (volumeInput && volumeInput.value) {
             formData.set('volume', volumeInput.value);
             console.log('📖 Volume:', volumeInput.value);
         }
 
-        // Hiển thị loading
         saveBtn.disabled = true;
         saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
         try {
             const url = contextPath + '/admin/products/add';
-            console.log('📤 Sending request to:', url);
-
+            console.log('Sending request to:', url);
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData
             });
-
-            console.log('📥 Response status:', response.status);
-
+            console.log('Response status:', response.status);
             const result = await response.json();
-            console.log('📦 Result:', result);
-
+            console.log('Result:', result);
             if (result.success) {
                 showNotification('Thêm truyện thành công!', 'success');
-
-                // Đóng modal
                 addModal.style.display = 'none';
                 resetForm();
-
-                // ✅ GỌI HÀM REFRESH BẢNG
                 setTimeout(() => {
                     refreshComicsTable();
                 }, 500);
-
             } else {
                 showNotification(result.message || 'Có lỗi xảy ra', 'error');
-
                 if (result.errors && result.errors.length > 0) {
                     showErrors(result.errors);
                 }
             }
         } catch (error) {
-            console.error('❌ Error:', error);
+            console.error('Error:', error);
             showNotification('Lỗi kết nối server: ' + error.message, 'error');
         } finally {
             saveBtn.disabled = false;
@@ -105,45 +88,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-// ✅ HÀM REFRESH BẢNG SAU KHI THÊM TRUYỆN
 async function refreshComicsTable() {
     const tbody = document.getElementById('productTableBody');
-
-    console.log('🔄 Refreshing comics table...');
-
-    // Hiển thị loading
     tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">' +
         '<i class="fas fa-spinner fa-spin" style="font-size: 24px; color: #ff4c4c;"></i>' +
         '<p style="margin-top: 10px;">Đang tải lại...</p></td></tr>';
 
     try {
-        // ✅ GỌI API LẤY DANH SÁCH MỚI NHẤT (TRANG 1)
         const url = contextPath + '/admin/products/list?page=1';
-        console.log('📥 Fetching from:', url);
-
         const response = await fetch(url);
-
         if (!response.ok) {
             throw new Error('Server error: ' + response.status);
         }
-
         const data = await response.json();
-        console.log('📦 New data:', data);
-
         if (data.success && data.comics) {
-            // ✅ CẬP NHẬT BẢNG
             updateTableWithNewData(data.comics);
-
-            // ✅ CẬP NHẬT PHÂN TRANG
             if (typeof updatePagination === 'function') {
                 updatePagination(data.currentPage, data.totalPages, data.totalComics);
             }
-
-            // ✅ BIND LẠI EVENT LISTENERS
             bindEventListeners();
-
-            console.log('✅ Table refreshed successfully!');
         } else {
             tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: #f44336;">Không thể tải dữ liệu</td></tr>';
         }
@@ -153,10 +116,8 @@ async function refreshComicsTable() {
     }
 }
 
-// ✅ HÀM CẬP NHẬT BẢNG VỚI DỮ LIỆU MỚI
 function updateTableWithNewData(comics) {
     const tbody = document.getElementById('productTableBody');
-
     if (!comics || comics.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #999;">' +
             '<i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px;"></i>' +
@@ -196,14 +157,11 @@ function updateTableWithNewData(comics) {
     tbody.innerHTML = html;
 }
 
-// ✅ FORMAT GIÁ
 function formatPrice(price) {
     return new Intl.NumberFormat('vi-VN').format(price);
 }
 
-// ✅ BIND LẠI EVENT LISTENERS SAU KHI CẬP NHẬT BẢNG
 function bindEventListeners() {
-    // Nút xem review
     document.querySelectorAll('.view-review-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const comicId = this.dataset.comic;
@@ -216,7 +174,6 @@ function bindEventListeners() {
         });
     });
 
-    // Nút sửa
     document.querySelectorAll('.edit-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const comicId = this.dataset.comicId;
@@ -225,7 +182,6 @@ function bindEventListeners() {
         });
     });
 
-    // Menu 3 chấm
     document.querySelectorAll('.more-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -240,8 +196,6 @@ function bindEventListeners() {
         });
     });
 }
-
-// ✅ Validate form - CẬP NHẬT ĐỂ KIỂM TRA VOLUME
 function validateForm() {
     const nameComics = document.querySelector('[name="nameComics"]').value.trim();
     const author = document.querySelector('[name="author"]').value.trim();
@@ -273,7 +227,6 @@ function validateForm() {
         errors.push('Số lượng không được âm');
     }
 
-    // ✅ Validate volume (không bắt buộc, nhưng nếu có thì phải > 0)
     if (volumeInput && volumeInput.trim() !== '') {
         const volume = parseInt(volumeInput);
         if (isNaN(volume) || volume < 1) {

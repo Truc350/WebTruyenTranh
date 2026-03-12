@@ -50,12 +50,6 @@ public class SubmitReviewServlet extends HttpServlet {
             int rating = Integer.parseInt(request.getParameter("rating"));
             String comment = request.getParameter("comment");
 
-            System.out.println("=== SUBMIT REVIEW ===");
-            System.out.println("Order ID: " + orderId);
-            System.out.println("User ID: " + user.getId());
-            System.out.println("Rating: " + rating);
-            System.out.println("Comment: " + comment);
-
             // Kiểm tra đã review chưa
             if (reviewDAO.hasUserReviewedOrder(user.getId(), orderId)) {
                 response.getWriter().write("{\"success\":false,\"message\":\"Bạn đã đánh giá đơn hàng này rồi\"}");
@@ -73,27 +67,20 @@ public class SubmitReviewServlet extends HttpServlet {
             // Lấy danh sách ảnh từ request
             List<String> uploadedImageUrls = new ArrayList<>();
 
-            // ✅ Sửa cách lấy Part - dùng getParts() thay vì vòng lặp request.getParts()
             for (Part part : request.getParts()) {
                 String partName = part.getName();
-                System.out.println("Part name: " + partName + ", size: " + part.getSize());
 
                 if ("images".equals(partName) && part.getSize() > 0) {
                     try {
                         String imageUrl = CloudinaryService.uploadImage(part, "reviews");
                         if (imageUrl != null) {
                             uploadedImageUrls.add(imageUrl);
-                            System.out.println("✓ Uploaded image: " + imageUrl);
                         }
                     } catch (Exception e) {
-                        System.err.println("✗ Error uploading image: " + e.getMessage());
                     }
                 }
             }
 
-            System.out.println("Total uploaded images: " + uploadedImageUrls.size());
-
-            // ✅ Tạo review cho từng comic và gán CÙNG ảnh cho tất cả review
             for (OrderItem item : items) {
                 Review review = new Review();
                 review.setComicId(item.getComicId());
@@ -103,22 +90,16 @@ public class SubmitReviewServlet extends HttpServlet {
                 review.setOrderId(orderId);
 
                 int reviewId = reviewDAO.addReview(review);
-                System.out.println("Created review ID: " + reviewId + " for comic: " + item.getComicId() + " in order: " + orderId);
 
-                // ✅ Thêm TẤT CẢ ảnh đã upload vào review này
                 for (String imageUrl : uploadedImageUrls) {
                     boolean added = reviewDAO.addReviewImage(reviewId, imageUrl);
-                    System.out.println("  " + (added ? "✓" : "✗") + " Added image to review: " + imageUrl);
                 }
             }
-
             response.getWriter().write("{\"success\":true,\"message\":\"Đánh giá thành công\"}");
 
         } catch (NumberFormatException e) {
-            System.err.println("Invalid number format: " + e.getMessage());
             response.getWriter().write("{\"success\":false,\"message\":\"Dữ liệu không hợp lệ\"}");
         } catch (Exception e) {
-            System.err.println("Error submitting review: " + e.getMessage());
             e.printStackTrace();
             response.getWriter().write("{\"success\":false,\"message\":\"Có lỗi xảy ra: " + e.getMessage() + "\"}");
         }

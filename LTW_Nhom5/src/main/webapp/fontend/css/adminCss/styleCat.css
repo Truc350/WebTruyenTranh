@@ -1,52 +1,40 @@
-/* Tổng thể layout */
 * {
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
 }
-
 body {
     color: #333;
     width: 100%;
 }
-
 .container {
     display: flex;
     height: 100vh;
 }
-
-/* Main content */
 .main-content {
     flex: 1;
     padding: 30px;
     overflow-y: auto;
 }
-
 .page-title {
     margin-top: 25px;
     margin-bottom: 25px;
 }
-
-/* Container cho bảng */
 .table-container {
     margin-bottom: 20px;
 }
-
-/* Thanh tìm kiếm và nút thêm */
 .search-add {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
 }
-
 .search-box {
     position: relative;
     flex: 1;
     max-width: 500px;
 }
-
 .search-box input {
     width: 100%;
     padding: 12px 45px 12px 16px;
@@ -56,15 +44,12 @@ body {
     font-size: 15px;
     transition: border-color 0.2s;
 }
-
 .search-box input:focus {
     border-color: #ff5c5c;
 }
-
 .search-box input::placeholder {
     color: #A49F9F;
 }
-
 .search-box button {
     position: absolute;
     right: 8px;
@@ -77,16 +62,12 @@ body {
     color: #888;
     font-size: 18px;
 }
-
 .search-box button:hover {
     color: #ff5c5c;
 }
-
-/* Nút thêm thể loại */
 .action-buttons {
     white-space: nowrap;
 }
-
 .add-category-btn {
     background-color: #ff4c4c;
     color: white;
@@ -98,134 +79,55 @@ body {
     font-weight: 500;
     transition: background-color 0.3s;
 }
-
 .add-category-btn:hover {
     background-color: #ff6a6a;
 }
-
-/* Wrapper cho bảng */
 .table-wrapper {
     background-color: white;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     margin-bottom: 20px;
+    width: fit-content;
 }
-
 .table-wrapper table {
-    width: 100%;
+    width: 700px;
     border-collapse: collapse;
+    table-layout: fixed;
 }
-
 .table-wrapper thead {
     background-color: #ffeaea;
 }
-
 .table-wrapper th {
     background-color: #ffeaea;
     color: #333;
     font-weight: 600;
     text-align: left;
-    padding: 16px 20px;
+    padding: 10px 14px;
 }
-
 .table-wrapper td {
     text-align: left;
-    padding: 10px 14px;
+    padding: 8px 10px;
     border-bottom: 1px solid #f5f5f5;
 }
-
 .table-wrapper tbody tr:hover {
     background-color: #fff8f8;
 }
-
 .table-wrapper tbody tr:last-child td {
     border-bottom: none;
 }
-
-/* Nút hành động trong bảng */
-.edit-btn,
-.delete-btn {
-    width: 36px;
-    height: 36px;
-    background-color: #fff;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 0;
-    border-radius: 6px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: all 0.2s ease;
-}
-
-/* Nút hành động trong bảng */
-.edit-btn,
-.delete-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    font-size: 18px;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: transform 0.15s ease, color 0.15s ease;
-}
-
-/* Cột thao tác */
 .action-cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 18px; /* khoảng cách giữa 2 icon */
+    gap: 18px;
 }
-
-/* Nút icon trần */
-.edit-btn,
-.delete-btn {
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/* Icon */
-.edit-btn i,
-.delete-btn i {
-    font-size: 18px;
-    color: #000;
-    transition: color 0.2s ease;
-}
-
-/* Hover đổi màu */
-.edit-btn:hover i {
-    color: #ff9800; /* cam */
-}
-
-.delete-btn:hover i {
-    color: #f44336; /* đỏ */
-}
-
-
-
-
-
-/* Phân trang */
 .pagination-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     gap: 8px;
 }
-
 .pagination-container button {
     background-color: #fff;
     border: 1px solid #FF7A7A;
@@ -236,23 +138,18 @@ body {
     font-size: 14px;
     color: #333;
 }
-
 .pagination-container button:hover:not(:disabled) {
     background-color: #fff1f1;
 }
-
 .pagination-container button.active {
     background-color: #FF7A7A;
     color: #fff;
     border-color: #FF7A7A;
 }
-
 .pagination-container button:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }
-
-/* POPUP OVERLAY */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -265,12 +162,9 @@ body {
     align-items: center;
     z-index: 9999;
 }
-
 .popup-overlay.show {
     display: flex;
 }
-
-/* Hộp popup */
 .popup-box {
     background: white;
     padding: 30px;
@@ -280,7 +174,6 @@ body {
     animation: slideDown 0.3s ease;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
-
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -291,14 +184,12 @@ body {
         transform: translateY(0);
     }
 }
-
 .popup-box h3 {
     margin-bottom: 20px;
     font-size: 22px;
     color: #333;
     text-align: center;
 }
-
 .popup-box label {
     display: block;
     font-weight: 600;
@@ -307,11 +198,9 @@ body {
     color: #444;
     font-size: 14px;
 }
-
 .popup-box label:first-of-type {
     margin-top: 0;
 }
-
 .popup-box input,
 .popup-box textarea {
     width: 100%;
@@ -324,30 +213,24 @@ body {
     font-size: 14px;
     transition: border-color 0.2s;
 }
-
 .popup-box input:focus,
 .popup-box textarea:focus {
     border-color: #ff5c5c;
 }
-
 .popup-box textarea {
     resize: vertical;
     min-height: 80px;
 }
-
 .popup-box input[readonly] {
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
-
-/* Nút trong popup */
 .popup-actions {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     margin-top: 24px;
 }
-
 .save-btn,
 .cancel-btn {
     padding: 10px 24px;
@@ -358,55 +241,43 @@ body {
     font-weight: 500;
     transition: all 0.2s;
 }
-
 .save-btn {
     background: #ff4c4c;
     color: white;
 }
-
 .save-btn:hover {
     background: #ff3333;
 }
-
 .cancel-btn {
     background: #e0e0e0;
     color: #333;
 }
-
 .cancel-btn:hover {
     background: #d0d0d0;
 }
-
-/* Popup xóa */
 #deletePopup .popup-box {
     width: 380px;
 }
-
 #deletePopup p {
     text-align: center;
     color: #666;
     margin: 16px 0 20px 0;
     font-size: 15px;
 }
-
 #deletePopup h3 {
     color: #f44336;
 }
-
-
-/* Ô thao tác */
 .action-cell {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
-
-/* Nút icon chung */
 .action-cell button {
     width: 36px;
     height: 36px;
-    background-color: #fff;
+    background-color: transparent !important;
+    border: none !important;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
@@ -414,26 +285,43 @@ body {
     justify-content: center;
     transition: all 0.2s ease;
 }
-
-/* Icon */
 .action-cell button i {
     font-size: 16px;
     color: #000;
 }
-
-/* Hover chung */
-.action-cell button:hover {
-    background-color: #f5f5f5;
-    border-color: #bbb;
+.edit-btn,
+.delete-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
-/* Hover riêng cho nút sửa */
-.action-cell .edit-btn:hover i {
-    color: #0056b3; /* cam */
+.edit-btn i,
+.delete-btn i {
+    font-size: 18px;
+    color: #000;
+    transition: color 0.2s ease;
 }
-
-/* Hover riêng cho nút xóa */
-.action-cell .delete-btn:hover i {
-    color: #ff4c4c; /* đỏ */
+.edit-btn:hover i,
+.edit-category-btn:hover i{
+    color: #0056b3 !important;
 }
-
+.delete-btn:hover i,
+.delete-category-btn:hover i{
+    color: #ff4c4c !important;
+}
+.table-wrapper table th:nth-child(1),
+.table-wrapper table td:nth-child(1) {
+    width: 120px;
+}
+.table-wrapper table th:nth-child(2),
+.table-wrapper table td:nth-child(2) {
+    width: 280px;
+}
+.table-wrapper table th:nth-child(3),
+.table-wrapper table td:nth-child(3) {
+    width: 100px;
+}

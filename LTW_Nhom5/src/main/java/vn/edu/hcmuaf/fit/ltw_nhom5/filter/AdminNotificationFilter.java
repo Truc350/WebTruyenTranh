@@ -17,7 +17,6 @@ public class AdminNotificationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         notificationDAO = NotificationDAO.getInstance();
-        System.out.println("✅ [AdminNotificationFilter] Filter initialized");
     }
 
     @Override
@@ -38,15 +37,10 @@ public class AdminNotificationFilter implements Filter {
                     List<Notification> notifications = notificationDAO.getRecentForAdmin(10);
                     int unreadCount = notificationDAO.countUnreadForAdmin();
 
-                    // Set vào request để JSP dùng
                     request.setAttribute("notifications", notifications);
                     request.setAttribute("unreadNotificationCount", unreadCount);
 
-                    System.out.println("📬 [AdminNotificationFilter] Loaded " + notifications.size() +
-                            " notifications, unread: " + unreadCount);
-
                 } catch (Exception e) {
-                    System.err.println("❌ [AdminNotificationFilter] Error: " + e.getMessage());
                     e.printStackTrace();
 
                     // Set mặc định nếu lỗi
@@ -70,6 +64,5 @@ public class AdminNotificationFilter implements Filter {
 
     @Override
     public void destroy() {
-        // Cleanup nếu cần
     }
 }

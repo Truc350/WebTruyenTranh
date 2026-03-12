@@ -45,7 +45,6 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 comicIdArray = new String[0];
             }
 
-            // Validate...
             if (name == null || name.trim().isEmpty()) {
                 responseJson.addProperty("success", false);
                 responseJson.addProperty("message", "Tên Flash Sale không được để trống");
@@ -102,7 +101,6 @@ public class CreateFlashSaleServlet extends HttpServlet {
                 return;
             }
 
-            // ← TỰ ĐỘNG XÁC ĐỊNH TRẠNG THÁI DựA TRÊN THỜI GIAN
             String status;
             if (now.isBefore(startTime)) {
                 status = "scheduled";  // Sắp diễn ra
@@ -117,7 +115,7 @@ public class CreateFlashSaleServlet extends HttpServlet {
             flashSale.setDiscountPercent(discountPercent);
             flashSale.setStartTime(startTime);
             flashSale.setEndTime(endTime);
-            flashSale.setStatus(status);  // ← SET STATUS TỰ ĐỘNG
+            flashSale.setStatus(status);
 
             int flashSaleId = flashSaleDAO.insert(flashSale);
 

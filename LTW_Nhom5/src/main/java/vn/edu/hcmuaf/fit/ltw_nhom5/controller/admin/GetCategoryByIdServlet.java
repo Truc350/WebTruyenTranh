@@ -28,21 +28,16 @@ public class GetCategoryByIdServlet extends HttpServlet {
     public void init() {
         categoriesDao = new CategoriesDao();
 
-        // Cấu hình Gson để serialize LocalDateTime
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class,
                         (JsonSerializer<LocalDateTime>) (src, typeOfSrc, context) ->
                                 context.serialize(src.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)))
                 .create();
-
-        System.out.println("✓ GetCategoryByIdServlet initialized with Gson adapter");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
-        System.out.println("=== GetCategoryByIdServlet called ===");
 
         req.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json; charset=UTF-8");
@@ -53,10 +48,8 @@ public class GetCategoryByIdServlet extends HttpServlet {
 
         try {
             String idParam = req.getParameter("id");
-            System.out.println("ID parameter: " + idParam);
 
             if (idParam == null || idParam.isEmpty()) {
-                System.out.println("✗ ID is null or empty");
                 result.put("success", false);
                 result.put("message", "Thiếu ID!");
                 out.print(gson.toJson(result));
@@ -64,15 +57,9 @@ public class GetCategoryByIdServlet extends HttpServlet {
             }
 
             int id = Integer.parseInt(idParam);
-            System.out.println("Parsed ID: " + id);
-            System.out.println("Calling DAO...");
-
             Category category = categoriesDao.getCategoryById(id);
-            System.out.println("DAO returned: " + (category != null ? "Category found" : "null"));
 
             if (category != null && !category.isDeleted()) {
-                System.out.println("✓ Success - returning category");
-                System.out.println("Category name: " + category.getNameCategories());
 
                 result.put("success", true);
                 result.put("category", category);
@@ -83,21 +70,18 @@ public class GetCategoryByIdServlet extends HttpServlet {
                 out.print(json);
 
             } else {
-                System.out.println("✗ Category not found or deleted");
                 result.put("success", false);
                 result.put("message", "Không tìm thấy thể loại!");
                 out.print(gson.toJson(result));
             }
 
         } catch (NumberFormatException e) {
-            System.err.println("✗ NumberFormatException:");
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "ID không hợp lệ!");
             out.print(gson.toJson(result));
 
         } catch (Exception e) {
-            System.err.println("✗✗✗ EXCEPTION in GetCategoryByIdServlet ✗✗✗");
             e.printStackTrace();
             result.put("success", false);
             result.put("message", "Lỗi hệ thống: " + e.getMessage());

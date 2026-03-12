@@ -15,14 +15,11 @@
     </a>
     <nav class="menu">
         <a href="${pageContext.request.contextPath}/home">Trang chủ</a>
-
         <div class="dropdown">
             <a href="#">Thể loại &#9662;</a>
             <div class="dropdown-content">
                 <%
                     List<Category> listCategories = (List<Category>) request.getAttribute("listCategories");
-
-                    // Nếu chưa có trong request thì tự load
                     if (listCategories == null || listCategories.isEmpty()) {
                         CategoriesDao categoriesDao = new CategoriesDao();
                         listCategories = categoriesDao.listCategories();
@@ -30,7 +27,6 @@
 
                     if (listCategories != null && !listCategories.isEmpty()) {
                         for (Category c : listCategories) {
-                            // Chỉ hiển thị category không bị ẩn
                             if (c.getIs_hidden() == 0) {
                 %>
                 <a href="${pageContext.request.contextPath}/userCategory?id=<%= c.getId() %>">
@@ -84,8 +80,6 @@
                     <i class="fa-solid fa-bell"></i>
                     <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
                 </a>
-
-                <!-- Dropdown thông báo -->
                 <div class="notification-panel" id="notification-panel">
                     <div class="notification-header">
                         <div class="inform-num">
@@ -135,9 +129,144 @@
             </div>
         </div>
     </div>
-</header>
 
-<!-- SEARCH HISTORY SCRIPT -->
+    <style>
+        .social-float-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-toggle-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .social-toggle-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .social-toggle-btn.open {
+            /*background: #fff;*/
+            transform: rotate(20deg);
+        }
+
+        .social-items {
+            background: #fff;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+
+        .social-items.open {
+            max-height: 200px;
+            opacity: 1;
+            background: #fff;
+        }
+
+        .social-float-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: block;
+        }
+
+        .social-float-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .social-float-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .social-float-btn {
+            position: relative;
+        }
+
+        .social-float-btn::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 54px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .social-float-btn:hover::before {
+            opacity: 1;
+        }
+    </style>
+
+    <div class="social-float-container">
+        <button class="social-toggle-btn" id="socialToggle" title="Liên hệ">
+            <img src="https://cdn-icons-png.flaticon.com/128/134/134718.png" alt="Contact"
+                 style="width:28px;height:28px;object-fit:contain;">
+        </button>
+        <div class="social-items" id="socialItems">
+            <a class="social-float-btn" href="https://zalo.me/0394158994" target="_blank" data-tooltip="Zalo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+            </a>
+            <a class="social-float-btn" href="https://www.facebook.com/share/1MVc1miHnd/" target="_blank" data-tooltip="Facebook">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" alt="Facebook">
+            </a>
+            <a class="social-float-btn" href="https://www.instagram.com/comic.store/" target="_blank"
+               data-tooltip="Instagram">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram">
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const socialToggle = document.getElementById('socialToggle');
+        const socialItems = document.getElementById('socialItems');
+
+        socialToggle.addEventListener('click', () => {
+            socialToggle.classList.toggle('open');
+            socialItems.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.social-float-container')) {
+                socialToggle.classList.remove('open');
+                socialItems.classList.remove('open');
+            }
+        });
+    </script>
+</header>
 <script>
     const searchInput = document.getElementById('searchInput');
     const dropdown = document.getElementById('searchDropdown');
@@ -241,9 +370,6 @@
 
 <c:if test="${not empty sessionScope.currentUser}">
     <script>
-        /**
-         * Load thông báo gần đây cho header dropdown
-         */
         async function loadHeaderNotifications() {
             const url = '${pageContext.request.contextPath}/NotificationServlet/recent?limit=8';
 
@@ -256,30 +382,22 @@
                 }
 
                 const data = await response.json();
-
-                // Cập nhật badge số lượng
                 const count = data.unread_count || 0;
                 const badge = document.getElementById('notification-badge');
                 const badgeCount = document.getElementById('header-badge-count');
-
                 if (badge && badgeCount) {
                     badge.textContent = count;
                     badge.style.display = count > 0 ? 'flex' : 'none';
                     badgeCount.textContent = `(${count})`;
                 }
-
                 const list = document.getElementById('header-notification-list');
                 if (!list) {
                     return;
                 }
-
-                // Nếu không có thông báo
                 if (!data.notifications || data.notifications.length === 0) {
                     list.innerHTML = '<div class="empty-noti">Chưa có thông báo mới</div>';
                     return;
                 }
-
-                // Render danh sách thông báo
                 let html = '';
                 data.notifications.forEach(n => {
                     const unreadClass = (n.is_read === false) ? 'unread' : '';
@@ -295,28 +413,26 @@
                     const formattedTime = n.formatted_date || '';
 
                     html += '<div class="header-noti-item ' + unreadClass + '" data-id="' + n.id + '">'
-                        +   '<div class="noti-icon">' + '</div>'
-                        +   '<div class="noti-content">'
-                        +     '<div class="noti-message">' + displayMessage + '</div>'
-                        +     '<div class="noti-time">' + formattedTime + '</div>'
-                        +   '</div>'
+                        + '<div class="noti-icon">' + '</div>'
+                        + '<div class="noti-content">'
+                        + '<div class="noti-message">' + displayMessage + '</div>'
+                        + '<div class="noti-time">' + formattedTime + '</div>'
+                        + '</div>'
                         + '</div>';
                 });
 
                 list.innerHTML = html;
-
-                // Click thông báo → đánh dấu đã đọc
                 document.querySelectorAll('.header-noti-item').forEach(item => {
                     item.addEventListener('click', async function () {
-                            const id = this.dataset.id;
-                            try {
-                                await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
-                                    method: 'POST'
-                                });
-                            } catch (err) {
-                                console.error('Lỗi đánh dấu đã đọc:', err);
-                            }
-                            window.location.href = '${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp#noti-' + id;
+                        const id = this.dataset.id;
+                        try {
+                            await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-read?id=' + id, {
+                                method: 'POST'
+                            });
+                        } catch (err) {
+                            console.error('Lỗi đánh dấu đã đọc:', err);
+                        }
+                        window.location.href = '${pageContext.request.contextPath}/fontend/nguoiB/notifications.jsp#noti-' + id;
                     });
                 });
 
@@ -327,7 +443,6 @@
                 }
             }
         }
-
         document.addEventListener('DOMContentLoaded', () => {
 
             const bell = document.getElementById('bell-icon');
@@ -410,4 +525,49 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
 
     <script src="${pageContext.request.contextPath}/js/firebase-notification.js"></script>
+</c:if>
+
+<c:if test="${empty sessionScope.currentUser}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bell = document.getElementById('bell-icon');
+            if (!bell) return;
+
+            bell.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showLoginHintToast();
+            });
+        });
+
+        function showLoginHintToast() {
+            const existing = document.getElementById('login-hint-toast');
+            if (existing) existing.remove();
+
+            const contextPath = '${pageContext.request.contextPath}';
+
+            const toast = document.createElement('div');
+            toast.id = 'login-hint-toast';
+            toast.innerHTML =
+                '<i class="fa-solid fa-bell" style="margin-right:8px;opacity:0.85;"></i>' +
+                'Vui lòng <a href="' + contextPath + '/login">đăng nhập</a> để xem thông báo';
+
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(() => toast.classList.add('show'));
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+
+            document.addEventListener('click', function handler(e) {
+                if (!toast.contains(e.target) && e.target !== bell) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                    document.removeEventListener('click', handler);
+                }
+            });
+        }
+    </script>
 </c:if>

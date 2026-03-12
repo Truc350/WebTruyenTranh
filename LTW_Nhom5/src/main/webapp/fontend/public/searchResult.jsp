@@ -25,7 +25,6 @@
         <span class="keyword">"${keyword}"</span>
     </h2>
 
-    <!-- Hiển thị tổng số kết quả -->
     <c:if test="${not empty totalComics && totalComics > 0}">
         <p class="search-info">
             Tìm thấy <strong>${totalComics}</strong> truyện
@@ -51,7 +50,6 @@
                 <c:forEach var="comic" items="${comics}">
                     <div class="product-item">
                         <a href="${pageContext.request.contextPath}/comic-detail?id=${comic.id}">
-                            <!-- Badge Flash Sale -->
                             <c:if test="${comic.hasFlashSale}">
                                 <div class="flash-sale-badge">
                                     <i class="fas fa-bolt"></i> FLASH SALE
@@ -63,11 +61,8 @@
                                  onerror="this.src='${pageContext.request.contextPath}/img/no-image.png'">
                             <p class="product-name">${comic.nameComics}</p>
                         </a>
-
-                        <!-- Giá -->
                         <c:choose>
                             <c:when test="${comic.hasFlashSale}">
-                                <!-- Có Flash Sale -->
                                 <p class="product-price flash">
                                     <fmt:formatNumber value="${comic.flashSalePrice}" pattern="#,###"/> đ
                                 </p>
@@ -79,7 +74,6 @@
                                 </p>
                             </c:when>
                             <c:otherwise>
-                                <!-- Giá thường -->
                                 <p class="product-price">
                                     <fmt:formatNumber value="${comic.price}" pattern="#,###"/> đ
                                 </p>
@@ -92,10 +86,7 @@
                     </div>
                 </c:forEach>
             </div>
-
-            <!-- PAGINATION -->
             <c:if test="${totalPages > 1}">
-                <!-- Giữ nguyên phần pagination -->
             </c:if>
 
         </c:otherwise>

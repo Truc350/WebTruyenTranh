@@ -94,39 +94,6 @@ public class FlashSale {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 
-
-    /**
-     * Chuyển LocalDateTime sang java.util.Date cho JSTL fmt:formatDate
-     */
-    public Date getStartTimeAsDate() {
-        if (startTime == null) return null;
-        return Timestamp.valueOf(startTime);
-    }
-
-    /**
-     * Chuyển LocalDateTime sang java.util.Date cho JSTL fmt:formatDate
-     */
-    public Date getEndTimeAsDate() {
-        if (endTime == null) return null;
-        return Timestamp.valueOf(endTime);
-    }
-
-    /**
-     * Lấy thời gian bắt đầu dạng HH:mm
-     */
-    public String getStartTimeFormatted() {
-        if (startTime == null) return "";
-        return String.format("%02d:%02d", startTime.getHour(), startTime.getMinute());
-    }
-
-    /**
-     * Lấy thời gian kết thúc dạng HH:mm
-     */
-    public String getEndTimeFormatted() {
-        if (endTime == null) return "";
-        return String.format("%02d:%02d", endTime.getHour(), endTime.getMinute());
-    }
-
     /**
      * Kiểm tra Flash Sale có đang active không
      */

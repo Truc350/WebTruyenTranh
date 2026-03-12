@@ -213,7 +213,6 @@
         <p>Chính sách có hiệu lực từ <strong>01/08/2022</strong>.</p>
     </div>
 </div>
-<!-- INCLUDE FOOTER -->
 <jsp:include page="/fontend/public/Footer.jsp" />
 </body>
 </html>

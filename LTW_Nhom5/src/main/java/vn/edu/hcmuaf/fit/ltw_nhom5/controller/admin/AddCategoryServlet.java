@@ -35,7 +35,6 @@ public class AddCategoryServlet extends HttpServlet {
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // Đọc dữ liệu JSON từ request body
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = req.getReader();
             String line;
@@ -43,14 +42,12 @@ public class AddCategoryServlet extends HttpServlet {
                 sb.append(line);
             }
 
-            // Parse JSON thành Map
             @SuppressWarnings("unchecked")
             Map<String, String> data = gson.fromJson(sb.toString(), Map.class);
 
             String name = data.get("name");
             String description = data.get("description");
 
-            // Validate dữ liệu
             if (name == null || name.trim().isEmpty()) {
                 response.put("success", false);
                 response.put("message", "Tên thể loại không được để trống!");
@@ -65,7 +62,6 @@ public class AddCategoryServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra trùng tên
             if (categoriesDao.isNameExists(name.trim(), null)) {
                 response.put("success", false);
                 response.put("message", "Tên thể loại đã tồn tại!");
@@ -73,12 +69,10 @@ public class AddCategoryServlet extends HttpServlet {
                 return;
             }
 
-            // Tạo đối tượng Category mới
             Category category = new Category();
             category.setNameCategories(name.trim());
             category.setDescription(description != null ? description.trim() : "");
 
-            // Thêm vào database
             boolean result = categoriesDao.addCategory(category);
 
             if (result) {

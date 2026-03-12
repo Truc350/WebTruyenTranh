@@ -33,13 +33,11 @@ public class SearchServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // Cập nhật trạng thái Flash Sale
         flashSaleDAO.updateStatuses();
 
         String keyword = request.getParameter("keyword");
         String searchType = request.getParameter("type");
 
-        // Lấy trang hiện tại (mặc định là trang 1)
         int currentPage = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null && !pageParam.trim().isEmpty()) {
@@ -53,7 +51,6 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
-        // Keyword rỗng
         if (keyword == null || keyword.trim().isEmpty()) {
             request.setAttribute("comics", new ArrayList<>());
             request.setAttribute("resultCount", 0);
@@ -65,10 +62,7 @@ public class SearchServlet extends HttpServlet {
             return;
         }
 
-        // Kết quả tìm kiếm
         List<Comic> comics = new ArrayList<>();
-
-        // Tìm kiếm theo loại - SỬ DỤNG METHOD CÓ FLASH SALE
         switch (searchType != null ? searchType : "all") {
             case "author":
                 List<Comic> authorResult = comicDAO.findByAuthorWithFlashSale(keyword);
@@ -90,13 +84,12 @@ public class SearchServlet extends HttpServlet {
                 if (nameResult != null) comics.addAll(nameResult);
                 break;
 
-            default: // "all" - tìm tất cả
+            default:
                 List<Comic> allResults = comicDAO.smartSearchAllWithFlashSale(keyword);
                 if (allResults != null) comics.addAll(allResults);
                 break;
         }
 
-        // Thêm các tập cùng series (nếu có kết quả)
         if (!comics.isEmpty()) {
             Set<Integer> addedIds = new HashSet<>();
             comics.forEach(c -> addedIds.add(c.getId()));
@@ -111,7 +104,6 @@ public class SearchServlet extends HttpServlet {
 
                 if (sameSeries != null) {
                     for (Comic c : sameSeries) {
-                        // Chỉ thêm nếu chưa tồn tại
                         if (addedIds.add(c.getId())) {
                             comics.add(c);
                         }
@@ -120,16 +112,13 @@ public class SearchServlet extends HttpServlet {
             }
         }
 
-        // ========== PHÂN TRANG ==========
         int totalComics = comics.size();
         int totalPages = (int) Math.ceil((double) totalComics / ITEMS_PER_PAGE);
 
-        // Đảm bảo trang hiện tại không vượt quá tổng số trang
         if (currentPage > totalPages && totalPages > 0) {
             currentPage = totalPages;
         }
 
-        // Lấy danh sách truyện cho trang hiện tại
         List<Comic> comicsForPage;
         if (totalComics > 0) {
             int startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

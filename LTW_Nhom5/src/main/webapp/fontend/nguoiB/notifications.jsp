@@ -36,14 +36,10 @@
         </div>
     </div>
 </main>
-
 <jsp:include page="/fontend/public/Footer.jsp"/>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         loadNotifications();
-
-        // Tab switching
         document.querySelectorAll('.notification-container .tab').forEach(tab => {
             tab.addEventListener('click', function () {
                 document.querySelectorAll('.notification-container .tab').forEach(t =>
@@ -79,9 +75,7 @@
                 document.getElementById('mark-all-read-btn').style.display = 'none';
                 return;
             }
-
             document.getElementById('mark-all-read-btn').style.display = 'block';
-
             let html = '';
             data.notifications.forEach(function(n) {
                 const unreadStyle = n.is_read ? '' : 'background:#f0f8ff;font-weight:600;border-left:4px solid #007bff;padding-left:16px;';
@@ -89,7 +83,6 @@
                 const message = (n.message || '').replace(/\n/g, '<br>');
                 const formattedDate = n.formatted_date || '';
                 const notiId = n.id || 0;
-
                 let icon = '<i class="fa-solid fa-bell" style="color:#666;"></i>';
                 if (n.type === 'ORDER_CONFIRMED')  icon = '<i class="fa-solid fa-circle-check" style="color:#28a745;"></i>';
                 else if (n.type === 'ORDER_SHIPPED')   icon = '<i class="fa-solid fa-truck" style="color:#007bff;"></i>';
@@ -110,9 +103,7 @@
                     +   '</div>'
                     + '</div>';
             });
-
             listArea.innerHTML = html;
-
             const hash = window.location.hash;
             if (hash && hash.startsWith('#noti-')) {
                 const targetEl = document.querySelector(hash);
@@ -147,7 +138,9 @@
     }
 
     async function markAllRead() {
-        if (!confirm('Đánh dấu tất cả thông báo là đã đọc?')) return;
+        await new Promise((resolve, reject) => {
+            showConfirmPopup('Đánh dấu tất cả thông báo là đã đọc?', 'Xác nhận', resolve, reject);
+        });
         try {
             await fetch('${pageContext.request.contextPath}/NotificationServlet/mark-all-read', {
                 method: 'POST',
@@ -155,8 +148,77 @@
             });
             loadNotifications();
         } catch (err) {
-            alert('Lỗi thực hiện');
+            showToastUser('Lỗi thực hiện', 'error');
         }
+    }
+</script>
+
+<script>
+    function showToastUser(message, type = 'success') {
+        const existing = document.getElementById('user-toast');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.id = 'user-toast';
+        toast.classList.add(type);
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    function showConfirmPopup(message, confirmText = 'Xác nhận', onConfirm, onCancel) {
+        if (!document.getElementById('rc-popup-style')) {
+            const s = document.createElement('style');
+            s.id = 'rc-popup-style';
+            s.textContent = `
+                .rc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s ease}
+                .rc-overlay.show{opacity:1}
+                .rc-popup{background:#fff;border-radius:12px;padding:24px 24px 18px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;transform:translateY(16px) scale(.97);transition:transform .25s ease,opacity .25s ease;opacity:0}
+                .rc-overlay.show .rc-popup{transform:translateY(0) scale(1);opacity:1}
+                .rc-popup p{margin:0 0 20px;font-size:16px;color:#333;line-height:1.5;font-weight:600}
+                .rc-popup-actions{display:flex;gap:10px}
+                .rc-btn-cancel,.rc-btn-confirm{flex:1;padding:9px 0;border-radius:7px;border:none;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s ease}
+                .rc-btn-cancel{background:#f3f3f3;color:#555}
+                .rc-btn-cancel:hover{background:#e8e8e8}
+                .rc-btn-confirm{background:linear-gradient(90deg,#28a745,#218838);color:#fff;box-shadow:0 3px 10px rgba(40,167,69,.3)}
+                .rc-btn-confirm:hover{background:linear-gradient(90deg,#218838,#1e7e34);transform:translateY(-1px)}
+            `;
+            document.head.appendChild(s);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'rc-overlay';
+        overlay.innerHTML =
+            '<div class="rc-popup">' +
+            '<p>' + message + '</p>' +
+            '<div class="rc-popup-actions">' +
+            '<button class="rc-btn-cancel">Hủy</button>' +
+            '<button class="rc-btn-confirm">' + confirmText + '</button>' +
+            '</div></div>';
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => overlay.classList.add('show'));
+
+        function close(confirmed) {
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.remove(), 250);
+            if (confirmed && onConfirm) onConfirm();
+            else if (!confirmed && onCancel) onCancel();
+        }
+
+        overlay.querySelector('.rc-btn-confirm').addEventListener('click', () => close(true));
+        overlay.querySelector('.rc-btn-cancel').addEventListener('click', () => close(false));
+        document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') {
+                document.removeEventListener('keydown', esc);
+                close(false);
+            }
+        });
     }
 </script>
 

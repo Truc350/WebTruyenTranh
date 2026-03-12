@@ -65,7 +65,6 @@ function bindDeleteButtons() {
 }
 
 
-// ========== TÌM KIẾM SERIES ==========
 function searchSeries() {
     const searchInput = document.querySelector('.search-input');
     const keyword = searchInput.value.trim();
@@ -77,8 +76,6 @@ function searchSeries() {
     }
 
     const tbody = document.getElementById('seriesTableBody');
-
-    // Hiển thị loading
     tbody.innerHTML = `
         <tr>
             <td colspan="5" style="text-align: center; padding: 40px;">
@@ -87,8 +84,6 @@ function searchSeries() {
             </td>
         </tr>
     `;
-
-    // Gọi API tìm kiếm
     fetch(`${contextPath}/SeriesManagement?action=search&keyword=${encodeURIComponent(keyword)}`)
         .then(response => {
             if (!response.ok) throw new Error('Lỗi tìm kiếm');
@@ -117,7 +112,6 @@ function searchSeries() {
         });
 }
 
-// ========== RENDER BẢNG SERIES ==========
 function renderSeriesTable(seriesList) {
     const tbody = document.getElementById('seriesTableBody');
 
@@ -179,7 +173,6 @@ function renderSeriesTable(seriesList) {
     bindVisibilityChange();
 }
 
-// ========== THÊM SERIES MỚI ==========
 function addNewSeries() {
     const form = document.querySelector('#addSeriesModal form');
     const formData = new FormData(form);
@@ -193,13 +186,11 @@ function addNewSeries() {
         return;
     }
 
-    // Hiển thị loading
     const saveBtn = document.getElementById('saveNewSeries');
     const originalText = saveBtn.textContent;
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
 
-    // Gửi request
     fetch(`${contextPath}/AddSeriesServlet`, {
         method: 'POST',
         body: formData
@@ -223,7 +214,6 @@ function addNewSeries() {
         });
 }
 
-// ========== CẬP NHẬT SERIES ==========
 function updateSeries() {
     const seriesId = document.getElementById('editSeriesId').value;
     const seriesName = document.getElementById('editSeriesName').value;
@@ -243,13 +233,11 @@ function updateSeries() {
     formData.append('status', seriesStatus);
     formData.append('description', seriesDescription);
 
-    // Kiểm tra nếu có ảnh mới
     const coverFile = document.getElementById('editSeriesCoverFile');
     if (coverFile && coverFile.files.length > 0) {
         formData.append('seriesCover', coverFile.files[0]);
     }
 
-    // Hiển thị loading
     const saveBtn = document.getElementById('saveEditSeries');
     const originalText = saveBtn.textContent;
     saveBtn.disabled = true;
@@ -278,7 +266,6 @@ function updateSeries() {
         });
 }
 
-// ========== BIND SỰ KIỆN NÚT SỬA ==========
 function bindEditButtons() {
     document.querySelectorAll('.edit-series-btn').forEach(btn => {
         btn.addEventListener('click', function () {
@@ -289,14 +276,12 @@ function bindEditButtons() {
             const desc = this.dataset.desc || '';
             const cover = this.dataset.cover || '';
 
-            // Điền dữ liệu vào form
             document.getElementById('editSeriesId').value = id;
             document.getElementById('editSeriesName').value = name;
             document.getElementById('editSeriesVolumes').value = vol;
             document.getElementById('editSeriesStatus').value = status;
             document.getElementById('editSeriesDescription').value = desc;
 
-            // Hiển thị ảnh cũ nếu có
             if (cover) {
                 const preview = document.getElementById('editSeriesPreview');
                 if (preview) {
@@ -305,31 +290,26 @@ function bindEditButtons() {
                 }
             }
 
-            // Mở popup
             document.getElementById('editSeriesModal').style.display = 'flex';
         });
     });
 }
 
-// ========== BIND SỰ KIỆN NÚT MORE ==========
 function bindMoreButtons() {
     document.querySelectorAll('.more-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
             const container = this.parentElement;
 
-            // Đóng tất cả menu khác
             document.querySelectorAll('.menu-container').forEach(m => {
                 if (m !== container) m.classList.remove('active');
             });
 
-            // Toggle menu hiện tại
             container.classList.toggle('active');
         });
     });
 }
 
-// ========== BIND THAY ĐỔI HIỂN THỊ/ẨN ==========
 function bindVisibilityChange() {
     document.querySelectorAll('.dropdown-menu input[type=radio]').forEach(radio => {
         radio.addEventListener('change', function () {
@@ -358,7 +338,6 @@ function bindVisibilityChange() {
     });
 }
 
-// ========== HIỂN THỊ LỖI ==========
 function showError(message) {
     const tbody = document.getElementById('seriesTableBody');
     tbody.innerHTML = `
@@ -371,23 +350,17 @@ function showError(message) {
     `;
 }
 
-// ========== KHỞI TẠO KHI TRANG LOAD ==========
 document.addEventListener('DOMContentLoaded', function () {
-
-    // bind nut xoa
     bindDeleteButtons();
-    // Nút xác nhận xóa
     const confirmBtn = document.getElementById('confirmDeleteBtn');
     if (confirmBtn) {
         confirmBtn.addEventListener('click', confirmDeleteSeries);
     }
 
-    // Nút hủy xóa
     const cancelBtn = document.getElementById('cancelDeleteBtn');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', cancelDelete);
     }
-    // Đóng popup khi click overlay
     const deleteModal = document.getElementById('deleteConfirmModal');
     if (deleteModal) {
         deleteModal.addEventListener('click', function (e) {
@@ -396,9 +369,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-
-    // Tìm kiếm khi nhấn Enter
     const searchInput = document.querySelector('.search-input');
     if (searchInput) {
         searchInput.addEventListener('keypress', function (e) {
@@ -408,14 +378,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
-    // Nút tìm kiếm
     const searchIcon = document.querySelector('.search-box .fa-magnifying-glass');
     if (searchIcon) {
         searchIcon.addEventListener('click', searchSeries);
     }
-
-    // Nút thêm series
     const addBtn = document.querySelector('.add-btn');
     if (addBtn) {
         addBtn.addEventListener('click', () => {
@@ -423,7 +389,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Nút lưu thêm mới
     const saveNewBtn = document.getElementById('saveNewSeries');
     if (saveNewBtn) {
         saveNewBtn.addEventListener('click', function (e) {

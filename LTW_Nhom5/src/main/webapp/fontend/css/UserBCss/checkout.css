@@ -1,14 +1,13 @@
-/* Body */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
     font-size: 14px;
-    /* Giảm từ ngầm định ~16px */
 }
 
-/* Wrapper styling */
+
 .mainContainer {
     max-width: 1200px;
     margin: 0 auto;
@@ -19,7 +18,6 @@ body {
     border-radius: 0px 0px 8px 8px;
 }
 
-/* Container styling */
 .container {
     flex: 2;
     min-width: 300px;
@@ -30,7 +28,6 @@ body {
     flex-direction: column;
 }
 
-/* TotalCost */
 .totalCost {
     flex: 1;
     min-width: 300px;
@@ -40,8 +37,6 @@ body {
     padding: 15px;
     max-height: 500px;
 }
-
-/* Checkout Header */
 .titleCheckout {
     background: #007bff;
     color: #fff;
@@ -88,7 +83,6 @@ main {
     font-weight: 600;
     margin-bottom: 4px;
     font-size: 16px;
-    /* Giảm từ 16px */
     color: #444;
 }
 
@@ -97,7 +91,6 @@ main {
     width: 100%;
     padding: 8px 10px;
     font-size: 13px;
-    /* Giảm từ 14px */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
@@ -116,7 +109,6 @@ main {
     outline: none;
 }
 
-/* Shipping, Payment, Promotion */
 .shipping,
 .payment,
 .promotion {
@@ -133,7 +125,6 @@ main {
 .promotion h2 {
     color: #007bff;
     font-size: 16px;
-    /* Giảm từ 16px */
     margin-bottom: 8px;
 }
 
@@ -143,11 +134,8 @@ main {
     display: block;
     margin: 4px 0;
     font-size: 14px;
-    /* Giảm từ 16px */
 }
 
-
-/* Promotion Section */
 .promotion {
     max-width: 800px;
     margin: 15px 0;
@@ -167,7 +155,6 @@ main {
     flex: 1;
     padding: 8px 10px;
     font-size: 13px;
-    /* Giảm từ 14px */
     border: 1px solid #ccc;
     border-radius: 5px 0 0 5px;
     box-sizing: border-box;
@@ -188,7 +175,6 @@ main {
 .promos .apply-btn {
     padding: 8px 16px;
     font-size: 13px;
-    /* Giảm từ 14px */
     font-weight: 600;
     color: #fff;
     background-color: #007bff;
@@ -218,20 +204,17 @@ main {
 
 .voucher-icon {
     font-size: 16px;
-    /* Giảm từ 18px */
     color: #c94d32;
 }
 
 .voucher-title {
     font-size: 14px;
-    /* Giảm từ 16px */
     color: #333;
     font-weight: 500;
 }
 
 .voucher-select {
     font-size: 13px;
-    /* Giảm từ 14px */
     color: #2f6ec8;
     text-decoration: none;
 }
@@ -245,23 +228,19 @@ main {
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
-    /* Giảm từ 14px */
     margin: 8px 0;
 }
 
 .promotion .usePoint p {
     font-size: 14px;
-    /* Giảm từ 16px */
 }
 
 .usePoint input[type="checkbox"] {
     width: 16px;
-    /* Giảm từ 18px */
     height: 16px;
     cursor: pointer;
 }
 
-/* Order Summary */
 .order-summary {
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
@@ -369,8 +348,6 @@ main {
     font-weight: 500;
 }
 
-/* Popup hien thi voucher */
-/* Định dạng nền mờ (backdrop) */
 .popup-backdrop {
     display: none;
     position: fixed;
@@ -388,17 +365,15 @@ main {
     opacity: 1;
 }
 
-/* Định dạng voucher-container như một popup */
-/* ===== BACKDROP (nền mờ) ===== */
 .voucher-backdrop {
     display: none;
     position: fixed;
-    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    inset: 0;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
 }
 
-/* ===== POPUP VOUCHER ===== */
+
 .voucher-popup {
     display: none;
     position: fixed;
@@ -417,7 +392,6 @@ main {
     font-family: Arial, sans-serif;
 }
 
-/* ===== HEADER ===== */
 .voucher-header-drag {
     display: flex;
     justify-content: space-between;
@@ -446,13 +420,11 @@ main {
     color: #000;
 }
 
-/* ===== VOUCHERS GRID ===== */
 .vouchers-grid {
     display: grid;
     gap: 15px;
 }
 
-/* ===== VOUCHER CARD ===== */
 .voucher-card {
     background: #f0f8f0;
     border: 1px solid #28a745;
@@ -465,11 +437,9 @@ main {
     transform: translateY(-2px);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
-
-/* Footer voucher - chỉ còn ngày hết hạn và nút copy */
 .voucher-footer {
     display: flex;
-    justify-content: space-between;   /* Giữ khoảng cách đều */
+    justify-content: space-between;
     align-items: center;
     padding: 10px 15px 12px;
     background: #f8f9fa;
@@ -485,7 +455,7 @@ main {
     background: #007bff;
     color: #fff;
     border: none;
-    padding: 8px 16px;         /* Tăng padding ngang cho dễ bấm */
+    padding: 8px 16px;
     border-radius: 6px;
     font-size: 13px;
     font-weight: 500;
@@ -501,8 +471,6 @@ main {
 .copy-code-btn:active {
     transform: translateY(0);
 }
-/*popup qr code*/
-/* Popup nền mờ */
 .qr-popup {
     display: none;
     position: fixed;
@@ -513,7 +481,6 @@ main {
     z-index: 9999;
 }
 
-/* Khung popup */
 .qr-content {
     background: #fff;
     padding: 20px;
@@ -528,7 +495,6 @@ main {
     border-radius: 8px;
 }
 
-/* Nút đóng */
 .close-btn {
     position: absolute;
     top: 8px;
@@ -537,7 +503,6 @@ main {
     cursor: pointer;
 }
 
-/*popup mã QR*/
 .popupQR {
     position: fixed;
     top: 50%;
@@ -549,10 +514,6 @@ main {
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     z-index: 9999;
 }
-
-
-
-/* Responsive cho thiết bị di động */
 @media (max-width: 600px) {
     .voucher-container {
         width: 95%;
@@ -561,32 +522,26 @@ main {
 
     .voucher-container h2 {
         font-size: 18px;
-        /* Giảm từ 20px */
     }
 
     .voucher-title {
         font-size: 14px;
-        /* Giảm từ 16px */
     }
 
     .voucher-desc {
         font-size: 12px;
-        /* Giảm từ 13px */
     }
 
     .voucher-code {
         font-size: 13px;
-        /* Giảm từ 14px */
     }
 
     .copy-code-btn {
         padding: 6px 10px;
         font-size: 12px;
-        /* Giảm từ 13px */
     }
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .mainContainer {
         padding: 0;
@@ -645,9 +600,6 @@ main {
         border-radius: 5px;
     }
 }
-
-/* popup qr thanh toán */
-/* ===== POPUP QR THANH TOÁN ===== */
 .qr-backdrop {
     display: none;
     position: fixed;
@@ -776,7 +728,6 @@ main {
     backdrop-filter: blur(2px);
 }
 
-/* Nút đóng */
 .momo-close {
     position: absolute;
     top: 10px;
@@ -790,7 +741,7 @@ main {
 }
 .momo-close:hover { color: var(--momo-primary); }
 
-/* Tiêu đề */
+
 .momo-title {
     margin: 0 0 16px;
     font-size: 18px;
@@ -798,7 +749,6 @@ main {
     color: var(--momo-primary);
 }
 
-/* Nội dung */
 .momo-content {
     display: flex;
     flex-direction: column;
@@ -909,7 +859,6 @@ main {
     white-space: nowrap;
 }
 
-/* Thông báo địa chỉ mặc định */
 .default-address-notice {
     background-color: #e8f5e9;
     border: 1px solid #4caf50;
@@ -933,7 +882,6 @@ main {
     line-height: 1.5;
 }
 
-/* Animation */
 @keyframes slideDown {
     from {
         opacity: 0;
@@ -945,7 +893,7 @@ main {
     }
 }
 
-/* Checkbox style */
+
 .form-group label input[type="checkbox"] {
     margin-right: 8px;
     width: 18px;
@@ -983,7 +931,6 @@ main {
     cursor: not-allowed;
 }
 
-/* ========== POPUP QR CODE MoMo ========== */
 .container-qr-popup {
     position: fixed;
     top: 0;
@@ -996,7 +943,6 @@ main {
     z-index: 9999;
 }
 
-/* Backdrop */
 .container-qr-popup .qr-backdrop {
     position: absolute;
     top: 0;
@@ -1042,7 +988,7 @@ main {
     }
 }
 
-/* ✅ NÚT ĐÓNG (X) - QUAN TRỌNG */
+
 .momo-close {
     position: absolute;
     top: 15px;
@@ -1075,7 +1021,7 @@ main {
     margin-bottom: 25px;
     font-size: 22px;
     font-weight: 600;
-    padding-right: 30px; /* Để tránh chồng lên nút X */
+    padding-right: 30px;
 }
 
 .momo-content {

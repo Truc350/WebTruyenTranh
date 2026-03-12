@@ -52,20 +52,6 @@ public class RecommendationService {
     }
 
     /**
-     * Gợi ý tập tiếp theo của series (CÓ FLASH SALE)
-     */
-    public Comic getNextVolumeRecommendation(int comicId) {
-        Comic currentComic = comicDAO.getComicById(comicId);
-        if (currentComic == null || currentComic.getSeriesId() == null) {
-            return null;
-        }
-        return comicDAO.getNextVolumeWithFlashSale(
-                currentComic.getSeriesId(),
-                currentComic.getVolume() != null ? currentComic.getVolume() : 0
-        );
-    }
-
-    /**
      * Lấy gợi ý cho trang detail (ĐÃ TÍCH HỢP FLASH SALE)
      */
     public List<Comic> getDetailPageSuggestions(Integer userId, Integer comicId, int limit) {
@@ -89,7 +75,6 @@ public class RecommendationService {
      */
     @Deprecated
     public Map<String, List<Comic>> getCategorizedRecommendations(int userId) {
-        // Method cũ, nên dùng getCategorizedRecommendationsWithFlashSale()
         return getCategorizedRecommendationsWithFlashSale(userId);
     }
 
@@ -103,7 +88,6 @@ public class RecommendationService {
         List<Comic> wishlistComics = wishlistDAO.getWishlistComics(userId);
 
         if (wishlistComics.isEmpty()) {
-            System.out.println("⚠️ User " + userId + " has empty wishlist, returning popular comics");
             List<Comic> popular = comicDAO.getPopularComicsWithFlashSale(8);
             if (!popular.isEmpty()) {
                 categorized.put("Phổ biến", popular);
@@ -111,7 +95,6 @@ public class RecommendationService {
             return categorized;
         }
 
-        // ========== 1. TẬP TIẾP THEO ==========
         List<Comic> nextVolumes = new ArrayList<>();
         Set<Integer> addedSeriesIds = new HashSet<>();
 
@@ -137,10 +120,8 @@ public class RecommendationService {
 
         if (!nextVolumes.isEmpty()) {
             categorized.put("Tập tiếp theo", nextVolumes);
-            System.out.println("✅ Added " + nextVolumes.size() + " next volumes");
         }
 
-        // ========== 2. CÙNG THỂ LOẠI ==========
         Set<Integer> categoryIds = wishlistComics.stream()
                 .map(Comic::getCategoryId)
                 .filter(Objects::nonNull)
@@ -176,11 +157,9 @@ public class RecommendationService {
 
             if (!sameCategory.isEmpty()) {
                 categorized.put("Cùng thể loại", sameCategory);
-                System.out.println("✅ Added " + sameCategory.size() + " same category comics");
             }
         }
 
-        // ========== 3. PHỔ BIẾN ==========
         Set<Integer> allAddedIds = new HashSet<>();
         categorized.values().forEach(list ->
                 list.forEach(comic -> allAddedIds.add(comic.getId()))
@@ -202,10 +181,8 @@ public class RecommendationService {
 
         if (!filteredPopular.isEmpty()) {
             categorized.put("Phổ biến", filteredPopular);
-            System.out.println("✅ Added " + filteredPopular.size() + " popular comics");
         }
 
-        System.out.println("📊 Total recommendation groups: " + categorized.size());
         return categorized;
     }
 

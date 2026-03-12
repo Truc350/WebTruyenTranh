@@ -16,7 +16,6 @@ body {
     height: 100vh;
 }
 
-/* ==== MAIN CONTENT ==== */
 .main-content {
     flex: 1;
     padding: 0;
@@ -26,18 +25,14 @@ body {
     flex-direction: column;
 }
 
-/* ==== WRAPPER CHO NỘI DUNG THỐNG KÊ ==== */
 .report-wrapper {
     padding: 30px;
     flex: 1;
 }
 
-/* Nếu bạn đang dùng cấu trúc có HeaderAdmin */
 .main-content > *:not(.report-wrapper) {
     flex-shrink: 0; /* Header không co lại */
 }
-
-/* ==== TIÊU ĐỀ TRANG ==== */
 .page-title {
     font-size: 24px;
     font-weight: 600;
@@ -52,7 +47,6 @@ body {
     color: #2196F3;
 }
 
-/* ==== BỘ LỌC THỜI GIAN ==== */
 .filter-time {
     margin-bottom: 30px;
     display: flex;
@@ -99,7 +93,6 @@ body {
     margin-left: 10px;
 }
 
-/* ==== KPI CARDS ==== */
 .kpi-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -151,7 +144,6 @@ body {
     color: #333;
 }
 
-/* ==== BIỂU ĐỒ CHÍNH ==== */
 .chart-container {
     background-color: #ffffff;
     padding: 30px;
@@ -169,7 +161,6 @@ body {
     max-height: 400px;
 }
 
-/* ==== TOP SẢN PHẨM BÁN CHẠY ==== */
 .top-products-wrapper {
     display: flex;
     gap: 30px;
@@ -234,7 +225,6 @@ body {
     border-bottom: none;
 }
 
-/* ==== RESPONSIVE ==== */
 @media (max-width: 1400px) {
     .kpi-cards {
         grid-template-columns: repeat(2, 1fr);
@@ -270,7 +260,6 @@ body {
     }
 }
 
-/* ==== LOADING & EMPTY STATE ==== */
 .loading {
     display: flex;
     justify-content: center;

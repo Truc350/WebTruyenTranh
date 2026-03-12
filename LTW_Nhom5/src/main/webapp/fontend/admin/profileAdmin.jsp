@@ -13,42 +13,28 @@
 
 
 <div class="container">
-    <!-- Sidebar -->
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
     <div class="main-content">
         <%@ include file="HeaderAdmin.jsp" %>
-
         <div class="profile-page">
-
-            <!-- RIGHT SIDE -->
             <div class="profile-right">
                 <h4>Thông tin đăng nhập</h4>
                 <p><strong>Email đăng nhập:</strong> admin@comicstore.com</p>
-
                 <hr>
-
-                <!-- Thông tin thanh toán -->
                 <h4>Thông tin ngân hàng</h4>
-
-                <!-- Hiển thị Bản đọc (masked) -->
                 <div class="bank-container">
                 <div class="bank-info" id="bankView">
                     <button id="btn-edit-bank" class="edit-btn" title="Chỉnh sửa">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </button>
-
                     <p><strong>Ngân hàng:</strong> <span id="bankNameText">Momo</span></p>
                     <p><strong>Số tài khoản:</strong> <span id="acctMasked">**** **** 1234</span></p>
                     <p><strong>Chủ tài khoản:</strong> <span id="acctNameText">Nguyễn Ngọc Linh</span></p>
-
                     <div id="qrContainerView" style="margin-top: 12px; text-align: center;">
                         <p><strong>Mã QR thanh toán:</strong></p>
                         <img src="../../img/qr.jpg" alt="QR Code" style="width: 120px; height: 120px; border: 1px dashed #ccc; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     </div>
                 </div>
-
-
                 <div class="bank-info-edit hidden" id="bankEdit">
                     <form id="bankForm">
                         <label>Ngân hàng
@@ -65,18 +51,15 @@
                                 <option value="Sacombank">Sacombank</option>
                             </select>
                         </label>
-
                         <label>Số tài khoản
                             <div class="account-field">
                                 <input name="accountNumber" id="accountNumber" value="12341234" required>
                                 <i id="toggleEye" class="fa-solid fa-eye"></i>
                             </div>
                         </label>
-
                         <label>Chủ tài khoản
                             <input name="accountHolder" id="accountHolder" value="Nguyễn Ngọc Linh" required>
                         </label>
-
                         <label>Mã QR thanh toán
                             <div class="qr-upload-wrapper" style="margin-top: 8px; text-align: center;">
                                 <div class="qr-upload-box">
@@ -89,7 +72,6 @@
                                 <input type="file" id="qrUpload" accept="image/*" hidden>
                             </div>
                         </label>
-
                         <div class="btn-group">
                             <button type="submit" class="btn">Lưu</button>
                             <button type="button" id="btnCancelBank" class="btn btn-secondary">Hủy</button>
@@ -98,7 +80,6 @@
                 </div>
                 </div>
                 <hr>
-                <!-- Đổi mật khẩu -->
                 <h4>Đổi mật khẩu</h4>
                 <form id="changePassForm">
                     <small class="password-hint">
@@ -120,34 +101,24 @@
                 </form>
             </div>
         </div>
-
-
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // === ELEMENTS ===
         const bankView = document.getElementById('bankView');
         const bankEdit = document.getElementById('bankEdit');
         const btnEdit = document.getElementById('btn-edit-bank');
         const btnCancel = document.getElementById('btnCancelBank');
         const bankForm = document.getElementById('bankForm');
         const saveBtn = bankForm.querySelector('button[type="submit"]');
-
         const accountNumberInput = document.getElementById('accountNumber');
         const toggleEye = document.getElementById('toggleEye');
         const acctMasked = document.getElementById('acctMasked');
-
         const qrUpload = document.getElementById('qrUpload');
         const qrPreviewImg = document.getElementById('qrPreviewImg');
         const qrUploadBox = document.querySelector('.qr-upload-box');
-
-        // === DỮ LIỆU GIẢ LẬP ===
         let actualAcct = accountNumberInput.value || '12341234';
         let masked = true;
-
-        // === MASK SỐ TÀI KHOẢN ===
         function maskAccount(acct) {
             const s = (acct || '').toString().replace(/\s+/g, '').replace(/[^0-9]/g, '');
             if (!s) return '----';
@@ -155,12 +126,9 @@
             const maskedPart = s.slice(0, -4).replace(/\d/g, '*');
             return (maskedPart + last4).replace(/(.{4})/g, '$1 ').trim();
         }
-
         function updateMasked() {
             acctMasked.textContent = maskAccount(actualAcct);
         }
-
-        // === TOGGLE EYE (HIỆN/ẨN SỐ TK) ===
         toggleEye.addEventListener('click', () => {
             masked = !masked;
             if (masked) {
@@ -171,8 +139,6 @@
                 toggleEye.classList.replace('fa-eye', 'fa-eye-slash');
             }
         });
-
-        // === CHỌN ẢNH QR ===
         qrUpload.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
@@ -186,20 +152,14 @@
                 qrPreviewImg.style.display = 'none';
             }
         });
-
-        // === MỞ POPUP ===
         btnEdit.addEventListener('click', () => {
             bankView.classList.add('hidden');
             bankEdit.classList.remove('hidden');
-
-            // Khôi phục số TK + trạng thái mắt
             accountNumberInput.value = masked ? maskAccount(actualAcct) : actualAcct;
             toggleEye.classList.toggle('fa-eye-slash', !masked);
             toggleEye.classList.toggle('fa-eye', masked);
 
         });
-
-        // === HỦY ===
         btnCancel.addEventListener('click', () => {
             bankEdit.classList.add('hidden');
             bankView.classList.remove('hidden');
@@ -207,11 +167,8 @@
             qrPreviewImg.style.display = 'none';
         });
         saveBtn.disabled = true;
-        // === KHỞI TẠO ===
         updateMasked();
     });
-
-    // chọn ảnh qr trong popup
     document.addEventListener('click', function (e) {
         if (e.target.closest('.qr-upload-box')) {
             e.preventDefault();
@@ -220,15 +177,12 @@
         }
     });
 </script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
-
         links.forEach(link => {
             const linkPage = link.getAttribute("href");
-
             if (linkPage === current) {
                 link.classList.add("active");
             }

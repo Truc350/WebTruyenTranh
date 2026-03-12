@@ -3,7 +3,6 @@
 
 <footer class="footer">
     <div class="footer-container">
-        <!-- Cột 1: Giới thiệu -->
         <div class="footer-column">
             <div class="logo">
                 <a href="${pageContext.request.contextPath}/fontend/public/homePage.jsp">
@@ -18,8 +17,6 @@
                 truyện hấp dẫn cho bạn
             </p>
         </div>
-
-        <!-- Cột 2: Liên kết nhanh -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-link"></i> Liên kết nhanh</h4>
             <ul>
@@ -29,8 +26,6 @@
                 <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/chat.jsp">Liên hệ</a></li>
             </ul>
         </div>
-
-        <!-- Cột 3: Hỗ trợ khách hàng -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-headset"></i> Hỗ trợ khách hàng</h4>
             <ul>
@@ -38,8 +33,6 @@
                 <li><a href="${pageContext.request.contextPath}/fontend/nguoiB/shippingPolicy.jsp">Chính sách vận chuyển</a></li>
             </ul>
         </div>
-
-        <!-- Cột 4: Liên hệ & Mạng xã hội -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-envelope"></i> Liên hệ</h4>
             <p><i class="fa-solid fa-envelope"></i> support@metruyen.vn</p>
@@ -52,8 +45,6 @@
                 <a href="https://www.tiktok.com/@comics_store.official" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
         </div>
-
-        <!-- Cột 5: Thanh toán -->
         <div class="footer-column">
             <h4><i class="fa-solid fa-shield-halved"></i> Thanh toán & Bảo mật</h4>
             <p>Hỗ trợ thanh toán qua:</p>

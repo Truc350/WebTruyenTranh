@@ -12,7 +12,6 @@
 <body>
 <div class="container">
     <jsp:include page="/fontend/admin/ASide.jsp"/>
-
     <div class="main-content">
         <header class="admin-header">
             <div class="header-right">
@@ -27,9 +26,7 @@
                 </button>
             </div>
         </header>
-
         <h2 class="page-title">Quản lý series</h2>
-
         <c:if test="${not empty successMessage}">
             <div class="toast-notification success" id="toastNotification">
                 <i class="fas fa-check-circle"></i>
@@ -44,36 +41,32 @@
                 <button class="toast-close" onclick="closeToast()">&times;</button>
             </div>
         </c:if>
-
         <div class="search-add-container">
             <form action="${pageContext.request.contextPath}/admin/SeriesManagement" method="get" class="search-box">
                 <input type="text" name="keyword" placeholder="Tìm kiếm series..." class="search-input"
                        value="${keyword}">
                 <button type="submit"><i class="fas fa-magnifying-glass"></i></button>
             </form>
-
             <div class="filter-container">
                 <label for="visibilityFilter" class="filter-label">
                     <i class="fas fa-filter"></i>
                 </label>
                 <select id="visibilityFilter" class="filter-select">
                     <option value="all" ${empty param.filter || param.filter == 'all' ? 'selected' : ''}>
-                        🌐 Tất cả
+                        Tất cả
                     </option>
                     <option value="visible" ${param.filter == 'visible' ? 'selected' : ''}>
-                        👁️ Đang hiển thị
+                         Đang hiển thị
                     </option>
                     <option value="hidden" ${param.filter == 'hidden' ? 'selected' : ''}>
-                        🔒 Đang ẩn
+                         Đang ẩn
                     </option>
                 </select>
             </div>
-
             <button class="add-btn" id="openAddModal">
                 <i class="fa-solid fa-plus"></i> Thêm series mới
             </button>
         </div>
-
         <div class="table-wrapper">
             <table>
                 <thead>
@@ -85,7 +78,6 @@
                     <th></th>
                 </tr>
                 </thead>
-
                 <tbody id="seriesTableBody">
                 <c:forEach var="s" items="${seriesList}">
                     <tr>
@@ -104,14 +96,12 @@
                                         data-cover="${s.coverUrl}">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
-
                                 <button class="delete-series-btn"
                                         data-id="${s.id}"
                                         data-name="${s.seriesName}"
                                         title="Xóa series">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
-
                                 <div class="menu-container">
                                     <button class="more-btn">⋮</button>
                                     <div class="dropdown-menu">
@@ -130,34 +120,15 @@
                         </td>
                     </tr>
                 </c:forEach>
-
                 <tr class="pagination-row">
                     <td colspan="10">
-                        <div class="pagination">
-                            <c:forEach var="i" begin="1" end="${totalPages}">
-                                <c:set var="pageUrl"
-                                       value="${pageContext.request.contextPath}/admin/SeriesManagement?page=${i}"/>
-                                <c:if test="${not empty param.filter}">
-                                    <c:set var="pageUrl" value="${pageUrl}&filter=${param.filter}"/>
-                                </c:if>
-                                <c:if test="${not empty keyword}">
-                                    <c:set var="pageUrl" value="${pageUrl}&keyword=${keyword}"/>
-                                </c:if>
-
-                                <button class="page-btn ${i == currentPage ? 'active' : ''}"
-                                        onclick="window.location.href='${pageUrl}'">
-                                        ${i}
-                                </button>
-                            </c:forEach>
-                        </div>
+                        <div class="pagination" id="paginationContainer"></div>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
-
-    <!-- POPUP THÊM SERIES -->
     <form action="${pageContext.request.contextPath}/AddSeriesServlet" method="post" enctype="multipart/form-data"
           id="addSeriesForm">
         <div class="modal-overlay" id="addSeriesModal">
@@ -181,7 +152,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="right-col">
                         <div class="form-group">
                             <label>Ảnh bìa</label>
@@ -198,7 +168,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="button-wrap">
                     <button type="submit" class="save-btn">Lưu</button>
                     <button type="button" class="cancel-btn close-add-series">Hủy</button>
@@ -206,15 +175,12 @@
             </div>
         </div>
     </form>
-
-    <!-- POPUP SỬA SERIES -->
     <form action="${pageContext.request.contextPath}/EditSeriesServlet" method="post" enctype="multipart/form-data"
           id="editSeriesForm">
         <div class="modal-overlay" id="editSeriesModal">
             <div class="modal-box two-column">
                 <h3>Chỉnh sửa series</h3>
                 <input type="hidden" id="editSeriesId" name="seriesId">
-
                 <div class="popup-content">
                     <div class="left-col">
                         <div class="form-group">
@@ -234,7 +200,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="right-col">
                         <div class="form-group">
                             <label>Ảnh bìa</label>
@@ -251,7 +216,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="button-wrap">
                     <button type="submit" class="save-btn">Cập nhật</button>
                     <button type="button" class="cancel-btn close-edit-series">Hủy</button>
@@ -259,8 +223,6 @@
             </div>
         </div>
     </form>
-
-    <!-- POPUP XÁC NHẬN XÓA -->
     <div class="modal-overlay" id="deleteConfirmModal">
         <div class="modal-box confirm-dialog">
             <div class="confirm-icon">
@@ -269,7 +231,6 @@
             <h3>Xác nhận xóa series</h3>
             <p>Bạn có chắc chắn muốn xóa series "<span id="deleteSeriesName"></span>" không?</p>
             <p class="warning-text">Hành động này không thể hoàn tác!</p>
-
             <div class="button-wrap">
                 <button class="delete-confirm-btn" id="confirmDeleteBtn">Xóa</button>
                 <button class="cancel-btn" id="cancelDeleteBtn">Hủy</button>
@@ -284,7 +245,6 @@
     document.getElementById("openAddModal").addEventListener("click", () => {
         document.getElementById("addSeriesModal").style.display = "flex";
     });
-
     // Đóng popup thêm
     document.querySelectorAll(".close-add-series").forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -292,12 +252,9 @@
             document.getElementById("addSeriesModal").style.display = "none";
         });
     });
-
-    // Upload ảnh cho popup THÊM
     const addBox = document.getElementById("newSeriesImageBox");
     const addInput = document.getElementById("newSeriesCoverFile");
     const addPreview = document.getElementById("newSeriesPreview");
-
     addBox.addEventListener("click", () => addInput.click());
     addInput.addEventListener("change", () => {
         if (addInput.files && addInput.files[0]) {
@@ -310,7 +267,6 @@
             reader.readAsDataURL(addInput.files[0]);
         }
     });
-
     // Mở popup sửa series
     document.querySelectorAll(".edit-series-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -319,7 +275,6 @@
             document.getElementById("editSeriesVolumes").value = btn.dataset.vol;
             document.getElementById("editSeriesStatus").value = btn.dataset.status;
             document.getElementById("editSeriesDescription").value = btn.dataset.desc || "";
-
             // Hiển thị ảnh cũ
             const editPreview = document.getElementById("editSeriesPreview");
             const editBox = document.getElementById("editSeriesImageBox");
@@ -331,24 +286,18 @@
                 editPreview.style.display = "none";
                 editBox.querySelector("span").style.display = "block";
             }
-
             document.getElementById("editSeriesModal").style.display = "flex";
         });
     });
-
-    // Đóng popup sửa
     document.querySelectorAll(".close-edit-series").forEach(btn => {
         btn.addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById("editSeriesModal").style.display = "none";
         });
     });
-
-    // Upload ảnh cho popup SỬA
     const editBox = document.getElementById("editSeriesImageBox");
     const editInput = document.getElementById("editSeriesCoverFile");
     const editPreview = document.getElementById("editSeriesPreview");
-
     editBox.addEventListener("click", () => editInput.click());
     editInput.addEventListener("change", () => {
         if (editInput.files && editInput.files[0]) {
@@ -361,8 +310,6 @@
             reader.readAsDataURL(editInput.files[0]);
         }
     });
-
-    // Đóng popup khi click nền
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) {
@@ -370,8 +317,6 @@
             }
         });
     });
-
-    // Menu hiển thị/ẩn series
     document.querySelectorAll(".more-btn").forEach(btn => {
         btn.addEventListener("click", function (e) {
             e.stopPropagation();
@@ -386,13 +331,10 @@
     document.addEventListener("click", () => {
         document.querySelectorAll(".menu-container").forEach(m => m.classList.remove("active"));
     });
-
-    // Xử lý hiển thị/ẩn series
     document.querySelectorAll('.dropdown-menu input[type=radio]').forEach(radio => {
         radio.addEventListener('change', function () {
             const seriesId = this.closest('.dropdown-menu').querySelector('.series-id').value;
             const action = this.value;
-
             fetch('${pageContext.request.contextPath}/admin/SeriesManagement', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -400,17 +342,14 @@
             })
                 .then(res => {
                     if (res.ok) {
-                        console.log("✅ Cập nhật thành công series " + seriesId + " → " + action);
                         location.reload();
                     } else {
-                        console.error("❌ Có lỗi khi cập nhật");
+                        console.error("Có lỗi khi cập nhật");
                     }
                 })
                 .catch(err => console.error("Fetch error:", err));
         });
     });
-
-    // Active sidebar
     document.addEventListener("DOMContentLoaded", function () {
         const current = window.location.pathname.split("/").pop();
         const links = document.querySelectorAll(".sidebar li a");
@@ -420,64 +359,37 @@
         });
     });
 </script>
-<%--xoa seri--%>
 <script>
     let deleteSeriesId = null;
-
     document.querySelectorAll(".delete-series-btn").forEach(btn => {
         btn.addEventListener("click", function () {
             deleteSeriesId = this.getAttribute("data-id");
             const seriesName = this.getAttribute("data-name");
-
-            console.log("✅ Delete button clicked");
-            console.log("📝 Series ID:", deleteSeriesId);
-            console.log("📝 Series Name:", seriesName);
-
-            // Hiển thị tên series trong popup
             document.getElementById("deleteSeriesName").textContent = seriesName;
-
-            // Mở popup xác nhận
             document.getElementById("deleteConfirmModal").style.display = "flex";
         });
     });
 
-    // Xử lý khi click nút XÁC NHẬN XÓA trong popup
     document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
         if (!deleteSeriesId) {
-            alert("❌ Không tìm thấy ID series cần xóa!");
+            alert("Không tìm thấy ID series cần xóa!");
             return;
         }
-
-        console.log("🗑️ Confirming delete for ID:", deleteSeriesId);
-
-        // Hiển thị loading
         this.disabled = true;
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
-
-        // Tạo URL xóa
         const deleteUrl = '${pageContext.request.contextPath}/DeleteSeriesServlet?id=' + deleteSeriesId;
-        console.log("🔗 Redirecting to:", deleteUrl);
-
-        // Chuyển hướng
         window.location.href = deleteUrl;
     });
-
-    // Xử lý khi click nút HÙY XÓA
     document.getElementById("cancelDeleteBtn").addEventListener("click", function () {
-        console.log("❌ Delete cancelled");
         document.getElementById("deleteConfirmModal").style.display = "none";
         deleteSeriesId = null;
     });
-
-    // Đóng popup khi click ra ngoài
     document.getElementById("deleteConfirmModal").addEventListener("click", function (e) {
         if (e.target === this) {
             this.style.display = "none";
             deleteSeriesId = null;
         }
     });
-
-    // Đóng popup khi click nền
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", (e) => {
             if (e.target === overlay) {
@@ -486,34 +398,71 @@
         });
     });
 </script>
-<%--xu ly loc--%>
 <script>
-    // ========== XỬ LÝ BỘ LỌC ==========
     document.addEventListener('DOMContentLoaded', function () {
         const filterSelect = document.getElementById('visibilityFilter');
-
         if (filterSelect) {
             filterSelect.addEventListener('change', function () {
                 const filterValue = this.value;
                 const urlParams = new URLSearchParams(window.location.search);
-
-                // Giữ keyword nếu có
                 const keyword = urlParams.get('keyword');
-
-                // Tạo URL mới
                 let newUrl = '${pageContext.request.contextPath}/admin/SeriesManagement?filter=' + filterValue;
-
                 if (keyword) {
                     newUrl += '&keyword=' + encodeURIComponent(keyword);
                 }
-
-                console.log('🔍 Applying filter:', filterValue);
-                console.log('🔗 Redirecting to:', newUrl);
-
                 window.location.href = newUrl;
             });
         }
     });
 </script>
+<script>
+    (function () {
+        var PAGE_GROUP_SIZE = 3;
+        var TOTAL_PAGES = parseInt('${totalPages}') || 1;
+        var CURRENT_PAGE = parseInt('${currentPage}') || 1;
+        var BASE_URL = '${pageContext.request.contextPath}/admin/SeriesManagement';
+        var FILTER = '${param.filter}';
+        var KEYWORD = '${keyword}';
+        function buildUrl(page) {
+            var url = BASE_URL + '?page=' + page;
+            if (FILTER) url += '&filter=' + encodeURIComponent(FILTER);
+            if (KEYWORD) url += '&keyword=' + encodeURIComponent(KEYWORD);
+            return url;
+        }
+        function renderPagination() {
+            var container = document.getElementById('paginationContainer');
+            var row = document.getElementById('paginationRow');
+            if (!container) return;
+            if (TOTAL_PAGES <= 1) {
+                if (row) row.style.display = 'none';
+                return;
+            }
+            var currentGroup = Math.floor((CURRENT_PAGE - 1) / PAGE_GROUP_SIZE);
+            var startPage = currentGroup * PAGE_GROUP_SIZE + 1;
+            var endPage = Math.min(startPage + PAGE_GROUP_SIZE - 1, TOTAL_PAGES);
+            var hasPrev = startPage > 1;
+            var hasNext = endPage < TOTAL_PAGES;
+            var html = '';
+            if (hasPrev) {
+                html += '<button class="page-btn nav-btn" onclick="window.location.href=\'' + buildUrl(startPage - 1) + '\'">&laquo;</button>';
+            } else {
+                html += '<button class="page-btn nav-btn" disabled>&laquo;</button>';
+            }
+            for (var i = startPage; i <= endPage; i++) {
+                var activeClass = (i === CURRENT_PAGE) ? ' active' : '';
+                html += '<button class="page-btn' + activeClass + '" onclick="window.location.href=\'' + buildUrl(i) + '\'">' + i + '</button>';
+            }
+            if (hasNext) {
+                html += '<button class="page-btn nav-btn" onclick="window.location.href=\'' + buildUrl(endPage + 1) + '\'">&raquo;</button>';
+            } else {
+                html += '<button class="page-btn nav-btn" disabled>&raquo;</button>';
+            }
+
+            container.innerHTML = html;
+        }
+        document.addEventListener('DOMContentLoaded', renderPagination);
+    })();
+</script>
+
 </body>
 </html>

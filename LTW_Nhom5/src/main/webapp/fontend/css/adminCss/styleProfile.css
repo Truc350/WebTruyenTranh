@@ -15,7 +15,7 @@ body {
     height: 100vh;
 }
 
-/* ==== MAIN CONTENT ==== */
+
 .main-content {
     flex: 1;
     padding: 30px;
@@ -23,7 +23,7 @@ body {
     height: 100vh;
 }
 
-/* ================= PROFILE PAGE ================= */
+
 .profile-page {
     display: flex;
     justify-content: center;
@@ -35,7 +35,7 @@ body {
     margin-top: 30px;
 }
 
-/* ==== RIGHT SIDE ==== */
+
 .profile-right {
     flex: 1;
     background: #fff;
@@ -81,15 +81,13 @@ body {
     outline: none;
 }
 
-/* === Bank Info === */
-/* === Bank edit UI === */
 .bank-container {
     position: relative;
     background-color: #f5f5f5;
     padding: 16px 20px;
     border-radius: 8px;
     max-width: 450px;
-    /*min-height: 160px;*/
+
 }
 
 .bank-info {
@@ -125,10 +123,10 @@ body {
     justify-content: flex-end;
 }
 
-/* hidden helper */
+
 .hidden { display: none !important; }
 
-/* edit block */
+
 .bank-info-edit {
     background-color: #fff;
     padding: 14px;
@@ -144,7 +142,7 @@ body {
     margin-top: 10px;
 }
 
-/* secondary button */
+
 .btn.btn-secondary {
     background: transparent;
     color: #444;
@@ -154,7 +152,6 @@ body {
     font-size: 14px;
 }
 
-/* form inputs within bank edit share same style as other inputs */
 .bank-info-edit input {
     width: 100%;
     padding: 10px 12px;
@@ -168,7 +165,7 @@ body {
     color: white;
 }
 
-/* === Buttons === */
+
 .actions {
     display: flex;
     justify-content: flex-start;
@@ -205,7 +202,7 @@ body {
 
 .account-input input {
     flex: 1;
-    padding-right: 40px; /* chừa chỗ cho icon */
+    padding-right: 40px;
 }
 
 .toggle-eye {
@@ -223,15 +220,12 @@ body {
     color: #007bff;
 }
 
-
-/* === Misc === */
 hr {
     border: none;
     border-top: 1px solid #eee;
     margin: 30px 0;
 }
 
-/* === Responsive === */
 @media (max-width: 900px) {
     .profile-page {
         flex-direction: column;
@@ -251,7 +245,7 @@ hr {
 
 .account-field input {
     flex: 1;
-    padding-right: 32px; /* để icon không đè lên text */
+    padding-right: 32px;
 }
 
 .account-field i {
@@ -261,7 +255,6 @@ hr {
     color: #666;
     transition: color 0.2s ease;
 }
-
 .account-field i:hover {
     color: #222;
 }
@@ -280,9 +273,6 @@ select#bankName {
     font-style: italic;
 }
 
-/* QR Code */
-
-/* Edit button */
 .edit-btn {
     position: absolute;
     top: 12px;
@@ -300,11 +290,9 @@ select#bankName {
     justify-content: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
 .edit-btn:hover {
     background: #2980b9;
 }
-
 .bank-container {
     position: relative;
 }
@@ -349,8 +337,6 @@ select#bankName {
     font-size: 28px;
     pointer-events: none;
 }
-
-/* Khi có ảnh → ẩn dấu + */
 .qr-upload-box img[style*="block"] ~ .qr-plus-icon {
     display: none;
 }

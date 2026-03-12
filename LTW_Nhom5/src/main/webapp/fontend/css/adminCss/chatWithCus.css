@@ -4,7 +4,6 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
-
 body {
     color: #333;
     width: 100%;
@@ -14,32 +13,25 @@ body {
     display: flex;
     height: 100vh;
 }
-
-/* ==== MAIN CONTENT ==== */
 .main-content {
     flex: 1;
     padding: 30px;
 }
-
-/* Reset & Base */
 body {
-    /*background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);*/
     background: white;
     padding: 0;
 }
-
-/* MÀU CHỦ ĐẠO */
 :root {
-    --primary: #007bff; /* Xanh dương chính */
-    --primary-dark: #0056b3; /* Xanh đậm hơn khi hover */
-    --primary-light: #4dabf7; /* Gradient */
-    --accent: #0d6efd; /* Nút gửi, badge */
+    --primary: #007bff;
+    --primary-dark: #0056b3;
+    --primary-light: #4dabf7;
+    --accent: #0d6efd;
     --text: #2c3e50;
     --bg: #f8f9fa;
     --border: #dee2e6;
 }
 
-/* Chat Container */
+
 .chat-container {
     display: flex;
     max-width: 1200px;
@@ -52,7 +44,7 @@ body {
     border: 1px solid #bbdefb;
 }
 
-/* User List */
+
 .user-list {
     width: 32%;
     background: #fff;
@@ -149,15 +141,12 @@ body {
     min-width: 18px;
     text-align: center;
 }
-
-/* Chat Area */
 .chat-area {
     width: 68%;
     display: flex;
     flex-direction: column;
     background: linear-gradient(135deg, #fafcff 0%, #f1f8ff 100%);
 }
-
 .chat-header {
     padding: 16px 20px;
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -169,19 +158,16 @@ body {
     position: relative;
     box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
 }
-
 .chat-header .user-avatar {
     width: 44px;
     height: 44px;
     border-radius: 50%;
     border: 3px solid rgba(255, 255, 255, 0.4);
 }
-
 .header-info h3 {
     font-size: 17px;
     margin-bottom: 2px;
 }
-
 .header-info small {
     font-size: 13px;
     opacity: 0.9;
@@ -189,13 +175,11 @@ body {
     align-items: center;
     gap: 6px;
 }
-
 .online-dot {
     font-size: 8px;
     color: #28a745;
     animation: pulse 2s infinite;
 }
-
 @keyframes pulse {
     0%, 100% {
         opacity: 1
@@ -204,7 +188,6 @@ body {
         opacity: 0.5
     }
 }
-
 .header-action {
     margin-left: auto;
     background: none;
@@ -216,12 +199,9 @@ body {
     border-radius: 50%;
     transition: 0.2s;
 }
-
 .header-action:hover {
     background: rgba(255, 255, 255, 0.25);
 }
-
-/* Messages */
 .chat-messages {
     flex: 1;
     padding: 20px;
@@ -231,22 +211,18 @@ body {
     gap: 14px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="30" cy="30" r="1.5" fill="%23e3f2fd"/><circle cx="170" cy="150" r="1.5" fill="%23bbdefb"/></svg>');
 }
-
 .message {
     max-width: 75%;
     display: flex;
     flex-direction: column;
     animation: fadeInUp 0.4s ease forwards;
 }
-
 .message.received {
     align-self: flex-start;
 }
-
 .message.sent {
     align-self: flex-end;
 }
-
 .bubble {
     padding: 11px 16px;
     border-radius: 20px;
@@ -256,20 +232,17 @@ body {
     box-shadow: 0 1px 3px rgba(0, 123, 255, 0.15);
     position: relative;
 }
-
 .message.received .bubble {
     background: white;
     color: var(--text);
     border-bottom-left-radius: 4px;
     border: 1px solid #e3f2fd;
 }
-
 .message.sent .bubble {
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
     border-bottom-right-radius: 4px;
 }
-
 .message .timestamp {
     font-size: 11px;
     margin-top: 4px;
@@ -277,7 +250,6 @@ body {
     text-align: right;
     padding: 0 4px;
 }
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -288,8 +260,6 @@ body {
         transform: translateY(0);
     }
 }
-
-/* Typing */
 .typing-indicator {
     align-self: flex-start;
     display: flex;
@@ -304,7 +274,6 @@ body {
     margin-left: 12px;
     border: 1px solid #e3f2fd;
 }
-
 .typing-indicator span {
     width: 8px;
     height: 8px;
@@ -313,15 +282,12 @@ body {
     display: inline-block;
     animation: typing 1.4s infinite;
 }
-
 .typing-indicator span:nth-child(2) {
     animation-delay: 0.2s;
 }
-
 .typing-indicator span:nth-child(3) {
     animation-delay: 0.4s;
 }
-
 @keyframes typing {
     0%, 100% {
         transform: translateY(0);
@@ -330,8 +296,6 @@ body {
         transform: translateY(-8px);
     }
 }
-
-/* Input */
 .chat-input {
     padding: 16px 20px;
     background: white;
@@ -340,7 +304,6 @@ body {
     gap: 10px;
     border-top: 1px solid #bbdefb;
 }
-
 .input-action {
     background: none;
     border: none;
@@ -351,12 +314,10 @@ body {
     border-radius: 50%;
     transition: 0.2s;
 }
-
 .input-action:hover {
     background: #ebf4ff;
     color: var(--primary);
 }
-
 #messageInput {
     flex: 1;
     padding: 12px 16px;
@@ -369,13 +330,11 @@ body {
     max-height: 100px;
     background: #f8fdff;
 }
-
 #messageInput:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
     background: white;
 }
-
 .send-btn {
     width: 44px;
     height: 44px;
@@ -391,17 +350,13 @@ body {
     transition: 0.3s;
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
-
 .send-btn:hover {
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
 }
-
 .send-btn:active {
     transform: scale(0.95);
 }
-
-/* Responsive */
 @media (max-width: 768px) {
     .chat-container {
         flex-direction: column;
@@ -411,28 +366,22 @@ body {
         box-shadow: none;
         border: none;
     }
-
     .user-list, .chat-area {
         width: 100%;
     }
-
     .user-list {
         height: 30%;
         border-bottom: 1px solid #bbdefb;
     }
-
     .chat-area {
         height: 70%;
     }
-
     .chat-header, .chat-input {
         padding: 14px 16px;
     }
-
     .chat-messages {
         padding: 16px;
     }
-    /* Xem trước ảnh */
     .image-preview {
         position: fixed;
         bottom: 80px;
@@ -450,7 +399,6 @@ body {
         border: 1px solid #bbdefb;
         animation: slideUp 0.3s ease;
     }
-
     .image-preview img {
         width: 80px;
         height: 80px;
@@ -458,7 +406,6 @@ body {
         border-radius: 8px;
         border: 1px solid #ddd;
     }
-
     .close-preview, .send-image-btn {
         background: #f1f3f4;
         border: none;
@@ -472,19 +419,14 @@ body {
         justify-content: center;
         transition: 0.2s;
     }
-
     .close-preview:hover { background: #ffebee; color: #d32f2f; }
     .send-image-btn {
         background: var(--primary);
         color: white;
     }
     .send-image-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
-
     @keyframes slideUp {
         from { transform: translateX(-50%) translateY(20px); opacity: 0; }
         to { transform: translateX(-50%) translateY(0); opacity: 1; }
     }
-
-
-
 }

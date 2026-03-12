@@ -48,35 +48,4 @@ public class PointTransactionDAO {
                         .list()
         );
     }
-
-    /**
-     * Lấy giao dịch theo order ID
-     */
-    public List<PointTransaction> getTransactionsByOrderId(int orderId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT * FROM PointTransactions " +
-                                "WHERE order_id = ? ORDER BY created_at DESC")
-                        .bind(0, orderId)
-                        .mapToBean(PointTransaction.class)
-                        .list()
-        );
-    }
-
-    /**
-     * Tính tổng điểm của user từ lịch sử giao dịch
-     */
-    public int calculateUserPoints(int userId) {
-        return jdbi.withHandle(handle -> {
-            Integer total = handle.createQuery(
-                            "SELECT SUM(CASE " +
-                                    "WHEN transaction_type = 'EARN' OR transaction_type = 'REFUND' THEN points " +
-                                    "WHEN transaction_type = 'SPEND' THEN -points " +
-                                    "ELSE 0 END) " +
-                                    "FROM PointTransactions WHERE user_id = ?")
-                    .bind(0, userId)
-                    .mapTo(Integer.class)
-                    .one();
-            return total != null ? total : 0;
-        });
-    }
 }

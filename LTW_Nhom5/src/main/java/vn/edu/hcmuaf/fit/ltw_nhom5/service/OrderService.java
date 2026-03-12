@@ -107,9 +107,6 @@ public class OrderService {
     /**
      * Xây dựng dữ liệu đơn hàng đầy đủ
      */
-    /**
-     * Xây dựng dữ liệu đơn hàng đầy đủ
-     */
     private Map<String, Object> buildOrderData(Order order) {
         Map<String, Object> data = new HashMap<>();
 
@@ -118,7 +115,7 @@ public class OrderService {
         data.put("orderCode", order.getId());
         data.put("userId", order.getUserId());
 
-        // XỬ LÝ NGÀY THÁNG - Xử lý cả trường hợp NULL
+
         try {
             Object orderDate = order.getOrderDate();
             String formattedDate = "";
@@ -126,7 +123,6 @@ public class OrderService {
             if (orderDate == null) {
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
-                System.out.println("⚠️ Order " + order.getId() + " has NULL orderDate");
             } else if (orderDate instanceof java.time.LocalDate) {
                 java.time.LocalDate localDate = (java.time.LocalDate) orderDate;
                 formattedDate = localDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -149,7 +145,6 @@ public class OrderService {
                 formattedDate = sdf.format(orderDate);
                 data.put("orderDate", orderDate);
             } else {
-                System.out.println("❌ Unknown date type for order " + order.getId() + ": " + orderDate.getClass().getName());
                 formattedDate = "N/A";
                 data.put("orderDate", new java.util.Date());
             }
@@ -157,7 +152,6 @@ public class OrderService {
             data.put("orderDateFormatted", formattedDate);
 
         } catch (Exception e) {
-            System.out.println("❌ Exception formatting date for order " + order.getId() + ": " + e.getMessage());
             e.printStackTrace();
             data.put("orderDate", new java.util.Date());
             data.put("orderDateFormatted", "N/A");
@@ -216,7 +210,6 @@ public class OrderService {
             }
         }
 
-        // Lấy tên khách hàng từ recipient_name
         data.put("userName", order.getRecipientName());
         try {
             User user = userDAO.getUserById(order.getUserId());
@@ -263,14 +256,11 @@ public class OrderService {
             data.put("paymentStatusDisplay", "—");
         }
 
-        // ============================================================
-        // ✅ PHẦN QUAN TRỌNG: XỬ LÝ DANH SÁCH SẢN PHẨM VỚI FLASH SALE
-        // ============================================================
+
         List<OrderItem> orderItems = orderDAO.getOrderItems(order.getId());
         List<Map<String, Object>> itemsData = new ArrayList<>();
         StringBuilder productSummary = new StringBuilder();
 
-        // ✅ KHỞI TẠO FlashSaleComicsDAO
         FlashSaleComicsDAO flashSaleComicsDAO = new FlashSaleComicsDAO();
 
         for (int i = 0; i < orderItems.size(); i++) {
@@ -281,7 +271,6 @@ public class OrderService {
             itemData.put("comicId", item.getComicId());
             itemData.put("quantity", item.getQuantity());
 
-            // ✅ GIÁ ĐÃ MUA (KHÔNG THAY ĐỔI) - Dùng cho tính tổng tiền
             itemData.put("priceAtPurchase", item.getPriceAtPurchase());
             itemData.put("formattedPriceAtPurchase", CurrencyFormatter.format(item.getPriceAtPurchase()));
 
@@ -292,14 +281,12 @@ public class OrderService {
                     itemData.put("comicName", comic.getNameComics());
                     itemData.put("comicImage", comic.getThumbnailUrl());
 
-                    // ✅ KIỂM TRA FLASH SALE HIỆN TẠI
                     Map<String, Object> flashSaleInfo = flashSaleComicsDAO.getFlashSaleInfoByComicId(item.getComicId());
 
                     double displayPrice = item.getPriceAtPurchase(); // Mặc định là giá đã mua
                     boolean hasActiveFlashSale = false;
 
                     if (flashSaleInfo != null) {
-                        // ✅ CÓ FLASH SALE ĐANG HOẠT ĐỘNG
                         hasActiveFlashSale = true;
 
                         Object discountObj = flashSaleInfo.get("discount_percent");
@@ -312,7 +299,6 @@ public class OrderService {
                             itemData.put("flashSaleDiscount", discountPercent);
                         }
                     } else {
-                        // ✅ KHÔNG CÓ FLASH SALE → Dùng giá discount hiện tại
                         if (comic.hasDiscount()) {
                             displayPrice = comic.getDiscountPrice();
                         } else {
@@ -320,12 +306,10 @@ public class OrderService {
                         }
                     }
 
-                    // ✅ GIÁ HIỂN THỊ (TỰ ĐỘNG CẬP NHẬT)
                     itemData.put("currentDisplayPrice", displayPrice);
                     itemData.put("formattedDisplayPrice", CurrencyFormatter.format(displayPrice));
                     itemData.put("hasActiveFlashSale", hasActiveFlashSale);
 
-                    // ✅ KIỂM TRA XEM GIÁ CÓ THAY ĐỔI SO VỚI LÚC MUA KHÔNG
                     boolean priceChanged = Math.abs(displayPrice - item.getPriceAtPurchase()) > 0.01;
                     itemData.put("priceChanged", priceChanged);
 
@@ -423,7 +407,6 @@ public class OrderService {
 
             String oldStatus = order.getStatus();
 
-            // Sử dụng updateOrderStatusWithPoints để tự động hoàn xu và tồn kho
             boolean success = orderDAO.updateOrderStatusWithPoints(orderId, "Cancelled");
 
             if (success) {
@@ -483,7 +466,6 @@ public class OrderService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // Sử dụng updateOrderStatusWithPoints để tự động cộng xu cho khách
             boolean success = orderDAO.updateOrderStatusWithPoints(orderId, "Completed");
 
             if (success) {
@@ -605,10 +587,6 @@ public class OrderService {
 
     /**
      * Tìm kiếm đơn hàng theo tab cụ thể
-     *
-     * @param keyword Từ khóa tìm kiếm (mã đơn hoặc tên khách)
-     * @param status  Trạng thái đơn hàng (tab hiện tại)
-     * @return Danh sách đơn hàng đã format
      */
     public List<Map<String, Object>> searchOrdersByTab(String keyword, String status) {
         List<Map<String, Object>> result = new ArrayList<>();
@@ -616,22 +594,18 @@ public class OrderService {
         try {
             List<Map<String, Object>> orders;
 
-            // Xử lý riêng cho tab Cancelled vì cần lấy thêm thông tin từ order_history
             if ("Cancelled".equalsIgnoreCase(status)) {
                 orders = orderDAO.searchCancelledOrders(keyword);
             } else {
                 orders = orderDAO.searchOrdersByStatus(keyword, status);
             }
 
-            // Format dữ liệu giống như buildOrderData
             for (Map<String, Object> orderMap : orders) {
                 int orderId = ((Number) orderMap.get("id")).intValue();
 
-                // Lấy Order object đầy đủ
                 Order order = orderDAO.getOrderById(orderId).orElse(null);
 
                 if (order != null) {
-                    // Sử dụng buildOrderData để format đồng nhất
                     Map<String, Object> formattedOrder = buildOrderData(order);
                     result.add(formattedOrder);
                 }
@@ -666,13 +640,6 @@ public class OrderService {
         return searchOrdersByTab(keyword, "Shipping");
     }
 
-//    /**
-//     * Tìm kiếm đơn hàng cho tab ĐÃ GIAO
-//     */
-//    public List<Map<String, Object>> searchCompletedOrders(String keyword) {
-//        return searchOrdersByTab(keyword, "Completed");
-//    }
-
     /**
      * Tìm kiếm đơn hàng cho tab TRẢ HÀNG/HOÀN TIỀN
      */
@@ -689,18 +656,10 @@ public class OrderService {
 
     /**
      * Cập nhật trạng thái đơn hàng và tự động cập nhật total_spent
-     *
-     * @param orderId   ID đơn hàng
-     * @param newStatus Trạng thái mới
-     * @return true nếu thành công
      */
     public boolean updateOrderStatusAndSync(int orderId, String newStatus) {
         // Cập nhật trạng thái đơn hàng
         boolean orderUpdated = orderDAO.updateOrderStatusWithPoints(orderId, newStatus);
-
-        if (orderUpdated) {
-            System.out.println("✅ Đã cập nhật đơn hàng " + orderId + " sang trạng thái: " + newStatus);
-        }
 
 //        // Nếu trạng thái mới là "completed", tự động cập nhật total_spent
 //        if ("Completed".equalsIgnoreCase(newStatus)) {
@@ -724,7 +683,7 @@ public class OrderService {
 
             // Format dữ liệu cho từng đơn hàng
             for (Map<String, Object> order : orders) {
-                // ✅ Format số tiền
+
                 Object totalAmountObj = order.get("total_amount");
                 if (totalAmountObj != null) {
                     double totalAmount = 0.0;
@@ -734,10 +693,8 @@ public class OrderService {
                     order.put("formattedAmount", CurrencyFormatter.format(totalAmount));
                 }
 
-                // ✅ LẤY payment_method TỪ MAP TRƯỚC KHI DÙNG
                 String paymentMethod = (String) order.get("payment_method");
 
-                // ✅ Format payment method
                 String paymentMethodDisplay = "COD";
                 if ("COD".equalsIgnoreCase(paymentMethod)) {
                     paymentMethodDisplay = "COD";
@@ -748,7 +705,6 @@ public class OrderService {
                 }
                 order.put("paymentMethodDisplay", paymentMethodDisplay);
 
-                // ✅ Xử lý thông tin rating
                 Object avgRatingObj = order.get("average_rating");
                 Object reviewCountObj = order.get("review_count");
 
@@ -782,7 +738,6 @@ public class OrderService {
             return orders;
 
         } catch (Exception e) {
-            System.err.println("Error in searchCompletedOrders: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -795,7 +750,6 @@ public class OrderService {
         try {
             List<Map<String, Object>> returns = orderReturnDAO.getAllReturnsWithDetails();
 
-            // Format dữ liệu cho từng đơn hoàn trả
             for (Map<String, Object> returnOrder : returns) {
                 formatReturnOrderData(returnOrder);
             }
@@ -897,7 +851,6 @@ public class OrderService {
             if (returnDetail != null) {
                 formatReturnOrderData(returnDetail);
 
-                // ✅ LẤY DANH SÁCH ẢNH VÀ CONVERT SANG MAP
                 List<OrderReturnImage> images = orderReturnDAO.getReturnImages(returnId);
                 List<Map<String, Object>> imageData = new ArrayList<>();
 
@@ -906,7 +859,6 @@ public class OrderService {
                     imgMap.put("id", img.getId());
                     imgMap.put("urlImg", img.getUrlImg());
 
-                    // ✅ CONVERT LocalDateTime THÀNH STRING
                     if (img.getCreatedAt() != null) {
                         imgMap.put("createdAt", img.getCreatedAt().format(DATE_TIME_FORMATTER));
                     }
@@ -942,14 +894,12 @@ public class OrderService {
                 int returnId = ((Number) returnIdObj).intValue();
                 List<OrderReturnImage> images = orderReturnDAO.getReturnImages(returnId);
 
-                // ✅ CONVERT ẢNH THÀNH LIST MAP THAY VÌ OBJECT
                 List<Map<String, Object>> imageData = new ArrayList<>();
                 for (OrderReturnImage img : images) {
                     Map<String, Object> imgMap = new HashMap<>();
                     imgMap.put("id", img.getId());
                     imgMap.put("urlImg", img.getUrlImg());
 
-                    // ✅ CONVERT CREATED_AT THÀNH STRING
                     if (img.getCreatedAt() != null) {
                         imgMap.put("createdAt", img.getCreatedAt().format(DATE_TIME_FORMATTER));
                     }
@@ -959,12 +909,10 @@ public class OrderService {
                 returnOrder.put("proof_images", imageData);
             }
 
-            // Xác định CSS class và text hiển thị cho status
             String returnStatus = (String) returnOrder.get("return_status");
             returnOrder.put("status_class", getReturnStatusClass(returnStatus));
             returnOrder.put("status_display", getReturnStatusDisplay(returnStatus));
 
-            // ✅ FORMAT NGÀY TẠO - CHUYỂN LocalDateTime THÀNH STRING
             Object returnDateObj = returnOrder.get("return_date");
             if (returnDateObj != null) {
                 String formattedDate = null;
@@ -978,14 +926,12 @@ public class OrderService {
                     formattedDate = sdf.format(timestamp);
                 }
 
-                // ✅ GHI ĐÈ return_date VỚI STRING ĐÃ FORMAT
                 if (formattedDate != null) {
                     returnOrder.put("return_date", formattedDate);
                     returnOrder.put("formatted_return_date", formattedDate);
                 }
             }
 
-            // ✅ FORMAT SỐ TIỀN HOÀN TRẢ
             Object refundAmountObj = returnOrder.get("refund_amount");
             if (refundAmountObj != null) {
                 double refundAmount = ((Number) refundAmountObj).doubleValue();
@@ -1079,7 +1025,6 @@ public class OrderService {
                             .orElse(null)
             );
 
-            // ✅ Format refund amount sau khi lấy
             if (result != null && result.get("refundAmount") != null) {
                 double amount = ((Number) result.get("refundAmount")).doubleValue();
                 result.put("formattedRefundAmount", CurrencyFormatter.format(amount));

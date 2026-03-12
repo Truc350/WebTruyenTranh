@@ -35,7 +35,6 @@ public class ReviewDAO {
                     .mapTo(Integer.class)
                     .one();
 
-            System.out.println("Review created with ID: " + reviewId);
             return reviewId;
         });
     }
@@ -137,7 +136,6 @@ public class ReviewDAO {
             distribution.put(i, 0);
         }
 
-        // Lấy dữ liệu thực tế từ database và cập nhật vào map
         jdbi.withHandle(handle ->
                 handle.createQuery(sql)
                         .bind(0, comicId)
@@ -151,20 +149,6 @@ public class ReviewDAO {
         );
 
         return distribution;
-    }
-
-    /**
-     * Đếm tổng số review của comic
-     */
-    public int getTotalReviews(int comicId) {
-        String sql = "SELECT COUNT(*) FROM reviews WHERE comic_id = ?";
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind(0, comicId)
-                        .mapTo(Integer.class)
-                        .one()
-        );
     }
 
 }

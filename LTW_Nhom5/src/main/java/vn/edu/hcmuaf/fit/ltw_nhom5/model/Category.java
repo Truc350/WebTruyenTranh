@@ -3,21 +3,13 @@ package vn.edu.hcmuaf.fit.ltw_nhom5.model;
 import java.time.LocalDateTime;
 
 public class Category {
-    private Integer id;  // Đổi thành Integer để có thể null
+    private Integer id;
     private String nameCategories;
     private String description;
-    private Integer isDeleted;  // Đổi thành Integer thay vì boolean
+    private Integer isDeleted;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
     private int is_hidden;
-
-    public int getIs_hidden() {
-        return is_hidden;
-    }
-
-    public void setIs_hidden(int is_hidden) {
-        this.is_hidden = is_hidden;
-    }
 
     public Category(Integer id, String nameCategories, String description, Integer isDeleted, LocalDateTime deletedAt, LocalDateTime createdAt, int is_hidden) {
         this.id = id;
@@ -29,11 +21,10 @@ public class Category {
         this.is_hidden = is_hidden;
     }
 
-    // Constructor không tham số (BẮT BUỘC cho JDBI)
+
     public Category() {
     }
 
-    // Constructor đầy đủ
     public Category(Integer id, String nameCategories, String description,
                     Integer isDeleted, LocalDateTime deletedAt, LocalDateTime createdAt) {
         this.id = id;
@@ -52,7 +43,6 @@ public class Category {
         this.createdAt = createdAt;
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -85,7 +75,6 @@ public class Category {
         this.isDeleted = isDeleted;
     }
 
-    // Thêm method tiện ích
     public boolean isDeleted() {
         return isDeleted != null && isDeleted == 1;
     }
@@ -116,5 +105,13 @@ public class Category {
                 ", deletedAt=" + deletedAt +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public int getIs_hidden() {
+        return is_hidden;
+    }
+
+    public void setIs_hidden(int is_hidden) {
+        this.is_hidden = is_hidden;
     }
 }

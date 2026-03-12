@@ -49,11 +49,6 @@ public class SubmitReturnServlet extends HttpServlet {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
             String reason = request.getParameter("reason");
 
-            System.out.println("=== SUBMIT RETURN ===");
-            System.out.println("Order ID: " + orderId);
-            System.out.println("User ID: " + user.getId());
-            System.out.println("Reason: " + reason);
-
             // Lấy tất cả sản phẩm trong đơn hàng
             List<OrderItem> items = orderDAO.getOrderItems(orderId);
 
@@ -74,15 +69,12 @@ public class SubmitReturnServlet extends HttpServlet {
                         String imageUrl = CloudinaryService.uploadImage(part, "returns");
                         if (imageUrl != null) {
                             uploadedImageUrls.add(imageUrl);
-                            System.out.println("✓ Uploaded return image: " + imageUrl);
                         }
                     } catch (Exception e) {
                         System.err.println("✗ Error uploading return image: " + e.getMessage());
                     }
                 }
             }
-
-            System.out.println("Total uploaded images: " + uploadedImageUrls.size());
 
             // Tạo yêu cầu trả hàng cho từng sản phẩm
             for (OrderItem item : items) {
@@ -95,12 +87,10 @@ public class SubmitReturnServlet extends HttpServlet {
                 orderReturn.setStatus("Pending"); // Chờ xử lý
 
                 int returnId = orderReturnDAO.addOrderReturn(orderReturn);
-                System.out.println("Created return ID: " + returnId + " for comic: " + item.getComicId());
 
                 // Thêm ảnh vào order_return
                 for (String imageUrl : uploadedImageUrls) {
                     boolean added = orderReturnDAO.addReturnImage(returnId, imageUrl);
-                    System.out.println("  " + (added ? "✓" : "✗") + " Added image to return: " + imageUrl);
                 }
             }
 
@@ -114,10 +104,8 @@ public class SubmitReturnServlet extends HttpServlet {
             }
 
         } catch (NumberFormatException e) {
-            System.err.println("Invalid number format: " + e.getMessage());
             response.getWriter().write("{\"success\":false,\"message\":\"Dữ liệu không hợp lệ\"}");
         } catch (Exception e) {
-            System.err.println("Error submitting return: " + e.getMessage());
             e.printStackTrace();
             response.getWriter().write("{\"success\":false,\"message\":\"Có lỗi xảy ra: " + e.getMessage() + "\"}");
         }

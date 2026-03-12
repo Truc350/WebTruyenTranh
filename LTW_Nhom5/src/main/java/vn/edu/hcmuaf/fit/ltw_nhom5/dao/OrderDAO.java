@@ -29,17 +29,9 @@ public class OrderDAO extends ADao {
         this.paymentDAO = new PaymentDAO(jdbi);
     }
 
-    /**
-     * Tạo đơn hàng mới với transaction (bao gồm payment và kiểm tra tồn kho)
-     *
-     * @param order         Thông tin đơn hàng
-     * @param orderItems    Danh sách sản phẩm trong đơn
-     * @param paymentMethod Phương thức thanh toán
-     * @return ID của đơn hàng mới tạo, trả về 0 nếu thất bại
-     */
+
     public int createOrderWithPayment(Order order, List<OrderItem> orderItems, String paymentMethod) {
         return jdbi.inTransaction(handle -> {
-            // 1. KIỂM TRA TỒN KHO
             for (OrderItem item : orderItems) {
                 int stockQuantity = handle.createQuery(
                                 "SELECT stock_quantity FROM comics WHERE id = ?")
@@ -57,7 +49,6 @@ public class OrderDAO extends ADao {
                 }
             }
 
-            // 2. TẠO ĐƠN HÀNG
             String insertOrderSql = "INSERT INTO orders " +
                     "(user_id, order_date, status, total_amount, shipping_address_id, " +
                     "recipient_name, shipping_phone, shipping_address, shipping_provider, " +
@@ -81,7 +72,6 @@ public class OrderDAO extends ADao {
                     .mapTo(Integer.class)
                     .one();
 
-            // 3. TẠO ORDER ITEMS VÀ TRỪ TỒN KHO
             if (orderItems != null && !orderItems.isEmpty()) {
                 String insertItemSql = "INSERT INTO order_items " +
                         "(order_id, comic_id, quantity, price_at_purchase) " +
@@ -90,14 +80,12 @@ public class OrderDAO extends ADao {
                 var batch = handle.prepareBatch(insertItemSql);
 
                 for (OrderItem item : orderItems) {
-                    // Thêm order item
                     batch.bind(0, orderId)
                             .bind(1, item.getComicId())
                             .bind(2, item.getQuantity())
                             .bind(3, item.getPriceAtPurchase())
                             .add();
 
-                    // Trừ tồn kho
                     String updateStockSql = "UPDATE comics SET stock_quantity = stock_quantity - ? " +
                             "WHERE id = ? AND stock_quantity >= ?";
 
@@ -117,15 +105,13 @@ public class OrderDAO extends ADao {
                 batch.execute();
             }
 
-            // 4. TẠO PAYMENT
             String insertPaymentSql = "INSERT INTO payments " +
                     "(order_id, payment_method, payment_status, transaction_id, " +
                     "amount, payment_date, created_at, updated_at) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-            // Xác định payment_status dựa trên payment_method
             String paymentStatus = "COD".equals(paymentMethod) ? "Pending" : "Pending";
-            String transactionId = null; // Sẽ được cập nhật sau khi thanh toán
+            String transactionId = null;
             LocalDateTime paymentDate = null;
             LocalDateTime now = LocalDateTime.now();
 
@@ -135,7 +121,7 @@ public class OrderDAO extends ADao {
                     .bind(2, paymentStatus)
                     .bind(3, transactionId)
                     .bind(4, order.getTotalAmount())
-                    .bind(5, paymentDate) // payment_date sẽ được set khi thanh toán thành công
+                    .bind(5, paymentDate)
                     .bind(6, now)
                     .bind(7, now)
                     .execute();
@@ -144,68 +130,7 @@ public class OrderDAO extends ADao {
         });
     }
 
-    /**
-     * Tạo đơn hàng mới với transaction
-     *
-     * @param order      Thông tin đơn hàng
-     * @param orderItems Danh sách sản phẩm trong đơn
-     * @return ID của đơn hàng mới tạo, trả về 0 nếu thất bại
-     */
-    public int createOrder(Order order, List<OrderItem> orderItems) {
-        return jdbi.inTransaction(handle -> {
-            // Insert order
-            String insertOrderSql = "INSERT INTO orders " +
-                    "(user_id, order_date, status, total_amount, shipping_address_id, " +
-                    "recipient_name, shipping_phone, shipping_address, shipping_provider, " +
-                    "shipping_fee, points_used, created_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            int orderId = handle.createUpdate(insertOrderSql)
-                    .bind(0, order.getUserId())
-                    .bind(1, order.getOrderDate())
-                    .bind(2, order.getStatus())
-                    .bind(3, order.getTotalAmount())
-                    .bind(4, order.getShippingAddressId())
-                    .bind(5, order.getRecipientName())
-                    .bind(6, order.getShippingPhone())
-                    .bind(7, order.getShippingAddress())
-                    .bind(8, order.getShippingProvider())
-                    .bind(9, order.getShippingFee())
-                    .bind(10, order.getPointUsed())
-                    .bind(11, order.getCreatedAt())
-                    .executeAndReturnGeneratedKeys("id")
-                    .mapTo(Integer.class)
-                    .one();
-
-            // Insert order items
-            if (orderItems != null && !orderItems.isEmpty()) {
-                String insertItemSql = "INSERT INTO order_items " +
-                        "(order_id, comic_id, quantity, price_at_purchase) " +
-                        "VALUES (?, ?, ?, ?)";
-
-                var batch = handle.prepareBatch(insertItemSql);
-
-                for (OrderItem item : orderItems) {
-                    batch.bind(0, orderId)
-                            .bind(1, item.getComicId())
-                            .bind(2, item.getQuantity())
-                            .bind(3, item.getPriceAtPurchase())
-                            .add();
-                }
-
-                batch.execute();
-            }
-
-            return orderId;
-        });
-    }
-
-    /**
-     * Lấy thông tin đơn hàng theo ID
-     *
-     * @param orderId ID đơn hàng
-     * @return Optional chứa Order nếu tìm thấy
-     */
     public Optional<Order> getOrderById(int orderId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM orders WHERE id = ?")
@@ -215,12 +140,7 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy danh sách đơn hàng của user
-     *
-     * @param userId ID của user
-     * @return Danh sách đơn hàng
-     */
+
     public List<Order> getOrdersByUserId(int userId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC")
@@ -230,12 +150,7 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy danh sách sản phẩm trong đơn hàng
-     *
-     * @param orderId ID đơn hàng
-     * @return Danh sách OrderItem
-     */
+
     public List<OrderItem> getOrderItems(int orderId) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM order_items WHERE order_id = ?")
@@ -245,13 +160,7 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Cập nhật trạng thái đơn hàng
-     *
-     * @param orderId ID đơn hàng
-     * @param status  Trạng thái mới
-     * @return true nếu cập nhật thành công
-     */
+
     public boolean updateOrderStatus(int orderId, String status) {
         return jdbi.withHandle(handle -> {
             int updated = handle.createUpdate(
@@ -263,11 +172,7 @@ public class OrderDAO extends ADao {
         });
     }
 
-    /**
-     * Lấy danh sách tất cả đơn hàng (cho admin)
-     *
-     * @return Danh sách tất cả đơn hàng
-     */
+
     public List<Order> getAllOrders() {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM orders ORDER BY order_date DESC")
@@ -276,12 +181,7 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy danh sách đơn hàng theo trạng thái
-     *
-     * @param status Trạng thái đơn hàng
-     * @return Danh sách đơn hàng
-     */
+
     public List<Order> getOrdersByStatus(String status) {
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT * FROM orders WHERE status = ? ORDER BY order_date DESC")
@@ -291,36 +191,7 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Đếm số đơn hàng của user
-     *
-     * @param userId ID user
-     * @return Số lượng đơn hàng
-     */
-    public int countOrdersByUserId(int userId) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery("SELECT COUNT(*) FROM orders WHERE user_id = ?")
-                        .bind(0, userId)
-                        .mapTo(Integer.class)
-                        .one()
-        );
-    }
 
-    /**
-     * Xóa đơn hàng (soft delete - chuyển status thành Cancelled)
-     *
-     * @param orderId ID đơn hàng
-     * @return true nếu xóa thành công
-     */
-    public boolean cancelOrder(int orderId) {
-        return updateOrderStatus(orderId, "Cancelled");
-    }
-
-    /**
-     * Lấy tổng doanh thu từ các đơn hàng đã hoàn thành
-     *
-     * @return Tổng doanh thu
-     */
     public double getTotalRevenue() {
         return jdbi.withHandle(handle ->
                 handle.createQuery(
@@ -330,33 +201,9 @@ public class OrderDAO extends ADao {
         );
     }
 
-    /**
-     * Lấy doanh thu theo khoảng thời gian
-     *
-     * @param startDate Ngày bắt đầu
-     * @param endDate   Ngày kết thúc
-     * @return Tổng doanh thu
-     */
-    public double getRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
-        return jdbi.withHandle(handle ->
-                handle.createQuery(
-                                "SELECT COALESCE(SUM(total_amount), 0) FROM orders " +
-                                        "WHERE status = 'Completed' AND order_date BETWEEN ? AND ?")
-                        .bind(0, startDate)
-                        .bind(1, endDate)
-                        .mapTo(Double.class)
-                        .one()
-        );
-    }
 
-    /**
-     * @param orderId   ID đơn hàng
-     * @param newStatus Trạng thái mới
-     * @return true nếu cập nhật thành công
-     */
     public boolean updateOrderStatusWithPoints(int orderId, String newStatus) {
         return jdbi.inTransaction(handle -> {
-            // 1. Lấy thông tin đơn hàng
             Order order = handle.createQuery("SELECT * FROM orders WHERE id = ?")
                     .bind(0, orderId)
                     .mapToBean(Order.class)
@@ -364,7 +211,6 @@ public class OrderDAO extends ADao {
                     .orElse(null);
 
             if (order == null) {
-                System.err.println("❌ Không tìm thấy đơn hàng ID: " + orderId);
                 return false;
             }
 
@@ -372,14 +218,12 @@ public class OrderDAO extends ADao {
             int userId = order.getUserId();
             double totalAmount = order.getTotalAmount();
 
-            // 2. Cập nhật trạng thái đơn hàng
             int updated = handle.createUpdate("UPDATE orders SET status = ? WHERE id = ?")
                     .bind(0, newStatus)
                     .bind(1, orderId)
                     .execute();
 
             if (updated == 0) {
-                System.err.println("❌ Không thể cập nhật trạng thái đơn hàng ID: " + orderId);
                 return false;
             }
 
@@ -400,9 +244,6 @@ public class OrderDAO extends ADao {
                         .bind(2, userId)
                         .execute();
 
-                System.out.println("✅ [COMPLETED] User " + userId + ": +" +
-                        String.format("%,.0f", totalAmount) + " VND, +" + earnedPoints + " điểm");
-
                 // Ghi log giao dịch xu
                 String insertTransactionSql = "INSERT INTO PointTransactions " +
                         "(user_id, order_id, points, transaction_type, description, created_at) " +
@@ -419,7 +260,6 @@ public class OrderDAO extends ADao {
                         .execute();
             }
 
-            // 4. Nếu hủy đơn hàng, hoàn xu (nếu đã sử dụng xu)
             if ("Cancelled".equalsIgnoreCase(newStatus) &&
                     !"Cancelled".equalsIgnoreCase(oldStatus)) {
 
@@ -463,11 +303,9 @@ public class OrderDAO extends ADao {
                 }
             }
 
-            // 5. THÊM: Xử lý trạng thái "Returned"
             if ("Returned".equalsIgnoreCase(newStatus) &&
                     !"Returned".equalsIgnoreCase(oldStatus)) {
 
-                // Hoàn xu nếu đã dùng
                 if (order.getPointUsed() != 0 && order.getPointUsed() > 0) {
                     handle.createUpdate("UPDATE users SET points = points + ?, updated_at = NOW() WHERE id = ?")
                             .bind(0, order.getPointUsed())
@@ -510,21 +348,6 @@ public class OrderDAO extends ADao {
         });
     }
 
-    /**
-     * Lấy đơn hàng kèm thông tin user
-     */
-    public List<Map<String, Object>> getOrdersWithUserInfo() {
-        return jdbi.withHandle(handle ->
-                handle.createQuery(
-                                "SELECT o.*, u.full_name as user_name " +
-                                        "FROM orders o " +
-                                        "JOIN users u ON o.user_id = u.id " +
-                                        "ORDER BY o.order_date DESC")
-                        .mapToMap()
-                        .list()
-        );
-    }
-
     public List<Map<String, Object>> searchOrders(String keyword, String status) {
         boolean isNumber = keyword != null && keyword.matches("\\d+");
 
@@ -548,7 +371,6 @@ public class OrderDAO extends ADao {
                     ORDER BY o.order_date DESC
                 """;
 
-        // ✅ THÊM COLLATE utf8mb4_unicode_ci VÀ LOWER() ĐỂ SEARCH KHÔNG PHÂN BIỆT HOA THƯỜNG
         String sqlByName = """
                     SELECT 
                         o.id,
@@ -579,20 +401,14 @@ public class OrderDAO extends ADao {
             } else {
                 return handle.createQuery(sqlByName)
                         .bind("status", status)
-                        .bind("name", "%" + keyword + "%")  // ✅ LOWER() đã có trong SQL
+                        .bind("name", "%" + keyword + "%")
                         .mapToMap()
                         .list();
             }
         });
     }
 
-    /**
-     * Tìm kiếm đơn hàng theo keyword và status cụ thể
-     *
-     * @param keyword Mã đơn hàng hoặc tên khách hàng
-     * @param status  Trạng thái đơn hàng
-     * @return Danh sách đơn hàng phù hợp
-     */
+
     public List<Map<String, Object>> searchOrdersByStatus(String keyword, String status) {
         if (keyword == null) keyword = "";
         if (status == null) status = "";
@@ -640,7 +456,6 @@ public class OrderDAO extends ADao {
         String finalStatus = status;
         return jdbi.withHandle(handle -> {
             if (isNumber && !trimmedKeyword.isEmpty()) {
-                // POSITIONAL BINDING
                 return handle.createQuery(sqlById)
                         .bind(0, finalStatus)
                         .bind(1, Integer.parseInt(trimmedKeyword))
@@ -660,22 +475,14 @@ public class OrderDAO extends ADao {
             }
         });
     }
-    /**
-     * Tìm kiếm đơn hàng bị hủy (lấy thêm thông tin từ order_history)
-     *
-     * @param keyword Mã đơn hàng hoặc tên khách hàng
-     * @return Danh sách đơn hàng bị hủy
-     */
+
     public List<Map<String, Object>> searchCancelledOrders(String keyword) {
-        System.out.println("=== searchCancelledOrders DEBUG ===");
-        System.out.println("📝 Input keyword: [" + keyword + "]");
 
         if (keyword == null) keyword = "";
 
         String trimmedKeyword = keyword.trim();
         boolean isNumber = trimmedKeyword.matches("\\d+");
 
-        System.out.println("📝 Trimmed keyword: [" + trimmedKeyword + "]");
 
         // SQL tìm kiếm đơn bị hủy theo ID
         String sqlById = """
@@ -724,36 +531,26 @@ public class OrderDAO extends ADao {
 
         List<Map<String, Object>> result = jdbi.withHandle(handle -> {
             if (isNumber && !trimmedKeyword.isEmpty()) {
-                System.out.println("🔍 Searching by ID: " + trimmedKeyword);
                 return handle.createQuery(sqlById)
                         .bind("orderId", Integer.parseInt(trimmedKeyword))
                         .mapToMap()
                         .list();
             } else if (!trimmedKeyword.isEmpty()) {
-                System.out.println("🔍 Searching by name: %" + trimmedKeyword + "%");
                 return handle.createQuery(sqlByName)
                         .bind("keyword", "%" + trimmedKeyword + "%")
                         .mapToMap()
                         .list();
             } else {
-                System.out.println("🔍 Loading all cancelled orders");
                 return handle.createQuery(sqlAll)
                         .mapToMap()
                         .list();
             }
         });
 
-        System.out.println("✅ Found " + result.size() + " cancelled orders");
-        if (result.size() > 0) {
-            System.out.println("📦 First result: " + result.get(0));
-        }
-        System.out.println("=================================");
-
         return result;
     }
 
 
-    // THÊM: Method hủy đơn hàng kèm lưu lý do vào order_history
     public boolean cancelOrderWithHistory(int orderId, int userId, String reason) {
         return jdbi.inTransaction(handle -> {
             // 1. Lấy thông tin đơn hàng
@@ -834,81 +631,6 @@ public class OrderDAO extends ADao {
 
             return true;
         });
-    }
-
-    /**
-     * Lấy điểm đánh giá trung bình của đơn hàng
-     * @param orderId ID đơn hàng
-     * @return Map chứa averageRating và hasReview
-     */
-    public Map<String, Object> getOrderRatingInfo(int orderId) {
-        String sql = """
-        SELECT 
-            COUNT(r.id) as review_count,
-            AVG(r.rating) as avg_rating
-        FROM reviews r
-        WHERE r.order_id = ?
-    """;
-
-        return jdbi.withHandle(handle -> {
-            Map<String, Object> result = handle.createQuery(sql)
-                    .bind(0, orderId)
-                    .mapToMap()
-                    .findOne()
-                    .orElse(new HashMap<>());
-
-            int reviewCount = ((Number) result.getOrDefault("review_count", 0)).intValue();
-            Double avgRating = result.get("avg_rating") != null
-                    ? ((Number) result.get("avg_rating")).doubleValue()
-                    : null;
-
-            Map<String, Object> ratingInfo = new HashMap<>();
-            ratingInfo.put("hasReview", reviewCount > 0);
-            ratingInfo.put("averageRating", avgRating);
-            ratingInfo.put("reviewCount", reviewCount);
-
-            return ratingInfo;
-        });
-    }
-
-    /**
-     * Lấy danh sách đơn hàng với thông tin đánh giá
-     */
-    public List<Map<String, Object>> getCompletedOrdersWithRating() {
-        String sql = """
-        SELECT 
-            o.id,
-            o.user_id,
-            o.order_date,
-            o.total_amount,
-            o.recipient_name,
-            o.shipping_phone,
-            o.shipping_address,
-            o.shipping_provider,
-            o.shipping_fee,
-            o.points_used,
-            o.status,
-            p.payment_method,
-            p.payment_status,
-            p.transaction_id,
-            AVG(r.rating) as average_rating,
-            COUNT(r.id) as review_count
-        FROM orders o
-        LEFT JOIN payments p ON o.id = p.order_id
-        LEFT JOIN reviews r ON o.id = r.order_id
-        WHERE o.status = 'Completed'
-        GROUP BY o.id, o.user_id, o.order_date, o.total_amount, 
-                 o.recipient_name, o.shipping_phone, o.shipping_address,
-                 o.shipping_provider, o.shipping_fee, o.points_used, o.status,
-                 p.payment_method, p.payment_status, p.transaction_id
-        ORDER BY o.order_date DESC
-    """;
-
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapToMap()
-                        .list()
-        );
     }
 
     /**

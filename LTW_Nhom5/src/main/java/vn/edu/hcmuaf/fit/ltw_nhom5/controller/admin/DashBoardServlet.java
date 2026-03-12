@@ -34,7 +34,6 @@ public class DashBoardServlet extends HttpServlet {
         } else if ("chartData".equals(action)) {
             handleChartData(request, response);
         } else {
-            // Mặc định hiển thị thống kê tháng hiện tại
             LocalDate today = LocalDate.now();
             LocalDate monthStart = today.withDayOfMonth(1);
             LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
@@ -48,24 +47,18 @@ public class DashBoardServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    /**
-     * Hiển thị dashboard với thống kê theo khoảng thời gian
-     */
     private void displayDashboard(HttpServletRequest request, HttpServletResponse response,
                                   String period, LocalDate startDate, LocalDate endDate)
             throws ServletException, IOException {
 
         Map<String, Object> stats = statisticsDAO.getCustomStats(startDate, endDate);
 
-        // Lấy top 10 sản phẩm bán chạy theo khoảng thời gian đã chọn
         List<Map<String, Object>> topProducts =
                 statisticsDAO.getTopSellingComics(startDate, endDate, 10);
 
-        // Lấy top 10 sản phẩm có đánh giá cao nhất
         List<Map<String, Object>> topRatedComics =
                 statisticsDAO.getTopRatedComics(10);
 
-        // Lấy dữ liệu biểu đồ phù hợp với khoảng thời gian
         List<Map<String, Object>> chartData = getChartData(period, startDate, endDate);
 
         request.setAttribute("stats", stats);
@@ -79,9 +72,7 @@ public class DashBoardServlet extends HttpServlet {
                 .forward(request, response);
     }
 
-    /**
-     * Xử lý lọc theo khoảng thời gian
-     */
+
     private void handleFilter(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -93,14 +84,12 @@ public class DashBoardServlet extends HttpServlet {
         LocalDate endDate;
 
         if ("custom".equals(period) && startDateStr != null && endDateStr != null) {
-            // Lọc theo khoảng thời gian tùy chỉnh
             startDate = LocalDate.parse(startDateStr);
             endDate = LocalDate.parse(endDateStr);
 
             request.setAttribute("startDate", startDateStr);
             request.setAttribute("endDate", endDateStr);
         } else {
-            // Lọc theo hôm nay/tuần/tháng/năm
             LocalDate today = LocalDate.now();
             switch (period) {
                 case "today":
@@ -115,43 +104,31 @@ public class DashBoardServlet extends HttpServlet {
                     startDate = today.withDayOfYear(1);
                     endDate = today.withDayOfYear(today.lengthOfYear());
                     break;
-                default: // month
+                default:
                     startDate = today.withDayOfMonth(1);
                     endDate = today.withDayOfMonth(today.lengthOfMonth());
                     break;
             }
         }
-
-        // Hiển thị dashboard với khoảng thời gian đã tính
         displayDashboard(request, response, period, startDate, endDate);
     }
 
-    /**
-     * Lấy dữ liệu biểu đồ phù hợp với loại thời gian
-     */
     private List<Map<String, Object>> getChartData(String period, LocalDate startDate, LocalDate endDate) {
         switch (period) {
             case "today":
-                // Hiển thị doanh thu theo giờ trong ngày (nếu có data)
                 return statisticsDAO.getDailyRevenue(startDate, endDate);
             case "week":
             case "custom":
-                // Hiển thị doanh thu theo ngày
                 return statisticsDAO.getDailyRevenue(startDate, endDate);
             case "month":
-                // Hiển thị doanh thu theo ngày trong tháng
                 return statisticsDAO.getDailyRevenue(startDate, endDate);
             case "year":
-                // Hiển thị doanh thu theo 12 tháng
                 return statisticsDAO.getRevenueByMonth(startDate.getYear());
             default:
                 return statisticsDAO.getRevenueByMonth(Year.now().getValue());
         }
     }
 
-    /**
-     * Xác định loại biểu đồ cần hiển thị
-     */
     private String getChartType(String period) {
         switch (period) {
             case "today":
@@ -166,9 +143,7 @@ public class DashBoardServlet extends HttpServlet {
         }
     }
 
-    /**
-     * API trả về dữ liệu biểu đồ dạng JSON
-     */
+
     private void handleChartData(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 

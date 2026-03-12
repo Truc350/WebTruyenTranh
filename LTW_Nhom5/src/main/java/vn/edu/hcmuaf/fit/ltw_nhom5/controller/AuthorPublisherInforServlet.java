@@ -47,7 +47,7 @@ public class AuthorPublisherInforServlet extends HttpServlet {
         response.setHeader("Pragma", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        String type = request.getParameter("type"); // "author" or "publisher"
+        String type = request.getParameter("type");
         String name = request.getParameter("name");
 
 
@@ -73,14 +73,13 @@ public class AuthorPublisherInforServlet extends HttpServlet {
 
             String jsonResponse = gson.toJson(result);
 
-            // GHI RESPONSE - KHÔNG close()
             PrintWriter out = response.getWriter();
             out.write(jsonResponse);
             out.flush();
 
 
         } catch (Exception e) {
-            System.err.println("❌ Servlet error:");
+            System.err.println("Servlet error:");
             e.printStackTrace();
             sendError(response, "Lỗi server: " + e.getMessage());
         }
@@ -92,7 +91,6 @@ public class AuthorPublisherInforServlet extends HttpServlet {
         error.put("message", message);
         String json = gson.toJson(error);
 
-        // GHI ERROR - KHÔNG close()
         PrintWriter out = response.getWriter();
         out.write(json);
         out.flush();
