@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Khuyến mãi</title>
-    <link rel="stylesheet" href="../css/adminCss/stylePromotion.css">
-    <link rel="stylesheet" href="../css/adminCss/adminHeader.css">
-    <link rel="stylesheet" href="../css/adminCss/styleSidebar.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/stylePromotion.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/adminHeader.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/fontend/css/adminCss/styleSidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
@@ -38,7 +38,7 @@
                 <tr>
                     <th>Mã giảm giá</th>
                     <th>Giá trị</th>
-                    <th>Loại</th>
+                    <th>Áp dụng</th>
                     <th>Đã dùng/Tổng</th>
                     <th>Đơn tối thiểu</th>
                     <th>Hạn sử dụng</th>
@@ -47,97 +47,66 @@
                 </tr>
                 </thead>
                 <tbody id="promoTableBody">
-                <tr>
-                    <td>NEWUSER10</td>
-                    <td>10%</td>
-                    <td>Phần trăm</td>
-                    <td>54/100</td>
-                    <td>0đ</td>
-                    <td>01/02/2026</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>SIEUSALE15</td>
-                    <td>15%</td>
-                    <td>Phần trăm</td>
-                    <td>0/50</td>
-                    <td>50.000đ</td>
-                    <td>08/10/2025</td>
-                    <td><span class="status-out">Hết lượt</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>FREESHIP20</td>
-                    <td>-20.000đ</td>
-                    <td>Cố định</td>
-                    <td>120/200</td>
-                    <td>199.000đ</td>
-                    <td>31/12/2025</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('FREESHIP20')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>BLACKFRIDAY50</td>
-                    <td>50%</td>
-                    <td>Phần trăm</td>
-                    <td>80/300</td>
-                    <td>500.000đ</td>
-                    <td>27/11/2025</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('BLACKFRIDAY50')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>WELCOME5</td>
-                    <td>15.000đ</td>
-                    <td>Cố định</td>
-                    <td>70/150</td>
-                    <td>80.000đ</td>
-                    <td>14/06/2025</td>
-                    <td><span class="status-out">Hết lượt</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('WELCOME5')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>VIPMEMBER30</td>
-                    <td>30%</td>
-                    <td>Phần trăm</td>
-                    <td>40/80</td>
-                    <td>100.000đ</td>
-                    <td>19/09/2025</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('VIPMEMBER30')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>TET2026</td>
-                    <td>-50.000đ</td>
-                    <td>Cố định</td>
-                    <td>200/500</td>
-                    <td>199.000đ</td>
-                    <td>10/02/2026</td>
-                    <td><span class="status-active">Đang chạy</span></td>
-                    <td>
-                        <button class="edit-btn" onclick="openEdit('TET2026')"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
+
+                <c:forEach var="voucher" items="${allVouchers}">
+                    <tr>
+                        <td>${voucher.code}</td>
+                        <td>${voucher.discountValue}</td>
+                        <td>${voucher.discountTarget}</td>
+                        <td>${voucher.usedCount}/${voucher.quantity}</td>
+                        <td>${voucher.minOrderAmount}</td>
+                        <td>${voucher.endDate}</td>
+
+                        <c:choose>
+                            <c:when test="${voucher.expired}">
+                                <td><span class="status-out">Hết Hạn</span></td>
+                            </c:when>
+                            <c:when test="${voucher.usedCount == voucher.quantity}">
+                                <td><span class="status-out">Hết lượt</span></td>
+                            </c:when>
+
+                            <c:otherwise>
+                                <td><span class="status-active">Đang chạy</span></td>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <td>
+                            <button class="edit-btn" onclick="openEdit('${voucher.code}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </c:forEach>
+
+
+<%--                <tr>--%>
+<%--                    <td>NEWUSER10</td>--%>
+<%--                    <td>10%</td>--%>
+<%--                    <td>Vận chuyển</td>--%>
+<%--                    <td>54/100</td>--%>
+<%--                    <td>0đ</td>--%>
+<%--                    <td>01/02/2026</td>--%>
+<%--                    <td><span class="status-active">Đang chạy</span></td>--%>
+<%--                    <td>--%>
+<%--                        <button class="edit-btn" onclick="openEdit('NEWUSER10')"><i class="fa-solid fa-pen-to-square"></i></button>--%>
+<%--                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                    </td>--%>
+<%--                </tr>--%>
+
+<%--                <tr>--%>
+<%--                    <td>SIEUSALE15</td>--%>
+<%--                    <td>15%</td>--%>
+<%--                    <td>Giảm giá</td>--%>
+<%--                    <td>0/50</td>--%>
+<%--                    <td>50.000đ</td>--%>
+<%--                    <td>08/10/2025</td>--%>
+<%--                    <td><span class="status-out">Hết lượt</span></td>--%>
+<%--                    <td>--%>
+<%--                        <button class="edit-btn" onclick="openEdit('SIEUSALE15')"><i class="fa-solid fa-pen-to-square"></i></button>--%>
+<%--                        <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>--%>
+<%--                    </td>--%>
+<%--                </tr>--%>
+
+                <!-- Phân trang -->
                 <tr class="pagination-row">
                     <td colspan="10">
                         <div class="pagination" id="tablePagination">
@@ -155,81 +124,94 @@
 </div>
 <div class="popup-overlay" id="addPopup">
     <div class="popup-box">
-        <h3>Thêm mã khuyến mãi</h3>
-        <div class="popup-grid">
-            <div>
-                <label>Tên mã</label>
-                <input type="text" id="addCode" placeholder="NEWUSER10" maxlength="20">
-            </div>
-            <div>
-                <label>Áp dụng</label>
-                <select id="addType" required>
-                    <option value="">Chọn </option>
-                    <option value="percent">Vận chuyển</option>
-                    <option value="fixed">Giảm giá</option>
-                    <option value="fixed">khác</option>
-                </select>
-            </div>
-            <div>
-                <label>Loại</label>
-                <select id="addType" required>
-                    <option value="">Chọn loại</option>
-                    <option value="percent">Phần trăm (%)</option>
-                    <option value="fixed">Số tiền (₫)</option>
-                </select>
-            </div>
-            <div>
-                <label>Giá trị giảm</label>
-                <input type="number" id="addValue" min="0" placeholder="10 hoặc 20000">
-            </div>
-            <div>
-                <label>Đơn tối thiểu</label>
-                <input type="number" id="addMinOrder" min="0" placeholder="0" value="0">
-            </div>
-            <div>
-                <label>Số lượng tối đa</label>
-                <input type="number" id="addMaxUsage" min="1" value="100">
-            </div>
-            <div>
-                <label>Áp dụng</label>
-                <select id="addApply">
-                    <option value="all">Toàn bộ sản phẩm</option>
-                    <option value="category">Một thể loại</option>
-                </select>
-            </div>
-            <div class="checkbox-row">
-                <input type="checkbox" id="addSingleUse">
-                <label for="addSingleUse">Mỗi khách chỉ dùng 1 lần</label>
-            </div>
-            <div id="addCategoryBox" style="grid-column: 1 / -1;">
-                <label>Thể loại</label>
-                <select id="addCategory" disabled>
-                    <option value="">-- Chọn thể loại --</option>
-                    <option>Trinh thám</option>
-                    <option>Hài hước</option>
-                    <option>Ngôn tình</option>
-                    <option>Hành động</option>
-                    <option>Kinh dị</option>
-                    <option>Phiêu lưu</option>
-                    <option>Học đường</option>
-                    <option>Giả tưởng</option>
-                </select>
-            </div>
-            <div class="date-row">
+        <form action="${pageContext.request.contextPath}/admin/vouchers" method="post">
+            <h3>Thêm mã khuyến mãi</h3>
+
+            <div class="popup-grid">
+                <!-- Dòng 1: Mã + Loại -->
                 <div>
-                    <label>Từ ngày</label>
-                    <input type="date" id="addStart">
+                    <label>Tên mã</label>
+                    <input type="text" id="addCode" placeholder="Nhập mã" maxlength="20" name="code">
                 </div>
                 <div>
-                    <label>Đến ngày</label>
-                    <input type="date" id="addEnd">
+                    <label>Áp dụng</label>
+                    <select id="addType" name="discount_target"  required>
+                        <option value="Vận chuyển">Vận chuyển</option>
+                        <option value="Giảm giá">Giảm giá</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Loại</label>
+                    <select id="addType"  name="discount_type" required>
+                        <option value="">Chọn loại</option>
+                        <option value="percent">Phần trăm (%)</option>
+                        <option value="fixed">Số tiền (₫)</option>
+                    </select>
+                </div>
+
+                <!-- Dòng 2: Giá trị + Đơn tối thiểu -->
+                <div>
+                    <label>Giá trị giảm</label>
+                    <input type="number" id="addValue" min="0" name="discount_value" placeholder="10 hoặc 20000">
+                </div>
+                <div>
+                    <label>Đơn tối thiểu</label>
+                    <input type="number" id="addMinOrder" min="0" name="min_order_amount" placeholder="0" value="0">
+                </div>
+
+                <!-- Dòng 3: Số lượng + Áp dụng cho -->
+                <div>
+                    <label>Số lượng</label>
+                    <input type="number" id="addMaxUsage" name="quantity" min="1" value="100">
+                </div>
+                <div>
+                    <label>Áp dụng</label>
+                    <select id="addApply" name="apply_scope">
+                        <option value="all">Toàn bộ sản phẩm</option>
+                        <option value="category">Một thể loại</option>
+                    </select>
+                </div>
+
+                <!-- Checkbox 1 lần/khách -->
+                <div class="checkbox-row">
+                    <input type="checkbox" id="addSingleUse" name="is_single_use">
+                    <label for="addSingleUse">Mỗi khách chỉ dùng 1 lần</label>
+                </div>
+
+                <!-- Chọn thể loại (ẩn mặc định) -->
+                <div id="addCategoryBox" style="grid-column: 1 / -1;">
+                    <label>Thể loại</label>
+                    <select id="addCategory" disabled>
+                        <option value="">-- Chọn thể loại --</option>
+                        <option>Trinh thám</option>
+                        <option>Hài hước</option>
+                        <option>Ngôn tình</option>
+                        <option>Hành động</option>
+                        <option>Kinh dị</option>
+                        <option>Phiêu lưu</option>
+                        <option>Học đường</option>
+                        <option>Giả tưởng</option>
+                    </select>
+                </div>
+
+                <!-- Ngày bắt đầu + kết thúc -->
+                <div class="date-row">
+                    <div>
+                        <label>Từ ngày</label>
+                        <input type="datetime-local" id="addStart" name="start_date">
+                    </div>
+                    <div>
+                        <label>Đến ngày</label>
+                        <input type="datetime-local" id="addEnd" name="end_date">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="btn-row">
-            <button class="btn-cancel" id="closeAddPopup">Hủy</button>
-            <button class="btn-save" id="saveAddBtn">Tạo mã</button>
-        </div>
+
+            <div class="btn-row">
+                <button type="submit" class="btn-cancel" id="closeAddPopup">Hủy</button>
+                <button type="submit" class="btn-save" id="saveAddBtn">Tạo mã</button>
+            </div>
+        </form>
     </div>
 </div>
 <div class="popup-overlay" id="editPopup">
