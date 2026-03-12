@@ -526,3 +526,48 @@
 
     <script src="${pageContext.request.contextPath}/js/firebase-notification.js"></script>
 </c:if>
+
+<c:if test="${empty sessionScope.currentUser}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bell = document.getElementById('bell-icon');
+            if (!bell) return;
+
+            bell.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showLoginHintToast();
+            });
+        });
+
+        function showLoginHintToast() {
+            const existing = document.getElementById('login-hint-toast');
+            if (existing) existing.remove();
+
+            const contextPath = '${pageContext.request.contextPath}';
+
+            const toast = document.createElement('div');
+            toast.id = 'login-hint-toast';
+            toast.innerHTML =
+                '<i class="fa-solid fa-bell" style="margin-right:8px;opacity:0.85;"></i>' +
+                'Vui lòng <a href="' + contextPath + '/login">đăng nhập</a> để xem thông báo';
+
+            document.body.appendChild(toast);
+
+            requestAnimationFrame(() => toast.classList.add('show'));
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+
+            document.addEventListener('click', function handler(e) {
+                if (!toast.contains(e.target) && e.target !== bell) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                    document.removeEventListener('click', handler);
+                }
+            });
+        }
+    </script>
+</c:if>

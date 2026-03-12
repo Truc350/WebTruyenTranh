@@ -2,7 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<fmt:setLocale value="vi_VN"/>
+<fmt:setBundle basename="java.text.DecimalFormatSymbols"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -116,7 +117,7 @@
                                                     <c:if test="${item.priceAtPurchase < comic.price}">
                                                         <del class="original-price">
                                                             <fmt:formatNumber value="${comic.price}" type="number"
-                                                                              groupingUsed="true"/>đ
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
                                                     <span class="discount-price"
@@ -136,7 +137,7 @@
                                                     <c:if test="${comic.discountPrice < comic.price}">
                                                         <del class="original-price">
                                                             <fmt:formatNumber value="${comic.price}" type="number"
-                                                                              groupingUsed="true"/>đ
+                                                                              groupingUsed="true"/> đ
                                                         </del>
                                                     </c:if>
                                                     <%-- Giá hiện tại --%>
@@ -154,7 +155,7 @@
 
                     <div class="order-total">
                 <span>Tổng tiền: <strong>
-                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>đ
+                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/> đ
                 </strong></span>
                     </div>
                     <div class="order-actions">
