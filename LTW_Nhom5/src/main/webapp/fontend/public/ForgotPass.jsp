@@ -22,8 +22,8 @@
                     <div style="color : red; font-size: 14px; display: flex;font-weight: bold; justify-content: center;">${error}</div>
                 </c:if>
 
-                <label>Email:</label>
-                <input type="email" placeholder="Nhập email" name="email" required>
+                <label>Email:<span class="required-star">*</span></label>
+                <input type="email" placeholder="Nhập email" name="email" id="emailInput" required>
 
                 <div class="buttons">
                     <button class="back"
@@ -75,6 +75,26 @@
         popup.style.display = "flex";
     }
     </c:if>
+
+
+    const emailInput = document.getElementById("emailInput");
+    function validateEmail() {
+        const value = emailInput.value.trim();
+        const  emailRegex =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (value === ""){
+            emailInput.classList.remove("valid");
+            emailInput.classList.add("invalid");
+        }else if(emailRegex.test(value)){
+            emailInput.classList.remove("invalid");
+            emailInput.classList.add("valid");
+        }else {
+            emailInput.classList.remove("valid");
+            emailInput.classList.add("invalid");
+        }
+    }
+    document.addEventListener("DOMContentLoaded", validateEmail);
+    emailInput.addEventListener("input", validateEmail);
+    emailInput.addEventListener("blur", validateEmail);
 </script>
 
 </body>

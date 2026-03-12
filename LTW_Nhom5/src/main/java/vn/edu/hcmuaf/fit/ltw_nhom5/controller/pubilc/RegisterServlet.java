@@ -7,6 +7,7 @@ import vn.edu.hcmuaf.fit.ltw_nhom5.dao.UserDao;
 import vn.edu.hcmuaf.fit.ltw_nhom5.db.JdbiConnector;
 import vn.edu.hcmuaf.fit.ltw_nhom5.model.User;
 import vn.edu.hcmuaf.fit.ltw_nhom5.utils.PasswordUtils;
+import vn.edu.hcmuaf.fit.ltw_nhom5.utils.ValidationUtils;
 
 import java.io.IOException;
 
@@ -25,8 +26,32 @@ public class RegisterServlet extends HttpServlet {
 
         String username = request.getParameter("username");
         String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
+
+        if (ValidationUtils.isBlank(username)
+                || ValidationUtils.isBlank(password) || ValidationUtils.isBlank(confirmPassword)) {
+            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+        if (!ValidationUtils.isAtLeastOne(email, phone)) {
+            request.setAttribute("error", "Vui lòng nhập ít nhất email hoặc số điện thoại!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+        if (!ValidationUtils.isBlank(email) && !ValidationUtils.isValidEmail(email)) {
+            request.setAttribute("error", "Email không đúng định dạng!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+        if (!ValidationUtils.isBlank(phone) && !ValidationUtils.isValidPhone(phone)) {
+            request.setAttribute("error", "Số điện thoại không đúng định dạng (VD: 0912345678)");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
+
 
         // Kiểm tra mật khẩu khớp
         if (!password.equals(confirmPassword)) {
@@ -48,8 +73,13 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
             return;
         }
+        if (!ValidationUtils.isBlank(phone) && userDao.findByPhone(phone).isPresent()) {
+            request.setAttribute("error", "Số điện thoại đã được sử dụng!");
+            request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
+            return;
+        }
 
-        if (userDao.findByEmail(email).isPresent()) {
+        if (!ValidationUtils.isBlank(email) && userDao.findByEmail(email).isPresent()) {
             request.setAttribute("error", "Email đã được sử dụng!");
             request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
             return;
@@ -60,7 +90,8 @@ public class RegisterServlet extends HttpServlet {
 
         User user = new User();
         user.setUsername(username);
-        user.setEmail(email);
+        user.setEmail(ValidationUtils.isBlank(email) ? null : email);
+        user.setPhone(ValidationUtils.isBlank(phone) ? null : phone);
         user.setPasswordHash(passwordHash);
         user.setFullName(username);
 
@@ -71,7 +102,8 @@ public class RegisterServlet extends HttpServlet {
 
     }
 
-        @Override
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.getRequestDispatcher("/fontend/public/Register.jsp").forward(request, response);
